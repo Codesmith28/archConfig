@@ -1,6 +1,0 @@
-2024/02/14-15:56:03.136 cb5 Reusing MANIFEST /home/codesmith28/.config/discord/Local Storage/leveldb/MANIFEST-000001
-2024/02/14-15:56:03.136 cb5 Recovering log #6
-2024/02/14-15:56:03.137 cb5 Reusing old log /home/codesmith28/.config/discord/Local Storage/leveldb/000006.log 
-2024/02/14-16:00:21.211 1156 Level-0 table #10: started
-2024/02/14-16:00:21.232 1156 Level-0 table #10: 2902754 bytes OK
-2024/02/14-16:00:21.234 1156 Delete type=0 #6
