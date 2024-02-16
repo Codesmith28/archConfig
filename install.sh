@@ -21,6 +21,7 @@ packages=(
     "libreoffice-still"
     "btop"
     "neovim"
+    "obsidian"
     "gimp"
 )
 
