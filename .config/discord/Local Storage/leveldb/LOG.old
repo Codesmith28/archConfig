@@ -1,8 +1,0 @@
-2024/02/11-12:38:27.982 3bac Creating DB /home/codesmith28/.config/discord/Local Storage/leveldb since it was missing.
-2024/02/11-12:38:27.985 3bac Reusing MANIFEST /home/codesmith28/.config/discord/Local Storage/leveldb/MANIFEST-000001
-2024/02/11-12:42:41.546 3fed Level-0 table #5: started
-2024/02/11-12:42:41.562 3fed Level-0 table #5: 732075 bytes OK
-2024/02/11-12:42:41.564 3fed Delete type=0 #3
-2024/02/11-12:43:41.539 3fed Level-0 table #7: started
-2024/02/11-12:43:41.555 3fed Level-0 table #7: 2171318 bytes OK
-2024/02/11-12:43:41.556 3fed Delete type=0 #4
