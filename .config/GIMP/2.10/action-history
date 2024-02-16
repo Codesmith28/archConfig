@@ -1,0 +1,14 @@
+# GIMP action-history
+
+(history-item "edit-clear" 4)
+(history-item "file-export" 0)
+(history-item "file-quit" 2)
+(history-item "file-export-as" 0)
+(history-item "file-open" 0)
+(history-item "dockable-close-tab" 0)
+(history-item "layers-merge-down" 1)
+(history-item "brushes-edit" 0)
+(history-item "brushes-new" 0)
+(history-item "layers-new" 1)
+
+# end of action-history

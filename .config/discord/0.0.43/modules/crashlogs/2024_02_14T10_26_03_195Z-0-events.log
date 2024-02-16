@@ -1,0 +1,16 @@
+2024-02-14T10:26:03.203Z 0: 
+
+----------------------------------------------
+2024-02-14T10:26:03.219Z 1: Discord starting: {"releaseChannel":"stable","version":"0.0.43"}, modulepath: /home/codesmith28/.config/discord/0.0.43/modules
+2024-02-14T10:26:03.224Z 2: ✅ webContents.created web1 ""
+2024-02-14T10:26:03.233Z 3: ✅ window.created win1 "discord"
+2024-02-14T10:26:03.622Z 4: ✅ webContents.did-finish-load web1
+2024-02-14T10:26:31.368Z 5: ✅ webContents.created web2 ""
+2024-02-14T10:26:31.375Z 6: ✅ window.created win2 "Discord"
+2024-02-14T10:26:39.389Z 7: ✅ webContents.did-finish-load web2
+2024-02-14T10:26:39.487Z 8: window.close win1
+2024-02-14T10:26:39.513Z 9: webContents.destroyed web1
+2024-02-14T10:26:39.515Z 10: window.closed win1
+2024-02-14T10:32:58.463Z 11: window.close win2
+2024-02-14T10:57:13.298Z 12: before-quit
+2024-02-14T10:57:13.308Z 13: window.close win2
