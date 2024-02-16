@@ -10,12 +10,20 @@ After installing the base configuration from [stephan-raabe/dotfiles](https://gi
 
 1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
 
-      ```
-      git clone https://github.com/Codesmith28/arch-config.git ~/Downloads/
-    ```
+   ```
+   git clone https://github.com/Codesmith28/arch-config.git ~/Downloads/
+   ```
+
 2. Navigate to the downloaded folder and view the content:
 
-    ```
-     cd ~/Downloads/arch-config
-    ```
- 3. Copy / Move the contents accordingly.
+   ```
+    cd ~/Downloads/arch-config
+   ```
+
+3. Run the installation script for basic packages:
+
+   ```
+   ./install.sh
+   ```
+
+4. Copy / Move the contents accordingly.
