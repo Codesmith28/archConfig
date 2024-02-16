@@ -1,0 +1,13 @@
+[font]
+size = 14.0
+
+[font.normal]
+family = "CaskaydiaCove Nerd Font"
+style = "Regular"
+
+[window]
+opacity = 0.7
+
+[window.padding]
+x = 15
+y = 15

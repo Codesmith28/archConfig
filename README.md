@@ -1,1 +1,1 @@
-# archConfig
+# Arch configuration by Codesmith28
