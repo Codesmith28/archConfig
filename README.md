@@ -13,7 +13,7 @@ After installing the base configuration from [stephan-raabe/dotfiles](https://gi
 1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
 
    ```
-   git clone https://github.com/Codesmith28/arch-config.git ~/Downloads/arch-config
+    git clone https://github.com/Codesmith28/archConfig.git ~/Downloads/arch-config
    ```
 
 2. Navigate to the downloaded folder and view the content:
