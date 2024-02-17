@@ -33,6 +33,7 @@ After installing the base configuration from [stephan-raabe/dotfiles](https://gi
 ## Backup
 
 You can also backup your current configuration by running:
+
 ```
 ./backup.sh
 ```
