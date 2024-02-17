@@ -29,3 +29,10 @@ After installing the base configuration from [stephan-raabe/dotfiles](https://gi
    ```
 
 4. Copy / Move the contents accordingly.
+
+## Backup
+
+You can also backup your current configuration by running:
+```
+./backup.sh
+```
