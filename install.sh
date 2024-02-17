@@ -22,6 +22,8 @@ packages=(
     "btop"
     "neovim"
     "obsidian"
+    "zathura"
+    "glow"
     "gimp"
 )
 
