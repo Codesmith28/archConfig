@@ -6,6 +6,7 @@ recursive_update() {
     local destination="$2"
 
     # Iterate through items in the source directory
+    shopt -s dotglob
     for item in "$source"/*; do
         if [ -d "$item" ]; then
             # If item is a directory, recursively update contents

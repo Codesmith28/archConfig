@@ -6,6 +6,10 @@ vimcmd_symbol = "[<](bold green)"
 [git_commit]
 tag_symbol = " tag "
 
+[git_branch]
+symbol = "git "
+command_timeout = 10000  # Set the timeout value in milliseconds (adjust as needed)
+
 [git_status]
 ahead = ">"
 behind = "<"
