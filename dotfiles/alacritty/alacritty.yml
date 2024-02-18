@@ -133,6 +133,18 @@ font:
     # The `style` can be specified to pick a specific face.
     style: Regular
 
+  bold:
+    family: CaskaydiaCove Nerd Font
+    style: Bold
+
+  italic:
+    family: CaskaydiaCove Nerd Font
+    style: Italic
+
+  bold_italic:
+    family: CaskaydiaCove Nerd Font
+    style: Bold Italic 
+
   # Bold font face
   #bold:
     # Font family
@@ -167,7 +179,7 @@ font:
     #style: Bold Italic
 
   # Point size
-  size: 12.0
+  size: 12
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
