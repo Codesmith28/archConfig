@@ -23,8 +23,10 @@ packages=(
     "neovim"
     "obsidian"
     "zathura"
+    "texlive"
     "glow"
     "gimp"
+    "clangd"
 )
 
 # Install packages using yay
