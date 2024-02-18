@@ -248,7 +248,7 @@
     "interval": 30,
     "format": "D {percentage_used}% ",
     "path": "/",
-    "on-click": "alacritty -e htop"
+    "on-click": "alacritty -e btop"
   },
 
   "hyprland/language": {
