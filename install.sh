@@ -13,7 +13,7 @@ packages=(
     "brave-bin"
     "cmatrix"
     "vlc"
-    "catimg"
+    "ueberzugpp"
     "gnome-calculator"
     "discord"
     "telegram-desktop"
