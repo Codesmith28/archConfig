@@ -126,7 +126,7 @@ cat ~/.cache/wal/sequences
 # -----------------------------------------------------
 echo ""
 if [[ $(tty) == *"pts"* ]]; then
-    pfetch
+    neofetch
 else
     if [ -f /bin/qtile ]; then
         echo "Start Qtile X11 with command Qtile"

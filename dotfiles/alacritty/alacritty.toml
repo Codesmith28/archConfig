@@ -11,3 +11,7 @@ opacity = 0.7
 [window.padding]
 x = 15
 y = 15
+
+[window.dimensions]
+columns = 100
+lines = 29
