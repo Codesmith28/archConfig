@@ -1,9 +1,12 @@
-#            _              
-#    _______| |__  _ __ ___ 
-#   |_  / __| '_ \| '__/ __|
-#  _ / /\__ \ | | | | | (__ 
-# (_)___|___/_| |_|_|  \___|                     
-#
+cat <<"EOF"
+           _              
+   _______| |__  _ __ ___ 
+  |_  / __| '_ \| '__/ __|
+ _ / /\__ \ | | | | | (__ 
+(_)___|___/_| |_|_|  \___|
+                          
+
+EOF
 
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -119,5 +122,6 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+pfetch
 
 alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
