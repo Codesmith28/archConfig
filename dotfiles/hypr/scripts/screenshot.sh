@@ -20,7 +20,7 @@ cliplist() {
         xsel --input --clipboard --output < "$1" && echo "Image copied to clipboard."
     else
         echo "Error: xclip or xsel command not found. Unable to copy image to clipboard."
-    fi
+    fi  
 }
 
 option2="Selected area"
