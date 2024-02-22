@@ -340,8 +340,7 @@ font:
 # Whether or not `window.opacity` applies to all cell backgrounds or only to
 # the default background. When set to `true` all cells will be transparent
 # regardless of their background color.
-#transparent_background_colors: false
-
+# transparent_background_colors: false
 # Bell
 #
 # The bell is rung every time the BEL control character is received.

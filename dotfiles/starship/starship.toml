@@ -1,3 +1,5 @@
+command_timeout = 10000
+
 [git_commit]
 tag_symbol = " tag "
 
