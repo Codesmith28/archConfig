@@ -4,7 +4,7 @@
 yay -S sddm-sugar-dark
 
 # In the [Theme] section simply add the themes name: Current=sugar-dark
-# Copy from /usr/lib/sddm/sddVm.conf.d/default.conf
+# Copy from /usr/lib/sddm/sddm.conf.d/default.conf
 /etc/sddm.conf.d/sddm.conf
 
 # Test the theme

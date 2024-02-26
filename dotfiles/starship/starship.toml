@@ -1,5 +1,10 @@
 command_timeout = 10000
 
+[character]
+success_symbol = "[❯❯](bold green)"
+error_symbol = "[✘ ](bold red)"
+vimcmd_symbol = "[❮❮](bold green)"
+
 [git_commit]
 tag_symbol = " tag "
 
