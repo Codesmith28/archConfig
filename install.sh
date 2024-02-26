@@ -20,8 +20,9 @@ packages=(
     "visual-studio-code-bin"
     "nnn"
     "brave-bin"
-    "cmatrix"
+    "cmatrix-git"
     "vlc"
+    "obs-studio"
     "ueberzugpp"
     "gnome-calculator"
     "discord"
@@ -34,7 +35,7 @@ packages=(
     "texlive"
     "glow"
     "gimp"
-    "clangd"
+    "clang"
     "neofetch"
 )
 
