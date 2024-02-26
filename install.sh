@@ -7,10 +7,8 @@ cat <<"EOF"
 |_|                         |___/           
 
 EOF
-                  |___/           
 
 #!/bin/bash
-
 # Ensure yay is installed
 if ! command -v yay &> /dev/null; then
     echo "yay is not installed. Installing yay..."
@@ -28,7 +26,6 @@ packages=(
     "gnome-calculator"
     "discord"
     "telegram-desktop"
-    "libreoffice-fresh"
     "libreoffice-still"
     "btop"
     "neovim"
@@ -38,6 +35,7 @@ packages=(
     "glow"
     "gimp"
     "clangd"
+    "neofetch"
 )
 
 # Install packages using yay

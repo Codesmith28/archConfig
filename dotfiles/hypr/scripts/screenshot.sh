@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #  ____                               _           _    
 # / ___|  ___ _ __ ___  ___ _ __  ___| |__   ___ | |_  
@@ -13,18 +12,8 @@
 DIR="$HOME/Pictures/screenshots/"
 NAME="screenshot_$(date +%d%m%Y_%H%M%S).png"
 
-cliplist() {
-    if command -v xclip &> /dev/null; then
-        xclip -selection clipboard -t image/png -i "$1" && echo "Image copied to clipboard."
-    elif command -v xsel &> /dev/null; then
-        xsel --input --clipboard --output < "$1" && echo "Image copied to clipboard."
-    else
-        echo "Error: xclip or xsel command not found. Unable to copy image to clipboard."
-    fi  
-}
-
 option2="Selected area"
-option3="Fullscreen"
+option3="Fullscreen (delay 3 sec)"
 
 options="$option2\n$option3"
 
@@ -34,12 +23,10 @@ case $choice in
     $option2)
         grim -g "$(slurp)" - | swappy -f -
         notify-send "Screenshot created" "Mode: Selected area"
-        cliplist "$DIR/$NAME"
     ;;
     $option3)
-        sleep 0.5
+        sleep 3
         grim - | swappy -f -
         notify-send "Screenshot created" "Mode: Fullscreen"
-        cliplist "$DIR/$NAME"
     ;;
 esac
