@@ -9,7 +9,7 @@
 # ----------------------------------------------------- 
 
 ignore-empty-password
-font="CaskaydiyaCove Nerd Font Semibold"
+font="Fira Sans Semibold"
 
 clock
 timestr=%R
@@ -22,10 +22,10 @@ screenshots
 # image=~/.cache/current_wallpaper.jpg
 
 # Fade in time
-fade-in=0
+fade-in=1
 
 # Effect for background
-effect-blur=5x10
+effect-blur=5x2
 # effect-greyscale
 # effect-pixelate=5
 
