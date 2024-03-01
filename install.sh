@@ -1,10 +1,10 @@
 cat <<"EOF"
-                  _                         
- _ __   __ _  ___| | ____ _  __ _  ___  ___ 
+                  _
+ _ __   __ _  ___| | ____ _  __ _  ___  ___
 | '_ \ / _` |/ __| |/ / _` |/ _` |/ _ \/ __|
 | |_) | (_| | (__|   < (_| | (_| |  __/\__ \
 | .__/ \__,_|\___|_|\_\__,_|\__, |\___||___/
-|_|                         |___/           
+|_|                         |___/
 
 EOF
 
@@ -37,6 +37,12 @@ packages=(
     "gimp"
     "clang"
     "neofetch"
+    "baobab"
+    "zathura-pdf-poppler-git"
+    "zsh"
+    "gvfs-mtp"
+    "github-cli"
+    "slack-desktop"
 )
 
 # Install packages using yay
