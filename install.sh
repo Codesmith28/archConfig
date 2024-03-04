@@ -43,6 +43,8 @@ packages=(
     "gvfs-mtp"
     "github-cli"
     "slack-desktop"
+    "bat"
+    "zoom"
 )
 
 # Install packages using yay
