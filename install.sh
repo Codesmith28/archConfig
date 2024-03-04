@@ -17,6 +17,10 @@ fi
 
 # List of packages to install
 packages=(
+    "pfetch" 
+    "bibata-cursor-theme" 
+    "trizen"
+    "pacseek"
     "visual-studio-code-bin"
     "nnn"
     "brave-bin"
@@ -33,7 +37,6 @@ packages=(
     "obsidian"
     "zathura"
     "texlive"
-    "glow"
     "gimp"
     "clang"
     "neofetch"
@@ -45,6 +48,13 @@ packages=(
     "slack-desktop"
     "bat"
     "zoom"
+    "fontpreview"
+    "w3m"
+    "glow"
+    "ffmpeg"
+    "ffmpegthumbnailer"
+    "mpv"
+    "bsdtar"
 )
 
 # Install packages using yay
