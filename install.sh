@@ -17,8 +17,8 @@ fi
 
 # List of packages to install
 packages=(
-    "pfetch" 
-    "bibata-cursor-theme" 
+    "pfetch"
+    "bibata-cursor-theme"
     "trizen"
     "pacseek"
     "visual-studio-code-bin"
@@ -55,6 +55,7 @@ packages=(
     "ffmpegthumbnailer"
     "mpv"
     "bsdtar"
+    "ttf-cascadia-code-nerd"
 )
 
 # Install packages using yay
