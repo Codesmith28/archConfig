@@ -10,7 +10,8 @@
 # ----------------------------------------------------- 
 
 DIR="$HOME/Pictures/screenshots/"
-NAME="screenshot_$(date +%d%m%Y_%H%M%S).png"
+
+NAME="screenshot_$(date +%Y-%m-%d_%H%M%S).png"
 
 option2="Selected area"
 option3="Fullscreen"
@@ -21,12 +22,16 @@ choice=$(echo -e "$options" | rofi -dmenu -replace -config ~/dotfiles/rofi/confi
 
 case $choice in
     $option2)
-        grim -g "$(slurp)" - | swappy -f -
-        notify-send "Screenshot created" "Mode: Selected area"
+        grim -g "$(slurp)" "$DIR$NAME"
+        xclip -selection clipboard -t image/png -i "$DIR$NAME"
+        swappy -f -
+        notify-send -t 250 "Screenshot created and copied to clipboard" "Mode: Selected area"
     ;;
     $option3)
-        sleep 0.5
-        grim - | swappy -f -
-        notify-send "Screenshot created" "Mode: Fullscreen"
+        sleep 0.75
+        grim "$DIR$NAME"
+        xclip -selection clipboard -t image/png -i "$DIR$NAME"
+        swappy -f -
+        notify-send -t 250 "Screenshot created and copied to clipboard" "Mode: Fullscreen"
     ;;
 esac

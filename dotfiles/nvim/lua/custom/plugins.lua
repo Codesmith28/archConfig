@@ -74,13 +74,21 @@ local plugins = {
                 "clangd",
                 "clang-format",
                 "codelldb",
+                -- for python and sql:
+                "python-lsp-server",
+                "sql-formatter",
                 -- for developement:
                 "nextls",
                 "eslint-lsp",
                 "js-debug-adapter",
                 "prettier",
                 "typescript-language-server",
-                "tailwindcss-language-server"
+                "tailwindcss-language-server",
+                "yaml-language-server",
+                "yamlfix",
+                "yamllint",
+                -- for lua:
+                "lua-language-server",
             }
         }
     },
