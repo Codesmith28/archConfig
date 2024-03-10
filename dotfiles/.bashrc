@@ -16,6 +16,9 @@ PS1='[\u@\h \W]\$ '
 # Define Editor
 export EDITOR=nvim
 
+# For the profile:
+# source ~/.profile
+
 # -----------------------------------------------------
 # ALIASES
 # -----------------------------------------------------
@@ -29,7 +32,7 @@ alias lt='eza -a --tree --level=2 --icons'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias ts='~/dotfiles/scripts/snapshot.sh'
-alias matrix='cmatrix'
+alias matrix='cmatrix b'
 alias wifi='nmtui'
 alias od='~/private/onedrive.sh'
 alias rw='~/dotfiles/waybar/reload.sh'
@@ -83,14 +86,14 @@ alias vmstop='virsh --connect qemu:///system destroy win11'
 alias confq='$EDITOR ~/dotfiles/qtile/config.py'
 alias confp='$EDITOR ~/dotfiles/picom/picom.conf'
 alias confb='$EDITOR ~/dotfiles/.bashrc'
+alias confz='$EDITOR ~/dotfiles/.zshrc'
 
 # -----------------------------------------------------
 # EDIT NOTES
 # -----------------------------------------------------
 
 alias notes='$EDITOR ~/notes.txt'
-alias task='cat ~/Desktop/misc/TODO.md'
-alias todo='$EDITOR ~/Desktop/misc/TODO.md'
+
 
 # -----------------------------------------------------
 # SYSTEM
@@ -98,7 +101,6 @@ alias todo='$EDITOR ~/Desktop/misc/TODO.md'
 
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias setkb='setxkbmap de;echo "Keyboard set back to de."'
-
 alias mntD='command -v ntfs-3g >/dev/null 2>&1 || { echo >&2 "ntfs-3g is not installed. Installing..."; yay -S ntfs-3g; }; [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD; sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"'
 
 # -----------------------------------------------------
@@ -124,6 +126,7 @@ cat ~/.cache/wal/sequences
 # -----------------------------------------------------
 # PFETCH if on wm
 # -----------------------------------------------------
+
 echo ""
 if [[ $(tty) == *"pts"* ]]; then
     pfetch

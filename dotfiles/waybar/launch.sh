@@ -15,7 +15,6 @@ if [ -f $HOME/.cache/waybar-disabled ] ;then
     exit 1 
 fi
 
-
 # ----------------------------------------------------- 
 # Quit all running waybar instances
 # ----------------------------------------------------- 
@@ -59,13 +58,4 @@ if [ -f ~/dotfiles/waybar/themes${arrThemes[1]}/style-custom.css ] ;then
     style_file="style-custom.css"
 fi
 
-if $WAYBAR_ENABLED ; then
-    waybar -c ~/dotfiles/waybar/themes${arrThemes[0]}/$config_file -s ~/dotfiles/waybar/themes${arrThemes[1]}/$style_file &
-fi
-
-# Check if waybar-disabled file exists
-if [ -f $HOME/.cache/waybar-disabled ] ;then 
-    killall waybar
-    pkill waybar
-    exit 1 
-fi
+waybar -c ~/dotfiles/waybar/themes${arrThemes[0]}/$config_file -s ~/dotfiles/waybar/themes${arrThemes[1]}/$style_file &
