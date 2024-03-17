@@ -28,7 +28,6 @@ packages=(
     "vlc"
     "obs-studio"
     "ueberzugpp"
-    "gnome-calculator"
     "discord"
     "telegram-desktop"
     "libreoffice-still"
