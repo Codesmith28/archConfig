@@ -12,7 +12,7 @@
 /* ---- Configuration ---- */
 configuration {
     modi:                       "drun,run";
-    font:                       "Fira Sans Bold 10";
+    font:                       "Fira Sans 11";
     show-icons:                 true;
     icon-theme:                 "kora";
     display-drun:               "APPS";
@@ -27,9 +27,16 @@ configuration {
     
 }
 
+/* ---- Load font ---- */
+@import "~/dotfiles/.settings/rofi-font.rasi"
+
 /* ---- Load pywal colors (custom wal template) ---- */
 @import "~/.cache/wal/colors-rofi-pywal"
+
+/* ---- Load wallpaper ---- */
 @import "~/.cache/current_wallpaper.rasi"
+
+/* ---- Load border width ---- */
 @import "~/dotfiles/.settings/rofi-border.rasi"
 
 /* ---- Window ---- */
@@ -100,6 +107,7 @@ inputbar {
 textbox-prompt-colon {
     enabled:                      true;
     expand:                       false;
+    padding:                      0px 5px 0px 0px;
     str:                          "";
     background-color:             transparent;
     text-color:                   inherit;

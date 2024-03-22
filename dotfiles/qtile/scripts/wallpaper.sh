@@ -11,6 +11,7 @@
 
 # Cache file for holding the current wallpaper
 cache_file="$HOME/.cache/current_wallpaper"
+blurred="$HOME/.cache/blurred_wallpaper.png"
 rasi_file="$HOME/.cache/current_wallpaper.rasi"
 
 # Create cache file if not exists
@@ -71,10 +72,17 @@ echo "Wallpaper: $wallpaper"
 newwall=$(echo $wallpaper | sed "s|$HOME/wallpaper/||g")
 
 # ----------------------------------------------------- 
+# Created blurred wallpaper
+# ----------------------------------------------------- 
+magick $wallpaper -resize 50% $blurred
+echo ":: Resized to 50%"
+magick $blurred -blur 50x30 $blurred
+echo ":: Blurred"
+# ----------------------------------------------------- 
 # Write selected wallpaper into .cache files
 # ----------------------------------------------------- 
 echo "$wallpaper" > "$cache_file"
-echo "* { current-image: url(\"$wallpaper\", height); }" > "$rasi_file"
+echo "* { current-image: url(\"$blurred\", height); }" > "$rasi_file"
 
 sleep 1
 
