@@ -141,3 +141,7 @@ esac
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun completions
+[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
+eval "$(gh copilot alias -- zsh)"

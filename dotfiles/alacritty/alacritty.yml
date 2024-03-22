@@ -128,10 +128,10 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: CaskaydiaCove Nerd Font
+    family: FiraCode Nerd Font
 
     # The `style` can be specified to pick a specific face.
-    style: Regular
+    style: Retina
 
   # Bold font face
   #bold:
@@ -188,10 +188,9 @@ font:
   # If `true`, Alacritty will use a custom built-in font for box drawing
   # characters (Unicode points 2500 - 259f).
   #
-  #builtin_box_drawing: true
+  builtin_box_drawing: true
 # If `true`, bold text is drawn using the bright color variants.
-#draw_bold_text_with_bright_colors: false
-
+draw_bold_text_with_bright_colors: false
 # Colors (Tomorrow Night)
 # colors:
 # Default colors

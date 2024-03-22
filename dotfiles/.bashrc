@@ -163,7 +163,6 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 
-
 # NNN plugins and colors:
 export NNN_PLUG='f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;i:imgview'
 export NNN_FCOLORS='FFFFFF310000000000000000'
@@ -242,3 +241,5 @@ nnn-preview ()
 
     rm -f "$NNN_FIFO"
 }
+
+
