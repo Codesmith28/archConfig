@@ -63,6 +63,11 @@
     "tooltip": false
   },
 
+  // Empty
+  "custom/empty": {
+    "format": ""
+  },
+
   // Youtube Subscriber Count
   "custom/youtube": {
     "format": " {}",
@@ -89,7 +94,7 @@
     "return-type": "json",
     "exec": "~/dotfiles/scripts/updates.sh",
     "restart-interval": 60,
-    "on-click": "alacritty -e ~/dotfiles/scripts/installupdates.sh",
+    "on-click": "alacritty --class dotfiles-floating -e ~/dotfiles/scripts/installupdates.sh",
     "on-click-right": "~/dotfiles/.settings/software.sh",
     "tooltip": false
   },
@@ -112,7 +117,7 @@
   // Settings
   "custom/settings": {
     "format": "",
-    "on-click": "alacritty --class dotfiles-floating -e ~/dotfiles/hypr/start-settings.sh",
+    "on-click": "~/dotfiles/apps/ML4W_Dotfiles_Settings-x86_64.AppImage",
     "tooltip": false
   },
 
@@ -153,18 +158,17 @@
 
   // ChatGPT Launcher
   "custom/chatgpt": {
-    "format": "",
-    "on-click": "brave --app=https://chat.openai.com",
+    "format": " ",
+    "on-click": "chromium --app=https://chat.openai.com",
     "tooltip": false
   },
 
   // Calculator
   "custom/calculator": {
-    "format": " ",
+    "format": "",
     "on-click": "qalculate-gtk",
     "tooltip": false
   },
-  "bottom": -1,
 
   // Windows VM
   "custom/windowsvm": {
@@ -176,7 +180,7 @@
   // Rofi Application Launcher
   "custom/appmenu": {
     // START APPS LABEL
-    "format": "Apps",
+    "format": " ",
     // END APPS LABEL
     "on-click": "rofi -show drun -replace",
     "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
@@ -185,7 +189,7 @@
 
   // Rofi Application Launcher
   "custom/appmenuicon": {
-    "format": "",
+    "format": "",
     "on-click": "rofi -show drun -replace",
     "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
     "tooltip": false
@@ -217,10 +221,12 @@
 
   // Clock
   "clock": {
+    // TIMEDATEFORMAT
+    "format": "{:%H:%M - %a}",
     // "timezone": "America/New_York",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     // START CLOCK FORMAT
-    "format-alt": "{:%d-%m-%Y}"
+    "format-alt": "{:%Y-%m-%d}"
     // END CLOCK FORMAT
   },
 
@@ -319,7 +325,7 @@
   "pulseaudio": {
     // "scroll-step": 1, // %, can be a float
     "format": "{icon}  {volume}%",
-    "format-bluetooth": "{volume}%  {icon}    {format_source}",
+    "format-bluetooth": "{volume}% {icon}   {format_source}",
     "format-bluetooth-muted": " {icon}   {format_source}",
     "format-muted": "  {format_source}",
     "format-source": "{volume}%  ",

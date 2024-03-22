@@ -1,9 +1,9 @@
 [font]
-size = 12.0
+size = 14.0
 
 [font.normal]
-family = "CaskaydiaCove Nerd Font"
-style = "Regular"
+family = "FiraCode Nerd Font Propo"
+style = "Retina"
 
 [window]
 opacity = 0.7
