@@ -180,7 +180,7 @@
   // Rofi Application Launcher
   "custom/appmenu": {
     // START APPS LABEL
-    "format": " ",
+    "format": "       ",
     // END APPS LABEL
     "on-click": "rofi -show drun -replace",
     "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
@@ -189,7 +189,7 @@
 
   // Rofi Application Launcher
   "custom/appmenuicon": {
-    "format": "",
+    "format": "       ",
     "on-click": "rofi -show drun -replace",
     "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
     "tooltip": false
