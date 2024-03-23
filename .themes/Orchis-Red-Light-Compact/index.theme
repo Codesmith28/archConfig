@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Orchis-Red-Light-Compact
+Comment=An flat Materia Gtk+ theme based on Elegant Design
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Orchis-Red-Light-Compact
+MetacityTheme=Orchis-Red-Light-Compact
+IconTheme=Tela-circle
+CursorTheme=Vimix
+ButtonLayout=close,minimize,maximize:menu
