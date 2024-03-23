@@ -32,7 +32,7 @@ alias lt='eza -a --tree --level=2 --icons'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias ts='~/dotfiles/scripts/snapshot.sh'
-alias matrix='cmatrix b'
+alias matrix='cmatrix'
 alias wifi='nmtui'
 alias od='~/private/onedrive.sh'
 alias rw='~/dotfiles/waybar/reload.sh'
@@ -40,6 +40,7 @@ alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/dotfiles"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
+alias ml4w-settings='~/dotfiles/apps/ML4W_Dotfiles_Settings-x86_64.AppImage'
 
 # -----------------------------------------------------
 # Window Managers
@@ -126,7 +127,6 @@ cat ~/.cache/wal/sequences
 # -----------------------------------------------------
 # PFETCH if on wm
 # -----------------------------------------------------
-
 echo ""
 if [[ $(tty) == *"pts"* ]]; then
     pfetch
@@ -161,6 +161,7 @@ fi
 # add to ~/.bashrc
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
 
 
 # NNN plugins and colors:
@@ -241,5 +242,3 @@ nnn-preview ()
 
     rm -f "$NNN_FIFO"
 }
-
-

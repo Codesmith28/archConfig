@@ -222,7 +222,7 @@
   // Clock
   "clock": {
     // TIMEDATEFORMAT
-    "format": "{:%H:%M - %a}",
+    "format": "{:%H:%M %a}",
     // "timezone": "America/New_York",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     // START CLOCK FORMAT
@@ -256,11 +256,6 @@
     "path": "/",
     "on-click": "alacritty -e btop"
   },
-
-  "hyprland/language": {
-    "format": "/ K {short}"
-  },
-
   // Group Hardware
   "group/hardware": {
     "orientation": "inherit",
@@ -363,9 +358,9 @@
     "format": "{icon}",
     "tooltip": true,
     "format-icons": {
-      "activated": "",
+      "activated": "",
       "deactivated": ""
     },
-    "on-click-right": "swaylock"
+    "on-click-right": "hyprlock"
   }
 }

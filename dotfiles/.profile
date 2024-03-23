@@ -74,7 +74,11 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 
 alias notes='$EDITOR ~/notes.txt'
 
+# -----------------------------------------------------
+# MINECRAFT
+# -----------------------------------------------------
 
+alias MC='java -jar ~/.minecraft/TLauncher*.jar'
 
 # -----------------------------------------------------
 # SYSTEM
