@@ -40,7 +40,7 @@ packages=(
     "clang"
     "neofetch"
     "baobab"
-    "zathura-pdf-poppler-git"
+    "zathura-pdf-poppler"
     "zsh"
     "gvfs-mtp"
     "github-cli"
