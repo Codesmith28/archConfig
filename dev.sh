@@ -1,14 +1,18 @@
 cat <<"EOF"
-     _            _____            
+     _            _____
   __| | _____   _| ____|_ ____   __
  / _` |/ _ \ \ / /  _| | '_ \ \ / /
-| (_| |  __/\ V /| |___| | | \ V / 
- \__,_|\___| \_/ |_____|_| |_|\_/  
-                                   
+| (_| |  __/\ V /| |___| | | \ V /
+ \__,_|\___| \_/ |_____|_| |_|\_/
+
 
 EOF
 
 #!/bin/bash
+
+# Plugins for zsh: zsh-autosuggestions and zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 
 # Install Git and configure authentication
 read -p "Enter your Git username: " git_username
@@ -29,9 +33,6 @@ source ~/.bashrc
 nvm install --lts
 
 # Install npm, pnpm, and Yarn
-npm install -g pnpm yarn
-
-# Install Bun
-npm install -g bun
+sudo npm install -g yarn pnpm typescript ts-node bun
 
 echo "Development environment setup complete!"
