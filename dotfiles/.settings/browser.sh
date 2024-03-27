@@ -1,1 +1,1 @@
-brave
+google-chrome-stable
