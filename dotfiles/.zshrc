@@ -84,9 +84,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git nvm zsh-autosuggestions)
 
-source $ZSH/oh-my-zsh.sh
+source $ZSH/oh-my-zsh.sh 
 
 # User configuration
 
@@ -115,7 +115,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# :# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Import all aliases from .profile
@@ -128,18 +128,24 @@ source $ZSH/oh-my-zsh.sh
 
 alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
 
-# nvm:
-export NVM_DIR="/home/codesmith28/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# # nvm:
+# export NVM_DIR="/home/codesmith28/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
-# pnpm
+
+# # pnpm
 export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
 eval "$(gh copilot alias -- zsh)"
+
+source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
