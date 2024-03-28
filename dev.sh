@@ -24,6 +24,7 @@ git config --global user.email "$git_email"
 
 # Install GitHub CLI
 sudo pacman -Syu --noconfirm github-cli
+sudo gh extension install github/copilot
 
 # Install Node Version Manager (NVM)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
