@@ -84,7 +84,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git nvm zsh-autosuggestions)
+plugins=(git zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh 
 
@@ -128,18 +128,28 @@ source $ZSH/oh-my-zsh.sh
 
 alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
 
-# # nvm:
-# export NVM_DIR="/home/codesmith28/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+
+export NVM_DIR="$HOME/.nvm"
+
+# This lazy loads nvm
+nvm() {
+  unset -f nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
+  nvm $@
+}
+
+# This loads nvm bash_completion
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 
 # # pnpm
-export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
+# export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
+# case ":$PATH:" in
+#   *":$PNPM_HOME:"*) ;;
+#   *) export PATH="$PNPM_HOME:$PATH" ;;
+# esac
+#
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

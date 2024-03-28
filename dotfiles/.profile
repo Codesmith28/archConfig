@@ -74,6 +74,9 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 
 alias notes='$EDITOR ~/notes.txt'
 
+# make an alias to run cpp code using clang and make the executable to be run
+alias runcpp='clang++ run.cpp -o run && ./run'
+
 # -----------------------------------------------------
 # MINECRAFT
 # -----------------------------------------------------
