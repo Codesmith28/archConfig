@@ -1,7 +1,7 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = { theme = 'doomchad', transparency = true }
+M.ui = { theme = 'monekai', transparency = true }
 
 M.plugins = "custom.plugins"
 
