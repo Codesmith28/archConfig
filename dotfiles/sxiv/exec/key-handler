@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+# ^X-^R: prompt for new image name (needs `dmenu`) and `mv`
+# ^X-^C: copy the image path to X clipboard (needs `xclip`)
+
+# Example zenity prompt:
+#   name="$(zenity --entry --display=:0.0 --text "rename $file to")" 2> /dev/null
+
+while read -r file
+do
+    case "$1" in
+        "C-r")
+                name="$(dmenu -p "rename $file to: ")" 2> /dev/null
+                if [ -n "$name" ]; then
+                    mv "$file" "$name"
+                fi
+                ;;
+        "C-c")
+                printf "%s" "$file" | xclip -selection clipboard ;;
+        *)
+                printf "Sorry, I don't understand"
+                exit 1
+                ;;
+    esac
+done

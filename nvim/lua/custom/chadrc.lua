@@ -1,7 +1,7 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = { theme = 'solarized_dark', transparency = true }
+M.ui = { theme = 'monekai', transparency = true }
 
 M.plugins = "custom.plugins"
 
@@ -13,5 +13,6 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.shell = "zsh"
+vim.g.copilot_assume_mapped = true
 
 return M
