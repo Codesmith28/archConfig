@@ -162,8 +162,6 @@ nvm() {
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 
-
-
 # This resolves the path to the default node version
 DEFAULT_NODE_VER_PATH="$(find $NVM_DIR/versions/node -maxdepth 1 -name "v${DEFAULT_NODE_VER#v}*" | sort -rV | head -n 1)"
 
@@ -171,10 +169,6 @@ DEFAULT_NODE_VER_PATH="$(find $NVM_DIR/versions/node -maxdepth 1 -name "v${DEFAU
 if [ ! -z "$DEFAULT_NODE_VER_PATH" ]; then
   export PATH="$DEFAULT_NODE_VER_PATH/bin:$PATH"
 fi
-
-
-
-
 
 
 
