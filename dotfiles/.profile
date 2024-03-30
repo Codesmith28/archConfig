@@ -20,6 +20,7 @@ export EDITOR=nvim
 # -----------------------------------------------------
 
 alias c='clear'
+alias e='exit'
 alias nf='neofetch'
 alias pf='pfetch'
 alias ls='eza -a --icons'

@@ -24,6 +24,7 @@ export EDITOR=nvim
 # -----------------------------------------------------
 
 alias c='clear'
+alias e='exit'
 alias nf='neofetch'
 alias pf='pfetch'
 alias ls='eza -a --icons'
@@ -94,7 +95,7 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 # -----------------------------------------------------
 
 alias notes='$EDITOR ~/notes.txt'
-
+alias cpp='cd ~/Projects/cse205-ds/ && code . && exit'
 
 # -----------------------------------------------------
 # SYSTEM
