@@ -55,6 +55,8 @@ packages=(
     "mpv"
     "bsdtar"
     "ttf-cascadia-code-nerd"
+    "noto-fonts"
+    "noto-fonts-cjk"
 )
 
 # Install packages using yay
