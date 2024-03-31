@@ -66,5 +66,10 @@ return {
     -- You can also have it load at immediately at
     -- startup by commenting above and uncommenting below:
     lazy = false,
+    opts = {
+      suggestion = {
+        auto_trigger = true,
+      },
+    },
   },
 }
