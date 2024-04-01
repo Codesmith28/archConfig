@@ -5,7 +5,7 @@
 local M = {}
 
 M.ui = {
-  theme = "bearded-arc",
+  theme = "everblush",
   transparency = true,
   hl_override = {
     Comment = { italic = true },
@@ -15,15 +15,28 @@ M.ui = {
   cheatsheet = { theme = "grid" }, -- simple/grid
 
   lsp = { signature = true },
+
+  term = {
+    hl = "Normal:term,WinSeparator:WinSeparator",
+    sizes = { sp = 0.3, vsp = 0.4 },
+    float = {
+      relative = "editor",
+      row = 0.3,
+      col = 0.25,
+      width = 0.5,
+      height = 0.4,
+      border = "single",
+    },
+  },
+
+  nvim_tree_ignore = { ".git", "node_modules", ".cache" }, -- add or remove as needed
+  -- other options...
 }
 
 -- relative line numbering:
 vim.opt.relativenumber = true
 
--- Set tabs to 4 spaces
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
+-- Set tabs to 2 spaces
 vim.opt.shell = "zsh"
 vim.g.copilot_assume_mapped = true
 
