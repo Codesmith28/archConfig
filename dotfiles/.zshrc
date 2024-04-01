@@ -128,8 +128,6 @@ source $ZSH/oh-my-zsh.sh
 
 alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
 
-
-
 export NVM_DIR="$HOME/.nvm"
 
 # This lazy loads nvm
@@ -141,6 +139,15 @@ nvm() {
 
 # This loads nvm bash_completion
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+
+# This resolves the path to the default node version
+DEFAULT_NODE_VER_PATH="$(find $NVM_DIR/versions/node -maxdepth 1 -name "v${DEFAULT_NODE_VER#v}*" | sort -rV | head -n 1)"
+
+# This adds the default node version path to PATH
+if [ ! -z "$DEFAULT_NODE_VER_PATH" ]; then
+  export PATH="$DEFAULT_NODE_VER_PATH/bin:$PATH"
+fi
 
 
 # # pnpm
