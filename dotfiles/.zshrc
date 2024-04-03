@@ -124,11 +124,8 @@ source $ZSH/oh-my-zsh.sh
 # -----------------------------------------
 #  development special:
 # -----------------------------------------
-
-
 alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
 
-export NVM_DIR="$HOME/.nvm"
 
 # This lazy loads nvm
 nvm() {
@@ -150,6 +147,13 @@ if [ ! -z "$DEFAULT_NODE_VER_PATH" ]; then
 fi
 
 
+
+# add to ~/.bashrc
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+
 # # pnpm
 # export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
 # case ":$PATH:" in
@@ -158,10 +162,9 @@ fi
 # esac
 #
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
 eval "$(gh copilot alias -- zsh)"
 
 source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# bun completions
+[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
