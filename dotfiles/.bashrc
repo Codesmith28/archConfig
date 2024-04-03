@@ -256,3 +256,12 @@ nnn-preview ()
 
     rm -f "$NNN_FIFO"
 }
+
+# make alases for tmux:
+alias tmux='tmux -2'
+alias ta='tmux attach -t'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session -t'
+alias tn='tmux new-session -s'
+alias ts='tmux switch -t'
+alias tks='tmux kill-session -a'
