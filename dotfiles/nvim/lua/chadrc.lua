@@ -5,7 +5,7 @@
 local M = {}
 
 M.ui = {
-  theme = "monekai",
+  theme = "everblush",
   transparency = true,
   hl_override = {
     Comment = { italic = true },
@@ -29,15 +29,19 @@ M.ui = {
     },
   },
 
-  nvim_tree_ignore = { ".git", "node_modules", ".cache" }, -- add or remove as needed
-  -- other options...
+  -- show all thfiles and dont exclude those in .gitignore in NvimTree
+  show_all_buffers = true,
 }
-
 -- relative line numbering:
 vim.opt.relativenumber = true
 
--- Set tabs to 2 spaces
 vim.opt.shell = "zsh"
 vim.g.copilot_assume_mapped = true
 
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+
+vim.opt.wrap = true
 return M
