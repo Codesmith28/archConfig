@@ -84,8 +84,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions)
-
+plugins=(git nvm zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh 
 
 # User configuration
@@ -151,6 +150,8 @@ fi
 # add to ~/.bashrc
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+# bun completions
+[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
 
 
 
@@ -165,6 +166,3 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 eval "$(gh copilot alias -- zsh)"
 
 source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# bun completions
-[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
