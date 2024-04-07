@@ -176,3 +176,7 @@ nnn-preview ()
 
     rm -f "$NNN_FIFO"
 }
+
+vsc() {
+    code "$1" && exit
+}
