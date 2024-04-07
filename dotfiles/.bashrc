@@ -97,6 +97,7 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 alias notes='$EDITOR ~/notes.txt'
 alias cpp='cd ~/Projects/cse205-ds/ && code . && exit'
 
+
 # -----------------------------------------------------
 # SYSTEM
 # -----------------------------------------------------
@@ -265,3 +266,8 @@ alias tk='tmux kill-session -t'
 alias tn='tmux new-session -s'
 alias ts='tmux switch -t'
 alias tks='tmux kill-session -a'
+
+vsc() {
+    code "$1" && exit
+}
+
