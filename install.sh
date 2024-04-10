@@ -57,6 +57,7 @@ packages=(
     "ttf-cascadia-code-nerd"
     "noto-fonts"
     "noto-fonts-cjk"
+    "eog"
 )
 
 # Install packages using yay
