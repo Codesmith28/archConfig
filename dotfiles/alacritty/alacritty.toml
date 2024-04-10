@@ -1,12 +1,12 @@
 [font]
-size = 12.5
+size = 14
 
 [font.normal]
 family = "FiraCode Nerd Font Propo"
 style = "Retina"
 
 [window]
-opacity = 0.7
+opacity = 0.75
 
 [window.padding]
 x = 15
