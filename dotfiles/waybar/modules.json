@@ -256,6 +256,11 @@
     "path": "/",
     "on-click": "alacritty -e btop"
   },
+
+  "hyprland/language": {
+    "format": "/ K {short}"
+  },
+
   // Group Hardware
   "group/hardware": {
     "orientation": "inherit",
