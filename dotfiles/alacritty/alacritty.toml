@@ -6,7 +6,7 @@ family = "FiraCode Nerd Font Propo"
 style = "Retina"
 
 [window]
-opacity = 0.75
+opacity = 0.65
 
 [window.padding]
 x = 15

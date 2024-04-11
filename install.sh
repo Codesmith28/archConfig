@@ -58,6 +58,7 @@ packages=(
     "noto-fonts"
     "noto-fonts-cjk"
     "eog"
+    "nautlius"
 )
 
 # Install packages using yay
