@@ -30,7 +30,7 @@ packages=(
     "ueberzugpp"
     "discord"
     "telegram-desktop"
-    "libreoffice-still"
+    "libreoffice-fresh"
     "btop"
     "neovim"
     "obsidian"
