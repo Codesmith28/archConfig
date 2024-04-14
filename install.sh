@@ -59,6 +59,7 @@ packages=(
     "noto-fonts-cjk"
     "eog"
     "nautlius"
+    "notion-app-nativefier"
 )
 
 # Install packages using yay
