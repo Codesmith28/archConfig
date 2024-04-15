@@ -5,7 +5,7 @@
 // |_|  |_|\___/ \__,_|\__,_|_|\___||___/
 //
 //
-// by Stephan Raabe (2023) Modified by Codesmith28
+// by Stephan Raabe (2023)
 // -----------------------------------------------------
 //
 {
@@ -226,7 +226,7 @@
     // "timezone": "America/New_York",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     // START CLOCK FORMAT
-    "format-alt": "{:%Y-%m-%d}"
+    "format-alt": "{:%d-%m-%Y}"
     // END CLOCK FORMAT
   },
 
@@ -256,6 +256,11 @@
     "path": "/",
     "on-click": "alacritty -e btop"
   },
+
+  "hyprland/language": {
+    "format": "/ K {short}"
+  },
+
   // Group Hardware
   "group/hardware": {
     "orientation": "inherit",
