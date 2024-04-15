@@ -11,7 +11,9 @@
 
 DIR="$HOME/Pictures/screenshots/"
 
+# get details of what window is open and append it in the screenshot name
 NAME="screenshot_$(date +%Y-%m-%d_%H%M%S).png"
+
 
 grim -g "$(slurp)" "$DIR$NAME"
 xclip -selection clipboard -t image/png -i "$DIR$NAME"
