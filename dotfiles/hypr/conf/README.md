@@ -18,7 +18,7 @@ You can find several variation within the three settings pages.
 - Decorations
 - Environments
 
-Select the variation that you want to use from the corresponding drop down menu.
+Select the variation that you want to use fdrom the corresponding drop down menu.
 
 Please don't edit the shipped configuration variations. These will be overwritten with every update of the ML4W dotfiles. <b>Create your own custom variation instead.</b>
 
