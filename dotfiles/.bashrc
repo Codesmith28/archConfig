@@ -271,3 +271,4 @@ vsc() {
     code "$1" && exit
 }
 
+alias thunar='setsid thunar'
