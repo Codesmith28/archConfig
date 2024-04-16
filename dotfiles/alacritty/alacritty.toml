@@ -6,7 +6,7 @@ family = "FiraCode Nerd Font Propo"
 style = "Retina"
 
 [window]
-opacity = 0.6
+opacity = 0.7
 
 [window.padding]
 x = 15
@@ -15,6 +15,8 @@ y = 15
 [window.dimensions]
 columns = 80 
 lines = 30
+
+# 44  
 
 [cursor.style]
 shape = "Underline"
