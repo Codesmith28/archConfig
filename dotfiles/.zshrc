@@ -164,5 +164,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 #
 
 eval "$(gh copilot alias -- zsh)"
+eval "$(fzf --zsh)"
 
 source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+

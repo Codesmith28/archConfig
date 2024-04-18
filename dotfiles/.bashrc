@@ -272,3 +272,4 @@ vsc() {
 }
 
 alias thunar='setsid thunar'
+eval "$(fzf --bash)"

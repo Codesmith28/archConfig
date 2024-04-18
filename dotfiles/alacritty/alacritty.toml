@@ -16,7 +16,6 @@ y = 15
 columns = 80 
 lines = 30
 
-# 44  
 
 [cursor.style]
 shape = "Underline"
