@@ -5,7 +5,7 @@
 local M = {}
 
 M.ui = {
-  theme = "bearded-arc",
+  theme = "gruvbox",
   transparency = true,
   hl_override = {
     Comment = { italic = true },
@@ -29,9 +29,11 @@ M.ui = {
     },
   },
 
-  -- show all thfiles and dont exclude those in .gitignore in NvimTree
+-- show all thfiles and dont exclude those in .gitignore in NvimTree
   show_all_buffers = true,
 }
+
+
 -- relative line numbering:
 vim.opt.relativenumber = true
 
@@ -43,5 +45,16 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 
+vim.opt.title = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+
+vim.opt.expandtab = true
+vim.opt.scrolloff = 8
+vim.opt.inccommand = "split"
 vim.opt.wrap = true
+vim.opt.smarttab = true
+vim.opt.breakindent = true
+vim.opt.shiftwidth = 2
+
 return M
