@@ -60,6 +60,8 @@ packages=(
     "eog"
     "nautlius"
     "notion-app-nativefier"
+    "kitty"
+    "fzf"
 )
 
 # Install packages using yay
