@@ -168,4 +168,5 @@ eval "$(fzf --zsh)"
 
 source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-
+# To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
+[[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles/.p10k.zsh
