@@ -72,17 +72,17 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 # -----------------------------------------------------
 # EDIT NOTES
 # -----------------------------------------------------
-
 alias notes='$EDITOR ~/notes.txt'
-
-# make an alias to run cpp code using clang and make the executable to be run
 alias runcpp='clang++ run.cpp -o run && ./run'
+alias cpp='cd ~/Projects/cse205-ds/ && code . && exit'
+
 
 # -----------------------------------------------------
 # MINECRAFT
 # -----------------------------------------------------
 
 alias MC='java -jar ~/.minecraft/TLauncher*.jar'
+
 
 # -----------------------------------------------------
 # SYSTEM
@@ -91,12 +91,21 @@ alias MC='java -jar ~/.minecraft/TLauncher*.jar'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias setkb='setxkbmap us;echo "Keyboard set back to de."'
 alias mntd='command -v ntfs-3g >/dev/null 2>&1 || { echo >&2 "ntfs-3g is not installed. Installing..."; yay -S ntfs-3g; }; [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD; sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"'
+alias D='cd /home/run/media/localdiskD'
+
 
 # -----------------------------------------------------
 # PFETCH if on wm
 # -----------------------------------------------------
 
+
 pfetch
+
+
+# -----------------------------------------------------
+# NNN
+# -----------------------------------------------------
+
 
 # NNN plugins and colors:
 export NNN_PLUG='f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;i:imgview'
@@ -104,6 +113,7 @@ export NNN_FCOLORS='FFFFFF310000000000000000'
 export NNN_TERMINAL='alacritty --title preview-tui'
 export NNN_FIFO="/tmp/nnn.fifo"
 export PAGER="less -R"
+
 
 #cd on quit NNN:
 n ()
@@ -177,8 +187,34 @@ nnn-preview ()
     rm -f "$NNN_FIFO"
 }
 
+
+# -----------------------------------------------------
+# TMUX
+# -----------------------------------------------------
+
+
+# make alases for tmux:
+alias tmux='tmux -2'
+alias ta='tmux attach -t'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session -t'
+alias tn='tmux new-session -s'
+alias ts='tmux switch -t'
+alias tks='tmux kill-session -a'
+
+
+# -----------------------------------------------------
+# Files and code
+# -----------------------------------------------------
+
+
 vsc() {
     code "$1" && exit
 }
 
 alias thunar='setsid thunar'
+alias nautilus='setsid nautilus'
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------

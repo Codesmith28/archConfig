@@ -84,7 +84,8 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git nvm zsh-autosuggestions)
+
+plugins=(git zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh 
 
 # User configuration
@@ -115,16 +116,45 @@ source $ZSH/oh-my-zsh.sh
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # :# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
+[[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles/.p10k.zsh
+
+
+# -----------------------------------------
+#  DEFAULT ENDS HERE
+# -----------------------------------------
+#  EDIT CONFIG FILES
+# -----------------------------------------
+
 
 # Import all aliases from .profile
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
+
 # -----------------------------------------
-#  development special:
+# FIX PYTHON ON ARCH LINUX
 # -----------------------------------------
 alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
 
+
+# -----------------------------------------------------
+# Development extensions
+# -----------------------------------------------------
+
+# eval "$(gh copilot alias -- zsh)"
+eval "$(fzf --zsh)"
+
+# # pnpm
+# export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
+# case ":$PATH:" in
+#   *":$PNPM_HOME:"*) ;;
+#   *) export PATH="$PNPM_HOME:$PATH" ;;
+# esac
+# # pnpm end
+#
+
+export NVM_DIR="$HOME/.nvm"
 
 # This lazy loads nvm
 nvm() {
@@ -146,27 +176,19 @@ if [ ! -z "$DEFAULT_NODE_VER_PATH" ]; then
 fi
 
 
-
 # add to ~/.bashrc
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-# bun completions
-[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
 
 
 
-# # pnpm
-# export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
-# case ":$PATH:" in
-#   *":$PNPM_HOME:"*) ;;
-#   *) export PATH="$PNPM_HOME:$PATH" ;;
-# esac
-#
+# -----------------------------------------------------
+# zsh syntax highlighting
+# -----------------------------------------------------
 
-eval "$(gh copilot alias -- zsh)"
-eval "$(fzf --zsh)"
 
 source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
-[[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles/.p10k.zsh
+
+# -----------------------------------------------------
+# -----------------------------------------------------
