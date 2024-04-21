@@ -24,5 +24,5 @@ cd "$base_dir"
 cd "$base_dir"
 git clone https://github.com/vinceliuice/Orchis-theme.git
 cd Orchis-theme
-./install.sh --tweaks black -t red
+./install.sh --tweaks black -t all
 cd "$base_dir"
