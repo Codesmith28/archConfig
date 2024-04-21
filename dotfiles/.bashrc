@@ -99,36 +99,55 @@ alias cpp='cd ~/Projects/cse205-ds/ && code . && exit'
 
 
 # -----------------------------------------------------
+# MINECRAFT
+# -----------------------------------------------------
+
+
+alias MC='java -jar ~/.minecraft/TLauncher*.jar'
+
+
+# -----------------------------------------------------
 # SYSTEM
 # -----------------------------------------------------
 
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias setkb='setxkbmap us;echo "Keyboard set back to us."'
 alias mntd='command -v ntfs-3g >/dev/null 2>&1 || { echo >&2 "ntfs-3g is not installed. Installing..."; yay -S ntfs-3g; }; [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD; sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"'
+alias D='cd /home/run/media/localdiskD'
+
 
 # -----------------------------------------------------
 # SCREEN RESOLUTINS
 # -----------------------------------------------------
 
+
 # Qtile
 alias res1='xrandr --output DisplayPort-0 --mode 2560x1440 --rate 120'
 alias res2='xrandr --output DisplayPort-0 --mode 1920x1080 --rate 120'
-
 export PATH="/usr/lib/ccache/bin/:$PATH"
+
 
 # -----------------------------------------------------
 # START STARSHIP
 # -----------------------------------------------------
+
+
 eval "$(starship init bash)"
+
 
 # -----------------------------------------------------
 # PYWAL
 # -----------------------------------------------------
+
+
 cat ~/.cache/wal/sequences
+
 
 # -----------------------------------------------------
 # PFETCH if on wm
 # -----------------------------------------------------
+
+
 echo ""
 if [[ $(tty) == *"pts"* ]]; then
     pfetch
@@ -140,6 +159,12 @@ else
         echo "Start Hyprland with command Hyprland"
     fi
 fi
+
+
+# -----------------------------------------------------
+# Development
+# -----------------------------------------------------
+
 
 # # pnpm
 # export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
@@ -172,11 +197,14 @@ if [ ! -z "$DEFAULT_NODE_VER_PATH" ]; then
 fi
 
 
-
 # add to ~/.bashrc
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+
+# -----------------------------------------------------
+# NNN
+# -----------------------------------------------------
 
 
 # NNN plugins and colors:
@@ -258,6 +286,12 @@ nnn-preview ()
     rm -f "$NNN_FIFO"
 }
 
+
+# -----------------------------------------------------
+# TMUX
+# -----------------------------------------------------
+
+
 # make alases for tmux:
 alias tmux='tmux -2'
 alias ta='tmux attach -t'
@@ -267,9 +301,19 @@ alias tn='tmux new-session -s'
 alias ts='tmux switch -t'
 alias tks='tmux kill-session -a'
 
+
+# -----------------------------------------------------
+# Files and code
+# -----------------------------------------------------
+
 vsc() {
     code "$1" && exit
 }
 
 alias thunar='setsid thunar'
+alias nautilus='setsid nautilus'
 eval "$(fzf --bash)"
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
