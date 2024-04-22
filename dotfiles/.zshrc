@@ -187,8 +187,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # -----------------------------------------------------
 
 
-source /home/codesmith28/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # -----------------------------------------------------
 # -----------------------------------------------------
