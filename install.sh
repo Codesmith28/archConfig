@@ -62,6 +62,7 @@ packages=(
     "notion-app-nativefier"
     "kitty"
     "fzf"
+    "tmux"
 )
 
 # Install packages using yay
