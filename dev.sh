@@ -10,9 +10,15 @@ EOF
 
 #!/bin/bash
 
+# remove any existing zsh configuration
+rm -rf ~/.oh-my-zsh
+#Install Oh My Zsh and p10k theme
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
 # Plugins for zsh: zsh-autosuggestions and zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/zsh-syntax-highlighting
 
 # Install Git and configure authentication
 read -p "Enter your Git username: " git_username
