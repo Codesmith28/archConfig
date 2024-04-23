@@ -74,3 +74,25 @@ GRUB_DISABLE_OS_PROBER=false
 ```
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+###  How to revive arch linux after any windows updates?
+1. Boot into the arch linux live usb.
+2. Connect to the internet and update all the packages as follows:
+```
+pacman -Sy
+```
+
+3. Mount the root partition of the arch linux to /mnt and the boot partition to /mnt/boot like: 
+
+```
+mount /dev/nvme0n1p5 /mnt
+```
+```
+mount /dev/nvme0n1p6 /mnt/boot
+```
+
+```
+arch-chroot /mnt
+```
+
+4. Run the grub-install and grub-mkconfig commands as mentioned above.
