@@ -34,7 +34,7 @@
     "tooltip-format": "{title}",
     "on-click": "activate",
     "on-click-middle": "close",
-    "ignore-list": ["Alacritty"],
+    "ignore-list": ["kitty"],
     "app_ids-mapping": {
       "firefoxdeveloperedition": "firefox-developer-edition"
     },
@@ -233,20 +233,20 @@
   // System2
   "custom/system": {
     "format": " ",
-    "on-click": "alacritty -e btop",
+    "on-click": "kitty -e btop",
     "tooltip": false
   },
 
   // CPU
   "cpu": {
     "format": "/ C {usage}% ",
-    "on-click": "alacritty -e btop"
+    "on-click": "kitty -e btop"
   },
 
   // Memory
   "memory": {
     "format": "/ M {}% ",
-    "on-click": "alacritty -e btop"
+    "on-click": "kitty -e btop"
   },
 
   // Harddisc space used
@@ -254,7 +254,7 @@
     "interval": 30,
     "format": "D {percentage_used}% ",
     "path": "/",
-    "on-click": "alacritty -e btop"
+    "on-click": "kitty -e btop"
   },
 
   "hyprland/language": {

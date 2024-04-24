@@ -56,7 +56,7 @@
         // START NETWORK TOOGLE
         "network",
         // END NETWORK TOOGLE
-        "group/hardware",
+        // "group/hardware",
         "custom/cliphist",
         // START IDLE TOOGLE
 //"idle_inhibitor",
