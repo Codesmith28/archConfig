@@ -73,7 +73,10 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 # EDIT NOTES
 # -----------------------------------------------------
 alias notes='$EDITOR ~/notes.txt'
-alias runcpp='clang++ run.cpp -o run && ./run'
+# alias runcpp='clang++ run.cpp -o run && ./run'
+runcpp() {
+    clang++ "$1" -o run.exe && ./run.exe
+}
 alias cpp='cd ~/Projects/cse205-ds/ && code . && exit'
 
 
