@@ -17,7 +17,7 @@
     },
     {
         "key": "rofi_bordersize",
-        "value": 0
+        "value": 1
     },
     {
         "key": "waybar_toggle",
