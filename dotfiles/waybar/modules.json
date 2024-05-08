@@ -34,7 +34,7 @@
     "tooltip-format": "{title}",
     "on-click": "activate",
     "on-click-middle": "close",
-    "ignore-list": ["kitty"],
+    "ignore-list": ["Alacritty"],
     "app_ids-mapping": {
       "firefoxdeveloperedition": "firefox-developer-edition"
     },
@@ -79,7 +79,7 @@
 
   // Cliphist
   "custom/cliphist": {
-    "format": "      ",
+    "format": "       ",
     "on-click": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh",
     "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
     "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
@@ -94,7 +94,7 @@
     "return-type": "json",
     "exec": "~/dotfiles/scripts/updates.sh",
     "restart-interval": 60,
-    "on-click": "kitty --class dotfiles-floating -e ~/dotfiles/scripts/installupdates.sh",
+    "on-click": "alacritty --class dotfiles-floating -e ~/dotfiles/scripts/installupdates.sh",
     "on-click-right": "~/dotfiles/.settings/software.sh",
     "tooltip": false
   },
@@ -233,20 +233,20 @@
   // System2
   "custom/system": {
     "format": " ",
-    "on-click": "kitty -e btop",
+    "on-click": "alacritty -e btop",
     "tooltip": false
   },
 
   // CPU
   "cpu": {
     "format": "/ C {usage}% ",
-    "on-click": "kitty -e btop"
+    "on-click": "alacritty -e btop"
   },
 
   // Memory
   "memory": {
     "format": "/ M {}% ",
-    "on-click": "kitty -e btop"
+    "on-click": "alacritty -e btop"
   },
 
   // Harddisc space used
@@ -254,7 +254,7 @@
     "interval": 30,
     "format": "D {percentage_used}% ",
     "path": "/",
-    "on-click": "kitty -e btop"
+    "on-click": "alacritty -e btop"
   },
 
   "hyprland/language": {
