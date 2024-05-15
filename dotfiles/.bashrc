@@ -33,7 +33,7 @@ alias lt='eza -a --tree --level=2 --icons'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias ts='~/dotfiles/scripts/snapshot.sh'
-alias matrix='cmatrix'
+alias matrix='cmatrix -u 2'
 alias wifi='nmtui'
 alias od='~/private/onedrive.sh'
 alias rw='~/dotfiles/waybar/reload.sh'
@@ -140,7 +140,7 @@ eval "$(starship init bash)"
 # -----------------------------------------------------
 
 
-cat ~/.cache/wal/sequences
+# cat ~/.cache/wal/sequences
 
 
 # -----------------------------------------------------
