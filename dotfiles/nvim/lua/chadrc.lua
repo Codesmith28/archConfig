@@ -5,7 +5,7 @@
 local M = {}
 
 M.ui = {
-  theme = "bearded-arc",
+  theme = "github_dark",
   transparency = true,
   hl_override = {
     Comment = { italic = true },
