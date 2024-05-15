@@ -217,7 +217,7 @@
     // "timezone": "America/New_York",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     // START CLOCK FORMAT
-    "format-alt": "{:%Y-%m-%d}"
+    "format-alt": "{:%d-%m-%Y}"
     // END CLOCK FORMAT
   },
 
@@ -367,5 +367,13 @@
       "deactivated": ""
     },
     "on-click-right": "hyprlock"
+  },
+
+  "custom/cava": {
+    "exec": "sh ~/.config/hypr/scripts/cava.sh",
+    "format": "{}",
+    "tooltip": false,
+    "layer": "below",
+    "output": "all"
   }
 }
