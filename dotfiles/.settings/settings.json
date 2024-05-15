@@ -24,6 +24,10 @@
         "value": true
     },
     {
+        "key": "waybar_taskbar",
+        "value": true
+    },
+    {
         "key": "waybar_network",
         "value": true
     },

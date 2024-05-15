@@ -135,7 +135,7 @@ source $ZSH/oh-my-zsh.sh
 # -----------------------------------------
 # FIX PYTHON ON ARCH LINUX
 # -----------------------------------------
-alias fixpy='sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED'
+alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
 
 
 # -----------------------------------------------------

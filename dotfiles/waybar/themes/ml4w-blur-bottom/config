@@ -28,7 +28,7 @@
         "group/settings",
         //"wlr/taskbar",
         "group/quicklinks",
-        "hyprland/window",
+        //"hyprland/window",
         "custom/empty"
     ],
 
@@ -47,7 +47,7 @@
         "group/hardware",
         "group/settings",
         "custom/cliphist",
-        "idle_inhibitor",
+        //"idle_inhibitor",
         "tray",
         "custom/exit",
         "custom/ml4w-welcome",
