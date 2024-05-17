@@ -29,7 +29,7 @@ alias lt='eza -a --tree --level=2 --icons'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias ts='~/dotfiles/scripts/snapshot.sh'
-alias matrix='cmatrix'
+alias matrix='cmatrix -u 2'
 alias wifi='nmtui'
 alias od='~/private/onedrive.sh'
 alias rw='~/dotfiles/waybar/reload.sh'
@@ -37,6 +37,7 @@ alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/dotfiles"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
+alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
 
 # -----------------------------------------------------
 # GIT
@@ -218,6 +219,16 @@ vsc() {
 alias thunar='setsid thunar'
 alias nautilus='setsid nautilus'
 
+
+# -----------------------------------------------------
+# App development
+# -----------------------------------------------------
+
+# export ANDROID_HOME=/opt/android-sdk
+# export PATH=$PATH:$ANDROID_HOME/emulator
+# export PATH=$PATH:$ANDROID_HOME/tools
+# export PATH=$PATH:$ANDROID_HOME/tools/bin
+# export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # -----------------------------------------------------
 # -----------------------------------------------------
