@@ -1,12 +1,7 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = { theme = 'monekai', transparency = true,
-	hl_override = {
-		Comment = { italic = true },
-		["@comment"] = { italic = true },
-	},
-}
+M.ui = { theme = 'bearded-arc', transparency = true }
 
 M.plugins = "custom.plugins"
 

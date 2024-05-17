@@ -63,6 +63,7 @@ packages=(
     "kitty"
     "fzf"
     "tmux"
+    "distrobox"
 )
 
 # Install packages using yay

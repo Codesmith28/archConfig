@@ -23,8 +23,8 @@
     // Modules Left
     "modules-left": [
         "custom/appmenuicon",
-        "hyprland/workspaces",
-        "custom/cava"
+        "hyprland/workspaces"
+        // "custom/cava"
         // "wlr/taskbar"
         // "group/links",
         // "group/settings",
@@ -41,7 +41,7 @@
     "modules-right": [
         "custom/updates",
         "pulseaudio",
-        "bluetooth",
+        // "bluetooth",
         "battery", 
         "network",
         //"group/hardware",
