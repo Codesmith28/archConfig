@@ -191,3 +191,6 @@ source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # -----------------------------------------------------
 # -----------------------------------------------------
+
+# bun completions
+[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
