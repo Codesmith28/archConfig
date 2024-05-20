@@ -17,7 +17,7 @@ PS1='[\u@\h \W]\$ '
 export EDITOR=nvim
 
 # For the profile:
-# source ~/.profile
+source ~/.profile
 
 # -----------------------------------------------------
 # ALIASES
@@ -42,7 +42,7 @@ alias dot="cd ~/dotfiles"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 alias ml4w-settings='~/dotfiles/apps/ML4W_Dotfiles_Settings-x86_64.AppImage'
-alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
+alias battery=' upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
 
 # -----------------------------------------------------
 # Window Managers
@@ -149,18 +149,18 @@ eval "$(starship init bash)"
 # -----------------------------------------------------
 
 
-echo ""
-if [[ $(tty) == *"pts"* ]]; then
-    pfetch
-else
-    if [ -f /bin/qtile ]; then
-        echo "Start Qtile X11 with command Qtile"
-    fi
-    if [ -f /bin/hyprctl ]; then
-        echo "Start Hyprland with command Hyprland"
-    fi
-fi
-
+# echo ""
+# if [[ $(tty) == *"pts"* ]]; then
+#     pfetch
+# else
+#     if [ -f /bin/qtile ]; then
+#         echo "Start Qtile X11 with command Qtile"
+#     fi
+#     if [ -f /bin/hyprctl ]; then
+#         echo "Start Hyprland with command Hyprland"
+#     fi
+# fi
+#
 
 # -----------------------------------------------------
 # Development

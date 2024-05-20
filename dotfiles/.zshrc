@@ -145,6 +145,7 @@ alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
 # eval "$(gh copilot alias -- zsh)"
 eval "$(fzf --zsh)"
 
+
 # # pnpm
 # export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
 # case ":$PATH:" in
