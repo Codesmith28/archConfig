@@ -21,6 +21,7 @@ packages=(
     "bibata-cursor-theme"
     "trizen"
     "pacseek"
+    
     "visual-studio-code-bin"
     "nnn"
     "brave-bin"
