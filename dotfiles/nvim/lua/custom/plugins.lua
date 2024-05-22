@@ -49,6 +49,8 @@ local plugins = {
     },
     {
         "jose-elias-alvarez/null-ls.nvim",
+        -- support all languages:
+        ft = "all",
         event = "VeryLazy",
         opts = function()
             return require "custom.configs.null-ls"
@@ -84,6 +86,11 @@ local plugins = {
                 "yamllint",
                 -- for lua:
                 "lua-language-server",
+                -- for go:
+                "gopls",
+                "goimports-reviser",
+                "golines",
+                "gofumpt",
             }
         }
     },
