@@ -9,7 +9,7 @@
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # If you come from bash you might have to change your $PATH.
@@ -85,8 +85,8 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-plugins=(git zsh-autosuggestions)
-source $ZSH/oh-my-zsh.sh 
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
@@ -118,33 +118,42 @@ source $ZSH/oh-my-zsh.sh
 # :# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
-[[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles/.p10k.zsh
+if [[ -f ~/dotfiles/.p10k.zsh ]]; then
+    source ~/dotfiles/.p10k.zsh
+else
+    source ~/.p10k.zsh
+fi
 
-
-# -----------------------------------------
+# -----------------------------------------------------
 #  DEFAULT ENDS HERE
-# -----------------------------------------
-#  EDIT CONFIG FILES
-# -----------------------------------------
+# -----------------------------------------------------
 
+# -----------------------------------------------------
+#  EDIT CONFIG FILES
+# -----------------------------------------------------
 
 # Import all aliases from .profile
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
-
-# -----------------------------------------
-# FIX PYTHON ON ARCH LINUX
-# -----------------------------------------
-alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
-
-
 # -----------------------------------------------------
-# Development extensions
+# Development
 # -----------------------------------------------------
 
+# gh copilot alias
 # eval "$(gh copilot alias -- zsh)"
+
+# fzf suppoprt
 eval "$(fzf --zsh)"
 
+# -----------------------------------------------------
+# FIX PYTHON ON ARCH LINUX
+# -----------------------------------------------------
+
+alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
+
+# -----------------------------------------------------
+# PNPM
+# -----------------------------------------------------
 
 # # pnpm
 # export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
@@ -155,13 +164,17 @@ eval "$(fzf --zsh)"
 # # pnpm end
 #
 
+# -----------------------------------------------------
+# NVM and NODE
+# -----------------------------------------------------
+
 export NVM_DIR="$HOME/.nvm"
 
 # This lazy loads nvm
 nvm() {
-  unset -f nvm
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
-  nvm $@
+    unset -f nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
+    nvm $@
 }
 
 # This loads nvm bash_completion
@@ -173,25 +186,17 @@ DEFAULT_NODE_VER_PATH="$(find $NVM_DIR/versions/node -maxdepth 1 -name "v${DEFAU
 
 # This adds the default node version path to PATH
 if [ ! -z "$DEFAULT_NODE_VER_PATH" ]; then
-  export PATH="$DEFAULT_NODE_VER_PATH/bin:$PATH"
+    export PATH="$DEFAULT_NODE_VER_PATH/bin:$PATH"
 fi
 
+# -----------------------------------------------------
+# BUN
+# -----------------------------------------------------
 
-# add to ~/.bashrc
+# add to ~/.zshrc
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-
-
-# -----------------------------------------------------
-# zsh syntax highlighting
-# -----------------------------------------------------
-
-
-source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# -----------------------------------------------------
-# -----------------------------------------------------
-
 # bun completions
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
+
