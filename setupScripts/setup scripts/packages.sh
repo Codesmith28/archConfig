@@ -15,66 +15,61 @@ if ! command -v yay &> /dev/null; then
     sudo pacman -S yay --noconfirm
 fi
 
-# List of packages to install
+# -------------------------------------------------------
+# list of packages to install
+# -------------------------------------------------------
+
 packages=(
+    "kitty"
     "pfetch"
-    "bibata-cursor-theme"
-    "trizen"
-    "pacseek"
+    "neofetch"
+    "btop"
+    "baobab"
     
-    "visual-studio-code-bin"
-    "nnn"
-    "brave-bin"
-    "cmatrix-git"
-    "vlc"
-    "obs-studio"
-    "ueberzugpp"
     "discord"
     "telegram-desktop"
-    "libreoffice-fresh"
-    "btop"
-    "neovim"
-    "obsidian"
-    "zathura"
-    "texlive"
-    "gimp"
-    "clang"
-    "neofetch"
-    "baobab"
-    "zathura-pdf-poppler"
-    "zsh"
-    "gvfs-mtp"
-    "github-cli"
     "slack-desktop"
-    "bat"
-    "zoom"
-    "fontpreview"
+    
+    "nnn"
+    "gvfs-mtp"
     "w3m"
     "glow"
+    "bsdtar"
+    "zathura"
+    "zathura-pdf-poppler"
+    "texlive"
+    
+    "nautilus"
+    "eog"
+    "brave-bin"
+    "google-chrome"
+    
+    "obs-studio"
+    "zoom"
     "ffmpeg"
     "ffmpegthumbnailer"
-    "mpv"
-    "bsdtar"
+    "zoom"
+    "gimp"
+    
+    "notion-app-nativefier"
+    "libreoffice-fresh"
+    "fontpreview"
     "ttf-cascadia-code-nerd"
     "noto-fonts"
     "noto-fonts-cjk"
-    "eog"
-    "nautlius"
-    "notion-app-nativefier"
-    "kitty"
-    "fzf"
-    "tmux"
-    "distrobox"
 )
 
-# Install packages using yay
+# -------------------------------------------------------
+# Install the packages
+# -------------------------------------------------------
+
 for package in "${packages[@]}"; do
     if yay -Qi "$package" &> /dev/null; then
         echo "$package is already installed. Skipping..."
     else
         echo "Installing $package..."
-        yay -S --noconfirm "$package"
+        yay -S "$package" --noconfirm
     fi
 done
 
-echo "All packages installed successfully."
+echo "All packages installed!"

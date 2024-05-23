@@ -1,4 +1,4 @@
-# Make discord a startup app:
+# Make discord a startup app
 
 1. Make a directory for the user:
 
@@ -43,3 +43,7 @@ systemctl --user start discord.service
 ```
 systemctl --user status discord.service
 ```
+
+# Setting up development environment for android
+
+Click here -> [android development](https://youtu.be/2EGDIOpp088?si=36zxWYFVnULO16-A)
