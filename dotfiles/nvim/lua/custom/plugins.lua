@@ -16,7 +16,6 @@ local plugins = {
             require "custom.configs.lint"
         end
     },
-
     {
         "zbirenbaum/copilot.lua",
         -- Lazy load when event occurs. Events are triggered
@@ -28,6 +27,16 @@ local plugins = {
         lazy = false,
         opts = overrides.copilot,
     },
+    -- {
+    --     "olexsmir/gopher.nvim",
+    --     ft = "go",
+    --     config = function(_, opts)
+    --         require("gopher").setup(opts)
+    --     end,
+    --     build = function()
+    --         vim.cmd [[silent!, GoInstallDeps]]
+    --     end,
+    -- },
 
     -- for cpp:
     {
