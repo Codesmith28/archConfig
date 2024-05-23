@@ -20,7 +20,6 @@ packages=(
     "distrobox"
     "clang"
     "fzf"
-    "tmux"
     "zsh"
     "github-cli"
     "bat"
