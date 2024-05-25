@@ -8,11 +8,11 @@ local util = require "lspconfig/util"
 
 -- for clang
 lspconfig.clangd.setup {
-  on_attach = function(client, bufnr)
-    client.server_capabilities.signatureHelpProvider = false
-    on_attach(client, bufnr)
-  end,
-  capabilities = capabilities,
+    on_attach = function(client, bufnr)
+        client.server_capabilities.signatureHelpProvider = false
+        on_attach(client, bufnr)
+    end,
+    capabilities = capabilities,
 }
 
 -- for typescript
@@ -30,8 +30,8 @@ lspconfig.tsserver.setup {
 lspconfig.gopls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
-    cmd = {"gopls"},
-    filetypes = {"go", "gomod", "gowork", "gotmpl"},
+    cmd = { "gopls" },
+    filetypes = { "go", "gomod", "gowork", "gotmpl" },
     root_dir = util.root_pattern("go.work", "go.mod", ".git"),
     settings = {
         gopls = {
@@ -45,7 +45,7 @@ lspconfig.gopls.setup {
 }
 
 
-local servers = {"tailwindcss", "eslint"}
+local servers = { "tailwindcss", "eslint" }
 
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
