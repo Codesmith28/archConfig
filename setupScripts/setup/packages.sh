@@ -25,6 +25,7 @@ packages=(
     "neofetch"
     "btop"
     "baobab"
+    "ripgrep"
     
     "discord"
     "telegram-desktop"

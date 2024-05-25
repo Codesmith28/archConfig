@@ -1,9 +1,9 @@
-#                     __ _ _      
-#    _ __  _ __ ___  / _(_) | ___ 
+#                     __ _ _
+#    _ __  _ __ ___  / _(_) | ___
 #   | '_ \| '__/ _ \| |_| | |/ _ \
 #  _| |_) | | | (_) |  _| | |  __/
 # (_) .__/|_|  \___/|_| |_|_|\___|
-#   |_|                           
+#   |_|
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -92,7 +92,7 @@ alias MC='java -jar ~/.minecraft/TLauncher*.jar'
 # -----------------------------------------------------
 
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-alias setkb='setxkbmap us;echo "Keyboard set back to de."'
+alias setkb='setxkbmap us;echo "Keyboard set back to us."'
 alias mntd='command -v ntfs-3g >/dev/null 2>&1 || { echo >&2 "ntfs-3g is not installed. Installing..."; yay -S ntfs-3g; }; [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD; sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"'
 alias D='cd /home/run/media/localdiskD'
 
