@@ -7,9 +7,9 @@ local o = vim.o
 -- relative line numbering:
 o.relativenumber = true
 
--- set tabs to have 4 spaces
-o.tabstop = 4
-o.shiftwidth = 4
+-- set tabs to have 2 spaces
+o.tabstop = 2
+o.shiftwidth = 2
 o.expandtab = true
 o.smartindent = true
 
