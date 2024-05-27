@@ -1,3 +1,4 @@
+#
 #            _
 #    _______| |__  _ __ ___
 #   |_  / __| '_ \| '__/ __|
@@ -23,7 +24,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -119,11 +122,13 @@ source $ZSH/oh-my-zsh.sh
 # :# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/.p10k.zsh.
-if [[ -f ~/dotfiles/.p10k.zsh ]]; then
-    source ~/dotfiles/.p10k.zsh
-else
-    source ~/.p10k.zsh
-fi
+
+# as I now use starship, I don't need powerlevel10k:
+# if [[ -f ~/dotfiles/.p10k.zsh ]]; then
+#     source ~/dotfiles/.p10k.zsh
+# else
+#     source ~/.p10k.zsh
+# fi
 
 # -----------------------------------------------------
 #  DEFAULT ENDS HERE
@@ -135,6 +140,9 @@ fi
 
 # Import all aliases from .profile
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+
+# starship:
+eval "$(starship init zsh)"
 
 # -----------------------------------------------------
 # Development
@@ -200,4 +208,3 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # bun completions
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
-
