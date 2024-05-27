@@ -66,7 +66,7 @@ rm -rf ~/.oh-my-zsh
 # installing oh-my-zsh:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 # installing powerlevel10k for oh my zsh:
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+# git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
 # -------------------------------------------------------
 # installing zsh-autosuggestions and zsh-syntax-highlighting:

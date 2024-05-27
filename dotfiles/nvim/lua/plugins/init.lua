@@ -9,6 +9,10 @@ return {
         end,
     },
     {
+        "wakatime/vim-wakatime",
+        lazy = false,
+    },
+    {
         "kdheepak/lazygit.nvim",
         cmd = {
             "LazyGit",

@@ -7,9 +7,9 @@ local o = vim.o
 -- relative line numbering:
 o.relativenumber = true
 
--- set tabs to have 2 spaces
-o.tabstop = 2
-o.shiftwidth = 2
+-- set tabs to have 4 spaces
+o.tabstop = 4
+o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
@@ -20,5 +20,8 @@ vim.g.copilot_assume_mapped = true
 o.shell = "zsh"
 o.ignorecase = true
 o.smartcase = true
+
+-- disable word wrap:
+o.wrap = false
 
 -- o.cursorlineopt ='both' -- to enable cursorline!
