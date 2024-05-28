@@ -25,7 +25,7 @@
     },
     {
         "key": "waybar_taskbar",
-        "value": true
+        "value": false
     },
     {
         "key": "waybar_network",
@@ -53,7 +53,7 @@
     },
     {
         "key": "hypridle_dpms_timeout",
-        "value": 680
+        "value": 660
     },
     {
         "key": "hypridle_suspend_timeout",
