@@ -13,6 +13,16 @@ EOF
 echo "Thank you omerxx's for your tmux configurations!"
 
 # Installing tmux and tpm
-yay -S tmux tmux-plugin-manager --noconfirm
+yay -S tmux
+touch ~/.tmux.conf
+
+echo "set -g prefix ^A
+
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+run '~/.tmux/plugins/tpm/tpm'" > ~/.tmux.conf 
+
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 echo "Copy from the dotfiles and then hit Ctrl+I"
