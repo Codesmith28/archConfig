@@ -39,6 +39,7 @@ packages=(
     "zathura-pdf-poppler"
     "texlive"
     "xclip"
+    "less"
     
     "nautilus"
     "eog"
