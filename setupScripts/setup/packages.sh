@@ -35,7 +35,6 @@ packages=(
     "gvfs-mtp"
     "w3m"
     "glow"
-    "bsdtar"
     "zathura"
     "zathura-pdf-poppler"
     "texlive"
