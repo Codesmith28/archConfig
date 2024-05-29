@@ -1,4 +1,4 @@
-cat <<"EOF"
+ at <<"EOF"
      _            _____
   __| | _____   _| ____|_ ____   __
  / _` |/ _ \ \ / /  _| | '_ \ \ / /
@@ -10,6 +10,7 @@ EOF
 #! /bin/bash
 
 echo "Setting up the development environment..."
+
 # -------------------------------------------------------
 # install important packages for development:
 # -------------------------------------------------------
@@ -18,12 +19,13 @@ packages=(
     "visual-studio-code-bin"
     "neovim"
     "distrobox"
+    "mongodb-compass"
     "clang"
+    "go"
     "fzf"
     "zsh"
     "github-cli"
     "bat"
-    "github-cli"
     "lazygit"
     "nvm"
 )
