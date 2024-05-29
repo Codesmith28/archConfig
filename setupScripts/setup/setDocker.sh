@@ -13,6 +13,7 @@ echo "Preparing to setup Docker ..."
 
 packages=(
     "docker"
+    "docker-compose"
     "gnome-terminal"
     "docker-desktop"
 )
