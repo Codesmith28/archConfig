@@ -15,7 +15,7 @@
     "layer": "top",
     "margin-left": 0,
     "margin-right": 0,    
-    "spacing": 1,
+    "spacing": 0,
 
     // Load Modules
     "include": ["~/dotfiles/waybar/modules.json"],
@@ -24,16 +24,15 @@
     "modules-left": [
         "custom/appmenuicon",
         "hyprland/workspaces",
-        "wlr/taskbar"
-        // "group/links",
-        // "group/settings",
-        // "group/quicklinks"
+        "group/links",
+        "group/settings",
+        "group/quicklinks"
     ],
 
     // Modules Center
     "modules-center": [
-        "hyprland/window"
-        // "custom/empty"
+        "hyprland/window",
+        "custom/empty"
     ],
 
     // Modules Right    
@@ -45,10 +44,11 @@
         "network",
         "group/hardware",
         "custom/cliphist",
-        //"idle_inhibitor",
+        "custom/hypridle",
+        "custom/hyprshade",
         "custom/exit",
+        "clock",
         "tray",
-        "clock"
-        // "custom/ml4w-welcome"
+        "custom/ml4w-welcome"
     ]
 }

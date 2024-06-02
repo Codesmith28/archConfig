@@ -1,10 +1,10 @@
 cat <<"EOF"
- _                      ___   _   _                              
-(_) ___ ___  _ __  ___ ( _ ) | |_| |__   ___ _ __ ___   ___  ___ 
+ _                      ___   _   _
+(_) ___ ___  _ __  ___ ( _ ) | |_| |__   ___ _ __ ___   ___  ___
 | |/ __/ _ \| '_ \/ __|/ _ \/\ __| '_ \ / _ \ '_ ` _ \ / _ \/ __|
 | | (_| (_) | | | \__ \ (_>  < |_| | | |  __/ | | | | |  __/\__ \
 |_|\___\___/|_| |_|___/\___/\/\__|_| |_|\___|_| |_| |_|\___||___/
-                                 
+
 
 EOF
 
@@ -24,5 +24,5 @@ cd "$base_dir"
 cd "$base_dir"
 git clone https://github.com/vinceliuice/Orchis-theme.git
 cd Orchis-theme
-./install.sh --tweaks black -t all
+./install.sh --tweaks -t all
 cd "$base_dir"
