@@ -6,12 +6,12 @@
 # |_|  \__,_|_|_|____/____/
 # -----------------------------------------------------
 
-DIR="$HOME/Pictures/screenshots/"
+DIR="$HOME/Pictures/Screenshots/"
 
-NAME="screenshot_$(date +%Y-%m-%d_%H%M%S).png"
+NAME="Screenshot_$(date +%Y-%m-%d_%H%M%S).png"
 
 grim "$DIR$NAME"
 # notify-send "Screenshot created" "Mode: Fullscreen"
 
-# Copy the screenshot to the clipboard
+# Copy the Screenshot to the clipboard
 xclip -selection clipboard -t image/png -i "$DIR$NAME"
