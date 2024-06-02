@@ -9,10 +9,10 @@
 # by Stephan Raabe (2023)
 # -----------------------------------------------------
 
-DIR="$HOME/Pictures/screenshots/"
+DIR="$HOME/Pictures/Screenshots/"
 
 # get details of what window is open and append it in the screenshot name
-NAME="screenshot_$(date +%Y-%m-%d_%H%M%S).png"
+NAME="Screenshot_$(date +%Y-%m-%d_%H%M%S).png"
 
 grim -g "$(slurp)" "$DIR$NAME"
 xclip -selection clipboard -t image/png -i "$DIR$NAME"

@@ -22,8 +22,8 @@ export EDITOR=nvim
 
 alias c='clear'
 alias e='exit'
-alias nf='neofetch'
-alias pf='pfetch'
+alias nf='fastfetch'
+alias pf='fastfetch'
 alias ls='eza -a --icons'
 alias ll='eza -al --icons'
 alias lt='eza -a --tree --level=1 --icons'
@@ -136,7 +136,7 @@ eval "$(starship init bash)"
 # -----------------------------------------------------
 echo ""
 if [[ $(tty) == *"pts"* ]]; then
-    pfetch
+    fastfetch
 else
     if [ -f /bin/qtile ]; then
         echo "Start Qtile X11 with command Qtile"
