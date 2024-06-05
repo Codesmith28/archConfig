@@ -36,9 +36,9 @@
 }
 
 window#waybar {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   border-bottom: 0px solid #ffffff;
-  /* color: #FFFFFF; */
+  /* color: #ffffff; */
   transition-property: background-color;
   transition-duration: 0.5s;
 }
@@ -79,14 +79,14 @@ window#waybar {
 
 tooltip {
   border-radius: 10px;
-  background-color: @backgroundlight;
+  background-color: @textcolor2;
   opacity: 0.8;
   padding: 20px;
   margin: 0px;
 }
 
 tooltip label {
-  color: @textcolor2;
+  color: @textcolor3;
 }
 
 /* -----------------------------------------------------

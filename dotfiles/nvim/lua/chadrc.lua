@@ -5,12 +5,34 @@
 local M = {}
 
 M.ui = {
-	theme = "tokyonight",
-	transparency = true,
-	hl_override = {
-		Comment = { italic = true },
-		["@comment"] = { italic = true },
-	},
+    theme = "tokyonight",
+    transparency = true,
+
+    hl_override = {
+        Comment = { italic = true },
+        ["@comment"] = { italic = true },
+    },
+
+    cmp = {
+        icons = true,
+        lspkind_text = true,
+        style = "default", -- default/flat_light/flat_dark/atom/atom_colored
+    },
+
+    telescope = { style = "bordered" }, -- borderless / bordered
+
+    term = {
+        hl = "Normal:term,WinSeparator:WinSeparator",
+        sizes = { sp = 0.5, vsp = 0.5 },
+        float = {
+            relative = "editor",
+            row = 0.15,
+            col = 0.2,
+            width = 0.6,
+            height = 0.6,
+            border = "rounded",
+        },
+    },
 }
 
 return M
