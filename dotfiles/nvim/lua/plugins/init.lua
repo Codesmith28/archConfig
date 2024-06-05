@@ -2,6 +2,13 @@ local overrides = require "configs.overrides"
 
 return {
     {
+        "kylechui/nvim-surround",
+        version = "*", -- Use for stability; omit to use `main` branch for the latest features
+        event = "VeryLazy",
+        opts = {},
+    },
+
+    {
         "stevearc/conform.nvim",
         -- event = 'BufWritePre', -- uncomment for format on save
         config = function()
@@ -65,12 +72,10 @@ return {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
         },
-        config = function(_, opts)
-            require("gopher").setup(opts)
+        config = function()
+            require("gopher").setup()
         end,
-        build = function()
-            vim.cmd [[!silent, GoInstallDeps]]
-        end,
+        build = ":GoInstallDeps",
     },
 
     -- for cpp:
