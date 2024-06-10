@@ -24,8 +24,8 @@
     "modules-left": [
         "custom/appmenuicon",
         "hyprland/workspaces"
-        // "custom/cava"
         // "wlr/taskbar"
+        // "custom/cava"
         // "group/links",
         // "group/settings",
         // "group/quicklinks"

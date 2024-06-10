@@ -5,7 +5,7 @@
 local M = {}
 
 M.ui = {
-    theme = "tokyonight",
+    theme = "bearded-arc",
     transparency = true,
 
     hl_override = {
@@ -17,6 +17,10 @@ M.ui = {
         icons = true,
         lspkind_text = true,
         style = "default", -- default/flat_light/flat_dark/atom/atom_colored
+    },
+
+    cheatsheet = {
+        theme = "grid",
     },
 
     telescope = { style = "bordered" }, -- borderless / bordered
