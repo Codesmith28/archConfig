@@ -27,7 +27,7 @@
     #
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
-    follow = none
+    follow = keyboard
 
     ### Geometry ###
 
@@ -40,10 +40,10 @@
     height = (0,300)
 
     # Position the notification in the top right corner
-    origin = top-center
+    origin = top-right
 
     # Offset from the origin
-    offset = 0x30
+    offset = 15x15
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
@@ -74,7 +74,7 @@
     progress_bar_corner_radius = 10
 
     # Corner radius for the icon image.
-    icon_corner_radius = 0
+    icon_corner_radius = 10
 
     # Show how many messages are currently hidden (because of
     # notification_limit).

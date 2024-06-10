@@ -26,11 +26,11 @@ packages=(
     "btop"
     "baobab"
     "ripgrep"
-    
+
     "discord"
     "telegram-desktop"
     "slack-desktop"
-    
+
     "nnn"
     "gvfs-mtp"
     "w3m"
@@ -40,19 +40,20 @@ packages=(
     "texlive"
     "xclip"
     "less"
-    
+
     "nautilus"
     "eog"
     "brave-bin"
     "google-chrome"
-    
+    "spotify-adblock"
+
     "obs-studio"
     "zoom"
     "ffmpeg"
     "ffmpegthumbnailer"
     "zoom"
     "gimp"
-    
+
     "notion-app-nativefier"
     "libreoffice-fresh"
     "fontpreview"

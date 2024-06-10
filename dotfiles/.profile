@@ -120,7 +120,8 @@ export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 # NNN plugins and colors:
 export NNN_PLUG='f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;i:imgview'
 export NNN_FCOLORS='FFFFFF310000000000000000'
-export NNN_TERMINAL='alacritty --title preview-tui'
+export NNN_BMS='d:~/Downloads;t:~/Projects;h:~;D:~/dotfiles/'
+export NNN_TERMINAL='kitty'
 export NNN_FIFO="/tmp/nnn.fifo"
 export PAGER="less -R"
 
