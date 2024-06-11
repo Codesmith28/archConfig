@@ -1,30 +1,31 @@
 /*
-#  ____        __ _
-# |  _ \ ___  / _(_)
-# | |_) / _ \| |_| |
-# |  _ < (_) |  _| |
-# |_| \_\___/|_| |_|
-#
-# by Stephan Raabe (2023)
-# -----------------------------------------------------
+#  ____        __ _  
+# |  _ \ ___  / _(_) 
+# | |_) / _ \| |_| | 
+# |  _ < (_) |  _| | 
+# |_| \_\___/|_| |_| 
+#                    
+# by Stephan Raabe (2023) 
+# ----------------------------------------------------- 
 */
 
 /* ---- Configuration ---- */
 configuration {
     modi:                       "drun,run";
     font:                       "Fira Sans 11";
-    show-icons:                 true;
+    show-icons:                 false;
     icon-theme:                 "kora";
     display-drun:               "APPS";
     display-run:                "RUN";
     display-filebrowser:        "FILES";
     display-window:             "WINDOW";
 	hover-select:               false;
+    scroll-method:              1;
     me-select-entry:            "";
     me-accept-entry:            "MousePrimary";
     drun-display-format:        "{name}";
     window-format:              "{w} · {c} · {t}";
-    scroll-method: 1;
+    
 }
 
 /* ---- Load font ---- */
@@ -41,12 +42,12 @@ configuration {
 
 /* ---- Window ---- */
 window {
-    width:                        400px;
+    width:                        600px;
     x-offset:                     0px;
-    y-offset:                     15px;
+    y-offset:                     65px;
     spacing:                      0px;
     padding:                      0px;
-    margin:                       0px;
+    margin:                       0px; 
     color:                        #FFFFFF;
     border:                       @border-width;
     border-color:                 #FFFFFF;
@@ -63,12 +64,12 @@ window {
 /* ---- Mainbox ---- */
 mainbox {
     enabled:                      true;
-    orientation:                  vertical;
+    orientation:                  horizontal;
     spacing:                      0px;
     margin:                       0px;
     background-color:             @background;
     background-image:             @current-image;
-    children:                     ["inputbar", "listbox"];
+    children:                     ["listbox"];
 }
 
 /* ---- Imagebox ---- */
@@ -84,7 +85,7 @@ listbox {
     spacing:                     20px;
     background-color:            transparent;
     orientation:                 vertical;
-    children:                    [ "listview" ];
+    children:                    [ "inputbar", "message", "listview" ];
 }
 
 /* ---- Dummy ---- */
@@ -222,7 +223,7 @@ element alternate.active {
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        60px;
+    size:                        32px;
     cursor:                      inherit;
 }
 
