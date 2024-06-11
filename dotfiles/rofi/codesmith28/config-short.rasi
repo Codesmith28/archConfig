@@ -1,30 +1,30 @@
 /*
-#  ____        __ _
-# |  _ \ ___  / _(_)
-# | |_) / _ \| |_| |
-# |  _ < (_) |  _| |
-# |_| \_\___/|_| |_|
-#
-# by Stephan Raabe (2023)
-# -----------------------------------------------------
+#  ____        __ _  
+# |  _ \ ___  / _(_) 
+# | |_) / _ \| |_| | 
+# |  _ < (_) |  _| | 
+# |_| \_\___/|_| |_| 
+#                    
+# by Stephan Raabe (2023) 
+# ----------------------------------------------------- 
 */
 
 /* ---- Configuration ---- */
 configuration {
     modi:                       "drun,run";
     font:                       "Fira Sans 11";
-    show-icons:                 true;
+    show-icons:                 false;
     icon-theme:                 "kora";
     display-drun:               "APPS";
     display-run:                "RUN";
     display-filebrowser:        "FILES";
     display-window:             "WINDOW";
-	hover-select:               false;
+	hover-select:               true;
     me-select-entry:            "";
     me-accept-entry:            "MousePrimary";
     drun-display-format:        "{name}";
     window-format:              "{w} · {c} · {t}";
-    scroll-method: 1;
+    
 }
 
 /* ---- Load font ---- */
@@ -41,19 +41,20 @@ configuration {
 
 /* ---- Window ---- */
 window {
-    width:                        400px;
-    x-offset:                     0px;
-    y-offset:                     15px;
+    width:                        200px;
+    height:                       130px;
+    x-offset:                     -14px;
+    y-offset:                     65px;
     spacing:                      0px;
     padding:                      0px;
-    margin:                       0px;
+    margin:                       0px; 
     color:                        #FFFFFF;
     border:                       @border-width;
     border-color:                 #FFFFFF;
     cursor:                       "default";
     transparency:                 "real";
-    location:                     north;
-    anchor:                       north;
+    location:                     northeast;
+    anchor:                       northeast;
     fullscreen:                   false;
     enabled:                      true;
     border-radius:                10px;
@@ -63,12 +64,12 @@ window {
 /* ---- Mainbox ---- */
 mainbox {
     enabled:                      true;
-    orientation:                  vertical;
+    orientation:                  horizontal;
     spacing:                      0px;
     margin:                       0px;
     background-color:             @background;
     background-image:             @current-image;
-    children:                     ["inputbar", "listbox"];
+    children:                     ["listbox"];
 }
 
 /* ---- Imagebox ---- */
@@ -148,9 +149,9 @@ button selected {
 listview {
     enabled:                      true;
     columns:                      1;
-    lines:                        8;
-    cycle:                        false;
-    dynamic:                      false;
+    lines:                        2;
+    cycle:                        true;
+    dynamic:                      true;
     scrollbar:                    false;
     layout:                       vertical;
     reverse:                      false;
@@ -222,7 +223,7 @@ element alternate.active {
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        60px;
+    size:                        32px;
     cursor:                      inherit;
 }
 
