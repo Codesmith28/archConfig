@@ -88,7 +88,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -169,8 +169,8 @@ alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
 #   *":$PNPM_HOME:"*) ;;
 #   *) export PATH="$PNPM_HOME:$PATH" ;;
 # esac
-# # pnpm end
-#
+# pnpm end
+
 
 # -----------------------------------------------------
 # NVM and NODE
