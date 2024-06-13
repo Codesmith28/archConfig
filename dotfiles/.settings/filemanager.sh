@@ -1,1 +1,1 @@
-nautilus
+thunar
