@@ -145,7 +145,7 @@ listview {
     lines:                        3;
     cycle:                        false;
     dynamic:                      false;
-    scrollbar:                    false;
+    scrollbar:                    true;
     layout:                       vertical;
     reverse:                      false;
     spacing:                      10px;
