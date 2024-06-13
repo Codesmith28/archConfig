@@ -1,5 +1,20 @@
+Version 2.9.1.2
+https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9.1.1
+--------------------------------------------------------
+- Workspaces module in waybar updated to enable scroll to change the workspace https://gitlab.com/stephan-raabe/dotfiles/-/merge_requests/114
+- More functions deactivated in Game Mode (SUPER+ALT+G)
+- Keybindings rofi menu updated with keybinding description. Open with right mouse click on Apps waybar module
+- Fixed bug of ML4W Hyprland Settings App with Hyprland 0.41.0
+
+Version 2.9.1.1
+https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9.1.1
+--------------------------------------------------------
+- New installation method for sddm sugar candy theme. Instead of using yay, the installer will download the ZIP from the repository, extract it to the Downloads folder and copy the files to the destination folder.
+- A gamemode can be toggled with SUPER+ALT+G. The gaming mode will disable the animations and blur.
+- Added a black ML4W Icon for black waybar themes
+
 Version 2.9.1
-https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9
+https://gitlab.com/stephan-raabe/dotfiles/-/releases/2.9.1
 --------------------------------------------------------
 - Hyprpaper is the default wallpaper engine. swww will not be installed by the installer anymore. You can still switch to swww in the Dotfiles Settings App (System tab) but you need to install swww manually with yay -S swww
 - pfetch has been replaced with fastfetch (requires an update of the .bashrc) https://gitlab.com/stephan-raabe/dotfiles/-/issues/315

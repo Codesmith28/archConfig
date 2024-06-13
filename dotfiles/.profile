@@ -11,6 +11,7 @@ PS1='[\u@\h \W]\$ '
 
 # Define Editor
 export EDITOR=nvim
+alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 
 # For the profile:
 # source ~/.profile
