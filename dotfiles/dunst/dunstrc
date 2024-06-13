@@ -1,12 +1,12 @@
-#      _                 _
-#   __| |_   _ _ __  ___| |_
-#  / _` | | | | '_ \/ __| __|
-# | (_| | |_| | | | \__ \ |_
-#  \__,_|\__,_|_| |_|___/\__|
-#
-#
-# by Stephan Raabe (2023)
-# -----------------------------------------------------
+#      _                 _    
+#   __| |_   _ _ __  ___| |_  
+#  / _` | | | | '_ \/ __| __| 
+# | (_| | |_| | | | \__ \ |_  
+#  \__,_|\__,_|_| |_|___/\__| 
+#                             
+#  
+# by Stephan Raabe (2023) 
+# ----------------------------------------------------- 
 
 # See dunst(5) for all configuration options
 
@@ -27,7 +27,7 @@
     #
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
-    follow = keyboard
+    follow = none
 
     ### Geometry ###
 
@@ -40,10 +40,10 @@
     height = (0,300)
 
     # Position the notification in the top right corner
-    origin = top-right
+    origin = top-center
 
     # Offset from the origin
-    offset = 15x15
+    offset = 0x30
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
@@ -74,7 +74,7 @@
     progress_bar_corner_radius = 10
 
     # Corner radius for the icon image.
-    icon_corner_radius = 10
+    icon_corner_radius = 0
 
     # Show how many messages are currently hidden (because of
     # notification_limit).
@@ -211,7 +211,7 @@
     enable_recursive_icon_lookup = true
 
     # Set icon theme (only used for recursive icon lookup)
-    icon_theme = "Colloid-Dark,Adwaita"
+    icon_theme = "Papirus-Dark,Adwaita"
     # You can also set multiple icon themes, with the leftmost one being used first.
     # icon_theme = "Adwaita, breeze"
 
@@ -305,9 +305,9 @@
     # * context_all: Open context menu for all notifications.
     # These values can be strung together for each mouse event, and
     # will be executed in sequence.
-    mouse_left_click = do_action
-    mouse_middle_click = close_all
-    mouse_right_click = close_current
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
 
 # Experimental features that may or may not work correctly. Do not expect them
 # to have a consistent behaviour across releases.
