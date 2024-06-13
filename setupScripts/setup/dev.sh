@@ -16,12 +16,12 @@ echo "Setting up the development environment..."
 # -------------------------------------------------------
 
 packages=(
-    "visual-studio-code-bin"
+    # "visual-studio-code-bin"
     "neovim"
-    "distrobox"
-    "mongodb-compass"
+    # "distrobox"
+    # "mongodb-compass"
     "clang"
-    "go"
+    # "go"
     "fzf"
     "zsh"
     "github-cli"
@@ -30,16 +30,16 @@ packages=(
     "nvm"
 )
 
-# -------------------------------------------------------
+# ------------------------------w-------------------------
 # Install packages using yay
 # -------------------------------------------------------
 
 for package in "${packages[@]}"; do
-    if yay -Qi "$package" &> /dev/null; then
+    if pacman -Qi "$package" &> /dev/null; then
         echo "$package is already installed. Skipping..."
     else
         echo "Installing $package..."
-        yay -S --noconfirm "$package"
+        sudo pacman -S --noconfirm "$package"
     fi
 done
 echo "All required packages are installed!"
