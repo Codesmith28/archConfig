@@ -146,6 +146,10 @@ return {
                 "bash-language-server",
                 "shellcheck",
                 "shfmt",
+
+                -- for docker:
+                "dockerfile-language-server",
+                "docker-compose-language-service",
             },
         },
     },

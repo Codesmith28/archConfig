@@ -2,8 +2,8 @@
 size = 12
 
 [font.normal]
-family = "CaskaydiaCove Nerd Font"
-style = "Retina"
+family = "RecMonoCasual Nerd Font"
+style = "Regular"
 
 [window]
 opacity = 0.7

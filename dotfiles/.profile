@@ -52,6 +52,7 @@ alias gp="git push"
 alias gpl="git pull"
 alias gst="git stash"
 alias gsp="git stash; git pull"
+alias lg='lazygit'
 alias gcheck="git checkout"
 
 # -----------------------------------------------------
