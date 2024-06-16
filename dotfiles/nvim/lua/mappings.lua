@@ -8,6 +8,13 @@ local map = vim.keymap.set
 map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
 
+-- Ctrl+j to open fullscreen terminal and Esc to escape from the terminal
+map("n", "<c-j>", function()
+    vim.cmd "terminal"
+    vim.cmd "startinsert"
+end, { desc = "terminal full screen" })
+-- map("t", "<esc>", "<c-\\><c-n>", { desc = "escape from terminal mode" })
+
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
 -- M.gopher = {

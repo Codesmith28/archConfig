@@ -22,6 +22,6 @@ o.ignorecase = true
 o.smartcase = true
 
 -- disable word wrap:
-o.wrap = false
+o.wrap = true
 
 -- o.cursorlineopt ='both' -- to enable cursorline!

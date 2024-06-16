@@ -1,12 +1,13 @@
-#      _                 _    
-#   __| |_   _ _ __  ___| |_  
-#  / _` | | | | '_ \/ __| __| 
-# | (_| | |_| | | | \__ \ |_  
-#  \__,_|\__,_|_| |_|___/\__| 
-#                             
-#  
-# by Stephan Raabe (2023) 
-# ----------------------------------------------------- 
+
+#      _                 _
+#   __| |_   _ _ __  ___| |_
+#  / _` | | | | '_ \/ __| __|
+# | (_| | |_| | | | \__ \ |_
+#  \__,_|\__,_|_| |_|___/\__|
+#
+#
+# by Stephan Raabe (2023)
+# -----------------------------------------------------
 
 # See dunst(5) for all configuration options
 
@@ -27,7 +28,7 @@
     #
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
-    follow = none
+    follow = keyboard
 
     ### Geometry ###
 
@@ -40,10 +41,10 @@
     height = (0,300)
 
     # Position the notification in the top right corner
-    origin = top-center
+    origin = top-right
 
     # Offset from the origin
-    offset = 0x30
+    offset = 15x15
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
@@ -133,7 +134,7 @@
 
     ### Text ###
 
-    font = "Fira Sans Semibold" 9
+    font = "RecMonoCasual Nerd Font Propo 11"
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -305,9 +306,9 @@
     # * context_all: Open context menu for all notifications.
     # These values can be strung together for each mouse event, and
     # will be executed in sequence.
-    mouse_left_click = close_current
-    mouse_middle_click = do_action, close_current
-    mouse_right_click = close_all
+    mouse_left_click = do_action
+    mouse_middle_click = close_all
+    mouse_right_click = close_current
 
 # Experimental features that may or may not work correctly. Do not expect them
 # to have a consistent behaviour across releases.
