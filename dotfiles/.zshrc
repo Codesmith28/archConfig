@@ -133,6 +133,7 @@ source $ZSH/oh-my-zsh.sh
 #  DEFAULT ENDS HERE
 # -----------------------------------------------------
 
+
 # -----------------------------------------------------
 #  EDIT CONFIG FILES
 # -----------------------------------------------------
@@ -169,8 +170,8 @@ alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
 #   *":$PNPM_HOME:"*) ;;
 #   *) export PATH="$PNPM_HOME:$PATH" ;;
 # esac
-# pnpm end
-
+# # pnpm end
+#
 
 # -----------------------------------------------------
 # NVM and NODE
