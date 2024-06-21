@@ -97,7 +97,7 @@ inputbar {
     text-color:                   @foreground;
     spacing:                      10px;
     padding:                      15px;
-    border-radius:                10px;
+    border-radius:                0px;
     border-color:                 @foreground;
     background-color:             @background;
     children:                     [ "textbox-prompt-colon", "entry" ];
@@ -149,7 +149,7 @@ listview {
     columns:                      2;
     lines:                        5;
     cycle:                        false;
-    dynamic:                      false;
+    dynamic:                      true;
     scrollbar:                    false;
     layout:                       vertical;
     reverse:                      false;

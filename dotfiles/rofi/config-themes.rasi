@@ -34,7 +34,6 @@ configuration {
 @import "~/.cache/wal/colors-rofi-pywal"
 
 /* ---- Load wallpaper ---- */
-@import "~/.cache/current_wallpaper.rasi"
 
 /* ---- Load border width ---- */
 @import "~/dotfiles/.settings/rofi-border.rasi"
@@ -67,7 +66,6 @@ mainbox {
     spacing:                      0px;
     margin:                       0px;
     background-color:             @background;
-    background-image:             @current-image;
     children:                     ["inputbar", "listbox"];
 }
 
