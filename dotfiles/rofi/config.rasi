@@ -149,7 +149,7 @@ listview {
     columns:                      2;
     lines:                        5;
     cycle:                        false;
-    dynamic:                      false;
+    dynamic:                      true;
     scrollbar:                    false;
     layout:                       vertical;
     reverse:                      false;
