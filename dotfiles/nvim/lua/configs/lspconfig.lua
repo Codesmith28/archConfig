@@ -1,10 +1,9 @@
-local base = require("nvchad.configs.lspconfig")
+local base = require "nvchad.configs.lspconfig"
 local on_attach = base.on_attach
 local capabilities = base.capabilities
 
-local lspconfig = require("lspconfig")
+local lspconfig = require "lspconfig"
 local util = require "lspconfig/util"
-
 
 -- for clang
 lspconfig.clangd.setup {
@@ -22,8 +21,8 @@ lspconfig.tsserver.setup {
     init_options = {
         preferences = {
             disableSuggestions = true,
-        }
-    }
+        },
+    },
 }
 
 -- for go
@@ -44,8 +43,7 @@ lspconfig.gopls.setup {
     },
 }
 
-
-local servers = { "tailwindcss", "eslint" }
+local servers = { "tailwindcss", "eslint", "tsserver", "cssls" }
 
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {

@@ -5,14 +5,15 @@ url_style curly
 detect_urls yes
 
 
- font_family      FiraCode Nerd Font
+ # font_family      FiraCode Nerd Font
 /* font_family      DejaVu Sans */
 /* font_family      Cascadia Mono PL */
 /* font_family      DaddyTimeMono */
-/* font_family CaskaydiaCove Nerd Font */
-/* font_family CaskaydiaCove Nerd Font Mono*/ 
-/*font_family   CodeNewRoman Nerd Font Mono*/
-font_size 12.0
+ # font_family CaskaydiaCove Nerd Font
+/* font_family CaskaydiaCove Nerd Font Mono*/
+font_family RecMonoCasual Nerd Font
+# font_family   CodeNewRoman Nerd Font
+font_size 12
 disable_ligatures never
 bold_font        auto
 italic_font      auto
@@ -166,7 +167,7 @@ box_drawing_scale 0.001, 1, 1.5, 2
 #: with the background color of the cell underneath instead, use the
 #: special keyword: background
 
-cursor_shape block
+cursor_shape beam
 
 #: The cursor shape can be one of (block, beam, underline). Note that
 #: when reloading the config this will be changed only if the cursor
@@ -283,13 +284,13 @@ detect_urls yes
 #: underline and the mouse cursor becomes a hand over them. Even if
 #: this option is disabled, URLs are still clickable.
 
-url_excluded_characters 
+url_excluded_characters
 
 #: Additional characters to be disallowed from URLs, when detecting
 #: URLs under the mouse cursor. By default, all characters legal in
 #: URLs are allowed.
 
-copy_on_select no
+copy_on_select yes
 
 #: Copy to clipboard or a private buffer on select. With this set to
 #: clipboard, simply selecting text with the mouse will cause the text
@@ -487,7 +488,7 @@ command_on_bell none
 # Window layout {{{
 
 remember_window_size  no
-initial_window_width  900
+initial_window_width  1000
 initial_window_height 600
 
 #: If enabled, the window size will be remembered so that new
@@ -528,6 +529,8 @@ draw_minimal_borders yes
 #: that setting a non-zero window margin overrides this and causes all
 #: borders to be drawn.
 
+text_fg_overrides_threshold 0
+
 window_margin_width 0
 
 #: The window margin (in pts) (blank area outside the border). A
@@ -544,7 +547,7 @@ single_window_margin_width -1
 #: values set top, horizontal and bottom. Four values set top, right,
 #: bottom and left.
 
-window_padding_width 10
+window_padding_width 5
 
 #: The window padding (in pts) (blank area between the text and the
 #: window border). A single value sets all four sides. Two values set
@@ -576,7 +579,7 @@ inactive_text_alpha 1.0
 #: Fade the text in inactive windows by the specified amount (a number
 #: between zero and one, with zero being fully faded).
 
-hide_window_decorations no
+hide_window_decorations yes
 
 #: Hide the window decorations (title-bar and window borders) with
 #: yes. On macOS, titlebar-only can be used to only hide the titlebar.
@@ -677,7 +680,7 @@ tab_powerline_style angled
 #: using powerline as the tab_bar_style, can be one of: angled,
 #: slanted, or round.
 
-tab_activity_symbol none
+tab_activity_symbol ⏳
 
 #: Some text or a unicode symbol to show on the tab if a window in the
 #: tab that does not have focus has some activity.
@@ -724,7 +727,7 @@ inactive_tab_font_style normal
 
 #: The foreground and background colors
 
-background_opacity 0.7
+background_opacity 0.85
 
 #: The opacity of the background. A number between 0 and 1, where 1 is
 #: opaque and 0 is fully transparent.  This will only work if
@@ -782,7 +785,7 @@ dim_opacity 0.75
 
 #: The foreground for text selected with the mouse. A value of none
 #: means to leave the color unchanged.
-# selection_background #fffacd
+#selection_background #fffacd
 
 #: The background for text selected with the mouse.
 
@@ -903,7 +906,7 @@ listen_on unix:@moo
 #: details. Changing this option by reloading the config is not
 #: supported.
 
-# env 
+# env
 
 #: Specify environment variables to set in all child processes. Note
 #: that environment variables are expanded recursively, so if you
@@ -1193,7 +1196,7 @@ map kitty_mod+enter new_window
 #: You can open a new window running an arbitrary program, for
 #: example::
 
-#:     map kitty_mod+y      launch mutt
+#:     map kitty_yesmod+y      launch mutt
 
 #: You can open a new window with the current working directory set to
 #: the working directory of the current window using::
@@ -1449,39 +1452,39 @@ map kitty_mod+f6 debug_config
 # selection_background    #ebdbb2
 
 black
-color0                  #282828
-color8                  #7c6f64
+# color0                  #282828
+# color8                  #7c6f64
 
 red
-color1                  #cc241d
-color9                  #fb4934
+# color1                  #cc241d
+# color9                  #fb4934
 
 : green
-color2                  #98971a
-color10                 #b8bb26
+# color2                  #98971a
+# color10                 #b8bb26
 
 yellow
-color3                  #d79921
-color11                 #fabd2f
+# color3                  #d79921
+# color11                 #fabd2f
 
 blue
-color4                  #458588
-color12                 #83a598
+# color4                  #458588
+# color12                 #83a598
 
 purple
-color5                  #b16286
-color13                 #d3869b
+# color5                  #b16286
+# color13                 #d3869b
 
 aqua
-color6                  #689d6a
-color14                 #8ec07c
+# color6                  #689d6a
+# color14                 #8ec07c
 
 white
-color7                  #a89984
-color15                 #fbf1c7
+# color7                  #a89984
+# color15                 #fbf1c7
 
 
 # BEGIN_KITTY_THEME
-# Campbell
-# include current-theme.conf
+# Adwaita darker
+include current-theme.conf
 # END_KITTY_THEME

@@ -35,7 +35,7 @@ return {
         -- setting the keybinding for LazyGit with 'keys' is recommended in
         -- order to load the plugin when the command is run for the first time
         keys = {
-            { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+            { "<leader>ll", "<cmd>LazyGit<cr>", desc = "LazyGit" },
         },
     },
 
@@ -76,6 +76,21 @@ return {
             require("gopher").setup()
         end,
         build = ":GoInstallDeps",
+    },
+    {
+        "windwp/nvim-ts-autotag",
+        ft = {
+            "html",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "svelte",
+            "vue",
+        },
+        config = function()
+            require("nvim-ts-autotag").setup()
+        end,
     },
 
     -- for cpp:
@@ -123,7 +138,7 @@ return {
                 "nextls",
                 "eslint-lsp",
                 "js-debug-adapter",
-                "prettier",
+                "prettierd",
                 "typescript-language-server",
                 "tailwindcss-language-server",
                 "yaml-language-server",
