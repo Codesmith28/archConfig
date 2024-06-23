@@ -21,3 +21,4 @@ lines = 30
 [cursor.style]
 shape = "Underline"
 blinking = "Always"
+
