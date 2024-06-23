@@ -11,9 +11,9 @@
 
 /* ---- Configuration ---- */
 configuration {
-    modi:                       "drun,run";
+    modi:                       "window";
     font:                       "Fira Sans 11";
-    show-icons:                 false;
+    show-icons:                 true;
     icon-theme:                 "kora";
     display-drun:               "APPS";
     display-run:                "RUN";
@@ -40,9 +40,7 @@ configuration {
 
 /* ---- Window ---- */
 window {
-    width:                        400px;
-    x-offset:                     -14px;
-    y-offset:                     65px;
+    width:                        600px;
     spacing:                      0px;
     padding:                      0px;
     margin:                       0px;
@@ -62,12 +60,11 @@ window {
 /* ---- Mainbox ---- */
 mainbox {
     enabled:                      true;
-    orientation:                  horizontal;
+    orientation:                  vertical;
     spacing:                      0px;
     margin:                       0px;
-    background-color:             @background;
     background-image:             @current-image;
-    children:                     ["listbox"];
+    children:                     ["inputbar", "listbox"];
 }
 
 /* ---- Imagebox ---- */
@@ -147,16 +144,14 @@ button selected {
 listview {
     enabled:                      true;
     columns:                      1;
-    lines:                        2;
+    lines:                        4;
     cycle:                        true;
     dynamic:                      true;
-    scrollbar:                    false;
+    scrollbar:                    true;
     layout:                       vertical;
     reverse:                      false;
-    fixed-height:                 true;
-    fixed-columns:                true;
     spacing:                      0px;
-    padding:                      10px;
+    padding:                      5px;
     margin:                       0px;
     background-color:             @background;
     border:0px;
