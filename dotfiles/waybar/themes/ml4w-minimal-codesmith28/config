@@ -23,8 +23,8 @@
     // Modules Left
     "modules-left": [
         "custom/appmenuicon",
+        "wlr/taskbar",
         "hyprland/workspaces"
-        // "wlr/taskbar"
         // "custom/cava"
         // "group/links",
         // "group/settings",
