@@ -9,6 +9,7 @@ map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct ta
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
 map("n", "<C-p>", "<cmd>Telescope find_files<CR>", { desc = "Telescope Find files" })
 map("n", "<C-F>", "<cmd>Telescope live_grep<CR>", { desc = "Telescope Live grep" })
+map("n", "<C-x>", "dd", { desc = "Delete current line" })
 
 -- Ctrl+j to open fullscreen terminal and Esc to escape from the terminal
 map("n", "<c-`>", function()
