@@ -5,7 +5,7 @@
 local M = {}
 
 M.ui = {
-    theme = "chadracula-evondev",
+    theme = "monekai",
     transparency = true,
 
     hl_override = {
@@ -25,17 +25,31 @@ M.ui = {
 
     telescope = { style = "bordered" }, -- borderless / bordered
 
-    term = {
-        hl = "Normal:term,WinSeparator:WinSeparator",
-        sizes = { sp = 0.5, vsp = 0.5 },
-        float = {
-            relative = "editor",
-            row = 0.15,
-            col = 0.2,
-            width = 0.6,
-            height = 0.6,
-            border = "rounded",
-        },
+    -- term = {
+    --     winopts = { winhl = "Normal:term,WinSeparator:WinSeparator" },
+    --     sizes = { sp = 0.5, vsp = 0.5, ["bo sp"] = 0.5, ["bo vsp"] = 0.5 },
+    --     float = {
+    --         relative = "editor",
+    --         row = 0.15,
+    --         col = 0.2,
+    --         width = 0.6,
+    --         height = 0.6,
+    --         border = "rounded",
+    --     },
+    -- },
+}
+
+---@type ChadrcConfig
+M.term = {
+    winopts = { winhl = "Normal:term,WinSeparator:WinSeparator" },
+    sizes = { sp = 0.5, vsp = 0.5, ["bo sp"] = 0.5, ["bo vsp"] = 0.5 },
+    float = {
+        relative = "editor",
+        row = 0.15,
+        col = 0.2,
+        width = 0.6,
+        height = 0.6,
+        border = "rounded",
     },
 }
 

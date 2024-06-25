@@ -6,17 +6,17 @@
 # |_|   \___/ \_/\_/ \___|_|  |_| |_| |_|\___|_| |_|\__,_|
 #
 #
-# by Stephan Raabe (2023)
+# by Codesmith28
 # -----------------------------------------------------
 echo $XDG_SESSION_TYPE
 lockapp=slock
 echo "Using $lockapp to lock the screen."
 
-option1="  lock"
-option2="󰒲  sleep"
-option3="  logout"
-option4="  reboot"
-option5="  power off"
+option1="  lock" #shortcut: l
+option2="󰒲  sleep" #shortcut: z
+option3="  logout" #shortcut: e
+option4="  reboot" #shortcut: r
+option5="  power off" #shortcut: s
 
 options="$option1\n"
 options="$options$option2\n"
