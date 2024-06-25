@@ -42,7 +42,7 @@ configuration {
 window {
     width:                        400px;
     x-offset:                     -14px;
-    y-offset:                     65px;
+    y-offset:                     15px;
     spacing:                      0px;
     padding:                      0px;
     margin:                       0px;
@@ -52,7 +52,7 @@ window {
     cursor:                       "default";
     transparency:                 "real";
     location:                     center;
-    anchor:                       center;
+    anchor:                       northeast;
     fullscreen:                   false;
     enabled:                      true;
     border-radius:                10px;
@@ -62,12 +62,11 @@ window {
 /* ---- Mainbox ---- */
 mainbox {
     enabled:                      true;
-    orientation:                  horizontal;
+    orientation:                  vertical;
     spacing:                      0px;
     margin:                       0px;
     background-color:             @background;
-    background-image:             @current-image;
-    children:                     ["listbox"];
+    children:                     ["inputbar", "listbox"];
 }
 
 /* ---- Imagebox ---- */
@@ -147,7 +146,7 @@ button selected {
 listview {
     enabled:                      true;
     columns:                      1;
-    lines:                        2;
+    lines:                        8;
     cycle:                        true;
     dynamic:                      true;
     scrollbar:                    false;
