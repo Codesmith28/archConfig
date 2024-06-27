@@ -164,14 +164,13 @@ alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
 # PNPM
 # -----------------------------------------------------
 
-# # pnpm
-# export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
-# case ":$PATH:" in
-#   *":$PNPM_HOME:"*) ;;
-#   *) export PATH="$PNPM_HOME:$PATH" ;;
-# esac
-# # pnpm end
-#
+# pnpm
+export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
 
 # -----------------------------------------------------
 # NVM and NODE
