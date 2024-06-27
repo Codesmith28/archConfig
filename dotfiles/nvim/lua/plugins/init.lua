@@ -146,6 +146,7 @@ return {
                 "yamllint",
                 "html-lsp",
                 "css-lsp",
+                "mdformat",
 
                 -- for lua:
                 "lua-language-server",

@@ -42,7 +42,7 @@ M.ui = {
 ---@type ChadrcConfig
 M.term = {
     winopts = { winhl = "Normal:term,WinSeparator:WinSeparator" },
-    sizes = { sp = 0.5, vsp = 0.5, ["bo sp"] = 0.5, ["bo vsp"] = 0.5 },
+    sizes = { sp = 0.4, vsp = 0.4, ["bo sp"] = 0.4, ["bo vsp"] = 0.4 },
     float = {
         relative = "editor",
         row = 0.15,
