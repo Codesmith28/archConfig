@@ -2,7 +2,13 @@
 
 ## Introduction
 
-This repository extends the Arch Linux configuration from [stephan-raabe/dotfiles](https://gitlab.com/stephan-raabe/dotfiles) with additional dotfiles and configurations.
+This repository extends the Arch Linux configuration from [stephan-raabe/dotfiles - v2.9.1](https://gitlab.com/stephan-raabe/dotfiles) with additional dotfiles and configurations.
+
+To install that version of dotfiles use the following link:
+
+   ```
+   git clone -b 2.9.1 https://gitlab.com/stephan-raabe/dotfiles ~/Downloads/dotfiles
+   ```
 
 ## Installation
 
