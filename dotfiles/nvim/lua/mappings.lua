@@ -10,6 +10,8 @@ map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct ta
 map("n", "<C-p>", "<cmd>Telescope find_files<CR>", { desc = "Telescope Find files" })
 map("n", "<C-F>", "<cmd>Telescope live_grep<CR>", { desc = "Telescope Live grep" })
 map("n", "<C-x>", "dd", { desc = "Delete current line" })
+map("n", "<leader>rm", vim.lsp.buf.rename, { desc = "LSP Renamer" })
+-- vim.keymap.set("n", "<leader>rm", vim.lsp.buf.rename, { noremap = true, silent = true }
 
 -- Ctrl+j to open fullscreen terminal and Esc to escape from the terminal
 map("n", "<c-`>", function()
