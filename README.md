@@ -6,9 +6,9 @@ This repository extends the Arch Linux configuration from [stephan-raabe/dotfile
 
 To install that version of dotfiles use the following link:
 
-   ```
-   git clone -b 2.9.1 https://gitlab.com/stephan-raabe/dotfiles ~/Downloads/dotfiles
-   ```
+```bash
+git clone -b 2.9.1 https://gitlab.com/stephan-raabe/dotfiles ~/Downloads/dotfiles
+```
 
 ## Installation
 
@@ -18,17 +18,17 @@ After installing the base configuration from [stephan-raabe/dotfiles](https://gi
 
 1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
 
-   ```
+   ```bash
     git clone https://github.com/Codesmith28/archConfig.git ~/Downloads/arch-config
    ```
 
-2. Navigate to the downloaded folder and view the content:
+1. Navigate to the downloaded folder and view the content:
 
-   ```
+   ```bash
     cd ~/Downloads/arch-config
    ```
 
-3. Copy / Move the contents accordingly.
+1. Copy / Move the contents accordingly.
 
 ## Packages
 
@@ -38,25 +38,25 @@ Go to set under setupScripts directory
 
 1. To install basic packages, run the following command:
 
-   ```
+   ```bash
    ./packages.sh
    ```
 
 2. To setup ssh keys, run the following command:
 
-   ```
+   ```bash
    ./ssh.sh
    ```
 
-2. To setup the development environment, run:
+3. To setup the development environment, run:
 
-   ```
+   ```bash
    ./dev.sh
    ```
 
 To configure startup apps, go to the startupApps directory and run the following command:
 
-```
+```bash
 ./setup.sh
 ```
 
@@ -64,7 +64,7 @@ To configure startup apps, go to the startupApps directory and run the following
 
 You can also backup your current configuration by running:
 
-```
+```bash
 ./backup.sh
 ```
 
@@ -74,15 +74,15 @@ You can also backup your current configuration by running:
 
 After the minimal installation, you may face the issue of the grub not showing up. Thus, we click on yes for post installation configuration and then run the following commands sequentially:
 
-```
+```bash
 pacman -Sy grub efibootmgr dosfstools mtools
 ```
 
-```
+```bash
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 ```
 
-```
+```bash
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
@@ -94,43 +94,44 @@ If you have Windows installed and it is not showing up in the grub, then run the
 
 - Install os-prober, if not already installed:
 
-```
-pacman -S os-prober
-```
+   ```bash
+   pacman -S os-prober
+   ```
 
 - Edit the file `etc/default/grub` and add the following line:
 
-```
-GRUB_DISABLE_OS_PROBER=false
-```
+   ```bash
+   GRUB_DISABLE_OS_PROBER=false
+   ```
 
 - Update the grub configuration:
 
-```
-grub-mkconfig -o /boot/grub/grub.cfg
-```
+   ```bash
+   grub-mkconfig -o /boot/grub/grub.cfg
+   ```
 
 ### How to revive arch linux after any windows updates?
 
 1. Boot into the arch linux live usb.
+
 2. Connect to the internet and update all the packages as follows:
 
-```
-pacman -Sy
-```
+   ```bash
+   pacman -Sy
+   ```
 
 3. Mount the root partition of the arch linux to /mnt and the boot partition to /mnt/boot like:
 
-```
-mount /dev/nvme0n1p5 /mnt
-```
+   ```bash
+   mount /dev/nvme0n1p5 /mnt
+   ```
 
-```
-mount /dev/nvme0n1p6 /mnt/boot
-```
+   ```bash
+   mount /dev/nvme0n1p6 /mnt/boot
+   ```
 
-```
-arch-chroot /mnt
-```
+   ```bash
+   arch-chroot /mnt
+   ```
 
 4. Run the grub-install and grub-mkconfig commands as mentioned above.
