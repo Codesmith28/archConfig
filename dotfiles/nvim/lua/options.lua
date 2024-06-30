@@ -4,6 +4,10 @@ require "nvchad.options"
 
 local o = vim.o
 
+vim.cmd [[
+    autocmd FileType javascript,typescript,json setlocal shiftwidth=2 tabstop=2
+]]
+
 -- relative line numbering:
 o.relativenumber = true
 
