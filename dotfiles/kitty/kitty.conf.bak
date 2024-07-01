@@ -5,16 +5,15 @@ url_style curly
 detect_urls yes
 
 
-# font_family     FiraCode Nerd Font
-# font_family     DejaVu Sans
-# font_family     Cascadia Mono PL
-# font_family     DaddyTimeMono
-# font_family     CaskaydiaCove Nerd Font
-# font_family     CodeNewRoman Nerd Font
-# font_family     JetBrainsMono Nerd Font
-# font_family     RecMonoCasual Nerd Font
-
-font_size 14.0
+ # font_family      FiraCode Nerd Font
+/* font_family      DejaVu Sans */
+/* font_family      Cascadia Mono PL */
+/* font_family      DaddyTimeMono */
+ # font_family CaskaydiaCove Nerd Font
+/* font_family CaskaydiaCove Nerd Font Mono*/
+font_family RecMonoCasual Nerd Font
+# font_family   CodeNewRoman Nerd Font
+font_size 12
 disable_ligatures never
 bold_font        auto
 italic_font      auto
@@ -41,7 +40,7 @@ force_ltr no
 #: support, because it will force kitty to always treat the text as
 #: LTR, which FriBidi expects for terminals.
 
-adjust_line_height  2
+adjust_line_height  0
 adjust_column_width 0
 
 #: Change the size of each character cell kitty renders. You can use
@@ -91,7 +90,7 @@ disable_ligatures never
 #: implemented using the calt OpenType feature. For disabling general
 #: ligatures, use the font_features setting.
 
-# font_features Retina
+# font_features none
 
 #: Choose exactly which OpenType features to enable or disable. This
 #: is useful as some fonts might have features worthwhile in a
@@ -237,7 +236,7 @@ scrollback_fill_enlarged_window no
 #: Fill new space with lines from the scrollback buffer after
 #: enlarging a window.
 
-wheel_scroll_multiplier 3.0
+wheel_scroll_multiplier 5.0
 
 #: Modify the amount scrolled by the mouse wheel. Note this is only
 #: used for low precision scrolling devices, not for high precision
@@ -490,7 +489,7 @@ command_on_bell none
 
 remember_window_size  no
 initial_window_width  1000
-initial_window_height 700
+initial_window_height 600
 
 #: If enabled, the window size will be remembered so that new
 #: instances of kitty will have the same size as the previous
@@ -499,7 +498,7 @@ initial_window_height 700
 #: suffix of "c" on the width/height values to have them interpreted
 #: as number of cells instead of pixels.
 
-enabled_layouts splits,stack
+enabled_layouts splits
 
 #: The enabled window layouts. A comma separated list of layout names.
 #: The special value all means all layouts. The first listed layout
@@ -514,7 +513,7 @@ window_resize_step_lines 2
 #: resizing windows. The cells value is used for horizontal resizing
 #: and the lines value for vertical resizing.
 
-window_border_width 1pt
+window_border_width 0.5pt
 
 #: The width of window borders. Can be either in pixels (px) or pts
 #: (pt). Values in pts will be rounded to the nearest number of pixels
@@ -530,6 +529,8 @@ draw_minimal_borders yes
 #: that setting a non-zero window margin overrides this and causes all
 #: borders to be drawn.
 
+text_fg_overrides_threshold 0
+
 window_margin_width 0
 
 #: The window margin (in pts) (blank area outside the border). A
@@ -537,7 +538,7 @@ window_margin_width 0
 #: horizontal sides. Three values set top, horizontal and bottom. Four
 #: values set top, right, bottom and left.
 
-single_window_margin_width 0
+single_window_margin_width -1
 
 #: The window margin (in pts) to use when only a single window is
 #: visible. Negative values will cause the value of
@@ -546,7 +547,7 @@ single_window_margin_width 0
 #: values set top, horizontal and bottom. Four values set top, right,
 #: bottom and left.
 
-window_padding_width 3
+window_padding_width 5
 
 #: The window padding (in pts) (blank area between the text and the
 #: window border). A single value sets all four sides. Two values set
@@ -636,7 +637,7 @@ tab_bar_margin_height 0.0 0.0
 #: the second number is the margin between the tab bar and the
 #: contents of the current tab.
 
-tab_bar_style powerline
+tab_bar_style fade
 
 #: The tab bar style, can be one of: fade, separator, powerline, or
 #: hidden. In the fade style, each tab's edges fade into the
@@ -679,7 +680,7 @@ tab_powerline_style angled
 #: using powerline as the tab_bar_style, can be one of: angled,
 #: slanted, or round.
 
-tab_activity_symbol ⏳️
+tab_activity_symbol ⏳
 
 #: Some text or a unicode symbol to show on the tab if a window in the
 #: tab that does not have focus has some activity.
@@ -726,8 +727,7 @@ inactive_tab_font_style normal
 
 #: The foreground and background colors
 
-background_opacity 0.8
-# background_opacity 1
+background_opacity 0.85
 
 #: The opacity of the background. A number between 0 and 1, where 1 is
 #: opaque and 0 is fully transparent.  This will only work if
@@ -1191,18 +1191,17 @@ map kitty_mod+h         show_scrollback
 
 #: Window management {{{
 
-# map kitty_mod+enter new_window
+map kitty_mod+enter new_window
 
 #: You can open a new window running an arbitrary program, for
 #: example::
 
-#:     map kitty_mod+y      launch mutt
+#:     map kitty_yesmod+y      launch mutt
 
 #: You can open a new window with the current working directory set to
 #: the working directory of the current window using::
 
-map kitty_mod+enter launch --location=vsplit --cwd=current
-map ctrl+alt+enter launch  --location=hsplit --cwd=current
+#:     map ctrl+alt+enter    launch --cwd=current
 
 #: You can open a new window that is allowed to control kitty via the
 #: kitty remote control facility by prefixing the command line with @.
@@ -1248,7 +1247,7 @@ map kitty_mod+0 tenth_window
 
 map kitty_mod+right next_tab
 map kitty_mod+left  previous_tab
-map kitty_mod+t     new_tab_with_cwd
+map kitty_mod+t     new_tab
 map kitty_mod+q     close_tab
 map shift+cmd+w     close_os_window
 map kitty_mod+.     move_tab_forward
@@ -1272,17 +1271,16 @@ map kitty_mod+alt+t set_tab_title
 
 #: Layout management {{{
 
-# map kitty_mod+l next_layout
+map kitty_mod+l next_layout
 
 #: You can also create shortcuts to switch to specific layouts::
 
-map ctrl+alt+t goto_layout tall
-map ctrl+alt+s goto_layout stack
+#:     map ctrl+alt+t goto_layout tall
+#:     map ctrl+alt+s goto_layout stack
 
 #: Similarly, to switch back to the previous layout::
 
-map ctrl+alt+p last_used_layout
-
+#:    map ctrl+alt+p last_used_layout
 #: }}}
 
 #: Font sizes {{{
@@ -1488,6 +1486,5 @@ white
 
 # BEGIN_KITTY_THEME
 # Adwaita darker
-include Dracula.conf
-# include citylights.conf
+include current-theme.conf
 # END_KITTY_THEME
