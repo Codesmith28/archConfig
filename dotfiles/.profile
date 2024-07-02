@@ -116,17 +116,10 @@ pfetch
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
 # -----------------------------------------------------
-# TMUX
+# DOCKER
 # -----------------------------------------------------
 
-# make alases for tmux:
-alias tmux='tmux -2'
-alias ta='tmux attach -t'
-alias tl='tmux list-sessions'
-alias tk='tmux kill-session -t'
-alias tn='tmux new-session -s'
-alias ts='tmux switch -t'
-alias tks='tmux kill-session -a'
+export DOCKER_HOST=unix:///var/run/docker.sock
 
 # -----------------------------------------------------
 # Files and code
