@@ -30,9 +30,9 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [open]
 rules = [
-	{ name = "*/", use = [ "edit", "open", "reveal" ] },
-
-	{ mime = "*", use = [ "open" ] },
+    { name = "*/", use = [ "edit", "open", "reveal" ] },
+    { mime = "*/application/pdf", cmd = "zathura \"$1\"", use = [ "zathura" ] },
+    { mime = "*", use = [ "open" ] },
 ]
 
 [tasks]

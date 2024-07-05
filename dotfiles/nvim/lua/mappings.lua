@@ -4,7 +4,7 @@ require "nvchad.mappings"
 
 local map = vim.keymap.set
 
--- map("i", "jk", "<ESC>")
+map("i", "kj", "<ESC>")
 map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
 map("n", "<C-p>", "<cmd>Telescope find_files<CR>", { desc = "Telescope Find files" })
