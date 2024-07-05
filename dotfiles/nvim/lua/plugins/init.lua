@@ -7,6 +7,24 @@ return {
         event = "VeryLazy",
         opts = {},
     },
+    {
+        "mistricky/codesnap.nvim",
+        lazy = true,
+        build = "make build_generator",
+        keys = {
+            { "<leader>sc", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
+        },
+        opts = {
+            save_path = "~/Pictures/Codesnaps",
+            has_breadcrumbs = true,
+            watermark = "",
+            bg_color = "#535c68",
+            code_font_familty = "JetBrainsMono Nerd Font",
+        },
+        config = function(_, opts)
+            require("codesnap").setup(opts)
+        end,
+    },
 
     {
         "stevearc/conform.nvim",
