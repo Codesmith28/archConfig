@@ -43,7 +43,8 @@ packages=(
 
     "nautilus"
     "eog"
-    "brave-bin"
+    "firefox"
+    "hyprshot"
     "google-chrome"
     "spotify-adblock"
 
