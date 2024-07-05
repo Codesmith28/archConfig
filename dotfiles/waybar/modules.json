@@ -232,12 +232,9 @@
 
   // Clock
   "clock": {
-    "format": "{:%H:%M %a}",
+    "format": "{:%H:%M %a | %d-%m-%Y}",
     // "timezone": "America/New_York",
-    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-    // START CLOCK FORMAT
-    "format-alt": "{:%d-%m-%Y}"
-    // END CLOCK FORMAT
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
   },
 
   // System
