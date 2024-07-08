@@ -28,6 +28,7 @@ packages=(
     "bat"
     "lazygit"
     "nvm"
+    "python-pipx"
 )
 
 # ------------------------------w-------------------------
@@ -60,6 +61,12 @@ git config --global user.email "$git_email"
 
 gh auth login
 sudo gh extension install github/copilot
+
+# -------------------------------------------------------
+# ensure path of pipx:
+# -------------------------------------------------------
+
+pipx ensurepath
 
 # -------------------------------------------------------
 # Install latest LTS version of Node.js
