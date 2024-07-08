@@ -15,20 +15,52 @@ return {
             { "<leader>sc", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
         },
         opts = {
+            code_font_familty = "JetBrainsMono Nerd Font",
             save_path = "~/Pictures/Codesnaps",
             has_breadcrumbs = true,
             watermark = "",
             bg_color = "#535c68",
-            code_font_familty = "JetBrainsMono Nerd Font",
+            bg_x_padding = 61,
+            bg_y_padding = 41,
         },
         config = function(_, opts)
             require("codesnap").setup(opts)
         end,
     },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        event = "User FilePost",
+        opts = {
+            indent = { char = "│" },
+            scope = {
+                char = "│",
+                show_start = false,
+                show_end = false,
+                highlight = "IblScopeChar"
+            },
+        },
+        config = function(_, opts)
+            dofile(vim.g.base46_cache .. "blankline")
+
+            local hooks = require "ibl.hooks"
+            hooks.register(
+                hooks.type.WHITESPACE,
+                hooks.builtin.hide_first_space_indent_level
+            )
+
+            -- Custom highlight for function scopes
+            vim.api.nvim_set_hl(0, "IblScopeChar", { fg = "#89b4fa", nocombine = true })
+
+            require("ibl").setup(opts)
+
+            dofile(vim.g.base46_cache .. "blankline")
+        end,
+    },
+
 
     {
         "stevearc/conform.nvim",
-        -- event = "BufWritePre", -- uncomment for format on save
+        event = "BufWritePre", -- uncomment for format on save
         config = function()
             require "configs.conform"
         end,
@@ -46,7 +78,7 @@ return {
             "LazyGitFilter",
             "LazyGitFilterCurrentFile",
         },
-        -- optional for floating window border decoration
+        -- optional for floating wow border decoration
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
@@ -64,6 +96,26 @@ return {
         opts = function()
             return require "configs.formatter"
         end,
+    },
+    {
+        "cameron-wags/rainbow_csv.nvim",
+        config = true,
+
+        ft = {
+            "csv",
+            "tsv",
+            "csv_semicolon",
+            "csv_whitespace",
+            "csv_pipe",
+            "rfc_csv",
+            "rfc_semicolon",
+        },
+        cmd = {
+            "RainbowDelim",
+            "RainbowDelimSimple",
+            "RainbowDelimQuoted",
+            "RainbowMultiDelim",
+        },
     },
     {
         "zbirenbaum/copilot.lua",

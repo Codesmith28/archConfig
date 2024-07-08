@@ -155,12 +155,6 @@ source $ZSH/oh-my-zsh.sh
 eval "$(fzf --zsh)"
 
 # -----------------------------------------------------
-# FIX PYTHON ON ARCH LINUX
-# -----------------------------------------------------
-
-alias fixpy='sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED'
-
-# -----------------------------------------------------
 # PNPM
 # -----------------------------------------------------
 
@@ -207,3 +201,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # bun completions
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
+
+# Created by `pipx` on 2024-07-07 06:31:33
+export PATH="$PATH:/home/codesmith28/.local/bin"
