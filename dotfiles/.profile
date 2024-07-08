@@ -130,8 +130,9 @@ vsc() {
 }
 
 alias thunar='setsid thunar'
-alias nautilus='setsid nautilus'
+alias files='setsid nautilus'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
+alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
 # -----------------------------------------------------
 # App development

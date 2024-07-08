@@ -5,27 +5,26 @@
 //    \_/\_/ \__,_|\__, |_.__/ \__,_|_|
 //                 |___/
 //
-// by Stephan Raabe (2023)
+// by Codesmith28
 // -----------------------------------------------------
-//
+
 {
     // General Settings
     "layer": "top",
     "margin-bottom": 0,
-    "layer": "top",
     "margin-left": 0,
     "margin-right": 0,
     "spacing": 1,
 
     // Load Modules
-    "include": ["~/dotfiles/waybar/modules.json"],
+    "include": ["~/dotfiles/waybar/modules.jsonc"],
 
     // Modules Left
     "modules-left": [
         "custom/appmenuicon",
         "wlr/taskbar",
         "hyprland/workspaces"
-        // "custom/cava"
+        // "custom/cava",
         // "group/links",
         // "group/settings",
         // "group/quicklinks"
@@ -41,13 +40,14 @@
     "modules-right": [
         "custom/updates",
         "pulseaudio",
+        "backlight",
         // "bluetooth",
         "battery",
         "network",
-        //"group/hardware",
+        // "group/hardware",
         "custom/cliphist",
-        //"idle_inhibitor",
-        "custom/exit",
+        // "idle_inhibitor",
+        // "custom/exit",
         "tray",
         "clock"
         // "custom/ml4w-welcome"
