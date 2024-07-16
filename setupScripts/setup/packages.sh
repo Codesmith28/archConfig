@@ -61,6 +61,7 @@ packages=(
     "ttf-cascadia-code-nerd"
     "noto-fonts"
     "noto-fonts-cjk"
+    "xwaylandvideobridge"
 )
 
 # -------------------------------------------------------
