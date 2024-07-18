@@ -32,8 +32,8 @@
 
     // Modules Center
     "modules-center": [
-        "hyprland/window"
-        // "custom/empty"
+        "hyprland/window",
+        "custom/empty"
     ],
 
     // Modules Right
