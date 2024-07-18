@@ -14,7 +14,7 @@ git clone -b 2.9.1 https://gitlab.com/stephan-raabe/dotfiles ~/Downloads/dotfile
 
 After installing the base configuration from [stephan-raabe/dotfiles](https://gitlab.com/stephan-raabe/dotfiles), follow these steps to integrate additional configurations:
 
-1. Install CaskaydiaCove Nerd Fonts from [here](https://www.nerdfonts.com/font-downloads).
+1. Install JetbrainsMono and RecMonoCasual Nerd Fonts from [here](https://www.nerdfonts.com/font-downloads).
 
 1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
 
@@ -94,21 +94,21 @@ If you have Windows installed and it is not showing up in the grub, then run the
 
 - Install os-prober, if not already installed:
 
-   ```bash
-   pacman -S os-prober
-   ```
+  ```bash
+  pacman -S os-prober
+  ```
 
 - Edit the file `etc/default/grub` and add the following line:
 
-   ```bash
-   GRUB_DISABLE_OS_PROBER=false
-   ```
+  ```bash
+  GRUB_DISABLE_OS_PROBER=false
+  ```
 
 - Update the grub configuration:
 
-   ```bash
-   grub-mkconfig -o /boot/grub/grub.cfg
-   ```
+  ```bash
+  grub-mkconfig -o /boot/grub/grub.cfg
+  ```
 
 ### How to revive arch linux after any windows updates?
 

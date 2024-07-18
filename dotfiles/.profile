@@ -37,6 +37,7 @@ alias od='~/private/onedrive.sh'
 alias rw='~/dotfiles/waybar/reload.sh'
 alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/dotfiles"
+alias hypr="cd ~/dotfiles/hypr"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
@@ -69,7 +70,7 @@ alias ascii='~/dotfiles/scripts/figlet.sh'
 # -----------------------------------------------------
 
 alias confq='$EDITOR ~/dotfiles/qtile/config.py'
-alias confp='$EDITOR ~/dotfiles/picom/picom.conf'
+alias confp='$EDITOR ~/dotfiles/.profile'
 alias confb='$EDITOR ~/dotfiles/.bashrc'
 alias confz='$EDITOR ~/dotfiles/.zshrc'
 
@@ -129,26 +130,20 @@ vsc() {
     code "$1" && exit
 }
 
+neovide() {
+    setsid -f neovide "$1" && exit
+}
+
 alias thunar='setsid thunar'
 alias files='setsid nautilus'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
 alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
 # -----------------------------------------------------
-# App development
-# -----------------------------------------------------
-
-# export ANDROID_HOME=/opt/android-sdk
-# export PATH=$PATH:$ANDROID_HOME/emulator
-# export PATH=$PATH:$ANDROID_HOME/tools
-# export PATH=$PATH:$ANDROID_HOME/tools/bin
-# export PATH=$PATH:$ANDROID_HOME/platform-tools
-
-# -----------------------------------------------------
 # Yazi file manager:
 # -----------------------------------------------------
 
-function y() {
+function lf() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -160,6 +155,11 @@ function y() {
 # -----------------------------------------------------
 # Gh CLI
 # -----------------------------------------------------
+
 ghcs () {
     gh copilot suggest "$1"
 }
+
+# -----------------------------------------------------
+# wayland
+# -----------------------------------------------------

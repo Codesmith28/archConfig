@@ -9,7 +9,7 @@ return {
     },
     {
         "mistricky/codesnap.nvim",
-        lazy = true,
+        lazy = false,
         build = "make build_generator",
         keys = {
             { "<leader>sc", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
@@ -36,17 +36,14 @@ return {
                 char = "│",
                 show_start = false,
                 show_end = false,
-                highlight = "IblScopeChar"
+                highlight = "IblScopeChar",
             },
         },
         config = function(_, opts)
             dofile(vim.g.base46_cache .. "blankline")
 
             local hooks = require "ibl.hooks"
-            hooks.register(
-                hooks.type.WHITESPACE,
-                hooks.builtin.hide_first_space_indent_level
-            )
+            hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
             -- Custom highlight for function scopes
             vim.api.nvim_set_hl(0, "IblScopeChar", { fg = "#89b4fa", nocombine = true })
@@ -56,7 +53,6 @@ return {
             dofile(vim.g.base46_cache .. "blankline")
         end,
     },
-
 
     {
         "stevearc/conform.nvim",
