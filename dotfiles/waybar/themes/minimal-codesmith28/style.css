@@ -13,24 +13,24 @@
 /* -----------------------------------------------------
  * Import Pywal colors
  * ----------------------------------------------------- */
-/* @import 'style-light.css'; */
-/*@define-color backgroundlight #FFFFFF;*/
-/*@define-color backgrounddark #FFFFFF;*/
-@define-color workspacesbackground1 #FFFFFF;
-@define-color workspacesbackground2 #CCCCCC;
-@define-color bordercolor #FFFFFF;
-@define-color textcolor1 #000000;
-@define-color textcolor2 #000000;
-@define-color textcolor3 #FFFFFF;
-@define-color iconcolor #FFFFFF;
+
+/* main*/
+@define-color c1 #000000;
+@define-color c2 #FFFFFF;
+
+/* icon */
+@define-color icon #FFFFFF;
+
+/* for waybar: */
+@define-color active #FFFFFF;
+@define-color hover #CCCCCC;
 
 /* -----------------------------------------------------
  * General
  * ----------------------------------------------------- */
 * {
-  /*font-family: "Fira Sans semibold", FontAwesome, Roboto, Helvetica, Arial, sans-serif; */
-  /*font-family: monospace;*/
-  /*font-family: "FiraCode Nerd Font";*/
+  /* font-family: "FiraCode Nerd Font"; */
+  font-family: monospace;
   font-size: 14px;
   border: none;
   border-radius: 0;
@@ -38,8 +38,6 @@
 
 window#waybar {
   background-color: rgba(0, 0, 0, 0.6);
-  border-bottom: 0 solid #ffffff;
-  /* color: #ffffff; */
   transition-property: background-color;
   transition-duration: 0.5s;
 }
@@ -52,22 +50,27 @@ window#waybar {
   border: 0;
   font-size: 14px;
   border-radius: 5px;
-  color: @textcolor1;
+  color: @c1;
 }
 
 #workspaces button {
   border: 0;
-  margin: 4px 5px 4px 0;
+  margin: 2px 3px 2px 0;
   padding: 0 4px;
-  color: @textcolor3;
+  color: @c2;
   border-radius: 5px;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
-#workspaces button.active,
+#workspaces button.active {
+  color: @c1;
+  background: @active;
+  border-radius: 8px;
+}
+
 #workspaces button:hover {
-  color: @textcolor1;
-  background: @workspacesbackground2;
+  color: @c1;
+  background: @hover;
   border-radius: 8px;
 }
 
@@ -76,14 +79,14 @@ window#waybar {
  * ----------------------------------------------------- */
 tooltip {
   border-radius: 10px;
-  background-color: @textcolor2;
+  background-color: @c1;
   opacity: 0.8;
   padding: 20px;
   margin: 0;
 }
 
 tooltip label {
-  color: @textcolor3;
+  color: @c2;
 }
 
 /* -----------------------------------------------------
@@ -131,7 +134,7 @@ window#waybar.empty #window {
   margin-right: 14px;
   font-size: 14px;
   font-weight: bold;
-  color: @iconcolor;
+  color: @icon;
 }
 
 #custom-settings {
@@ -179,7 +182,7 @@ window#waybar.empty #window {
   margin-right: 15px;
   font-size: 16px;
   font-weight: bold;
-  color: @iconcolor;
+  color: @icon;
 }
 
 #idle_inhibitor.activated {
@@ -202,7 +205,7 @@ window#waybar.empty #window {
   margin: 0 20px 0 0;
   padding: 0;
   font-size: 16px;
-  color: @iconcolor;
+  color: @icon;
 }
 
 /* -----------------------------------------------------
@@ -231,7 +234,7 @@ window#waybar.empty #window {
 #custom-youtube {
   background-color: @backgroundlight;
   font-size: 14px;
-  color: @textcolor2;
+  color: @c1;
   border-radius: 15px;
   margin: 0 15px 0 0;
 }
@@ -246,7 +249,7 @@ window#waybar.empty #window {
   margin: 0;
   padding: 0;
   font-size: 14px;
-  color: @iconcolor;
+  color: @icon;
 }
 
 #language {
@@ -327,7 +330,7 @@ window#waybar.empty #window {
 @keyframes blink {
   to {
     /* background-color: @backgroundlight; */
-    color: @textcolor3;
+    color: @c2;
   }
 }
 

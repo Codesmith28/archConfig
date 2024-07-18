@@ -7,17 +7,23 @@ local o = vim.o
 -- relative line numbering:
 o.relativenumber = true
 
--- set tabs to have 4 spaces
+-- set default tab size to 4 spaces
 o.tabstop = 4
 o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
-vim.cmd [[
-    autocmd FileType javascript,typescript,json,css setlocal shiftwidth=2 tabstop=2
-]]
+-- set tab size to 2 for specific file types
+-- Set indentation for specific file types
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = { "javascript", "typescript", "json", "css", "html", "jsx", "tsx", "javascriptreact", "typescriptreact" },
+    callback = function()
+        vim.bo.tabstop = 2
+        vim.bo.shiftwidth = 2
+    end,
+})
 
--- other utilites
+-- other utilities
 vim.g.copilot_assume_mapped = true
 
 -- shell and search settings
@@ -35,11 +41,6 @@ o.cursorlineopt = "both" -- to enable cursorline!
 vim.opt.mouse = "a"
 vim.api.nvim_set_keymap("n", "<S-ScrollWheelUp>", "10zh", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<S-ScrollWheelDown>", "10zl", { noremap = true, silent = true })
-
--- center the screen when moving up and down
-vim.api.nvim_set_keymap("n", "j", "jzz", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "k", "kzz", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "G", "Gzz", { noremap = true, silent = true })
 
 -- comments
 vim.api.nvim_set_keymap("n", "<C-/>", "gcc", { noremap = false })

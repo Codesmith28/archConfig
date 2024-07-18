@@ -5,8 +5,8 @@
 local M = {}
 
 M.ui = {
-    theme = "gruvbox",
-    theme_toggle = { "gruvbox", "onedark" },
+    theme = "onedark",
+    theme_toggle = { "onedark", "chadracula" },
     transparency = true,
 
     hl_override = {
