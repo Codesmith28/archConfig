@@ -1,0 +1,3 @@
+{
+  "IgnorePkg": ["tff-liberation", "chromium"]
+}

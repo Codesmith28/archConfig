@@ -31,4 +31,3 @@ end, { desc = "terminal full screen" })
 -- indenting
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
-
