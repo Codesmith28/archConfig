@@ -5,8 +5,8 @@
 local M = {}
 
 M.ui = {
-    theme = "onedark",
-    theme_toggle = { "onedark", "chadracula" },
+    theme = "chadracula",
+    theme_toggle = { "chadracula" },
     transparency = true,
 
     hl_override = {
@@ -53,5 +53,7 @@ M.term = {
         border = "rounded",
     },
 }
+
+M.lsp = { signature = false }
 
 return M

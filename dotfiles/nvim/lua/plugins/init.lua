@@ -7,6 +7,33 @@ return {
         event = "VeryLazy",
         opts = {},
     },
+    -- lazy.nvim
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        opts = {},
+        dependencies = {
+            "rcarriga/nvim-notify",
+        },
+        config = function()
+            require "configs.noice"
+        end,
+    },
+    {
+        "rcarriga/nvim-notify",
+        opts = {
+            background_colour = "#000000",
+            fps = 60,
+            level = 1,
+            max_height = 10,
+            render = "default",
+            damping = 0.7,
+            timeout = 2000,
+        },
+        config = function(_, opts)
+            require("notify").setup(opts)
+        end,
+    },
     {
         "mistricky/codesnap.nvim",
         lazy = false,
@@ -108,7 +135,7 @@ return {
         },
         cmd = {
             "RainbowDelim",
-            "RainbowDelimSimple",
+            -- "RainbowDelimSimple",
             "RainbowDelimQuoted",
             "RainbowMultiDelim",
         },
