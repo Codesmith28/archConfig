@@ -7,7 +7,7 @@ This repository extends the Arch Linux configuration from [stephan-raabe/dotfile
 To install that version of dotfiles use the following link:
 
 ```bash
-git clone -b 2.9.1 https://gitlab.com/stephan-raabe/dotfiles ~/Downloads/dotfiles
+git clone -b 2.9.1 https://github.com/mylinuxforwork/dotfiles.git
 ```
 
 ## Installation
