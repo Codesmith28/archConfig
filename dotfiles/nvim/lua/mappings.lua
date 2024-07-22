@@ -31,3 +31,6 @@ end, { desc = "terminal full screen" })
 -- indenting
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
+
+-- notification history:
+map("n", "<M-n>", "<cmd>Telescope notify<CR>", { desc = "Notification history" })
