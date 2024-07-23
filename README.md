@@ -14,8 +14,6 @@ git clone -b 2.9.1 https://github.com/mylinuxforwork/dotfiles.git
 
 After installing the base configuration from [stephan-raabe/dotfiles](https://gitlab.com/stephan-raabe/dotfiles), follow these steps to integrate additional configurations:
 
-1. Install JetbrainsMono and RecMonoCasual Nerd Fonts from [here](https://www.nerdfonts.com/font-downloads).
-
 1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
 
    ```bash
