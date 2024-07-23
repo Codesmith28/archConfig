@@ -22,7 +22,7 @@ fi
 packages=(
     "kitty"
     "pfetch"
-    "neofetch"
+    "fastfetch"
     "btop"
     "baobab"
     "ripgrep"
@@ -58,10 +58,11 @@ packages=(
     "notion-app-nativefier"
     "libreoffice-fresh"
     "fontpreview"
-    "ttf-cascadia-code-nerd"
     "noto-fonts"
     "noto-fonts-cjk"
     "xwaylandvideobridge"
+    "ttf-recursive-nerd"
+    "tff-jetbrains-mono-nerd"
 )
 
 # -------------------------------------------------------
