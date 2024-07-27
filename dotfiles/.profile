@@ -13,9 +13,6 @@ PS1='[\u@\h \W]\$ '
 export EDITOR=nvim
 alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 
-# For the profile:
-# source ~/.profile
-
 # -----------------------------------------------------
 # ALIASES
 # -----------------------------------------------------
@@ -24,9 +21,13 @@ alias c='clear'
 alias e='exit'
 alias nf='neofetch'
 alias pf='pfetch'
+alias ff='fastfetch'
 alias ls='eza -a --icons'
 alias ll='eza -al --icons'
-alias lt='eza -a --tree --level=2 --icons'
+lt () {
+    local level=${1:-1}
+    eza -a --tree --level=$level --icons
+}
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias vim='$EDITOR'
@@ -105,10 +106,10 @@ mntd() {
 alias D='cd /home/run/media/localdiskD'
 
 # -----------------------------------------------------
-# PFETCH if on wm
+# PFETCH/fastfetch
 # -----------------------------------------------------
 
-pfetch
+# ff
 
 # -----------------------------------------------------
 # STARSHIP export

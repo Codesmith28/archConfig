@@ -1,4 +1,5 @@
 require "nvchad.mappings"
+require("oil").setup()
 
 -- add yours here
 
@@ -34,3 +35,14 @@ map("v", ">", ">gv", { desc = "Indent right" })
 
 -- notification history:
 map("n", "<M-n>", "<cmd>Telescope notify<CR>", { desc = "Notification history" })
+
+-- oil.nvim:
+map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- change tab not buffer:
+map("n", "<M-]>", "<cmd>tabnext<CR>", { desc = "Next tab" })
+map("n", "<M-[>", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
+
+-- navigation:
+map("n", "<M-j>", "jzz", { desc = "Move down and center", silent = true })
+map("n", "<M-k>", "kzz", { desc = "Move up and center", silent = true })

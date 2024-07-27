@@ -1,105 +1,60 @@
-//  Thanks to Bina
+//   _____ _____ _____ _____ _____ _____ _____ _____ _____
+//  |   __|  _  |   __|_   _|   __|   __|_   _|     |  |  |
+//  |   __|     |__   | | | |   __|   __| | | |   --|     |
+//  |__|  |__|__|_____| |_| |__|  |_____| |_| |_____|__|__|  ARCH
+//
+//  by Bina
+
+// execute with: fastfetch --colors-block-range-start 9 --colors-block-width 3
+
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
+    "source": "~/.local/share/fastfetch/ascii/arch3.txt",
     "padding": {
-      "top": 2,
+      "right": 4,
     },
   },
   "display": {
-    "separator": " ➜  ",
+    "separator": " ",
   },
   "modules": [
     "break",
-    "break",
-    "break",
+    {
+      "type": "title",
+      "keyWidth": 10,
+    },
     {
       "type": "os",
-      "key": "OS   ",
-      "keyColor": "31", // = color1
+      "key": " ",
+      "keyColor": "34", // = color3
     },
     {
       "type": "kernel",
-      "key": " ├  ",
-      "keyColor": "31",
+      "key": " ",
+      "keyColor": "34",
+    },
+    {
+      "type": "host",
+      "key": "󰍹 ",
+      "keyColor": "34",
+    },
+    {
+      "type": "uptime",
+      "key": " ",
+      "keyColor": "34",
     },
     {
       "type": "packages",
       "format": "{} (pacman)",
-      "key": " ├ 󰏖 ",
-      "keyColor": "31",
-    },
-    {
-      "type": "shell",
-      "key": " └  ",
-      "keyColor": "31",
-    },
-    "break",
-    {
-      "type": "wm",
-      "key": "WM   ",
-      "keyColor": "32",
-    },
-    {
-      "type": "wmtheme",
-      "key": " ├ 󰉼 ",
-      "keyColor": "32",
-    },
-    {
-      "type": "icons",
-      "key": " ├ 󰀻 ",
-      "keyColor": "32",
-    },
-    {
-      "type": "cursor",
-      "key": " ├  ",
-      "keyColor": "32",
-    },
-    {
-      "type": "terminal",
-      "key": " ├  ",
-      "keyColor": "32",
-    },
-    {
-      "type": "terminalfont",
-      "key": " └  ",
-      "keyColor": "32",
-    },
-    "break",
-    {
-      "type": "host",
-      "format": "{5} {1} Type {2}",
-      "key": "PC   ",
-      "keyColor": "33",
-    },
-    {
-      "type": "cpu",
-      "format": "{1} ({3}) @ {7} GHz",
-      "key": " ├  ",
-      "keyColor": "33",
-    },
-    {
-      "type": "gpu",
-      "format": "{1} {2} @ {12} GHz",
-      "key": " ├ 󰢮 ",
-      "keyColor": "33",
+      "key": "󰏓 ",
+      "keyColor": "34",
     },
     {
       "type": "memory",
-      "key": " ├  ",
-      "keyColor": "33",
+      "key": " ",
+      "keyColor": "34",
     },
-    {
-      "type": "swap",
-      "key": " ├ 󰓡 ",
-      "keyColor": "33",
-    },
-    {
-      "type": "disk",
-      "key": " └ 󰋊 ",
-      "keyColor": "33",
-    },
-    "break",
     "break",
   ],
 }
