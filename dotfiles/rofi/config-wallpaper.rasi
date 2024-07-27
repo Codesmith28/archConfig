@@ -12,14 +12,13 @@
 /* ---- Configuration ---- */
 configuration {
     modi:                       "drun,run";
-    font:                       "Fira Sans 11";
     show-icons:                 true;
 	hover-select:               false;
     me-select-entry:            "";
     me-accept-entry:            "MousePrimary";
     drun-display-format:        "{name}";
     window-format:              "{w} · {c} · {t}";
-    scroll-method: 1;
+    scroll-method:              0;
 }
 
 /* ---- Load font ---- */
@@ -29,7 +28,6 @@ configuration {
 @import "~/.cache/wal/colors-rofi-pywal"
 
 /* ---- Load wallpaper ---- */
-@import "~/.cache/current_wallpaper.rasi"
 
 /* ---- Load border width ---- */
 @import "~/dotfiles/.settings/rofi-border.rasi"
@@ -161,7 +159,7 @@ listview {
 element {
     enabled:                      true;
     padding:                      0px;
-    margin:                       5px;
+    margin:                       0px;
     cursor:                       pointer;
     background-color:             @background;
     border-radius:                10px;

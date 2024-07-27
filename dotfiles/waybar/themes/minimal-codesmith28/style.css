@@ -29,7 +29,6 @@
  * General
  * ----------------------------------------------------- */
 * {
-  /* font-family: "FiraCode Nerd Font"; */
   font-family: monospace;
   font-size: 14px;
   border: none;
@@ -107,8 +106,8 @@ window#waybar.empty #window {
 /* -----------------------------------------------------
  * Modules
  * ----------------------------------------------------- */
-.modules-left>widget:first-child>#workspaces,
-.modules-right>widget:last-child>#workspaces {
+.modules-left > widget:first-child > #workspaces,
+.modules-right > widget:last-child > #workspaces {
   margin-left: 0;
   margin-right: 0;
 }
@@ -215,10 +214,12 @@ window#waybar.empty #window {
   font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
-  margin: 0 15px 0 0;
+  /*margin: 0 15px 0 0;*/
+  margin: 0 5px 0 10px;
 }
 
-#custom-updates.green {}
+#custom-updates.green {
+}
 
 #custom-updates.yellow {
   color: #ff9a3c;
@@ -346,11 +347,11 @@ window#waybar.empty #window {
   margin: 0 10px 0 0;
 }
 
-#tray>.passive {
+#tray > .passive {
   -gtk-icon-effect: dim;
 }
 
-#tray>.needs-attention {
+#tray > .needs-attention {
   -gtk-icon-effect: highlight;
   background-color: #eb4d4b;
 }

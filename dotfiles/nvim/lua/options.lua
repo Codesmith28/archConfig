@@ -13,15 +13,13 @@ o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
--- set tab size to 2 for specific file types
--- Set indentation for specific file types
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = { "javascript", "typescript", "json", "css", "html", "jsx", "tsx", "javascriptreact", "typescriptreact" },
-    callback = function()
-        vim.bo.tabstop = 2
-        vim.bo.shiftwidth = 2
-    end,
-})
+-- vim.api.nvim_create_autocmd({ "FileType" }, {
+--     pattern = { "javascript", "typescript", "json", "css", "html", "jsx", "tsx", "javascriptreact", "typescriptreact" },
+--     callback = function()
+--         vim.bo.tabstop = 2
+--         vim.bo.shiftwidth = 2
+--     end,
+-- })
 
 -- other utilities
 vim.g.copilot_assume_mapped = true
@@ -35,7 +33,7 @@ o.smartcase = true
 o.wrap = false
 o.sidescroll = 10
 o.sidescrolloff = 8
-o.cursorlineopt = "both" -- to enable cursorline!
+o.cursorlineopt = "both"
 
 -- enable horizontal scrolling with mouse
 vim.opt.mouse = "a"
