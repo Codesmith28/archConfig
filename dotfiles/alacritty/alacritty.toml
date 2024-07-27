@@ -1,9 +1,9 @@
 [font]
-size = 12
+size = 13
 
 [font.normal]
-family = "RecMonoCasual Nerd Font"
-style = "Regular"
+# family = "RecMonoCasual Nerd Font"
+style = "Semibold"
 
 [window]
 opacity = 0.7
@@ -21,4 +21,3 @@ lines = 30
 [cursor.style]
 shape = "Underline"
 blinking = "Always"
-
