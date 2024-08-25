@@ -5,8 +5,8 @@
 local M = {}
 
 M.ui = {
-    theme = "chadracula",
-    theme_toggle = { "chadracula" },
+    theme = "catppuccin",
+    theme_toggle = { "catppuccin" },
     transparency = true,
 
     hl_override = {
@@ -17,7 +17,6 @@ M.ui = {
     cmp = {
         icons = true,
         lspkind_text = true,
-        style = "default", -- default/flat_light/flat_dark/atom/atom_colored
     },
 
     cheatsheet = {

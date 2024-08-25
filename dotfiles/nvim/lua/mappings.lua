@@ -21,7 +21,6 @@ map("n", "<C-a>", "ggVG", { desc = "Select all" })
 
 -- LSP Rename
 map("n", "<leader>rm", vim.lsp.buf.rename, { desc = "LSP Renamer" })
--- vim.keymap.set("n", "<leader>rm", vim.lsp.buf.rename, { noremap = true, silent = true }
 
 -- Ctrl+j to open fullscreen terminal and Esc to escape from the terminal
 map("n", "<c-`>", function()

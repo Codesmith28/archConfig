@@ -1,4 +1,4 @@
-# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
+# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.inint
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
@@ -9,7 +9,7 @@ sort_sensitive = false
 sort_reverse   = false
 sort_dir_first = true
 linemode       = "size"
-show_hidden    = true
+show_hidden    = false
 show_symlink   = false
 
 [preview]
@@ -45,16 +45,17 @@ suppress_preload = false
 
 [plugin]
 
-preloaders = [
-	{ name = "*", cond = "!mime", run = "mime", multi = true, prio = "high" },
-	# Image
-	{ mime = "image/vnd.djvu", run = "noop" },
-	{ mime = "image/*",        run = "image" },
-	# Video
-	{ mime = "video/*", run = "video" },
-	# PDF
-	{ mime = "application/pdf", run = "pdf" },
-]
+ # preloaders = [
+# 	{ name = "*", cond = "!mime", run = "mime", multi = true, prio = "high" },
+# 	# Image
+# 	{ mime = "image/vnd.djvu", run = "noop" },
+# 	{ mime = "image/*",        run = "image" },
+# 	# Video
+# 	{ mime = "video/*", run = "video" },
+# 	# PDF
+# 	{ mime = "application/pdf", run = "pdf" },
+# ]
+
 previewers = [
 	{ name = "*/", run = "folder", sync = true },
 	# Code

@@ -1,16 +1,16 @@
 fork = false
 frame = "full"
 idle = true
-maximized = false
+maximized = true
 neovim-bin = "/usr/bin/nvim" # in reality found dynamically on $PATH if unset
 no-multigrid = false
 srgb = true
 tabs = true
-title-hidden = true
+title-hidden = false
 vsync = true
 wsl = false
 blur = 1.0
 
 [font]
-normal = ["RecMonoCasual Nerd Font"] # Will use the bundled Fira Code Nerd Font by default
-size = 15.0
+normal = ["JetBrainsMono Nerd Font"] # Will use the bundled Fira Code Nerd Font by default
+size = 14.0

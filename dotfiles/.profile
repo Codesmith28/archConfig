@@ -12,6 +12,7 @@ PS1='[\u@\h \W]\$ '
 # Define Editor
 export EDITOR=nvim
 alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
+alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
 
 # -----------------------------------------------------
 # ALIASES
@@ -42,6 +43,7 @@ alias hypr="cd ~/dotfiles/hypr"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
+alias netrs='sudo systemctl restart NetworkManager'
 
 # -----------------------------------------------------
 # GIT
@@ -130,6 +132,8 @@ export DOCKER_HOST=unix:///var/run/docker.sock
 vsc() {
     code "$1" && exit
 }
+
+alias proj='cd ~/Projects'
 
 neovide() {
     setsid -f neovide "$1" && exit

@@ -38,3 +38,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Pipx
 export PATH="$PATH:/home/codesmith28/.local/bin"
+
+ # cat ~/.cache/wal/sequences
+
+ eval $(thefuck --alias)
+ eval $(thefuck --alias fk)
