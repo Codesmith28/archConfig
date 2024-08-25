@@ -29,14 +29,15 @@
  * General
  * ----------------------------------------------------- */
 * {
-  font-family: monospace;
+  /*font-family: monospace;*/
+  font-family: CaskaydiaCove Nerd Font;
   font-size: 14px;
   border: none;
   border-radius: 0;
 }
 
 window#waybar {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.4);
   transition-property: background-color;
   transition-duration: 0.5s;
 }

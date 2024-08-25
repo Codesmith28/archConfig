@@ -39,14 +39,26 @@ return {
         end,
     },
     {
+        "rust-lang/rust.vim",
+        ft = "rust",
+        init = function()
+            vim.g.rustfmt_autosave = 1
+        end,
+    },
+    {
         "williamboman/mason.nvim",
         opts = {
             ensure_installed = {
+                -- for cpp:
                 "clangd",
                 "clang-format",
                 "codelldb",
+
+                -- for python and sql:
                 "python-lsp-server",
                 "sql-formatter",
+
+                -- for development:
                 "nextls",
                 "eslint-lsp",
                 "js-debug-adapter",
@@ -59,17 +71,28 @@ return {
                 "html-lsp",
                 "css-lsp",
                 "mdformat",
+
+                -- for lua:
                 "lua-language-server",
                 "stylua",
+
+                -- for go:
                 "gopls",
                 "goimports-reviser",
                 "golines",
                 "gofumpt",
+
+                -- for bash scripts:
                 "bash-language-server",
                 "shellcheck",
                 "shfmt",
+
+                -- for docker:
                 "dockerfile-language-server",
                 "docker-compose-language-service",
+
+                -- for rust:
+                "rust-analyzer",
             },
         },
     },

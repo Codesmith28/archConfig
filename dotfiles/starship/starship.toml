@@ -1,9 +1,9 @@
 command_timeout = 10000
 
 [character]
-success_symbol = "[❯❯](bold green)"
+success_symbol = "[](bold green)"
 error_symbol = "[✘ ](bold red)"
-vimcmd_symbol = "[❮❮](bold green)"
+vimcmd_symbol = "[](bold green)"
 
 [aws]
 symbol = "  "
