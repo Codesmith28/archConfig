@@ -30,26 +30,26 @@ return {
             require("notify").setup(opts)
         end,
     },
-    {
-        "mistricky/codesnap.nvim",
-        lazy = false,
-        build = "make build_generator",
-        keys = {
-            { "<leader>sc", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
-        },
-        opts = {
-            code_font_familty = "JetBrainsMono Nerd Font",
-            save_path = "~/Pictures/Codesnaps",
-            has_breadcrumbs = true,
-            watermark = "",
-            bg_color = "#535c68",
-            bg_x_padding = 61,
-            bg_y_padding = 41,
-        },
-        config = function(_, opts)
-            require("codesnap").setup(opts)
-        end,
-    },
+    -- {
+    --     "mistricky/codesnap.nvim",
+    --     lazy = false,
+    --     build = "make build_generator",
+    --     keys = {
+    --         { "<leader>sc", "<cmd>CodeSnapSave<cr>", mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
+    --     },
+    --     opts = {
+    --         code_font_familty = "JetBrainsMono Nerd Font",
+    --         save_path = "~/Pictures/Codesnaps",
+    --         has_breadcrumbs = true,
+    --         watermark = "",
+    --         bg_color = "#535c68",
+    --         bg_x_padding = 61,
+    --         bg_y_padding = 41,
+    --     },
+    --     config = function(_, opts)
+    --         require("codesnap").setup(opts)
+    --     end,
+    -- },
     {
         "stevearc/conform.nvim",
         event = "BufWritePre", -- uncomment for format on save
@@ -150,7 +150,7 @@ return {
     {
         "mrcjkb/rustaceanvim",
         version = "^5", -- Recommended
-        lazy = false,   -- This plugin is already lazy
+        lazy = false, -- This plugin is already lazy
     },
 
     -- These are some examples, uncomment them if you want to see them work!
