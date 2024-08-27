@@ -20,189 +20,150 @@
     "format-icons": {
       "urgent": "",
       "active": "",
-      "default": ""
+      "default": "",
     },
     "persistent-workspaces": {
-      "*": 5
-    }
+      "*": 4,
+    },
   },
 
   // Taskbar
   "wlr/taskbar": {
     "format": "{icon}",
-    "icon-size": 18,
+    "icon-size": 20,
     "tooltip-format": "{title}",
     "on-click": "activate",
     "on-click-middle": "close",
-    "ignore-list": ["kitty"],
-    "app_ids-mapping": {
-      "firefoxdeveloperedition": "firefox-developer-edition"
-    },
-    "rewrite": {
-      "Firefox Web Browser": "Firefox",
-      "Foot Server": "Terminal"
-    }
+    //"app_ids-mapping": {
+    //  "firefoxdeveloperedition": "firefox-developer-edition",
+    //},
+    //"rewrite": {
+    //  "Firefox Web Browser": "Firefox",
+    //  "Foot Server": "Terminal",
+    //},
   },
 
   // Hyprland Window
   "hyprland/window": {
     "rewrite": {
       "(.*) - Brave": "$1",
+      "(.*) - Firefox": "$1",
       "(.*) - Chromium": "$1",
       "(.*) - Brave Search": "$1",
       "(.*) - Outlook": "$1",
-      "(.*) Microsoft Teams": "$1"
+      "(.*) Microsoft Teams": "$1",
     },
-    "separate-outputs": true
+    "separate-outputs": true,
   },
 
-  // ML4W Welcome App
+  // Custom Widgets
   "custom/ml4w-welcome": {
     "on-click": "sleep 0.1 && ~/dotfiles/eww/ml4w-sidebar/launch.sh",
     "on-click-right": "sleep 0.1 && ~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage",
     "format": " ",
-    "tooltip-format": "Open Sidebar"
+    "tooltip-format": "Open Sidebar",
   },
-
-  // ML4W Welcome App
   "custom/ml4w-hyprland-settings": {
     "on-click": "~/dotfiles/apps/ML4W_Hyprland_Settings-x86_64.AppImage",
     "format": " ",
-    "tooltip-format": "ML4W Hyprland Settings"
+    "tooltip-format": "ML4W Hyprland Settings",
   },
-
-  // Empty
   "custom/empty": {
-    "format": ""
+    "format": "",
   },
-
-  // Youtube Subscriber Count
   "custom/youtube": {
     "format": " {}",
     "exec": "python ~/private/youtube.py",
     "restart-interval": 600,
     "on-click": "chromium https://studio.youtube.com",
-    "tooltip": false
+    "tooltip": false,
   },
-
-  // Cliphist
   "custom/cliphist": {
-    "format": "",
+    "format": " ",
     "on-click": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh",
     "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
     "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
-    "tooltip-format": "Clipboard Manager"
+    "tooltip-format": "Clipboard Manager",
   },
-
-  // Updates Count
   "custom/updates": {
-    "format": "   {}",
+    "format": " {}",
     "escape": true,
     "return-type": "json",
     "exec": "~/dotfiles/scripts/updates.sh",
     "restart-interval": 60,
     "on-click": "kitty --class dotfiles-floating -e ~/dotfiles/scripts/installupdates.sh",
-    "on-click-right": "~/dotfiles/.settings/software.sh"
+    "on-click-right": "~/dotfiles/.settings/software.sh",
+    "tooltip-format": "Click to update packages",
   },
-
-  // Wallpaper
   "custom/wallpaper": {
     "format": "",
     "on-click": "~/dotfiles/hypr/scripts/wallpaper.sh select",
     "on-click-right": "~/dotfiles/hypr/scripts/wallpaper-effects.sh",
-    "tooltip-format": "Left: Select a wallpaper\nRight: Select wallpaper effect"
+    "tooltip-format": "Left: Select a wallpaper\nRight: Select wallpaper effect",
   },
-
-  // Waybar Themes
   "custom/waybarthemes": {
     "format": "",
     "on-click": "~/dotfiles/waybar/themeswitcher.sh",
-    "tooltip-format": "Select a waybar theme"
+    "tooltip-format": "Select a waybar theme",
   },
-
-  // Settings
   "custom/settings": {
     "format": "",
     "on-click": "~/dotfiles/apps/ML4W_Dotfiles_Settings-x86_64.AppImage",
-    "tooltip-format": "ML4W Dotfiles Settings"
+    "tooltip-format": "ML4W Dotfiles Settings",
   },
-
-  // Keybindings
   "custom/keybindings": {
     "format": "",
     "on-click": "~/dotfiles/hypr/scripts/keybindings.sh",
-    "tooltip": false
+    "tooltip": false,
   },
-
-  // Filemanager Launcher
   "custom/filemanager": {
     "format": "",
     "on-click": "~/dotfiles/.settings/filemanager.sh",
-    "tooltip-format": "Open filemanager"
+    "tooltip-format": "Open filemanager",
   },
-
-  // Browser Launcher
   "custom/browser": {
     "format": "",
     "on-click": "~/dotfiles/.settings/browser.sh",
-    "tooltip-format": "Open browser"
+    "tooltip-format": "Open browser",
   },
-
-  // ChatGPT Launcher
   "custom/chatgpt": {
     "format": " ",
     "on-click": "chromium --app=https://chat.openai.com",
-    "tooltip-format": "Open ChatGPT"
+    "tooltip-format": "Open ChatGPT",
   },
-
-  // Calculator
   "custom/calculator": {
     "format": "",
     "on-click": "qalculate-gtk",
-    "tooltip-format": "Open calculator"
+    "tooltip-format": "Open calculator",
   },
-
-  // Windows VM
   "custom/windowsvm": {
     "format": "",
     "on-click": "~/dotfiles/scripts/launchvm.sh",
-    "tooltip": false
+    "tooltip": false,
   },
-
-  // Rofi Application Launcher
-  "custom/appmenu": {
-    // START APPS LABEL
-    "format": "Apps",
-    // END APPS LABEL
-    "on-click": "sleep 0.2;rofi -show drun -replace",
-    "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
-    "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings"
-  },
-
-  // Rofi Application Launcher
+  //"custom/appmenu": {
+  //  "format": "Apps",
+  //  "on-click": "sleep 0.2;rofi -show drun -replace",
+  //  "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
+  //  "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings",
+  //},
   "custom/appmenuicon": {
     "format": "",
     "on-click": "rofi -show drun -replace",
-    "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
-    "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings"
+    "on-click-right": "wlogout",
+    "tooltip-format": "",
   },
-
-  // Power Menu
   "custom/exit": {
     "format": "",
     "on-click": "wlogout",
-    "tooltip-format": "Power Menu"
+    "tooltip-format": "Power Menu",
   },
-
-  // Hyprshade
   "custom/hyprshade": {
     "format": "",
     "tooltip-format": "Toggle Screen Shader",
     "on-click": "sleep 0.5; ~/dotfiles/hypr/scripts/hyprshade.sh",
-    "on-click-right": "sleep 0.5; ~/dotfiles/hypr/scripts/hyprshade.sh rofi"
+    "on-click-right": "sleep 0.5; ~/dotfiles/hypr/scripts/hyprshade.sh rofi",
   },
-
-  // Hypridle inhibitor
   "custom/hypridle": {
     "format": "",
     "return-type": "json",
@@ -211,7 +172,7 @@
     "interval": 60,
     "exec": "~/dotfiles/hypr/scripts/hypridle.sh status",
     "on-click": "~/dotfiles/hypr/scripts/hypridle.sh toggle",
-    "on-click-right": "hyprlock"
+    "on-click-right": "hyprlock",
   },
 
   // Keyboard State
@@ -221,54 +182,63 @@
     "format": "{name} {icon}",
     "format-icons": {
       "locked": "",
-      "unlocked": ""
-    }
+      "unlocked": "",
+    },
   },
 
   // System tray
   "tray": {
-    "icon-size": 21,
-    "spacing": 10
+    "icon-size": 20,
+    "spacing": 10,
   },
 
-  // Clock
   "clock": {
-    "format": "{:%H:%M %a}",
-    // "timezone": "America/New_York",
-    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-    // START CLOCK FORMAT
-    "format-alt": "{:%Y-%m-%d}"
-    // END CLOCK FORMAT
+    "format": " {:%H:%M %a}",
+    "tooltip-format": "<span><big>{calendar}</big></span>",
+    "calendar": {
+      "on-scroll": 1,
+      "on-click-right": "mode",
+      "format": {
+        "months": "<span color='#ffead3'><b>{}</b></span>",
+        "today": "<span color='#FF4500'><b><i>{}</i></b></span>",
+        "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+      },
+    },
+    "actions": {
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down",
+    },
   },
 
   // System
   "custom/system": {
     "format": "",
-    "tooltip": false
+    "tooltip": false,
   },
 
   // CPU
   "cpu": {
     "format": "/ C {usage}% ",
-    "on-click": "kitty -e htop"
+    "on-click": "kitty -e htop",
   },
 
   // Memory
   "memory": {
     "format": "/ M {}% ",
-    "on-click": "kitty -e htop"
+    "on-click": "kitty -e htop",
   },
 
-  // Harddisc space used
+  // Disk Space
   "disk": {
     "interval": 30,
     "format": "D {percentage_used}% ",
     "path": "/",
-    "on-click": "kitty -e htop"
+    "on-click": "kitty -e htop",
   },
 
+  // Language
   "hyprland/language": {
-    "format": "/ K {short}"
+    "format": "/ K {short}",
   },
 
   // Group Hardware
@@ -277,15 +247,15 @@
     "drawer": {
       "transition-duration": 300,
       "children-class": "not-memory",
-      "transition-left-to-right": false
+      "transition-left-to-right": false,
     },
-    "modules": ["custom/system", "disk", "cpu", "memory", "hyprland/language"]
+    "modules": ["custom/system", "disk", "cpu", "memory", "hyprland/language"],
   },
 
-  // Group Settings
+  // Group Links
   "group/links": {
     "orientation": "horizontal",
-    "modules": ["custom/chatgpt", "custom/empty"]
+    "modules": ["custom/chatgpt", "custom/empty"],
   },
 
   // Group Settings
@@ -294,26 +264,26 @@
     "drawer": {
       "transition-duration": 300,
       "children-class": "not-memory",
-      "transition-left-to-right": true
+      "transition-left-to-right": true,
     },
     "modules": [
       "custom/settings",
       "custom/waybarthemes",
       "custom/wallpaper",
-      "custom/ml4w-hyprland-settings"
-    ]
+      "custom/ml4w-hyprland-settings",
+    ],
   },
 
   // Group Quicklinks
   "group/quicklinks": {
     "orientation": "horizontal",
-    "modules": ["custom/browser", "custom/filemanager"]
+    "modules": ["custom/browser", "custom/filemanager"],
   },
 
   // Network
   "network": {
     "format": "{ifname}",
-    "format-wifi": "   {signalStrength}%",
+    "format-wifi": "  {signalStrength}%",
     "format-ethernet": "  {ifname}",
     "format-disconnected": "Disconnected",
     "tooltip-format": " {ifname} via {gwaddri}",
@@ -322,44 +292,41 @@
     "tooltip-format-disconnected": "Disconnected",
     "max-length": 50,
     "on-click": "kitty --class dotfiles-floating -e nmtui",
-    "on-click-right": "~/dotfiles/.settings/networkmanager.sh"
+    "on-click-right": "~/dotfiles/.settings/networkmanager.sh",
   },
 
   // Battery
   "battery": {
     "states": {
-      // "good": 95,
       "warning": 30,
-      "critical": 15
+      "critical": 15,
     },
-    "format": "{icon}   {capacity}%",
-    "format-charging": "  {capacity}%",
-    "format-plugged": "  {capacity}%",
-    "format-alt": "{icon}  {time}",
-    // "format-good": "", // An empty format will hide the module
-    // "format-full": "",
-    "format-icons": [" ", " ", " ", " ", " "]
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{icon}{time}",
+    "format-icons": [" ", " ", " ", " ", " "],
   },
 
   // Pulseaudio
   "pulseaudio": {
-    // "scroll-step": 1, // %, can be a float
-    "format": "{icon}   {volume}%",
-    "format-bluetooth": "{volume}%  {icon}  {format_source}",
-    "format-bluetooth-muted": "  {icon}  {format_source}",
+    "scroll-step": 2,
+    "format": "{icon} {volume}%",
+    "format-bluetooth": "{volume}% {icon}  {format_source}",
+    "format-bluetooth-muted": "  {icon}  {format_source}",
     "format-muted": " {format_source}",
     "format-source": "{volume}% ",
     "format-source-muted": "",
     "format-icons": {
       "headphone": " ",
-      "hands-free": " ",
-      "headset": " ",
+      "hands-free": "",
+      "headset": "",
       "phone": " ",
       "portable": " ",
       "car": " ",
-      "default": [" ", " ", " "]
+      "default": [" ", " ", " "],
     },
-    "on-click": "pavucontrol"
+    "on-click": "pavucontrol",
   },
 
   // Bluetooth
@@ -369,13 +336,36 @@
     "format-off": "",
     "interval": 30,
     "on-click": "blueman-manager",
-    "format-no-controller": ""
+    "format-no-controller": "",
   },
 
-  // Other
+  // User
   "user": {
     "format": "{user}",
     "interval": 60,
-    "icon": false
-  }
+    "icon": false,
+  },
+
+  // Backlighting
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+    ],
+    "scroll-step": 2,
+  },
 }

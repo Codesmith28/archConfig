@@ -32,7 +32,8 @@ o.smartcase = true
 -- disable word wrap:
 o.wrap = false
 o.sidescroll = 10
-o.sidescrolloff = 8
+o.sidescrolloff = 10
+o.scrolloff = 8
 o.cursorlineopt = "both"
 
 -- enable horizontal scrolling with mouse
