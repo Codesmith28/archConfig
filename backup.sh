@@ -39,7 +39,7 @@ recursive_update() {
 
 # Set the paths for the two folders
 source_folder="$HOME"
-destination_folder="$HOME/Downloads/archConfig"
+destination_folder="$HOME/Downloads/arch/archConfig/"
 
 # Check if both folders exist
 if [ ! -d "$source_folder" ]; then

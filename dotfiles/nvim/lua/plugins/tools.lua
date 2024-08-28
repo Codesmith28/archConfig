@@ -15,21 +15,6 @@ return {
         dependencies = { { "echasnovski/mini.icons", opts = {} } },
         -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
     },
-    {
-        "rcarriga/nvim-notify",
-        opts = {
-            background_colour = "#000000",
-            fps = 60,
-            level = 1,
-            max_height = 10,
-            render = "default",
-            damping = 0.7,
-            timeout = 2000,
-        },
-        config = function(_, opts)
-            require("notify").setup(opts)
-        end,
-    },
     -- {
     --     "mistricky/codesnap.nvim",
     --     lazy = false,
@@ -150,7 +135,7 @@ return {
     {
         "mrcjkb/rustaceanvim",
         version = "^5", -- Recommended
-        lazy = false, -- This plugin is already lazy
+        lazy = false,   -- This plugin is already lazy
     },
 
     -- These are some examples, uncomment them if you want to see them work!
