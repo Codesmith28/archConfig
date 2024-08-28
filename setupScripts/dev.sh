@@ -1,4 +1,4 @@
- at <<"EOF"
+ cat <<"EOF"
      _            _____
   __| | _____   _| ____|_ ____   __
  / _` |/ _ \ \ / /  _| | '_ \ \ / /
@@ -16,6 +16,7 @@ echo "Setting up the development environment..."
 # -------------------------------------------------------
 
 packages=(
+    "vim"
     "visual-studio-code-bin"
     "neovim"
     "distrobox"
@@ -24,9 +25,7 @@ packages=(
     "go"
     "fzf"
     "zsh"
-    "github-cli"
     "bat"
-    "lazygit"
     "nvm"
     "python-pipx"
 )
@@ -44,23 +43,6 @@ for package in "${packages[@]}"; do
     fi
 done
 echo "All required packages are installed!"
-
-# -------------------------------------------------------
-#  Configure git and GitHub CLI
-# -------------------------------------------------------
-
-echo "Configuring git and GitHub CLI..."
-read -p "Enter your Git username: " git_username
-read -p "Enter your Git email: " git_email
-git config --global user.name "$git_username"
-git config --global user.email "$git_email"
-
-# -------------------------------------------------------
-# Setting up github cli:
-# -------------------------------------------------------
-
-gh auth login
-sudo gh extension install github/copilot
 
 # -------------------------------------------------------
 # ensure path of pipx:
