@@ -16,7 +16,7 @@
     "on-click": "activate",
     "active-only": false,
     "all-outputs": true,
-    "format": "{}"
+    "format": "{}",
     "format-icons": {
       "urgent": "",
       "active": "",
@@ -193,7 +193,7 @@
   },
 
   "clock": {
-    "format": " {:%H:%M %a}",
+    "format": "  {:%H:%M %a}",
     "tooltip-format": "<span><big>{calendar}</big></span>",
     "calendar": {
       "on-scroll": 1,
