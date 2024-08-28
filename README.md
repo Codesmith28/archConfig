@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository extends the Arch Linux configuration from [stephan-raabe/dotfiles - v2.9.1](https://github.com/mylinuxforwork/dotfiles.git) with additional dotfiles and configurations.
+This repository is inspired by the Arch Linux configuration from [stephan-raabe/dotfiles - v2.9.1](https://github.com/mylinuxforwork/dotfiles.git) with additional dotfiles and configurations.
 
 To install that version of dotfiles use the following link:
 
@@ -12,27 +12,25 @@ git clone -b 2.9.1 https://github.com/mylinuxforwork/dotfiles.git
 
 ## Installation
 
-After installing the base configuration from [stephan-raabe/dotfiles](https://gitlab.com/stephan-raabe/dotfiles), follow these steps to integrate additional configurations:
+After installing the minimal configuration from archInstall, follow these steps to integrate additional configurations:
 
 1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
 
    ```bash
-    git clone https://github.com/Codesmith28/archConfig.git ~/Downloads/arch-config
+    git clone https://github.com/Codesmith28/archConfig.git ~/Downloads/arch/archConfig
    ```
 
 1. Navigate to the downloaded folder and view the content:
 
    ```bash
-    cd ~/Downloads/arch-config
+    cd ~/Downloads/arch/archConfig
    ```
 
-1. Copy / Move the contents accordingly.
+1. Copy / Move the contents accordingly and run the setup scripts.
 
 ## Packages
 
 All the packages are available under setupScripts directory.
-
-Go to set under setupScripts directory
 
 1. To install basic packages, run the following command:
 
@@ -51,12 +49,6 @@ Go to set under setupScripts directory
    ```bash
    ./dev.sh
    ```
-
-To configure startup apps, go to the startupApps directory and run the following command:
-
-```bash
-./setup.sh
-```
 
 ## Backup
 
