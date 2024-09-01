@@ -7,7 +7,7 @@ local M = {}
 M.ui = {
     theme = "gruvbox",
     theme_toggle = { "gruvbox" },
-    transparency = true,
+    transparency = false,
 
     hl_override = {
         Comment = { italic = true },

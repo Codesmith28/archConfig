@@ -1,14 +1,14 @@
 
 cat <<"EOF"
- ____             _                
-| __ )  __ _  ___| | ___   _ _ __  
-|  _ \ / _` |/ __| |/ / | | | '_ \ 
+ ____             _
+| __ )  __ _  ___| | ___   _ _ __
+|  _ \ / _` |/ __| |/ / | | | '_ \
 | |_) | (_| | (__|   <| |_| | |_) |
-|____/ \__,_|\___|_|\_\\__,_| .__/ 
-                            |_|    
+|____/ \__,_|\___|_|\_\\__,_| .__/
+                            |_|
 
 EOF
-                           
+
 
 #!/bin/bash
 
@@ -39,7 +39,7 @@ recursive_update() {
 
 # Set the paths for the two folders
 source_folder="$HOME"
-destination_folder="$HOME/Downloads/arch/archConfig/"
+destination_folder="$HOME/Downloads/archConfig/"
 
 # Check if both folders exist
 if [ ! -d "$source_folder" ]; then

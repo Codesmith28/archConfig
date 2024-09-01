@@ -12,5 +12,5 @@ wsl = false
 blur = 1.0
 
 [font]
-normal = ["JetBrainsMono Nerd Font"] # Will use the bundled Fira Code Nerd Font by default
+normal = ["CaskaydiaCove Nerd Font"] # Will use the bundled Fira Code Nerd Font by default
 size = 14.0

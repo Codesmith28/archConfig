@@ -86,7 +86,7 @@ alias notes='$EDITOR ~/notes.txt'
 runcpp() {
     clang++ "$1" -o run.exe && ./run.exe
 }
-alias cpp='cd ~/Projects/cse205-ds/ && code . && exit'
+alias cpp='cd ~/Projects/cp/ && code . && exit'
 
 # -----------------------------------------------------
 # MINECRAFT
