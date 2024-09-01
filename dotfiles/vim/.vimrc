@@ -1,11 +1,11 @@
-"  _   _                 _            
-" | \ | | ___  _____   _(_)_ __ ___   
-" |  \| |/ _ \/ _ \ \ / / | '_ ` _ \  
-" | |\  |  __/ (_) \ V /| | | | | | | 
-" |_| \_|\___|\___/ \_/ |_|_| |_| |_| 
-"                                     
-" by Stephan Raabe (2023) 
-" ----------------------------------------------------- 
+"  _   _                 _
+" | \ | | ___  _____   _(_)_ __ ___
+" |  \| |/ _ \/ _ \ \ / / | '_ ` _ \
+" | |\  |  __/ (_) \ V /| | | | | | |
+" |_| \_|\___|\___/ \_/ |_|_| |_| |_|
+"
+" by Stephan Raabe (2023)
+" -----------------------------------------------------
 
 " Add line numbers
 set number
@@ -70,3 +70,30 @@ set hlsearch
 
 " Set the commands to save in history default number is 20.
 set history=1000
+
+
+" Ps = 0  -> blinking block.
+" Ps = 1  -> blinking block (default).
+" Ps = 2  -> steady block.
+" Ps = 3  -> blinking underline.
+" Ps = 4  -> steady underline.
+" Ps = 5  -> blinking bar (xterm).
+" Ps = 6  -> steady bar (xterm).
+
+if $TERM == "xterm-kitty"
+    set mouse=a
+    try
+        " undercurl support
+        let &t_Cs = "\e[4:3m"
+        let &t_Ce = "\e[4:0m"
+    catch
+    endtry
+    " Change the cursor in different modes
+    let &t_SI = "\e[5 q"
+    let &t_SR = "\e[3 q"
+    let &t_EI = "\e[1 q"
+    " vim hardcodes background color erase even if the terminfo file does
+    " not contain bce. This causes incorrect background rendering when
+    " using a color theme with a background color.
+    let &t_ut=''
+endif

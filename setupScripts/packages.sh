@@ -26,11 +26,11 @@ packagesPacman=(
     "btop"
     "ripgrep"
     "baobab"
-
+    
     # Communication
     "discord"
     "telegram-desktop"
-
+    
     # Utilities
     "gvfs"
     "w3m"
@@ -40,12 +40,12 @@ packagesPacman=(
     "texlive"
     "xclip"
     "less"
-
+    
     # File Managers
     "nautilus"
     "eog"
     "unzip"
-
+    
     # Multimedia
     "obs-studio"
     "mpv"
@@ -56,7 +56,7 @@ packagesPacman=(
     "xwaylandvideobridge"
     "gimp"
     "libreoffice-fresh"
-
+    
     # System Tools
     "pacman-contrib"
     "bluez"
@@ -65,7 +65,7 @@ packagesPacman=(
     "firefox"
     "dunst"
     "starship"
-
+    
     # Additional Tools
     "eza"
     "python-pip"
@@ -76,7 +76,7 @@ packagesPacman=(
     "python-gobject"
     "pavucontrol"
     "tumbler"
-
+    
     # GNOME and GTK
     "colloid-icon-theme-git"
     "polkit-gnome"
@@ -100,7 +100,7 @@ packagesPacman=(
     "jq"
     "rofi-wayland"
     "blueman"
-
+    
     # Fonts
     "noto-fonts"
     "noto-fonts-cjk"
@@ -109,16 +109,17 @@ packagesPacman=(
     "ttf-firacode-nerd"
     "ttf-recursive-nerd"
     "ttf-cascadia-code-nerd"
+    "ttf-jetbrains-mono-nerd"
     "figlet"
     "fontpreview"
-
- # Hyprland Components
+    
+    # Hyprland Components
     "hyprland"
     "hyprpaper"
     "hyprlock"
     "hypridle"
     "xdg-desktop-portal-hyprland"
-
+    
     # Wayland Utilities
     "waybar"
     "grim"

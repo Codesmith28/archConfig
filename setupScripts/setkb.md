@@ -18,10 +18,17 @@ Add the following content in `/etc/keyd/default.conf`:
 [main]
 sysrq = insert
 capslock = esc
+compose = rightcontrol
 
 ```
 
 ```bash
 sudo systemctl restart keyd
 
+```
+
+To test the keymappings:
+
+```bash
+sudo keyd -m
 ```

@@ -20,7 +20,7 @@ echo "Created startup directory: $startup_dir"
 setup_service() {
     local service_name=$1
     local service_file="${service_name}.service"
-
+    
     echo "Setting up ${service_name} startup script..."
     echo "Checking for ${service_file} in current directory..."
     if [ -f "./${service_file}" ]; then

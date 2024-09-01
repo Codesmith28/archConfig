@@ -39,6 +39,38 @@ return {
         end,
     },
     {
+        "olexsmir/gopher.nvim",
+        ft = "go",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        config = function()
+            require("gopher").setup()
+        end,
+        build = ":GoInstallDeps",
+    },
+    {
+        "windwp/nvim-ts-autotag",
+        ft = {
+            "html",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "svelte",
+            "vue",
+        },
+        config = function()
+            require("nvim-ts-autotag").setup()
+        end,
+    },
+    {
+        "mrcjkb/rustaceanvim",
+        version = "^5", -- Recommended
+        lazy = false, -- This plugin is already lazy
+    },
+    {
         "rust-lang/rust.vim",
         ft = "rust",
         init = function()
@@ -94,6 +126,47 @@ return {
                 -- for rust:
                 "rust-analyzer",
             },
+        },
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        opts = {
+            ensure_installed = {
+                -- General
+                "vim",
+                "lua",
+                "vimdoc",
+
+                -- Web development
+                "html",
+                "css",
+                "javascript",
+                "typescript",
+                "tsx",
+                "json",
+                "yaml",
+
+                -- Programming languages
+                "python",
+                "cpp",
+                "go",
+                "rust",
+
+                -- Scripting
+                "bash",
+
+                -- Markup and config
+                "markdown",
+
+                -- DevOps
+                "dockerfile",
+            },
+            auto_install = true,
+            highlight = {
+                enable = true,
+                additional_vim_regex_highlighting = false,
+            },
+            indent = { enable = true },
         },
     },
 }

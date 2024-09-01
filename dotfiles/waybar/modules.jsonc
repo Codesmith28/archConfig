@@ -193,7 +193,7 @@
   },
 
   "clock": {
-    "format": "  {:%H:%M %a}",
+    "format": " {:%H:%M %a}",
     "tooltip-format": "<span><big>{calendar}</big></span>",
     "calendar": {
       "on-scroll": 1,
@@ -205,8 +205,8 @@
       },
     },
     "actions": {
-      "on-scroll-up": "shift_up",
-      "on-scroll-down": "shift_down",
+      "on-scroll-up": "shift_down",
+      "on-scroll-down": "shift_up",
     },
   },
 
@@ -312,8 +312,8 @@
   "pulseaudio": {
     "scroll-step": 2,
     "format": "{icon} {volume}%",
-    "format-bluetooth": "{volume}% {icon}  {format_source}",
-    "format-bluetooth-muted": "  {icon}  {format_source}",
+    "format-bluetooth": "{volume}% {icon} {format_source}",
+    "format-bluetooth-muted": "  {icon} {format_source}",
     "format-muted": " {format_source}",
     "format-source": "{volume}% ",
     "format-source-muted": "",

@@ -1,16 +1,16 @@
 #!/bin/bash
-#                _ _                              
-# __      ____ _| | |_ __   __ _ _ __   ___ _ __  
-# \ \ /\ / / _` | | | '_ \ / _` | '_ \ / _ \ '__| 
-#  \ V  V / (_| | | | |_) | (_| | |_) |  __/ |    
-#   \_/\_/ \__,_|_|_| .__/ \__,_| .__/ \___|_|    
-#                   |_|         |_|               
-#  
-# by Stephan Raabe (2024) 
-# ----------------------------------------------------- 
+#                _ _
+# __      ____ _| | |_ __   __ _ _ __   ___ _ __
+# \ \ /\ / / _` | | | '_ \ / _` | '_ \ / _ \ '__|
+#  \ V  V / (_| | | | |_) | (_| | |_) |  __/ |
+#   \_/\_/ \__,_|_|_| .__/ \__,_| .__/ \___|_|
+#                   |_|         |_|
+#
+# by Stephan Raabe (2024)
+# -----------------------------------------------------
 
 # Cache file for holding the current wallpaper
-wallpaper_folder="$HOME/wallpaper"
+wallpaper_folder="$HOME/wallpaper/src/"
 if [ -f ~/dotfiles/.settings/wallpaper-folder.sh ] ;then
     source ~/dotfiles/.settings/wallpaper-folder.sh
 fi
@@ -40,7 +40,7 @@ current_wallpaper=$(cat "$cache_file")
 
 case $1 in
 
-    # Load wallpaper from .cache of last session 
+    # Load wallpaper from .cache of last session
     "init")
         sleep 1
         if [ -f $cache_file ]; then
@@ -64,29 +64,29 @@ case $1 in
         wal -q -i $wallpaper_folder/$selected
     ;;
 
-    # Randomly select wallpaper 
+    # Randomly select wallpaper
     *)
         wal -q -i $wallpaper_folder/
     ;;
 
 esac
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Load current pywal color scheme
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 source "$HOME/.cache/wal/colors.sh"
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # get wallpaper image name
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 newwall=$(echo $wallpaper | sed "s|$wallpaper_folder/||g")
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Reload waybar with new colors
 # -----------------------------------------------------
 ~/dotfiles/waybar/launch.sh
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Set the new wallpaper
 # -----------------------------------------------------
 transition_type="wipe"
@@ -136,14 +136,14 @@ if [ "$1" == "init" ] ;then
 else
     sleep 1
     dunstify "Changing wallpaper ..." "with image $newwall" -h int:value:25 -h string:x-dunst-stack-tag:wallpaper
-    
-    # ----------------------------------------------------- 
+
+    # -----------------------------------------------------
     # Reload Hyprctl.sh
     # -----------------------------------------------------
     $HOME/.config/ml4w-hyprland-settings/hyprctl.sh &
 fi
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Created blurred wallpaper
 # -----------------------------------------------------
 if [ "$1" == "init" ] ;then
@@ -159,7 +159,7 @@ if [ ! "$blur" == "0x0" ] ;then
     echo ":: Blurred"
 fi
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Created quare wallpaper
 # -----------------------------------------------------
 if [ "$1" == "init" ] ;then
@@ -170,15 +170,15 @@ fi
 magick $wallpaper -gravity Center -extent 1:1 $square
 echo ":: Square version created"
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Write selected wallpaper into .cache files
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 echo "$wallpaper" > "$cache_file"
 echo "* { current-image: url(\"$blurred\", height); }" > "$rasi_file"
 
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 # Send notification
-# ----------------------------------------------------- 
+# -----------------------------------------------------
 
 if [ "$1" == "init" ] ;then
     echo ":: Init"

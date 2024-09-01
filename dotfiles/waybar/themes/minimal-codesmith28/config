@@ -22,7 +22,7 @@
     // Modules Left
     "modules-left": [
         "custom/appmenuicon",
-        "custom/updates",
+        // "custom/updates",
         "wlr/taskbar",
         "hyprland/workspaces"
         // "custom/cava",
