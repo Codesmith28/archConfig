@@ -1,4 +1,4 @@
-Change the printscr key to insert key:
+# Remap the existing keys on keyboard to other keys:
 
 ```bash
 sudo pacman -S keyd
@@ -26,6 +26,10 @@ compose = rightcontrol
 sudo systemctl restart keyd
 
 ```
+This config remaps: 
+- printscr ➡ insert
+- capslock ➡ esc
+- menu ➡ right-control
 
 To test the keymappings:
 
