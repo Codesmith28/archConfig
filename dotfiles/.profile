@@ -135,10 +135,6 @@ vsc() {
 
 alias proj='cd ~/Projects'
 
-neovide() {
-    setsid -f neovide "$1" && exit
-}
-
 alias thunar='setsid thunar'
 alias files='setsid nautilus'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
