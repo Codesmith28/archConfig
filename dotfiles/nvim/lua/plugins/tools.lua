@@ -1,5 +1,4 @@
 local overrides = require "configs.overrides"
-
 return {
     {
         "kylechui/nvim-surround",
