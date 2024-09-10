@@ -6,4 +6,4 @@ if [ $EUID -ne 0 ]; then
 fi
 
 
-cp ./conf.d/60-latin.conf /usr/share/fontconfig/conf.default/
+cp ./conf.d/60-latin.conf ~/.config/fontconfig/conf.d/60-latin.conf
