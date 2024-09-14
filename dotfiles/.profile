@@ -84,7 +84,8 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 alias notes='$EDITOR ~/notes.txt'
 # alias runcpp='clang++ run.cpp -o run && ./run'
 runcpp() {
-    clang++ "$1" -o run.exe && ./run.exe
+    clang++ "$1" -o run && ./run
+    rm run
 }
 alias cpp='cd ~/Projects/cp/ && code . && exit'
 
@@ -133,7 +134,7 @@ vsc() {
     code "$1" && exit
 }
 
-alias proj='cd ~/Projects'
+alias pj='cd ~/Projects'
 
 alias thunar='setsid thunar'
 alias files='setsid nautilus'
@@ -144,7 +145,7 @@ alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --
 # Yazi file manager:
 # -----------------------------------------------------
 
-function lf() {
+function yz() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then

@@ -193,6 +193,7 @@
   },
 
   "clock": {
+    "timezone": "Asia/Kolkata",
     "format": " {:%H:%M %a}",
     "tooltip-format": "<span><big>{calendar}</big></span>",
     "calendar": {
@@ -283,7 +284,7 @@
   // Network
   "network": {
     "format": "{ifname}",
-    "format-wifi": "  {signalStrength}%",
+    "format-wifi": " {signalStrength}%",
     "format-ethernet": "  {ifname}",
     "format-disconnected": "Disconnected",
     "tooltip-format": " {ifname} via {gwaddri}",
@@ -303,9 +304,9 @@
     },
     "format": "{icon} {capacity}%",
     "format-charging": " {capacity}%",
-    "format-plugged": " {capacity}%",
+    "format-plugged": "{capacity}%",
     "format-alt": "{icon}{time}",
-    "format-icons": [" ", " ", " ", " ", " "],
+    "format-icons": ["", "", "", "", ""],
   },
 
   // Pulseaudio
@@ -366,6 +367,6 @@
       "",
       "",
     ],
-    "scroll-step": 2,
+    "scroll-step": -2,
   },
 }

@@ -68,7 +68,7 @@ return {
     {
         "mrcjkb/rustaceanvim",
         version = "^5", -- Recommended
-        lazy = false, -- This plugin is already lazy
+        lazy = false,   -- This plugin is already lazy
     },
     {
         "rust-lang/rust.vim",
@@ -80,7 +80,7 @@ return {
     {
         "williamboman/mason.nvim",
         opts = {
-            ensure_installed = {
+            ewnsure_installed = {
                 -- for cpp:
                 "clangd",
                 "clang-format",
@@ -131,36 +131,6 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         opts = {
-            ensure_installed = {
-                -- General
-                "vim",
-                "lua",
-                "vimdoc",
-
-                -- Web development
-                "html",
-                "css",
-                "javascript",
-                "typescript",
-                "tsx",
-                "json",
-                "yaml",
-
-                -- Programming languages
-                "python",
-                "cpp",
-                "go",
-                "rust",
-
-                -- Scripting
-                "bash",
-
-                -- Markup and config
-                "markdown",
-
-                -- DevOps
-                "dockerfile",
-            },
             auto_install = true,
             highlight = {
                 enable = true,

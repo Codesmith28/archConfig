@@ -5,8 +5,8 @@
 local M = {}
 
 M.ui = {
-    theme = "gruvbox",
-    theme_toggle = { "gruvbox" },
+    theme = "gruvchad",
+    theme_toggle = { "gruvchad" },
     transparency = false,
 
     hl_override = {
@@ -18,6 +18,7 @@ M.ui = {
         icons = true,
         lspkind_text = true,
     },
+    mason = { cmd = true, pkgs = {} },
 
     cheatsheet = {
         theme = "grid",
@@ -54,5 +55,39 @@ M.term = {
 }
 
 M.lsp = { signature = false }
+
+M.mason = {
+    cmd = true,
+    pkgs = {
+        -- General
+        "vim",
+        "lua",
+        "vimdoc",
+
+        -- Web development
+        "html",
+        "css",
+        "javascript",
+        "typescript",
+        "tsx",
+        "json",
+        "yaml",
+
+        -- Programming languages
+        "python",
+        "cpp",
+        "go",
+        "rust",
+
+        -- Scripting
+        "bash",
+
+        -- Markup and config
+        "markdown",
+
+        -- DevOps
+        "dockerfile",
+    },
+}
 
 return M

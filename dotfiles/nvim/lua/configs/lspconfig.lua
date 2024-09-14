@@ -15,7 +15,7 @@ lspconfig.clangd.setup {
 }
 
 -- for typescript
-lspconfig.tsserver.setup {
+lspconfig.ts_ls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     init_options = {
@@ -58,7 +58,7 @@ lspconfig.rust_analyzer.setup {
     },
 }
 
-local servers = { "tailwindcss", "eslint", "tsserver", "cssls" }
+local servers = { "tailwindcss", "eslint", "ts_ls", "cssls" }
 
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
