@@ -1,3 +1,4 @@
+#!/bin/bash
 
 cat <<"EOF"
  ____             _
@@ -9,50 +10,26 @@ cat <<"EOF"
 
 EOF
 
+source_folder="$HOME/dotfiles/"
+destination_folder="$HOME/Downloads/archConfig/"
 
-#!/bin/bash
+sync_dotfiles() {
+    for src_file in $(find "$source_folder" -type f ! -path "*/.git/*"); do
+        relative_path="${src_file#$source_folder}"
+        dest_file="$destination_folder/$relative_path"
 
-# Function to recursively update files
-recursive_update() {
-    local source="$1"
-    local destination="$2"
-
-    # Iterate through items in the source directory
-    shopt -s dotglob
-    for item in "$source"/*; do
-        if [ -d "$item" ]; then
-            # If item is a directory, recursively update contents
-            local dest_dir="$destination/$(basename "$item")"
-            if [ -d "$dest_dir" ]; then
-                recursive_update "$item" "$dest_dir"
-            fi
-        elif [ -f "$item" ]; then
-            # If item is a file, check if it exists in the destination
-            if [ -e "$destination/$(basename "$item")" ]; then
-                # If file exists in both source and destination, update it
-                cp -f "$item" "$destination"
-                echo "Updated $(basename "$item")"
+        if [ ! -f "$dest_file" ]; then
+            echo "Adding missing file: $relative_path"
+            mkdir -p "$(dirname "$dest_file")"
+            cp "$src_file" "$dest_file"
+        else
+            if ! cmp -s "$src_file" "$dest_file"; then
+                echo "Replacing modified file: $relative_path"
+                cp "$src_file" "$dest_file"
             fi
         fi
     done
 }
 
-# Set the paths for the two folders
-source_folder="$HOME"
-destination_folder="$HOME/Downloads/archConfig/"
-
-# Check if both folders exist
-if [ ! -d "$source_folder" ]; then
-    echo "Source folder does not exist!"
-    exit 1
-fi
-
-if [ ! -d "$destination_folder" ]; then
-    echo "Destination folder does not exist!"
-    exit 1
-fi
-
-# Call the function to recursively update files
-recursive_update "$source_folder" "$destination_folder"
-
-echo "Update process completed!"
+sync_dotfiles
+echo "Backup completed."
