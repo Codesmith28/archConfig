@@ -6,6 +6,7 @@ return {
             require "configs.lspconfig"
         end,
     },
+
     {
         "nvimtools/none-ls.nvim",
         ft = "all",
@@ -38,6 +39,7 @@ return {
             }
         end,
     },
+
     {
         "olexsmir/gopher.nvim",
         ft = "go",
@@ -50,6 +52,7 @@ return {
         end,
         build = ":GoInstallDeps",
     },
+
     {
         "windwp/nvim-ts-autotag",
         ft = {
@@ -65,10 +68,11 @@ return {
             require("nvim-ts-autotag").setup()
         end,
     },
+
     {
         "mrcjkb/rustaceanvim",
         version = "^5", -- Recommended
-        lazy = false,   -- This plugin is already lazy
+        lazy = false, -- This plugin is already lazy
     },
     {
         "rust-lang/rust.vim",
@@ -77,6 +81,7 @@ return {
             vim.g.rustfmt_autosave = 1
         end,
     },
+
     {
         "williamboman/mason.nvim",
         opts = {
@@ -128,6 +133,7 @@ return {
             },
         },
     },
+
     {
         "nvim-treesitter/nvim-treesitter",
         opts = {

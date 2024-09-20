@@ -138,6 +138,7 @@ alias pj='cd ~/Projects'
 
 alias thunar='setsid thunar'
 alias files='setsid nautilus'
+alias obsidian='setsid obsidian'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
 alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
