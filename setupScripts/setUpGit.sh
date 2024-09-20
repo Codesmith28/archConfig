@@ -41,6 +41,7 @@ read -p "Enter your Git username: " git_username
 read -p "Enter your Git email: " git_email
 git config --global user.name "$git_username"
 git config --global user.email "$git_email"
+git config --global pull.rebase false
 
 # -------------------------------------------------------
 # Setting up github cli:

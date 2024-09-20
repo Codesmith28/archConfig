@@ -14,7 +14,7 @@
  * Import Pywal colors
  * ----------------------------------------------------- */
 
-/* main*/
+/* main*/ 
 @define-color c1 #000000;
 @define-color c2 #FFFFFF;
 
@@ -29,8 +29,7 @@
  * General
  * ----------------------------------------------------- */
 * {
-  font-family: monospace;
-  /*font-family: CaskaydiaCove Nerd Font;*/
+  font-family: Monospace;
   font-size: 14px;
   border: none;
   border-radius: 0;
@@ -131,7 +130,7 @@ window#waybar.empty #window {
 #custom-wallpaper,
 #custom-system,
 #custom-waybarthemes {
-  margin-right: 14px;
+  margin-right: 15px;
   font-size: 14px;
   font-weight: bold;
   color: @icon;
@@ -285,7 +284,6 @@ window#waybar.empty #window {
  * Network
  * ----------------------------------------------------- */
 #network {
-  font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
   margin: 0 15px 0 0;
@@ -305,7 +303,7 @@ window#waybar.empty #window {
   font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
-  margin: 10px 15px;
+  margin: 10px 10px;
 }
 
 #bluetooth.off {
@@ -316,12 +314,12 @@ window#waybar.empty #window {
 
 /* -----------------------------------------------------
  * Battery
- * ----------------------------------------------------- */
+  -----------------------------------------------------  */
 #battery {
   font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
-  margin: 10px 15px;
+  margin: 0px 10px;
 }
 
 #battery.charging,
@@ -354,7 +352,6 @@ window#waybar.empty #window {
 
 #tray > .needs-attention {
   -gtk-icon-effect: highlight;
-  background-color: #eb4d4b;
 }
 
 /* -----------------------------------------------------

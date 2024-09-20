@@ -54,6 +54,7 @@
       "(.*) Microsoft Teams": "$1",
     },
     "separate-outputs": true,
+    "max-length": 80,
   },
 
   // Custom Widgets
@@ -189,7 +190,7 @@
   // System tray
   "tray": {
     "icon-size": 20,
-    "spacing": 10,
+    "spacing": 5,
   },
 
   "clock": {
@@ -284,14 +285,13 @@
   // Network
   "network": {
     "format": "{ifname}",
-    "format-wifi": " {signalStrength}%",
+    "format-wifi": "  {signalStrength}%",
     "format-ethernet": "  {ifname}",
     "format-disconnected": "Disconnected",
     "tooltip-format": " {ifname} via {gwaddri}",
     "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
     "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
     "tooltip-format-disconnected": "Disconnected",
-    "max-length": 50,
     "on-click": "kitty --class dotfiles-floating -e nmtui",
     "on-click-right": "~/dotfiles/.settings/networkmanager.sh",
   },
@@ -304,8 +304,8 @@
     },
     "format": "{icon} {capacity}%",
     "format-charging": " {capacity}%",
-    "format-plugged": "{capacity}%",
-    "format-alt": "{icon}{time}",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{icon}  {time}",
     "format-icons": ["", "", "", "", ""],
   },
 

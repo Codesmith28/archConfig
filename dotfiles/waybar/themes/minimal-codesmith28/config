@@ -1,55 +1,55 @@
-// __        __          _
-// \ \      / /_ _ _   _| |__   __ _ _ __
-//  \ \ /\ / / _` | | | | '_ \ / _` | '__|
-//   \ V  V / (_| | |_| | |_) | (_| | |
-//    \_/\_/ \__,_|\__, |_.__/ \__,_|_|
-//                 |___/
-//
-// by Codesmith28
-// -----------------------------------------------------
+    // __        __          _
+    // \ \      / /_ _ _   _| |__   __ _ _ __
+    //  \ \ /\ / / _` | | | | '_ \ / _` | '__|
+    //   \ V  V / (_| | |_| | |_) | (_| | |
+    //    \_/\_/ \__,_|\__, |_.__/ \__,_|_|
+    //                 |___/
+    //
+    // by Codesmith28
+    // -----------------------------------------------------
 
-{
-    // General Settings
-    "layer": "top",
-    "margin-bottom": 0,
-    "margin-left": 0,
-    "margin-right": 0,
-    "spacing": 1,
+    {
+        // General Settings
+        "layer": "top",
+        "margin-bottom": 0,
+        "margin-left": 0,
+        "margin-right": 0,
+        "spacing": 1,
 
-    // Load Modules
-    "include": ["~/dotfiles/waybar/modules.jsonc"],
+        // Load Modules
+        "include": ["~/dotfiles/waybar/modules.jsonc"],
 
-    // Modules Left
-    "modules-left": [
-        "custom/appmenuicon",
-        // "custom/updates",
-        "wlr/taskbar",
-        "hyprland/workspaces"
-        // "custom/cava",
-        // "group/links",
-        // "group/settings",
-        // "group/quicklinks"
-    ],
+        // Modules Left
+        "modules-left": [
+            "custom/appmenuicon",
+            // "custom/updates",
+            "wlr/taskbar",
+            "hyprland/workspaces"
+            // "custom/cava",
+            // "group/links",
+            // "group/settings",
+            // "group/quicklinks"
+        ],
 
-    // Modules Center
-    "modules-center": [
-        "hyprland/window",
-        "custom/empty"
-    ],
+        // Modules Center
+        "modules-center": [
+            "hyprland/window",
+            "custom/empty"
+        ],
 
-    // Modules Right
-    "modules-right": [
-        "pulseaudio",
-        "backlight",
-        // "bluetooth",
-        "battery",
-        "network",
-        // "group/hardware",
-        "custom/cliphist",
-        // "idle_inhibitor",
-        // "custom/exit",
-        "tray",
-        "clock"
-        // "custom/ml4w-welcome"
-    ]
-}
+        // Modules Right
+        "modules-right": [
+            "pulseaudio",
+            "backlight",
+            // "bluetooth",
+            "battery",
+            "network",
+            // "group/hardware",
+            "custom/cliphist",
+            // "idle_inhibitor",
+            // "custom/exit",
+            "tray",
+            "clock"
+            // "custom/ml4w-welcome"
+        ]
+    }
