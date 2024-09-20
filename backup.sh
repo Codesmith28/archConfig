@@ -11,7 +11,7 @@ cat <<"EOF"
 EOF
 
 source_folder="$HOME/dotfiles/"
-destination_folder="$HOME/Downloads/archConfig/"
+destination_folder="$HOME/Downloads/archConfig/dotfiles"
 
 sync_dotfiles() {
     for src_file in $(find "$source_folder" -type f ! -path "*/.git/*"); do
