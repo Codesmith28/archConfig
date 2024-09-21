@@ -19,7 +19,7 @@ sync_dotfiles() {
         dest_item="$destination_folder/$relative_path"
 
         if [ -d "$src_item" ]; then
-            if [ ! -d "$dest_item" ]; then
+            if [ ! -d "$dest_item" ] && [ "$(basename "$src_item")" != ".git" ]; then
                 echo "Adding missing directory: $relative_path"
                 mkdir -p "$dest_item"
             fi

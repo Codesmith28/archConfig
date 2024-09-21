@@ -21,7 +21,7 @@ window#waybar {
 /* ----------------------------------------------------- * Workspaces * ----------------------------------------------------- */
 #workspaces {
     border: 0;
-    margin-left: 5px;
+    margin: 3px 5px 3px 5px;
     font-size: 14px;
     border-radius: 5px;
     color: @c1;
@@ -50,7 +50,7 @@ window#waybar {
 
 /* ----------------------------------------------------- * Tray * ----------------------------------------------------- */
 #tray {
-    margin: 0 15px 0 0;
+    margin: 0 10px 0 5px;
 }
 
 #tray>.passive {
@@ -84,7 +84,7 @@ tooltip label {
 }
 
 #custom-cliphist {
-    margin: 0 15px 0 0;
+    margin: 0 10px 0 0;
     font-size: 14px;
     font-weight: bold;
     color: @icon;

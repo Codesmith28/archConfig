@@ -23,8 +23,10 @@ alias e='exit'
 alias nf='neofetch'
 alias pf='pfetch'
 alias ff='fastfetch'
-alias ls='eza -a --icons'
-alias ll='eza -al --icons'
+alias ls='eza  --icons'
+alias ll='eza -l --icons'
+alias la='eza -a --icons'
+alias lla='eza -al --icons'
 lt () {
     local level=${1:-1}
     eza -a --tree --level=$level --icons
@@ -84,8 +86,8 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 alias notes='$EDITOR ~/notes.txt'
 # alias runcpp='clang++ run.cpp -o run && ./run'
 runcpp() {
-    clang++ "$1" -o run && ./run
-    rm run
+    clang++ "$1" -o run && "./$1"
+    # rm run
 }
 alias cpp='cd ~/Projects/cp/ && code . && exit'
 
