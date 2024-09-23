@@ -86,8 +86,10 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 alias notes='$EDITOR ~/notes.txt'
 # alias runcpp='clang++ run.cpp -o run && ./run'
 runcpp() {
-    clang++ "$1" -o run && "./$1"
-    # rm run
+    # filename=$(echo $1 | cut -f 1 -d '.')
+    # clang++ "$1" -o $filename && ./$filename
+    clang++ "$1" -o run && "./run"
+    rm run
 }
 alias cpp='cd ~/Projects/cp/ && code . && exit'
 
