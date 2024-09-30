@@ -55,3 +55,11 @@ vim.g.neovide_light_angle_degrees = 45
 vim.g.neovide_light_radius = 5
 
 vim.opt.termguicolors = true
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "oil",
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+    end,
+})

@@ -1,1 +1,1 @@
-zed
+mousepad
