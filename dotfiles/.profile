@@ -23,6 +23,7 @@ alias e='exit'
 alias nf='neofetch'
 alias pf='pfetch'
 alias ff='fastfetch'
+alias cff='c && fastfetch'
 alias ls='eza  --icons'
 alias ll='eza -l --icons'
 alias la='eza -a --icons'
@@ -44,8 +45,6 @@ alias dot="cd ~/dotfiles"
 alias hypr="cd ~/dotfiles/hypr"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
-alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
-alias netrs='sudo systemctl restart NetworkManager'
 
 # -----------------------------------------------------
 # GIT
@@ -60,6 +59,9 @@ alias gst="git stash"
 alias gsp="git stash; git pull"
 alias lg='lazygit'
 alias gcheck="git checkout"
+ghcs () {
+    gh copilot suggest "$1"
+}
 
 # -----------------------------------------------------
 # SCRIPTS
@@ -69,6 +71,7 @@ alias gr='python ~/dotfiles/scripts/growthrate.py'
 alias ChatGPT='python ~/mychatgpt/mychatgpt.py'
 alias chat='python ~/mychatgpt/mychatgpt.py'
 alias ascii='~/dotfiles/scripts/figlet.sh'
+alias fontsearch='~/dotfiles/scripts/fontsearch.sh'
 
 # -----------------------------------------------------
 # EDIT CONFIG FILES
@@ -84,7 +87,6 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 # -----------------------------------------------------
 
 alias notes='$EDITOR ~/notes.txt'
-# alias runcpp='clang++ run.cpp -o run && ./run'
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
     # clang++ "$1" -o $filename && ./$filename
@@ -111,12 +113,8 @@ mntd() {
     sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"
 }
 alias D='cd /home/run/media/localdiskD'
-
-# -----------------------------------------------------
-# PFETCH/fastfetch
-# -----------------------------------------------------
-
-# ff
+alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
+alias netrs='sudo systemctl restart NetworkManager'
 
 # -----------------------------------------------------
 # STARSHIP export
@@ -139,10 +137,10 @@ vsc() {
 }
 
 alias pj='cd ~/Projects'
-
 alias thunar='setsid thunar'
 alias files='setsid nautilus'
-alias obsidian='setsid obsidian'
+alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
+alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
 alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
@@ -159,14 +157,3 @@ function yz() {
     rm -f -- "$tmp"
 }
 
-# -----------------------------------------------------
-# Gh CLI
-# -----------------------------------------------------
-
-ghcs () {
-    gh copilot suggest "$1"
-}
-
-# -----------------------------------------------------
-# wayland
-# -----------------------------------------------------

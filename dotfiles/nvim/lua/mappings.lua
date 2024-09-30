@@ -45,3 +45,4 @@ map("n", "<M-[>", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
 -- navigation:
 map("n", "<M-j>", "jzz", { desc = "Move down and center", silent = true })
 map("n", "<M-k>", "kzz", { desc = "Move up and center", silent = true })
+map("n", "-", "<cmd>Oil --float<CR>", { desc = "Open parent directory" })

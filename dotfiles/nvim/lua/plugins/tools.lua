@@ -10,8 +10,19 @@ return {
         "stevearc/oil.nvim",
         opts = {},
         -- Optional dependencies
-        dependencies = { { "echasnovski/mini.icons", opts = {} } },
-        -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("oil").setup {
+                skip_confirm_for_simple_edits = true,
+                view_options = {
+                    show_hidden = true,
+                },
+                float = {
+                    max_width = 50,
+                    max_height = 20,
+                },
+            }
+        end,
     },
     {
         "stevearc/conform.nvim",

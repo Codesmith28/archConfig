@@ -39,7 +39,7 @@ configuration {
 
 /* ---- Window ---- */
 window {
-    width:                        700px;
+    width:                        500px;
     x-offset:                     0px;
     y-offset:                     0px;
     spacing:                      0px;
@@ -144,7 +144,7 @@ button selected {
 /* ---- Listview ---- */
 listview {
     enabled:                      true;
-    columns:                      2;
+    columns:                      1;
     lines:                        5;
     cycle:                        false;
     dynamic:                      true;

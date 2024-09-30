@@ -5,8 +5,8 @@
 local M = {}
 
 M.ui = {
-    theme = "onedark",
-    theme_toggle = { "onedark" },
+    theme = "tokyonight",
+    theme_toggle = { "tokyonight" },
     transparency = false,
 
     hl_override = {

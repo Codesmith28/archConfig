@@ -1,11 +1,5 @@
 return {
     {
-
-        "stevearc/oil.nvim",
-        opts = {},
-        dependencies = { { "echasnovski/mini.icons", opts = {} } },
-    },
-    {
         "hedyhli/outline.nvim",
         lazy = true,
         cmd = { "Outline", "OutlineOpen" },
