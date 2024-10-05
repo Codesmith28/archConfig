@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "setupScripts/set_uni_wifi.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "792764fed53ee6ba",
@@ -147,6 +146,6 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6de60a6b27d534a6",
+  "active": "682aaa9a1549350d",
   "lastOpenFiles": []
 }

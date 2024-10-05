@@ -5,8 +5,7 @@
 local M = {}
 
 M.ui = {
-    theme = "tokyonight",
-    theme_toggle = { "tokyonight" },
+    theme = "gruvchad",
     transparency = false,
 
     hl_override = {
@@ -59,34 +58,43 @@ M.lsp = { signature = false }
 M.mason = {
     cmd = true,
     pkgs = {
-        -- General
-        "vim",
-        "lua",
-        "vimdoc",
-
-        -- Web development
-        "html",
-        "css",
-        "javascript",
-        "typescript",
-        "tsx",
-        "json",
-        "yaml",
-
-        -- Programming languages
-        "python",
-        "cpp",
-        "go",
-        "rust",
-
-        -- Scripting
-        "bash",
-
-        -- Markup and config
-        "markdown",
-
-        -- DevOps
-        "dockerfile",
+        -- for cpp:
+        -- "clangd",
+        "clang-format",
+        "codelldb",
+        -- for python and sql:
+        "python-lsp-server",
+        "sql-formatter",
+        -- for development:
+        "nextls",
+        "eslint-lsp",
+        "js-debug-adapter",
+        "prettierd",
+        "typescript-language-server",
+        "tailwindcss-language-server",
+        "yaml-language-server",
+        "yamlfix",
+        "yamllint",
+        "html-lsp",
+        "css-lsp",
+        "mdformat",
+        -- for lua:
+        "lua-language-server",
+        "stylua",
+        -- for go:
+        "gopls",
+        "goimports-reviser",
+        "golines",
+        "gofumpt",
+        -- for bash scripts:
+        "bash-language-server",
+        "shellcheck",
+        "shfmt",
+        -- for docker:
+        "dockerfile-language-server",
+        "docker-compose-language-service",
+        -- for rust:
+        "rust-analyzer",
     },
 }
 

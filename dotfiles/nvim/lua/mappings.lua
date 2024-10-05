@@ -46,3 +46,8 @@ map("n", "<M-[>", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
 map("n", "<M-j>", "jzz", { desc = "Move down and center", silent = true })
 map("n", "<M-k>", "kzz", { desc = "Move up and center", silent = true })
 map("n", "-", "<cmd>Oil --float<CR>", { desc = "Open parent directory" })
+
+-- toggle-checkboxes in markdown:
+map("n", "<leader>tt", function()
+    vim.cmd ":lua require('./configs/toggle-checkbox').toggle()"
+end)
