@@ -86,7 +86,7 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 # EDIT NOTES
 # -----------------------------------------------------
 
-alias notes='$EDITOR ~/notes.txt'
+alias notes='$EDITOR ~/notes.md'
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
     # clang++ "$1" -o $filename && ./$filename

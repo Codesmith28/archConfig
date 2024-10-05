@@ -94,4 +94,9 @@ return {
         lazy = false,
         opts = overrides.copilot,
     },
+    {
+	'xeluxee/competitest.nvim',
+	dependencies = 'MunifTanjim/nui.nvim',
+	config = function() require('competitest').setup() end,
+    },
 }

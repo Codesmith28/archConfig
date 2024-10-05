@@ -27,6 +27,11 @@ packages=(
     "zsh"
     "bat"
     "nvm"
+    "pnpm"
+    "yarn"
+    "typescript"
+    "ts-node"
+    "bun"
     "python-pipx"
 )
 
@@ -55,12 +60,6 @@ pipx ensurepath
 # -------------------------------------------------------
 
 nvm install --lts
-
-# -------------------------------------------------------
-# Install npm, pnpm, and Yarn
-# -------------------------------------------------------
-
-sudo npm install -g yarn pnpm typescript ts-node bun
 
 # -------------------------------------------------------
 # remove any preconfigured zsh configuration

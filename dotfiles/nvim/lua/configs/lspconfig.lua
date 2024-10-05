@@ -5,13 +5,11 @@ local capabilities = base.capabilities
 local lspconfig = require "lspconfig"
 local util = require "lspconfig/util"
 
--- for clang
-lspconfig.clangd.setup {
-    on_attach = function(client, bufnr)
-        client.server_capabilities.signatureHelpProvider = false
-        on_attach(client, bufnr)
-    end,
+-- setup clangd server
+lspconfig["clangd"].setup {
+    on_attach = on_attach,
     capabilities = capabilities,
+    cmd = { "clangd", "-header-insertion=never" },
 }
 
 -- for typescript
