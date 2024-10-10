@@ -93,6 +93,11 @@ runcpp() {
     clang++ "$1" -o run && "./run"
     rm run
 }
+runc() {
+    clang "$1" -o run && "./run"
+    rm run
+}
+
 alias cpp='cd ~/Projects/cp/ && code . && exit'
 
 # -----------------------------------------------------
@@ -136,6 +141,10 @@ vsc() {
     code "$1" && exit
 }
 
+neo() {
+    setsid neovide "$1" && exit -f
+}
+
 alias pj='cd ~/Projects'
 alias thunar='setsid thunar'
 alias files='setsid nautilus'
@@ -156,4 +165,3 @@ function yz() {
     fi
     rm -f -- "$tmp"
 }
-

@@ -35,9 +35,6 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- notification history:
 map("n", "<M-n>", "<cmd>Telescope notify<CR>", { desc = "Notification history" })
 
--- oil.nvim:
-map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-
 -- change tab not buffer:
 map("n", "<M-]>", "<cmd>tabnext<CR>", { desc = "Next tab" })
 map("n", "<M-[>", "<cmd>tabprevious<CR>", { desc = "Previous tab" })

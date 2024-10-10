@@ -4,6 +4,13 @@ require "nvchad.options"
 
 local o = vim.o
 
+-- folding
+o.foldmethod = "expr"
+o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.cmd [[
+  autocmd BufRead * setlocal foldlevel=99
+]]
+
 -- relative line numbering:
 o.relativenumber = true
 
@@ -45,17 +52,8 @@ vim.api.nvim_set_keymap("n", "<S-ScrollWheelDown>", "10zl", { noremap = true, si
 vim.api.nvim_set_keymap("n", "<C-/>", "gcc", { noremap = false })
 vim.api.nvim_set_keymap("v", "<C-/>", "gcc", { noremap = false })
 
--- for neovide
-vim.g.neovide_floating_blur_amount_x = 2.0
-vim.g.neovide_floating_blur_amount_y = 2.0
-
-vim.g.neovide_floating_shadow = true
-vim.g.neovide_floating_z_height = 10
-vim.g.neovide_light_angle_degrees = 45
-vim.g.neovide_light_radius = 5
-
-vim.opt.termguicolors = true
-
+-- oil.nvim options:
+-- file explorer as buffer
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "oil",
     callback = function()
