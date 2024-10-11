@@ -1,5 +1,4 @@
 require "nvchad.mappings"
-require("oil").setup()
 
 -- add yours here
 
@@ -42,7 +41,7 @@ map("n", "<M-[>", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
 -- navigation:
 map("n", "<M-j>", "jzz", { desc = "Move down and center", silent = true })
 map("n", "<M-k>", "kzz", { desc = "Move up and center", silent = true })
-map("n", "-", "<cmd>Oil --float<CR>", { desc = "Open parent directory" })
+map("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
 
 -- toggle-checkboxes in markdown:
 map("n", "<leader>tt", function()
