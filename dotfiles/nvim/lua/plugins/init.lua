@@ -1,6 +1,6 @@
 return {
     require "plugins.competitest",
-    require "plugins.conform",
+    require "plugins.conform_nvim",
     require "plugins.copilot_zbir",
     require "plugins.formatter",
     require "plugins.gopher",
@@ -8,7 +8,7 @@ return {
     require "plugins.lazygit_nvim",
     require "plugins.mason_nvim",
     require "plugins.mini_indentscope",
-    require "plugins.noice",
+    require "plugins.noice_nvim",
     require "plugins.none_ls",
     require "plugins.nvim_lspconifg",
     require "plugins.nvim_notify",
@@ -22,5 +22,6 @@ return {
     require "plugins.render_markdown",
     require "plugins.rust_vim",
     require "plugins.rustacean",
+    require "plugins.telescope",
     require "plugins.vim_wakatime",
 }
