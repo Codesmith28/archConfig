@@ -43,15 +43,6 @@ o.sidescrolloff = 10
 o.scrolloff = 8
 o.cursorlineopt = "both"
 
--- enable horizontal scrolling with mouse
-vim.opt.mouse = "a"
-vim.api.nvim_set_keymap("n", "<S-ScrollWheelUp>", "10zh", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<S-ScrollWheelDown>", "10zl", { noremap = true, silent = true })
-
--- comments
-vim.api.nvim_set_keymap("n", "<C-/>", "gcc", { noremap = false })
-vim.api.nvim_set_keymap("v", "<C-/>", "gcc", { noremap = false })
-
 -- oil.nvim options:
 -- file explorer as buffer
 vim.api.nvim_create_autocmd("FileType", {

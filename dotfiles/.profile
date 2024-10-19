@@ -86,19 +86,7 @@ alias confz='$EDITOR ~/dotfiles/.zshrc'
 # EDIT NOTES
 # -----------------------------------------------------
 
-alias notes='$EDITOR ~/notes.md'
-runcpp() {
-    # filename=$(echo $1 | cut -f 1 -d '.')
-    # clang++ "$1" -o $filename && ./$filename
-    clang++ "$1" -o run && "./run"
-    rm run
-}
-runc() {
-    clang "$1" -o run && "./run"
-    rm run
-}
-
-alias cpp='cd ~/Projects/cp/ && code . && exit'
+alias rough='$EDITOR ~/rough.md'
 
 # -----------------------------------------------------
 # MINECRAFT
@@ -140,7 +128,6 @@ export DOCKER_HOST=unix:///var/run/docker.sock
 vsc() {
     code "$1" && exit
 }
-
 neo() {
     setsid neovide "$1" && exit -f
 }
@@ -153,8 +140,22 @@ alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
 alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
+runcpp() {
+    # filename=$(echo $1 | cut -f 1 -d '.')
+    # clang++ "$1" -o $filename && ./$filename
+    clang++ "$1" -o run && "./run"
+    rm run
+}
+runc() {
+    clang "$1" -o run && "./run"
+    rm run
+}
+
+alias cpp='cd ~/Projects/cp/ && code . && exit'
+alias lazy='./Downloads/lazyAiReleases/v1/lazyAi_v1.0.0_unix/lazyAi'
+
 # -----------------------------------------------------
-# Yazi file manager:
+# Yazi file manager exit on quit:
 # -----------------------------------------------------
 
 function yz() {

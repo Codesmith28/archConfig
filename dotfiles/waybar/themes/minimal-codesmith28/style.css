@@ -22,7 +22,6 @@ window#waybar {
 #workspaces {
   border: 0;
   margin: 3px 5px 3px 5px;
-  font-size: 14px;
   border-radius: 5px;
   color: @c1;
 }
@@ -85,7 +84,6 @@ tooltip label {
 
 #custom-cliphist {
   margin: 0 10px 0 0;
-  font-size: 14px;
   font-weight: bold;
   color: @icon;
 }
@@ -98,7 +96,6 @@ tooltip label {
 }
 
 #custom-updates {
-  font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
   /*margin: 0 15px 0 0;*/
@@ -115,14 +112,12 @@ tooltip label {
 
 /* ----------------------------------------------------- * Clock * ----------------------------------------------------- */
 #clock {
-  font-size: 15px;
   color: @textcolor;
   margin: 0 10px 0 0;
 }
 
 /* ----------------------------------------------------- * Pulseaudio * ----------------------------------------------------- */
 #pulseaudio {
-  font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
   margin: 0 15px 0 0;
@@ -146,7 +141,6 @@ tooltip label {
 
 /* ----------------------------------------------------- * Battery -----------------------------------------------------  */
 #battery {
-  font-size: 14px;
   color: @textcolor;
   border-radius: 15px;
   margin: 0px 15px 0 0;
