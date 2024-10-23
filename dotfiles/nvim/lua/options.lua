@@ -44,7 +44,6 @@ o.scrolloff = 8
 o.cursorlineopt = "both"
 
 -- oil.nvim options:
--- file explorer as buffer
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "oil",
     callback = function()
