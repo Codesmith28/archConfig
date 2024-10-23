@@ -1,5 +1,4 @@
 return {
-    require "plugins.competitest",
     require "plugins.conform_nvim",
     require "plugins.copilot_zbir",
     require "plugins.formatter",
@@ -22,6 +21,7 @@ return {
     require "plugins.render_markdown",
     require "plugins.rust_vim",
     require "plugins.rustacean",
+    require "plugins.snippets",
     require "plugins.telescope",
     require "plugins.vim_wakatime",
 }

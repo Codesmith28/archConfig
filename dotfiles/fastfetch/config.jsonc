@@ -12,49 +12,60 @@
   "logo": {
     "source": "~/dotfiles/fastfetch/ascii/arch2.txt",
     "padding": {
-      "right": 4
-    }
+      "right": 4,
+    },
   },
   "display": {
-    "separator": " "
+    "separator": " ",
   },
   "modules": [
     "break",
     {
       "type": "title",
-      "keyWidth": 10
+      "keyWidth": 10,
     },
     {
       "type": "os",
       "key": " ",
-      "keyColor": "34" // = color3
+      "keyColor": "34", // = color3
     },
     {
       "type": "kernel",
       "key": " ",
-      "keyColor": "34"
+      "keyColor": "34",
     },
     {
       "type": "host",
       "key": "󰍹 ",
-      "keyColor": "34"
+      "keyColor": "34",
     },
     {
       "type": "uptime",
       "key": " ",
-      "keyColor": "34"
+      "keyColor": "34",
     },
     {
       "type": "packages",
       "format": "{} (pacman)",
       "key": "󰏓 ",
-      "keyColor": "34"
+      "keyColor": "34",
     },
     {
       "type": "memory",
       "key": " ",
-      "keyColor": "34"
+      "keyColor": "34",
     },
-    "break"
-  ]
+    {
+      "type": "battery",
+      "key": "󰗱 ",
+      "keyColor": "34",
+      "format": "{/4}{-}{/}{4}{?5} [{5}]{?}",
+    },
+    {
+      "type": "datetime",
+      "key": "󱇼 ",
+      "keyColor": "34",
+    },
+    "break",
+  ],
 }
