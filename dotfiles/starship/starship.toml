@@ -6,8 +6,11 @@ command_timeout = 10000
 # """
 
 format = """
-$directory$fill$battery$time
-$character
+$all
+"""
+
+right_format = """
+$battery$time
 """
 
 [fill]
