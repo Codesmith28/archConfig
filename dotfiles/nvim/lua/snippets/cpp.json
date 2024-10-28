@@ -31,9 +31,9 @@
       "}",
       "",
       "int32_t main() {",
-      "    int testCases = 1;",
-      "    $1cin >> testCases;",
-      "    while(testCases--) {",
+      "    int test_cases = 1;",
+      "    $1cin >> test_cases;",
+      "    while(test_cases--) {",
       "        solve();",
       "    }",
       "    return 0;",
@@ -67,10 +67,10 @@
       "    cin.tie(NULL);",
       "    cout.tie(NULL);",
       "",
-      "    int testCases = 1;",
-      "    $1cin >> testCases;",
+      "    int test_cases = 1;",
+      "    $1cin >> test_cases;",
       "",
-      "    while(testCases--) {",
+      "    while(test_cases--) {",
       "        solve();",
       "    }",
       "",
@@ -155,18 +155,12 @@
   },
   "vectors": {
     "prefix": "vi",
-    "body": [
-      "vector<int> $1;",
-      "$0"
-    ],
+    "body": ["vector<int> $1;", "$0"],
     "description": "Input vector of integers"
   },
   "vector<vector>": {
     "prefix": "vvi",
-    "body": [
-      "vector<vector<int>> $1($2, vector<int>($3));",
-      "$0"
-    ],
+    "body": ["vector<vector<int>> $1($2, vector<int>($3));", "$0"],
     "description": "Input vector of integers"
   },
   "DSU (Disjoint Set Union)": {
@@ -203,10 +197,7 @@
   },
   "sortSnippet": {
     "prefix": "sa",
-    "body": [
-      "sort($1.begin(), $1.end() $2);",
-      "$0"
-    ],
+    "body": ["sort($1.begin(), $1.end() $2);", "$0"],
     "description": "Sort a vector"
   },
   "Trie": {
@@ -434,6 +425,23 @@
       "__int128 getHash(int x, int y) {",
       "    __int128 res = add(ha[y], (x == 0) ? 0 : -ha[x - 1], mod);",
       "    res = mult(res, inv[x], mod);",
+      "    return res;",
+      "}"
+    ],
+    "description": ""
+  },
+  "power_function": {
+    "prefix": "poww",
+    "body": [
+      "int power(int a, int x) {",
+      "    int res = 1;",
+      "    while (x) {",
+      "        if (x & 1) {",
+      "            res = (res * a) % mod;",
+      "        }",
+      "        a = (a * a) % mod;",
+      "        x >>= 1;",
+      "    }",
       "    return res;",
       "}"
     ],

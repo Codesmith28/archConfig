@@ -23,7 +23,7 @@ alias e='exit'
 alias nf='neofetch'
 alias pf='pfetch'
 alias ff='fastfetch'
-alias cff='c && fastfetch'
+alias cf='c && fastfetch'
 alias ls='eza  --icons'
 alias ll='eza -l --icons'
 alias la='eza -a --icons'
@@ -146,7 +146,7 @@ runcpp() {
     clang++ "$1" -o run && "./run"
     rm run
 }
-runc() {
+runcc() {
     clang "$1" -o run && "./run"
     rm run
 }
