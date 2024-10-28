@@ -1,8 +1,55 @@
 command_timeout = 10000
 
+# format = """
+# $all$fill$battery$time
+# $character
+# """
+
+format = """
+$directory$fill$battery$time
+$character
+"""
+
+[fill]
+symbol = ' '
+
+# Time on the first line (right)
+[time]
+disabled = false
+format = "[$time](white)"
+time_format = "⏲ %H:%M"  # Display as HH:MM
+
+[battery]
+charging_symbol = " "
+
+[[battery.display]]
+threshold = 100
+style = 'green'
+discharging_symbol = "󰁹 "
+
+[[battery.display]]
+threshold = 90
+style = 'green'
+discharging_symbol = "󰂂 "
+
+[[battery.display]]
+threshold = 60
+style = 'yellow'
+discharging_symbol = "󰁿 "
+
+[[battery.display]]
+threshold = 30
+style = 'orange'
+discharging_symbol = "󰁼 "
+
+[[battery.display]]
+threshold = 10
+style = 'bold red'
+discharging_symbol = "󰁺 "
+
 [character]
 success_symbol = "[](bold green)"
-error_symbol = "[✘ ](bold red)"
+error_symbol = "[](bold red)"
 vimcmd_symbol = "[](bold green)"
 
 [aws]
