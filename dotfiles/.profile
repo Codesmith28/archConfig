@@ -47,6 +47,27 @@ alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 
 # -----------------------------------------------------
+# System Controls
+# -----------------------------------------------------
+
+bu () {
+    if [[ -z $1 ]]; then
+        echo "Please specify a percentage to increase, e.g., bu 10"
+    else
+        brightnessctl set "$1"%+
+    fi
+}
+bd () {
+    if [[ -z $1 ]]; then
+        echo "Please specify a percentage to decrease, e.g., bd 10"
+    else
+        brightnessctl set "$1"%-
+    fi
+}
+
+
+
+# -----------------------------------------------------
 # GIT
 # -----------------------------------------------------
 
