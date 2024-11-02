@@ -3,7 +3,12 @@
     "prefix": "leet",
     "body": [
       "#include<bits/stdc++.h>",
-      "using namespace std;",
+      "#ifndef ONLINE_JUDGE",
+      "#include \"debug.h\"",
+      "#else",
+      "#define dbg(x...)",
+      "#endif",
+      "",
       "/* (╯°□°)╯︵ ┻━┻ */",
       "",
       "$1",
@@ -275,12 +280,12 @@
     "description": "Snippet for a binary tree node structure"
   },
   "ordered_set": {
-    "prefix": "ordset",
+    "prefix": "pbds",
     "body": [
       "#include <ext/pb_ds/assoc_container.hpp> // Common file",
       "#include <ext/pb_ds/tree_policy.hpp>",
       "using namespace __gnu_pbds;",
-      "typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;"
+      "template <typename T> using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;"
     ],
     "description": "Include and define an ordered set"
   },
@@ -445,6 +450,6 @@
       "    return res;",
       "}"
     ],
-    "description": ""
+    "description": "modular exponentiation"
   }
 }

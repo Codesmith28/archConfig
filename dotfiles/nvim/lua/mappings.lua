@@ -50,14 +50,21 @@ end)
 
 -- enable horizontal scrolling with mouse
 vim.opt.mouse = "a"
-vim.api.nvim_set_keymap("n", "<S-ScrollWheelUp>", "10zh", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<S-ScrollWheelDown>", "10zl", { noremap = true, silent = true })
+map("n", "<S-ScrollWheelUp>", "10zh", { noremap = true, silent = true })
+map("n", "<S-ScrollWheelDown>", "10zl", { noremap = true, silent = true })
 
 -- comments
-vim.api.nvim_set_keymap("n", "<C-/>", "gcc", { noremap = false })
-vim.api.nvim_set_keymap("v", "<C-/>", "gcc", { noremap = false })
+map("n", "<C-/>", "gcc", { noremap = false })
+map("v", "<C-/>", "gcc", { noremap = false })
 
 -- harpoon mappings
 map("n", "<leader>ah", "<cmd>lua require('harpoon.mark').add_file()<CR>", { desc = "Add mark" })
 map("n", "<leader>lh", "<cmd>Telescope harpoon marks<CR>", { desc = "Toggle mark telescope" })
 map("n", "<leader>fm", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<CR>", { desc = "Toggle mark menu" })
+
+-- Move lines
+map("v", "<C-j>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true, desc = "Move line down" })
+map("v", "<C-k>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true, desc = "Move line up" })
+
+-- append the line below and cursor stays at same place
+map("n", "J", "mzJ`z", { desc = "Append line below" })
