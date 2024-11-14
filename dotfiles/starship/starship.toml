@@ -29,6 +29,7 @@ charging_symbol = " "
 threshold = 100
 style = 'green'
 discharging_symbol = "󰁹 "
+charging_symbol = " "
 
 [[battery.display]]
 threshold = 90
