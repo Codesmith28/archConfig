@@ -9,6 +9,7 @@
       "#define dbg(x...)",
       "#endif",
       "",
+      "using namespace std;",
       "/* (╯°□°)╯︵ ┻━┻ */",
       "",
       "$1",
