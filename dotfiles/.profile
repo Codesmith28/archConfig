@@ -64,8 +64,20 @@ bd () {
         brightnessctl set "$1"%-
     fi
 }
-
-
+vu() {
+    if [[ -z $1 ]]; then
+        echo "Please specify a percentage to increase, e.g., vu 10"
+    else
+        pactl set-sink-volume @DEFAULT_SINK@ +"$1"%
+    fi
+}
+vd () {
+    if [[ -z $1 ]]; then
+        echo "Please specify a percentage to decrease, e.g., vd 10"
+    else
+        pactl set-sink-volume @DEFAULT_SINK@ -"$1"%
+    fi
+}
 
 # -----------------------------------------------------
 # GIT
