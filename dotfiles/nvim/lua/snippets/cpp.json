@@ -15,7 +15,6 @@
       "$1",
       "",
       "int main() {",
-      "    int sz = 1;",
       "    $0",
       "    return 0;",
       "}"
@@ -303,7 +302,7 @@
       "",
       "        if (spath[curr_node] < curr_dis) continue;",
       "        for (auto [nei, dis] : adj[curr_node]) {",
-      "            if (spath[nei] > curr_dis + dis) {",
+      "            if (spath[nei] >= curr_dis + dis) {",
       "                spath[nei] = curr_dis + dis;",
       "                pq.push({spath[nei], nei});",
       "            }",

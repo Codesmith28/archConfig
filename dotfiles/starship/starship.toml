@@ -20,7 +20,7 @@ symbol = ' '
 [time]
 disabled = false
 format = "[$time](white)"
-time_format = "⏲ %H:%M"  # Display as HH:MM
+time_format = "󱑏 %H:%M"  # Display as HH:MM
 
 [battery]
 charging_symbol = " "
