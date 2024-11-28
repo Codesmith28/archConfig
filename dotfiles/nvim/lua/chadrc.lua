@@ -7,6 +7,7 @@ local M = {}
 M.base46 = {
     theme = "chadracula",
     transparency = false,
+    -- transparency = true,
     hl_override = {
         Comment = { italic = true },
         ["@comment"] = { italic = true },
@@ -85,6 +86,8 @@ M.mason = {
         "docker-compose-language-service",
         -- for rust:
         "rust-analyzer",
+        -- for markdown:
+        "markdownlint",
     },
 }
 
