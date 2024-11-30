@@ -1,5 +1,5 @@
 [flavor]
-use = "kanagawa"
+use = "dracula"
 
 [manager]
 hovered = { reversed = true }
