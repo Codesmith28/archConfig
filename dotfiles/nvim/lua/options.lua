@@ -20,13 +20,15 @@ o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
--- vim.api.nvim_create_autocmd({ "FileType" }, {
---     pattern = { "javascript", "typescript", "json", "css", "html", "jsx", "tsx", "javascriptreact", "typescriptreact" },
---     callback = function()
---         vim.bo.tabstop = 2
---         vim.bo.shiftwidth = 2
---     end,
--- })
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    -- pattern = { "javascript", "typescript", "json", "css", "html", "jsx", "tsx", "javascriptreact", "typescriptreact" },
+    -- do it for markkdown:
+    pattern = "markdown",
+    callback = function()
+        vim.bo.tabstop = 2
+        vim.bo.shiftwidth = 2
+    end,
+})
 
 -- other utilities
 vim.g.copilot_assume_mapped = true

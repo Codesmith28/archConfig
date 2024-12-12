@@ -139,6 +139,9 @@ mntd() {
     sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"
 }
 alias D='cd /home/run/media/localdiskD'
+fixD() {
+    sudo umount /home/run/media/localdiskD && echo "Disk unmounted."
+}
 alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
 alias netrs='sudo systemctl restart NetworkManager'
 
