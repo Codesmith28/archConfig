@@ -118,6 +118,8 @@ packagesPacman=(
     "hyprpaper"
     "hyprlock"
     "hypridle"
+    "hyprshade"
+    "hyprshot"
     "xdg-desktop-portal-hyprland"
     
     # Wayland Utilities
@@ -132,8 +134,6 @@ packagesYay=(
     # Additional Tools
     "wlogout"
     "nwg-look"
-    "hyprshade"
-    "hyprshot"
 )
 
 # Merge both arrays
