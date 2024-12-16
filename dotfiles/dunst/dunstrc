@@ -228,8 +228,8 @@
     max_icon_size = 40
 
     # Paths to default icons (only neccesary when not using recursive icon lookup)
-    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
-
+    # icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+    icon_path="~/.local/share/icons/Colloid-Dark/actions/16:~/.local/share/icons/Colloid-Dark/actions@2x/16:~/.local/share/icons/Colloid-Dark/devices/16:~/.local/share/icons/Colloid-Dark/devices@2x/16:~/.local/share/icons/Colloid-Dark/emblems/16:~/.local/share/icons/Colloid-Dark/emblems@2x/16:~/.local/share/icons/Colloid-Dark/places/16:~/.local/share/icons/Colloid-Dark/places@2x/16:~/.local/share/icons/Colloid-Dark/status/16:~/.local/share/icons/Colloid-Dark/status@2x/16"
     ### History ###
 
     # Should a notification popped up from history be sticky or timeout
