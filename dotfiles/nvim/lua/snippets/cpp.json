@@ -82,6 +82,7 @@
       "            int mid = (start + end) / 2;",
       "            build(arr, 2 * node, start, mid);",
       "            build(arr, 2 * node + 1, mid + 1, end);",
+      "",
       "            tree[node] = tree[2 * node] + tree[2 * node + 1];",
       "        }",
       "    }",
@@ -96,6 +97,7 @@
       "            } else {",
       "                update(2 * node + 1, mid + 1, end, idx, val);",
       "            }",
+      "",
       "            tree[node] = tree[2 * node] + tree[2 * node + 1];",
       "        }",
       "    }",
@@ -106,6 +108,7 @@
       "        int mid = (start + end) / 2;",
       "        int p1 = query(2 * node, start, mid, left, right);",
       "        int p2 = query(2 * node + 1, mid + 1, end, left, right);",
+      "",
       "        return p1 + p2;",
       "    }",
       "};"

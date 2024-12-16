@@ -56,6 +56,22 @@ lspconfig.rust_analyzer.setup {
     },
 }
 
+-- for python:
+lspconfig.pyright.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { "python" },
+    settings = {
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = "workspace",
+                useLibraryCodeForTypes = true,
+            },
+        },
+    },
+}
+
 local servers = { "tailwindcss", "eslint", "ts_ls", "cssls" }
 
 for _, lsp in ipairs(servers) do
