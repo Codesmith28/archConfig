@@ -1,5 +1,8 @@
+require("nvchad.configs.lspconfig").defaults()
+
 local base = require "nvchad.configs.lspconfig"
 local on_attach = base.on_attach
+local on_init = base.on_init
 local capabilities = base.capabilities
 
 local lspconfig = require "lspconfig"
@@ -77,6 +80,7 @@ local servers = { "tailwindcss", "eslint", "ts_ls", "cssls" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         on_attach = on_attach,
+        on_init = on_init,
         capabilities = capabilities,
     }
 end
