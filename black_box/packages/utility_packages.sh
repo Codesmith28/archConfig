@@ -16,6 +16,7 @@ packages=(
     "texlive"
     "xclip"
     "less"
+    "alsa-utils"
 )
 
 for package in "${packages[@]}"; do

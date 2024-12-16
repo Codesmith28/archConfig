@@ -5,7 +5,7 @@
 local M = {}
 
 M.base46 = {
-    theme = "chadracula-evondev",
+    theme = "tokyonight",
     transparency = false,
     -- transparency = true,
     hl_override = {
@@ -53,8 +53,15 @@ M.mason = {
         -- "clangd",
         "clang-format",
         "codelldb",
-        -- for python and sql:
-        "python-lsp-server",
+        -- for python:
+        "pyright",
+        "mypy",
+        "ruff",
+        "black",
+        "isort",
+        "flake8",
+        "pylint",
+        -- for sql:
         "sql-formatter",
         -- for development:
         "nextls",
