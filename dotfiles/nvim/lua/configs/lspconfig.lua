@@ -75,7 +75,12 @@ lspconfig.pyright.setup {
     },
 }
 
-local servers = { "tailwindcss", "eslint", "ts_ls", "cssls" }
+local servers = {
+    "tailwindcss",
+    "eslint",
+    "ts_ls",
+    "cssls",
+}
 
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {

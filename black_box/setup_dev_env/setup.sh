@@ -9,18 +9,32 @@ cat << "EOF"
               |_____|
 EOF
 
+packages=(
+    "go"
+    "rust"
+    "rust-analyzer"
+    "rustup"
+    "nvm"
+    "bun"
+    "python-pipx"
+)
+
+# -------------------------------------------------------
+# Install packages using yay
+# -------------------------------------------------------
+
+for package in "${packages[@]}"; do
+    if yay -Qi "$package" &> /dev/null; then
+        echo "$package is already installed. Skipping..."
+    else
+        echo "Installing $package..."
+        sudo yay -S --noconfirm "$package"
+    fi
+done
+echo "All required packages are installed!"
+
 # Ensure pipx path
 pipx ensurepath
-
-# Set go environment
-if ! command -v go &> /dev/null
-then
-    echo "Go is not installed. Installing Go..."
-    sudo pacman -S --noconfirm go
-    echo "Go installed and configured."
-else
-    echo "Go is already installed."
-fi
 
 # Set rust environment
 if ! command -v rustc &> /dev/null

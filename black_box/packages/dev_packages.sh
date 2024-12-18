@@ -14,6 +14,7 @@ packages=(
     "vim"
     "visual-studio-code-bin"
     "neovim"
+    "neovide"
     "distrobox"
     "mongodb-compass"
     "clang"

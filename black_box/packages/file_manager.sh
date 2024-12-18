@@ -10,6 +10,8 @@ EOF
 
 packages=(
     "nautilus"
+    "nautilus-code"
+    "nautilus-open-any-terminal"
     "eog"
     "unzip"
 )

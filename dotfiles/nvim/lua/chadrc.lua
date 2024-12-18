@@ -23,10 +23,10 @@ M.term = {
     sizes = { sp = 0.4, vsp = 0.4, ["bo sp"] = 0.4, ["bo vsp"] = 0.4 },
     float = {
         relative = "editor",
-        row = 0.15,
+        row = 0.1,
         col = 0.2,
         width = 0.6,
-        height = 0.6,
+        height = 0.7,
         border = "rounded",
     },
 }
@@ -35,7 +35,7 @@ M.nvdash = {
     load_on_startup = true,
 }
 
--- M.lsp = { signature = false }
+M.lsp = { signature = false }
 
 M.mason = {
     cmd = true,

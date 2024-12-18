@@ -1,3 +1,4 @@
+-- inlay hints:
 require "nvchad.options"
 
 -- add yours here!
@@ -28,6 +29,12 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         vim.bo.tabstop = 2
         vim.bo.shiftwidth = 2
     end,
+})
+
+-- set cursorline on by default
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    command = "set cursorline",
 })
 
 -- other utilities
