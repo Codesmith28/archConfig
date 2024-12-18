@@ -73,4 +73,6 @@ return {
             scope = { enabled = false },
         },
     },
+    { "nvzone/volt", lazy = false },
+    { "nvzone/menu", lazy = false },
 }

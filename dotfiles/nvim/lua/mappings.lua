@@ -64,3 +64,6 @@ map("v", "<C-k>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true, desc = "M
 
 -- append the line below and cursor stays at same place
 map("n", "J", "mzJ`z", { desc = "Append line below" })
+
+-- toggle inlay hints:
+map("n", "<leader>ih", "<cmd>lua require('lsp_extensions').inlay_hints()<CR>", { desc = "Toggle inlay hints" })

@@ -174,7 +174,8 @@ alias files='setsid nautilus'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
-alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
+# alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
+alias ivm='$EDITOR $(tv)'
 
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
