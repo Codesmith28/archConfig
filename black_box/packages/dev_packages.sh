@@ -11,6 +11,8 @@ EOF
 
 
 packages=(
+    "clang"
+    "gcc"
     "vim"
     "visual-studio-code-bin"
     "neovim"

@@ -22,11 +22,11 @@ scripts=(
     "fonts.sh"
     "file_manager.sh"
     "multi_media.sh"
-    "gnome_gtk.sh"
-    "hyprland_components.sh"
     "additional_tools.sh"
     "dev_packages.sh"
     "utility_packages.sh"
+    "gnome_gtk.sh"
+    "hyprland_components.sh"
 )
 
 # Function to prompt and run a script

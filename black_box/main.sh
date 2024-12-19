@@ -32,6 +32,7 @@ declare -A scripts=(
     ["./setup_git_github/setUpGit.sh"]=true
     ["./config_pacman/setup.sh"]=true
     ["./packages/install_packages.sh"]=true
+    ["./config_gnome/config.sh"]=false
     ["./link_dotfiles/link.sh"]=false
     ["./setup_dev_env/setup.sh"]=true
     ["./setup_docker_env/setDocker.sh"]=true
