@@ -1,10 +1,10 @@
 fork = false
 frame = "full"
 idle = true
-maximized = false
+maximized = true
 neovim-bin = "/usr/bin/nvim" # in reality found dynamically on $PATH if unset
 no-multigrid = false
-srgb = false
+srgb = true
 tabs = true
 theme = "auto"
 title-hidden = true
@@ -13,4 +13,5 @@ wsl = false
 
 [font]
 normal = ["Monospace"] # Will use the bundled Fira Code Nerd Font by default
-size = 14.0
+size = 13
+# size = 14.7

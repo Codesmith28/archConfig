@@ -7,7 +7,7 @@
 /* ----------------------------------------------------- * General * ----------------------------------------------------- */
 * {
   font-family: Monospace;
-  font-size: 14px;
+  font-size: 14.7px;
   border: none;
   border-radius: 0;
 }
@@ -21,7 +21,8 @@ window#waybar {
 /* ----------------------------------------------------- * Workspaces * ----------------------------------------------------- */
 #workspaces {
   border: 0;
-  margin: 3px 5px 3px 5px;
+  /*margin: 3px 5px 3px 5px;*/
+  margin: 1px 0px 1px 3px;
   border-radius: 5px;
   color: @c1;
 }
@@ -60,9 +61,9 @@ window#waybar {
   -gtk-icon-effect: highlight;
 }
 
-#taskbar {
-  margin-left: 5px;
-}
+/*#taskbar {*/
+/*    margin-left: 5px;*/
+/*}*/
 
 #taskbar button {
   padding-right: 7px;
