@@ -7,7 +7,7 @@ Add a full border to Yazi to make it look fancier.
 ## Installation
 
 ```sh
-ya pack -a yazi-rs/plugins#full-border
+ya pack -a yazi-rs/plugins:full-border
 ```
 
 ## Usage
@@ -26,3 +26,7 @@ require("full-border"):setup {
 	type = ui.Border.ROUNDED,
 }
 ```
+
+## License
+
+This plugin is MIT-licensed. For more information check the [LICENSE](LICENSE) file.

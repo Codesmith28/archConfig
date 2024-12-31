@@ -1,5 +1,5 @@
 [plugin]
-deps = [{ use = "yazi-rs/plugins#full-border", commit = "ba2a7d7" }]
+deps = [{ use = "yazi-rs/plugins:full-border", rev = "71c4fc2" }, { use = "Rolv-Apneseth/starship", rev = "9c37d37" }, { use = "yazi-rs/plugins:max-preview", rev = "71c4fc2" },  { use = "ahkohd/eza-preview", rev = "5ef05bc" }, { use = "GrzegorzKozub/mdcat", rev = "d3d5089" }, { use = "Reledia/glow", rev = "c2ed51e" }, { use = "h-hg/yamb", rev = "108347b" }]
 
 [flavor]
-deps = []
+deps = [{ use = "yazi-rs/flavors:catppuccin-mocha", rev = "8458d25" }]

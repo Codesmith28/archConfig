@@ -21,6 +21,9 @@ o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
+o.encoding = "utf-8"
+o.fileencoding = "utf-8"
+
 vim.api.nvim_create_autocmd({ "FileType" }, {
     -- pattern = { "javascript", "typescript", "json", "css", "html", "jsx", "tsx", "javascriptreact", "typescriptreact" },
     -- do it for markkdown:

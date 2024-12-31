@@ -137,10 +137,22 @@ fi
 # -----------------------------------------------------
 # Create blurred wallpaper if not "init"
 # -----------------------------------------------------
+
+# if [ "$1" != "init" ]; then
+#     dunstify "Creating blurred version ..." "with image $newwall" -h int:value:50 -h string:x-dunst-stack-tag:wallpaper
+#     if magick "$used_wallpaper" -resize 75% "$blurred" && [ "$blur" != "0x0" ]; then
+#         magick "$blurred" -blur "$blur" "$blurred"
+#     else
+#         echo "Failed to create blurred wallpaper"
+#     fi
+# fi
+
 if [ "$1" != "init" ]; then
     dunstify "Creating blurred version ..." "with image $newwall" -h int:value:50 -h string:x-dunst-stack-tag:wallpaper
     if magick "$used_wallpaper" -resize 75% "$blurred" && [ "$blur" != "0x0" ]; then
         magick "$blurred" -blur "$blur" "$blurred"
+        # Add a slight black tint
+        magick "$blurred" -fill "black" -colorize 50% "$blurred"
     else
         echo "Failed to create blurred wallpaper"
     fi

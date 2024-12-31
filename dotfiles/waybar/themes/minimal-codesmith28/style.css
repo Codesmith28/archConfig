@@ -21,7 +21,6 @@ window#waybar {
 /* ----------------------------------------------------- * Workspaces * ----------------------------------------------------- */
 #workspaces {
   border: 0;
-  /*margin: 3px 5px 3px 5px;*/
   margin: 1px 0px 1px 3px;
   border-radius: 5px;
   color: @c1;
@@ -91,9 +90,9 @@ tooltip label {
 
 /* ----------------------------------------------------- * Custom Modules * ----------------------------------------------------- */
 #custom-appmenuicon {
-  font-size: 20px;
+  font-size: 21px;
   color: @textcolor;
-  margin: 0 10px 0 10px;
+  margin: 6px 10px 6px 10px;
 }
 
 #custom-updates {

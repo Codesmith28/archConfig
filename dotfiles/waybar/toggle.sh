@@ -12,4 +12,5 @@ if [ -f ~/.cache/waybar-disabled ] ;then
 else
     touch ~/.cache/waybar-disabled
 fi
+
 ~/dotfiles/waybar/launch.sh &
