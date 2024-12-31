@@ -1,4 +1,5 @@
 return {
+    require "plugins.assistant_nvim",
     require "plugins.conform_nvim",
     require "plugins.copilot_zbir",
     require "plugins.formatter",

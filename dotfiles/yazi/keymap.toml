@@ -1,16 +1,74 @@
-# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
-# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
-"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+[[manager.prepend_keymap]]
+on   = "T"
+run  = "plugin max-preview"
+desc = "Maximize or restore preview"
 
-[manager]
+[[manager.prepend_keymap]]
+on = [ "m" ]
+run = "plugin relative-motions"
+desc = "Trigger a new relative motion"
 
-prepend_keymap = [
-	{ on = [ "j" ], run = [ "plugin --sync arrow --args=1"],  desc = "Move selection downwards, or wrap." },
-	{ on = [ "k" ], run = [ "plugin --sync arrow --args=-1"], desc = "Move selection upwards, or wrap." },
-	{ on = [ "l" ], run = [ "plugin smart-enter --sync", "escape --visual --select" ], desc = "Enter the child directory, or open file." },
-    # {on  = [ "return" ], run = [ "plugin smart-enter --sync", "escape --visual --select" ], desc = "Enter the child directory, or open file." },
-	{ on = [ "L" ], run = "plugin smart-enter --sync --args='detatch'", desc = "Open in new window." },
-    { on = [ "=" ], run = """
-        shell 'printf "Mode Bits: "; read ans; chmod $ans "$@"' --block --confirm
-    """, desc = "chmod" },
-]
+[[manager.prepend_keymap]]
+on = [ "E" ]
+run = "plugin eza-preview"
+desc = "Toggle tree/list dir preview"
+
+[[manager.prepend_keymap]]
+on = [ "-" ]
+run = "plugin eza-preview --args='--inc-level'"
+desc = "Increment tree level"
+
+[[manager.prepend_keymap]]
+on = [ "_" ]
+run = "plugin eza-preview --args='--dec-level'"
+desc = "Decrement tree level"
+
+[[manager.prepend_keymap]]
+on = [ "$" ]
+run = "plugin eza-preview --args='--toggle-follow-symlinks'"
+desc = "Toggle tree follow symlinks"
+
+[[manager.prepend_keymap]]
+on = [ "u", "a" ]
+run = "plugin yamb --args=save"
+desc = "Add bookmark"
+
+[[manager.prepend_keymap]]
+on = [ "u", "g" ]
+run = "plugin yamb --args=jump_by_key"
+desc = "Jump bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "G" ]
+run = "plugin yamb --args=jump_by_fzf"
+desc = "Jump bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = [ "u", "d" ]
+run = "plugin yamb --args=delete_by_key"
+desc = "Delete bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "D" ]
+run = "plugin yamb --args=delete_by_fzf"
+desc = "Delete bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = [ "u", "A" ]
+run = "plugin yamb --args=delete_all"
+desc = "Delete all bookmarks"
+
+[[manager.prepend_keymap]]
+on = [ "u", "r" ]
+run = "plugin yamb --args=rename_by_key"
+desc = "Rename bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "R" ]
+run = "plugin yamb --args=rename_by_fzf"
+desc = "Rename bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = ["C"]
+run = "plugin ouch --args=zip"
+desc = "Compress with ouch"

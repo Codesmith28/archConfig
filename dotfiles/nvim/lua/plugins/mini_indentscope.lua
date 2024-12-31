@@ -3,7 +3,7 @@ return {
     version = false, -- wait till new 0.7.0 release to put it back on semver
     event = "VeryLazy",
     opts = {
-        symbol = "╎",
+        symbol = "|",
         delay = 50,
         options = { try_as_border = true },
     },
