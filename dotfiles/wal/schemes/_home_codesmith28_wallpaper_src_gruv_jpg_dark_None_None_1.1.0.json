@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/gruv.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0F151D",
+        "foreground": "#f1c19b",
+        "cursor": "#f1c19b"
+    },
+    "colors": {
+        "color0": "#0F151D",
+        "color1": "#8D603C",
+        "color2": "#976742",
+        "color3": "#AF7445",
+        "color4": "#C37E4A",
+        "color5": "#BE804D",
+        "color6": "#CF8950",
+        "color7": "#f1c19b",
+        "color8": "#a8876c",
+        "color9": "#8D603C",
+        "color10": "#976742",
+        "color11": "#AF7445",
+        "color12": "#C37E4A",
+        "color13": "#BE804D",
+        "color14": "#CF8950",
+        "color15": "#f1c19b"
+    }
+}

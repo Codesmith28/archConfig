@@ -1,0 +1,21 @@
+set $wallpaper /home/codesmith28/wallpaper/src/itoshi_rin.png
+
+set $background #060D13
+set $foreground #c5f5f5
+
+set $color0 #060D13
+set $color1 #837B70
+set $color2 #076B89
+set $color3 #0E9DA2
+set $color4 #2CCACD
+set $color5 #68F4F5
+set $color6 #B1A499
+set $color7 #c5f5f5
+set $color8 #89abab
+set $color9 #837B70
+set $color10 #076B89
+set $color11 #0E9DA2
+set $color12 #2CCACD
+set $color13 #68F4F5
+set $color14 #B1A499
+set $color15 #c5f5f5

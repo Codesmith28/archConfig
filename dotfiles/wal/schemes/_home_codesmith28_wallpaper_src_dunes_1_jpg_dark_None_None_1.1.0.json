@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/dunes_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#151920",
+        "foreground": "#eae3c6",
+        "cursor": "#eae3c6"
+    },
+    "colors": {
+        "color0": "#151920",
+        "color1": "#7C8274",
+        "color2": "#9A9178",
+        "color3": "#DCA451",
+        "color4": "#1E7084",
+        "color5": "#649891",
+        "color6": "#9FA38E",
+        "color7": "#eae3c6",
+        "color8": "#a39e8a",
+        "color9": "#7C8274",
+        "color10": "#9A9178",
+        "color11": "#DCA451",
+        "color12": "#1E7084",
+        "color13": "#649891",
+        "color14": "#9FA38E",
+        "color15": "#eae3c6"
+    }
+}

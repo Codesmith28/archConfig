@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/peaks_catpuccin.png",
+    "alpha": "100",
+    "special": {
+        "background": "#0f0f17",
+        "foreground": "#cbdee9",
+        "cursor": "#cbdee9"
+    },
+    "colors": {
+        "color0": "#0f0f17",
+        "color1": "#6E738D",
+        "color2": "#788DA3",
+        "color3": "#929AB6",
+        "color4": "#94B5C9",
+        "color5": "#91D7E3",
+        "color6": "#91D7E3",
+        "color7": "#cbdee9",
+        "color8": "#8e9ba3",
+        "color9": "#6E738D",
+        "color10": "#788DA3",
+        "color11": "#929AB6",
+        "color12": "#94B5C9",
+        "color13": "#91D7E3",
+        "color14": "#91D7E3",
+        "color15": "#cbdee9"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/leaves.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#040F03",
+        "foreground": "#aac0a0",
+        "cursor": "#aac0a0"
+    },
+    "colors": {
+        "color0": "#040F03",
+        "color1": "#3C6429",
+        "color2": "#45661E",
+        "color3": "#4A702D",
+        "color4": "#4E7547",
+        "color5": "#588535",
+        "color6": "#649038",
+        "color7": "#aac0a0",
+        "color8": "#768670",
+        "color9": "#3C6429",
+        "color10": "#45661E",
+        "color11": "#4A702D",
+        "color12": "#4E7547",
+        "color13": "#588535",
+        "color14": "#649038",
+        "color15": "#aac0a0"
+    }
+}
