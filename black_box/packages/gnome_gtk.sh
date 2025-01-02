@@ -32,9 +32,6 @@ packages=(
     "gnome-shell-extension-dash-to-dock"
     "gnome-shell-extension-appindicator"
     "gnome-shell-extension-blur-my-shell"
-
-    "colloid-gtk-theme-git"
-    "colloid-icon-theme"
 )
 
 for package in "${packages[@]}"; do

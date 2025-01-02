@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/peak2.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#101322",
+        "foreground": "#e2caca",
+        "cursor": "#e2caca"
+    },
+    "colors": {
+        "color0": "#101322",
+        "color1": "#716779",
+        "color2": "#89647C",
+        "color3": "#7A6A84",
+        "color4": "#8D738B",
+        "color5": "#AC7789",
+        "color6": "#AA909D",
+        "color7": "#e2caca",
+        "color8": "#9e8d8d",
+        "color9": "#716779",
+        "color10": "#89647C",
+        "color11": "#7A6A84",
+        "color12": "#8D738B",
+        "color13": "#AC7789",
+        "color14": "#AA909D",
+        "color15": "#e2caca"
+    }
+}

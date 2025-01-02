@@ -41,4 +41,7 @@ for service in $(ls ${STARTUP_DIR}/*.service); do
     setup_service $(basename -s .service $service)
 done
 
+# Enable bluetooth service
+sudo systemctl enable bluetooth.service
+
 echo "Script execution completed."

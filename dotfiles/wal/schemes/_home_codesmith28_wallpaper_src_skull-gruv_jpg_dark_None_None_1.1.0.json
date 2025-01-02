@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/skull-gruv.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0c0f0c",
+        "foreground": "#d7d4c0",
+        "cursor": "#d7d4c0"
+    },
+    "colors": {
+        "color0": "#0c0f0c",
+        "color1": "#906D4E",
+        "color2": "#B36E49",
+        "color3": "#A8925B",
+        "color4": "#C48966",
+        "color5": "#A39E80",
+        "color6": "#B5AF8A",
+        "color7": "#d7d4c0",
+        "color8": "#969486",
+        "color9": "#906D4E",
+        "color10": "#B36E49",
+        "color11": "#A8925B",
+        "color12": "#C48966",
+        "color13": "#A39E80",
+        "color14": "#B5AF8A",
+        "color15": "#d7d4c0"
+    }
+}

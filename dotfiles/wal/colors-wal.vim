@@ -1,0 +1,23 @@
+" Special
+let wallpaper  = "/home/codesmith28/wallpaper/src/itoshi_rin.png"
+let background = "#060D13"
+let foreground = "#c5f5f5"
+let cursor     = "#c5f5f5"
+
+" Colors
+let color0  = "#060D13"
+let color1  = "#837B70"
+let color2  = "#076B89"
+let color3  = "#0E9DA2"
+let color4  = "#2CCACD"
+let color5  = "#68F4F5"
+let color6  = "#B1A499"
+let color7  = "#c5f5f5"
+let color8  = "#89abab"
+let color9  = "#837B70"
+let color10 = "#076B89"
+let color11 = "#0E9DA2"
+let color12 = "#2CCACD"
+let color13 = "#68F4F5"
+let color14 = "#B1A499"
+let color15 = "#c5f5f5"

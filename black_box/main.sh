@@ -28,10 +28,20 @@ if [ "$EUID" -ne 0 ]; then
     exec sudo bash "$0" "$@"
 fi
 
+# Install yay:
+cd ~/Downloads
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+cd ..
+rm -rf yay
+
+cd ~/Downloads
+
 declare -A scripts=(
-    ["./setup_git_github/setUpGit.sh"]=true
     ["./config_pacman/setup.sh"]=true
     ["./packages/install_packages.sh"]=true
+    ["./setup_git_github/setUpGit.sh"]=true
     ["./config_gnome/config.sh"]=false
     ["./link_dotfiles/link.sh"]=false
     ["./setup_dev_env/setup.sh"]=true
