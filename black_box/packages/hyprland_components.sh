@@ -17,6 +17,7 @@ packages=(
     "hypridle"
     "hyprshade"
     "hyprshot"
+    "hyprswitch"
     "xdg-desktop-portal-hyprland"
 
     "waybar"
