@@ -11,4 +11,4 @@ elif [ $lines -gt 5 ]; then
     lines=5
 fi
 
-rofi -show window -l "$lines" -config /home/codesmith28/dotfiles/rofi/config-window.rasi
+rofi -show window -l "$lines" -config ~/dotfiles/rofi/config-window.rasi
