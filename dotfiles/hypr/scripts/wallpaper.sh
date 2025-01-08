@@ -10,12 +10,12 @@
 # -----------------------------------------------------
 
 # Cache directory for holding all cache-related files
-cache_dir="$HOME/.cache/wallpaper_cache"
+cache_dir="$HOME/dotfiles/wallpaper_cache"
 mkdir -p "$cache_dir"
 
 # Define cache file paths
 used_wallpaper="$cache_dir/used_wallpaper"
-cache_file="$cache_dir/current_wallpaper"
+cache_file="$cache_dir/current_wallpaper"wallpaper.sh
 blurred="$cache_dir/blurred_wallpaper.png"
 square="$cache_dir/square_wallpaper.png"
 rasi_file="$cache_dir/current_wallpaper.rasi"
@@ -47,9 +47,9 @@ case $1 in
     # Load wallpaper from .cache of last session
     "init")
         if [ -f "$cache_file" ]; then
-            wal -qi "$current_wallpaper" || swww img "$current_wallpaper"
+            wal -q -i "$current_wallpaper" || swww img "$current_wallpaper"
         else
-            wal -qi "$current_wallpaper" || swww img "$wallpaper_folder/default.jpg"
+            wal -q -i "$current_wallpaper" || swww img "$wallpaper_folder/default.jpg"
         fi
     ;;
 
@@ -66,7 +66,7 @@ case $1 in
         fi
 
         current_wallpaper="$wallpaper_folder/$selected"
-        wal -qi "$current_wallpaper" ||
+        wal -q -i "$current_wallpaper" ||
             swww img "$current_wallpaper" \
             --transition-bezier .43,1.19,1,.4 \
             --transition-fps=60 \
@@ -78,14 +78,15 @@ case $1 in
     # Randomly select wallpaper
     *)
         current_wallpaper=$(find "$wallpaper_folder" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | sort -R | head -n 1)
-        wal -qi "$current_wallpaper" || swww img "$current_wallpaper"
+        wal -q -i "$current_wallpaper" || swww img "$current_wallpaper"
     ;;
 esac
 
-# -----------------------------------------------------
+# -----------------------------------------------------# Create folder with generated versions of wallpaper if not exists
 # Load pywal color scheme if needed
 # -----------------------------------------------------
 source "$HOME/.cache/wal/colors.sh"
+source "$HOME/dotfiles/hypr/scripts/cachecol.sh"
 
 # -----------------------------------------------------
 # Get the wallpaper name for notifications/logging

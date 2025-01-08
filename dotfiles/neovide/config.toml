@@ -13,4 +13,4 @@ wsl = false
 
 [font]
 normal = ["Monospace"] # Will use the bundled Fira Code Nerd Font by default
-size = 13
+size = 15
