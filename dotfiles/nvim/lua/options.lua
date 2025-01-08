@@ -11,6 +11,7 @@ o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.cmd [[
   autocmd BufRead * setlocal foldlevel=99
 ]]
+o.foldenable = false
 
 -- relative line numbering:
 o.relativenumber = true
