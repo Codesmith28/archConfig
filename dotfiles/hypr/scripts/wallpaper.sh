@@ -153,7 +153,7 @@ if [ "$1" != "init" ]; then
     if magick "$used_wallpaper" -resize 75% "$blurred" && [ "$blur" != "0x0" ]; then
         magick "$blurred" -blur "$blur" "$blurred"
         # Add a slight black tint
-        magick "$blurred" -fill "black" -colorize 50% "$blurred"
+        magick "$blurred" -fill "black" -colorize 40% "$blurred"
     else
         echo "Failed to create blurred wallpaper"
     fi
