@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/forest_road3_1.jpeg",
+    "alpha": "100",
+    "special": {
+        "background": "#100f0c",
+        "foreground": "#c6bfa3",
+        "cursor": "#c6bfa3"
+    },
+    "colors": {
+        "color0": "#100f0c",
+        "color1": "#4C4D2E",
+        "color2": "#635D34",
+        "color3": "#3E3E47",
+        "color4": "#494B55",
+        "color5": "#696A5D",
+        "color6": "#515666",
+        "color7": "#c6bfa3",
+        "color8": "#8a8572",
+        "color9": "#4C4D2E",
+        "color10": "#635D34",
+        "color11": "#3E3E47",
+        "color12": "#494B55",
+        "color13": "#696A5D",
+        "color14": "#515666",
+        "color15": "#c6bfa3"
+    }
+}

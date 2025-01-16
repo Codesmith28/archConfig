@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/train6.png",
+    "alpha": "100",
+    "special": {
+        "background": "#05070F",
+        "foreground": "#c3c3c8",
+        "cursor": "#c3c3c8"
+    },
+    "colors": {
+        "color0": "#05070F",
+        "color1": "#9F7675",
+        "color2": "#3A5E85",
+        "color3": "#536D8B",
+        "color4": "#64748E",
+        "color5": "#71899D",
+        "color6": "#72A3C9",
+        "color7": "#c3c3c8",
+        "color8": "#88888c",
+        "color9": "#9F7675",
+        "color10": "#3A5E85",
+        "color11": "#536D8B",
+        "color12": "#64748E",
+        "color13": "#71899D",
+        "color14": "#72A3C9",
+        "color15": "#c3c3c8"
+    }
+}

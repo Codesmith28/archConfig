@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/midnight-reflections-moonlit-sea.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0D0C18",
+        "foreground": "#9fc9da",
+        "cursor": "#9fc9da"
+    },
+    "colors": {
+        "color0": "#0D0C18",
+        "color1": "#403E6A",
+        "color2": "#A6436B",
+        "color3": "#315B91",
+        "color4": "#5D5893",
+        "color5": "#9F5499",
+        "color6": "#C55F97",
+        "color7": "#9fc9da",
+        "color8": "#6f8c98",
+        "color9": "#403E6A",
+        "color10": "#A6436B",
+        "color11": "#315B91",
+        "color12": "#5D5893",
+        "color13": "#9F5499",
+        "color14": "#C55F97",
+        "color15": "#9fc9da"
+    }
+}
