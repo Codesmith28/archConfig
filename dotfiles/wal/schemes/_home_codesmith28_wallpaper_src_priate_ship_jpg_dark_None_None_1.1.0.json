@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/priate_ship.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#070D0E",
+        "foreground": "#91d4d7",
+        "cursor": "#91d4d7"
+    },
+    "colors": {
+        "color0": "#070D0E",
+        "color1": "#41915D",
+        "color2": "#B0A254",
+        "color3": "#1B6E97",
+        "color4": "#4F768F",
+        "color5": "#1C99A6",
+        "color6": "#5E94A8",
+        "color7": "#91d4d7",
+        "color8": "#659496",
+        "color9": "#41915D",
+        "color10": "#B0A254",
+        "color11": "#1B6E97",
+        "color12": "#4F768F",
+        "color13": "#1C99A6",
+        "color14": "#5E94A8",
+        "color15": "#91d4d7"
+    }
+}

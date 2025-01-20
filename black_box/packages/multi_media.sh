@@ -10,6 +10,9 @@ cat << "EOF"
 EOF
 
 packages=(
+    "pipewire-alsa"
+    "pipewire-jack"
+    "pipewire-pulse"
     "obs-studio"
     "mpv"
     "spotify-adblock"
