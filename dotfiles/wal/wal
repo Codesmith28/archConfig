@@ -1,1 +1,1 @@
-/home/codesmith28/wallpaper/src/secluded-grove-pixel.png
+/home/codesmith28/wallpaper/src/aurora_borealis.jpg
