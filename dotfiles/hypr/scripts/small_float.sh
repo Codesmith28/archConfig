@@ -13,5 +13,5 @@ fi
 
 # Apply floating mode, resize, and center the active window
 hyprctl dispatch focuswindow "$ACTIVE_WINDOW"
-hyprctl dispatch resizeactive exact 900 600
+hyprctl dispatch resizeactive exact 1000 600
 hyprctl dispatch centerwindow

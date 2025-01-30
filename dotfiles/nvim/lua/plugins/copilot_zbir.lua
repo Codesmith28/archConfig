@@ -34,9 +34,9 @@ return {
                 hide_during_completion = true,
                 debounce = 75,
                 keymap = {
-                    accept = "<M-l>",
+                    accept = "<M-a>",
                     accept_word = "<M-w>",
-                    accept_line = false,
+                    accept_line = "<M-l>",
                     next = "<M-]>",
                     prev = "<M-[>",
                     dismiss = "<C-]>",
