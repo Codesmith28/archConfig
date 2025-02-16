@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/might_guy.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#3c1c1d",
+        "foreground": "#dfc1c0",
+        "cursor": "#dfc1c0"
+    },
+    "colors": {
+        "color0": "#3c1c1d",
+        "color1": "#CF4D50",
+        "color2": "#DB6A62",
+        "color3": "#7E8475",
+        "color4": "#D4876F",
+        "color5": "#AD9B96",
+        "color6": "#B59391",
+        "color7": "#dfc1c0",
+        "color8": "#9c8786",
+        "color9": "#CF4D50",
+        "color10": "#DB6A62",
+        "color11": "#7E8475",
+        "color12": "#D4876F",
+        "color13": "#AD9B96",
+        "color14": "#B59391",
+        "color15": "#dfc1c0"
+    }
+}

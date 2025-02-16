@@ -50,7 +50,7 @@ o.ignorecase = true
 o.smartcase = true
 
 -- disable word wrap:
-o.wrap = false
+o.wrap = true
 o.sidescroll = 10
 o.sidescrolloff = 10
 o.scrolloff = 8

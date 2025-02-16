@@ -20,11 +20,11 @@
     "format-icons": {
       "urgent": "",
       "active": "",
-      "default": ""
+      "default": "",
     },
     "persistent-workspaces": {
-      "*": 4
-    }
+      "*": 4,
+    },
   },
 
   // Taskbar
@@ -33,7 +33,7 @@
     "icon-size": 20,
     "tooltip-format": "{title}",
     "on-click": "activate",
-    "on-click-middle": "close"
+    "on-click-middle": "close",
     //"app_ids-mapping": {
     //  "firefoxdeveloperedition": "firefox-developer-edition",
     //},
@@ -51,10 +51,10 @@
       "(.*) - Chromium": "$1",
       "(.*) - Brave Search": "$1",
       "(.*) - Outlook": "$1",
-      "(.*) Microsoft Teams": "$1"
+      "(.*) Microsoft Teams": "$1",
     },
     "separate-outputs": true,
-    "max-length": 80
+    "max-length": 80,
   },
 
   // Custom Widgets
@@ -62,29 +62,29 @@
     "on-click": "sleep 0.1 && ~/dotfiles/eww/ml4w-sidebar/launch.sh",
     "on-click-right": "sleep 0.1 && ~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage",
     "format": " ",
-    "tooltip-format": "Open Sidebar"
+    "tooltip-format": "Open Sidebar",
   },
   "custom/ml4w-hyprland-settings": {
     "on-click": "~/dotfiles/apps/ML4W_Hyprland_Settings-x86_64.AppImage",
     "format": " ",
-    "tooltip-format": "ML4W Hyprland Settings"
+    "tooltip-format": "ML4W Hyprland Settings",
   },
   "custom/empty": {
-    "format": ""
+    "format": "",
   },
   "custom/youtube": {
     "format": " {}",
     "exec": "python ~/private/youtube.py",
     "restart-interval": 600,
     "on-click": "chromium https://studio.youtube.com",
-    "tooltip": false
+    "tooltip": false,
   },
   "custom/cliphist": {
     "format": " ",
     "on-click": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh",
     "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
     "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
-    "tooltip-format": "Clipboard Manager"
+    "tooltip-format": "Clipboard Manager",
   },
   "custom/updates": {
     "format": " {}",
@@ -94,53 +94,53 @@
     "restart-interval": 60,
     "on-click": "kitty --class dotfiles-floating -e ~/dotfiles/scripts/installupdates.sh",
     "on-click-right": "~/dotfiles/.settings/software.sh",
-    "tooltip-format": "Click to update packages"
+    "tooltip-format": "Click to update packages",
   },
   "custom/wallpaper": {
     "format": "",
     "on-click": "~/dotfiles/hypr/scripts/wallpaper.sh select",
     "on-click-right": "~/dotfiles/hypr/scripts/wallpaper-effects.sh",
-    "tooltip-format": "Left: Select a wallpaper\nRight: Select wallpaper effect"
+    "tooltip-format": "Left: Select a wallpaper\nRight: Select wallpaper effect",
   },
   "custom/waybarthemes": {
     "format": "",
     "on-click": "~/dotfiles/waybar/themeswitcher.sh",
-    "tooltip-format": "Select a waybar theme"
+    "tooltip-format": "Select a waybar theme",
   },
   "custom/settings": {
     "format": "",
     "on-click": "~/dotfiles/apps/ML4W_Dotfiles_Settings-x86_64.AppImage",
-    "tooltip-format": "ML4W Dotfiles Settings"
+    "tooltip-format": "ML4W Dotfiles Settings",
   },
   "custom/keybindings": {
     "format": "",
     "on-click": "~/dotfiles/hypr/scripts/keybindings.sh",
-    "tooltip": false
+    "tooltip": false,
   },
   "custom/filemanager": {
     "format": "",
     "on-click": "~/dotfiles/.settings/filemanager.sh",
-    "tooltip-format": "Open filemanager"
+    "tooltip-format": "Open filemanager",
   },
   "custom/browser": {
     "format": "",
     "on-click": "~/dotfiles/.settings/browser.sh",
-    "tooltip-format": "Open browser"
+    "tooltip-format": "Open browser",
   },
   "custom/chatgpt": {
     "format": " ",
     "on-click": "chromium --app=https://chat.openai.com",
-    "tooltip-format": "Open ChatGPT"
+    "tooltip-format": "Open ChatGPT",
   },
   "custom/calculator": {
     "format": "",
     "on-click": "qalculate-gtk",
-    "tooltip-format": "Open calculator"
+    "tooltip-format": "Open calculator",
   },
   "custom/windowsvm": {
     "format": "",
     "on-click": "~/dotfiles/scripts/launchvm.sh",
-    "tooltip": false
+    "tooltip": false,
   },
   //"custom/appmenu": {
   //  "format": "Apps",
@@ -152,18 +152,18 @@
     "format": "",
     "on-click": "rofi -show drun -replace",
     "on-click-right": "wlogout",
-    "tooltip-format": ""
+    "tooltip-format": "",
   },
   "custom/exit": {
     "format": "",
     "on-click": "wlogout",
-    "tooltip-format": "Power Menu"
+    "tooltip-format": "Power Menu",
   },
   "custom/hyprshade": {
     "format": "",
     "tooltip-format": "Toggle Screen Shader",
     "on-click": "sleep 0.5; ~/dotfiles/hypr/scripts/hyprshade.sh",
-    "on-click-right": "sleep 0.5; ~/dotfiles/hypr/scripts/hyprshade.sh rofi"
+    "on-click-right": "sleep 0.5; ~/dotfiles/hypr/scripts/hyprshade.sh rofi",
   },
   "custom/hypridle": {
     "format": "",
@@ -173,7 +173,7 @@
     "interval": 60,
     "exec": "~/dotfiles/hypr/scripts/hypridle.sh status",
     "on-click": "~/dotfiles/hypr/scripts/hypridle.sh toggle",
-    "on-click-right": "hyprlock"
+    "on-click-right": "hyprlock",
   },
 
   // Keyboard State
@@ -183,14 +183,14 @@
     "format": "{name} {icon}",
     "format-icons": {
       "locked": "",
-      "unlocked": ""
-    }
+      "unlocked": "",
+    },
   },
 
   // System tray
   "tray": {
     "icon-size": 20,
-    "spacing": 5
+    "spacing": 5,
   },
 
   "clock": {
@@ -203,31 +203,31 @@
       "format": {
         "months": "<span color='#ffead3'><b>{}</b></span>",
         "today": "<span color='#FF4500'><b><i>{}</i></b></span>",
-        "weekdays": "<span color='#ffcc66'><b>{}</b></span>"
-      }
+        "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+      },
     },
     "actions": {
       "on-scroll-up": "shift_down",
-      "on-scroll-down": "shift_up"
-    }
+      "on-scroll-down": "shift_up",
+    },
   },
 
   // System
   "custom/system": {
     "format": "",
-    "tooltip": false
+    "tooltip": false,
   },
 
   // CPU
   "cpu": {
     "format": "/ C {usage}% ",
-    "on-click": "kitty -e htop"
+    "on-click": "kitty -e htop",
   },
 
   // Memory
   "memory": {
     "format": "/ M {}% ",
-    "on-click": "kitty -e htop"
+    "on-click": "kitty -e htop",
   },
 
   // Disk Space
@@ -235,12 +235,12 @@
     "interval": 30,
     "format": "D {percentage_used}% ",
     "path": "/",
-    "on-click": "kitty -e htop"
+    "on-click": "kitty -e htop",
   },
 
   // Language
   "hyprland/language": {
-    "format": "/ K {short}"
+    "format": "/ K {short}",
   },
 
   // Group Hardware
@@ -249,15 +249,15 @@
     "drawer": {
       "transition-duration": 300,
       "children-class": "not-memory",
-      "transition-left-to-right": false
+      "transition-left-to-right": false,
     },
-    "modules": ["custom/system", "disk", "cpu", "memory", "hyprland/language"]
+    "modules": ["custom/system", "disk", "cpu", "memory", "hyprland/language"],
   },
 
   // Group Links
   "group/links": {
     "orientation": "horizontal",
-    "modules": ["custom/chatgpt", "custom/empty"]
+    "modules": ["custom/chatgpt", "custom/empty"],
   },
 
   // Group Settings
@@ -266,20 +266,20 @@
     "drawer": {
       "transition-duration": 300,
       "children-class": "not-memory",
-      "transition-left-to-right": true
+      "transition-left-to-right": true,
     },
     "modules": [
       "custom/settings",
       "custom/waybarthemes",
       "custom/wallpaper",
-      "custom/ml4w-hyprland-settings"
-    ]
+      "custom/ml4w-hyprland-settings",
+    ],
   },
 
   // Group Quicklinks
   "group/quicklinks": {
     "orientation": "horizontal",
-    "modules": ["custom/browser", "custom/filemanager"]
+    "modules": ["custom/browser", "custom/filemanager"],
   },
 
   // Network
@@ -293,20 +293,20 @@
     "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
     "tooltip-format-disconnected": "Disconnected",
     "on-click": "kitty --class dotfiles-floating -e nmtui",
-    "on-click-right": "~/dotfiles/.settings/networkmanager.sh"
+    "on-click-right": "~/dotfiles/.settings/networkmanager.sh",
   },
 
   // Battery
   "battery": {
     "states": {
       "warning": 30,
-      "critical": 15
+      "critical": 15,
     },
     "format": "{icon} {capacity}%",
     "format-charging": " {capacity}%",
     "format-plugged": " {capacity}%",
     "format-alt": "{icon}  {time}",
-    "format-icons": ["", "", "", "", ""]
+    "format-icons": ["", "", "", "", ""],
   },
 
   // Pulseaudio
@@ -325,9 +325,9 @@
       "phone": " ",
       "portable": " ",
       "car": " ",
-      "default": [" ", " ", " "]
+      "default": [" ", " ", " "],
     },
-    "on-click": "pavucontrol"
+    "on-click": "pavucontrol",
   },
 
   // Bluetooth
@@ -337,14 +337,14 @@
     "format-off": "",
     "interval": 30,
     "on-click": "blueman-manager",
-    "format-no-controller": ""
+    "format-no-controller": "",
   },
 
   // User
   "user": {
     "format": "{user}",
     "interval": 60,
-    "icon": false
+    "icon": false,
   },
 
   // Backlighting
@@ -365,8 +365,8 @@
       "",
       "",
       "",
-      ""
+      "",
     ],
-    "scroll-step": -2
-  }
+    "scroll-step": -2,
+  },
 }
