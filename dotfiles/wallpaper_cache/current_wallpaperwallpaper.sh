@@ -1,1 +1,1 @@
-/home/codesmith28/wallpaper/src/itoshi_rin.png
+/home/codesmith28/wallpaper/src/aurora_borealis.jpg

@@ -203,3 +203,5 @@ function yz() {
     fi
     rm -f -- "$tmp"
 }
+
+alias dafq='thefuck'
