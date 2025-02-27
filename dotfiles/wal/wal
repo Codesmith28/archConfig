@@ -1,1 +1,1 @@
-/home/codesmith28/wallpaper/src/blackhole.jpeg
+/home/codesmith28/wallpaper/src/aurora_borealis.jpg
