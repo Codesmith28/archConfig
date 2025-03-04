@@ -1,21 +1,21 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "71c4fc2"
-hash = "a61bb2d21a08bf1d18f0a549e5eb1475"
+rev = "3d0c7c6"
+hash = "9dce00232a0e0e2502565c7aa2b0ed4e"
 
 [[plugin.deps]]
 use = "Rolv-Apneseth/starship"
-rev = "9c37d37"
-hash = "63522f9e5675f0f14835297af16b9462"
+rev = "6c639b4"
+hash = "5614c46d5de76623c283d415bfac8025"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:max-preview"
-rev = "71c4fc2"
-hash = "9bc26d10d2f6e2aa93b10905b1b76979"
+rev = "3d0c7c6"
+hash = "a8025f2bb311e869069364fba01abffc"
 
 [[plugin.deps]]
 use = "ahkohd/eza-preview"
-rev = "5ef05bc"
+rev = "6575a9a"
 hash = "72355a6c8b7c8de6ed4dda0f98f86fee"
 
 [[plugin.deps]]
@@ -25,15 +25,15 @@ hash = "40c20e6c1085d1f45309b9f148bf4f6e"
 
 [[plugin.deps]]
 use = "Reledia/glow"
-rev = "c2ed51e"
-hash = "136ce00885041aeee5cf582ccf7a46dc"
+rev = "c76bf4f"
+hash = "a6b78bf9af5390e3a85a6951fbb7b93"
 
 [[plugin.deps]]
 use = "h-hg/yamb"
-rev = "108347b"
-hash = "faf1b817347b5b46c96039dab538694b"
+rev = "22af003"
+hash = "7cc42012a7c2099f80064d228feb8d44"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "8458d25"
-hash = "44ab3265147788a4e780b2060341d65e"
+rev = "c023460"
+hash = "2ac87e1b3a61f5887472899e86535d29"

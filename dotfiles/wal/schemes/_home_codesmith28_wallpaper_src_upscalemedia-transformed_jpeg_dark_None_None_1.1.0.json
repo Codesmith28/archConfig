@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/upscalemedia-transformed.jpeg",
+    "alpha": "100",
+    "special": {
+        "background": "#070D19",
+        "foreground": "#cbb3bf",
+        "cursor": "#cbb3bf"
+    },
+    "colors": {
+        "color0": "#070D19",
+        "color1": "#634F5F",
+        "color2": "#9B5F5A",
+        "color3": "#BE624A",
+        "color4": "#E69363",
+        "color5": "#2F5C8D",
+        "color6": "#5A6894",
+        "color7": "#cbb3bf",
+        "color8": "#8e7d85",
+        "color9": "#634F5F",
+        "color10": "#9B5F5A",
+        "color11": "#BE624A",
+        "color12": "#E69363",
+        "color13": "#2F5C8D",
+        "color14": "#5A6894",
+        "color15": "#cbb3bf"
+    }
+}

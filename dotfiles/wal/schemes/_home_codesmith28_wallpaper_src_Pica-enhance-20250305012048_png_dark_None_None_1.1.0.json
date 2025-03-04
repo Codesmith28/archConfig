@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/Pica-enhance-20250305012048.png",
+    "alpha": "100",
+    "special": {
+        "background": "#080C19",
+        "foreground": "#9cc1da",
+        "cursor": "#9cc1da"
+    },
+    "colors": {
+        "color0": "#080C19",
+        "color1": "#AD5E50",
+        "color2": "#F09361",
+        "color3": "#2D5C8E",
+        "color4": "#2367AC",
+        "color5": "#5B6997",
+        "color6": "#9E7795",
+        "color7": "#9cc1da",
+        "color8": "#6d8798",
+        "color9": "#AD5E50",
+        "color10": "#F09361",
+        "color11": "#2D5C8E",
+        "color12": "#2367AC",
+        "color13": "#5B6997",
+        "color14": "#9E7795",
+        "color15": "#9cc1da"
+    }
+}
