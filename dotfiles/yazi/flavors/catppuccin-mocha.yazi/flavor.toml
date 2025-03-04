@@ -44,8 +44,8 @@ normal_main = { fg = "#1e1e2e", bg = "#89b4fa", bold = true }
 normal_alt  = { fg = "#89b4fa", bg = "#313244" }
 
 # Select mode
-select_main = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
-select_alt  = { fg = "#a6e3a1", bg = "#313244" }
+select_main = { fg = "#1e1e2e", bg = "#94e2d5", bold = true }
+select_alt  = { fg = "#94e2d5", bg = "#313244" }
 
 # Unset mode
 unset_main = { fg = "#1e1e2e", bg = "#f2cdcd", bold = true }
@@ -57,14 +57,6 @@ unset_alt  = { fg = "#f2cdcd", bg = "#313244" }
 # : Status bar {{{
 
 [status]
-separator_open  = ""
-separator_close = ""
-
-# Progress
-progress_label  = { fg = "#ffffff", bold = true }
-progress_normal = { fg = "#89b4fa", bg = "#45475a" }
-progress_error  = { fg = "#f38ba8", bg = "#45475a" }
-
 # Permissions
 perm_sep   = { fg = "#7f849c" }
 perm_type  = { fg = "#89b4fa" }
@@ -72,17 +64,10 @@ perm_read  = { fg = "#f9e2af" }
 perm_write = { fg = "#f38ba8" }
 perm_exec  = { fg = "#a6e3a1" }
 
-# TODO: -- remove these once Yazi 0.4 gets released
-separator_style = { fg = "#313244", bg = "#313244" }
-mode_normal     = { fg = "#1e1e2e", bg = "#89b4fa", bold = true }
-mode_select     = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
-mode_unset      = { fg = "#1e1e2e", bg = "#f2cdcd", bold = true }
-permissions_t   = { fg = "#89b4fa" }
-permissions_r   = { fg = "#f9e2af" }
-permissions_w   = { fg = "#f38ba8" }
-permissions_x   = { fg = "#a6e3a1" }
-permissions_s   = { fg = "#7f849c" }
-# TODO: remove these once Yazi 0.4 gets released --
+# Progress
+progress_label  = { fg = "#ffffff", bold = true }
+progress_normal = { fg = "#89b4fa", bg = "#45475a" }
+progress_error  = { fg = "#f38ba8", bg = "#45475a" }
 
 # : }}}
 
@@ -93,13 +78,6 @@ permissions_s   = { fg = "#7f849c" }
 border   = { fg = "#89b4fa" }
 active   = { fg = "#f5c2e7", bold = true }
 inactive = {}
-
-# TODO: -- remove these once Yazi 0.4 gets released
-[select]
-border   = { fg = "#89b4fa" }
-active   = { fg = "#f5c2e7", bold = true }
-inactive = {}
-# TODO: remove these once Yazi 0.4 gets released --
 
 # : }}}
 
@@ -117,7 +95,7 @@ selected = { reversed = true }
 
 # : Completion {{{
 
-[completion]
+[cmp]
 border = { fg = "#89b4fa" }
 
 # : }}}
@@ -179,8 +157,7 @@ rules = [
 	{ mime = "{audio,video}/*", fg = "#f9e2af" },
 
 	# Archives
-	{ mime = "application/*zip", fg = "#f5c2e7" },
-	{ mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#f5c2e7" },
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#f5c2e7" },
 
 	# Documents
 	{ mime = "application/{pdf,doc,rtf}", fg = "#a6e3a1" },

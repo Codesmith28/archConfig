@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/caravan_enhanced.png",
+    "alpha": "100",
+    "special": {
+        "background": "#060D1A",
+        "foreground": "#cab3be",
+        "cursor": "#cab3be"
+    },
+    "colors": {
+        "color0": "#060D1A",
+        "color1": "#624D60",
+        "color2": "#9C5C5B",
+        "color3": "#C06046",
+        "color4": "#ED945D",
+        "color5": "#2F5D8C",
+        "color6": "#5A6994",
+        "color7": "#cab3be",
+        "color8": "#8d7d85",
+        "color9": "#624D60",
+        "color10": "#9C5C5B",
+        "color11": "#C06046",
+        "color12": "#ED945D",
+        "color13": "#2F5D8C",
+        "color14": "#5A6994",
+        "color15": "#cab3be"
+    }
+}

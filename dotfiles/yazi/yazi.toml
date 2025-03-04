@@ -23,16 +23,15 @@ sixel_fraction  = 15
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
-[opener]
-open = [
-	{ run = 'nvim "$@"', block = true, desc = "Open" },
-]
+# [opener]
+# open = [
+# 	{ run = 'nvim "$@"', block = true, desc = "Open" },
+# ]
 
 [open]
 rules = [
     { name = "*/", use = [ "edit", "open", "reveal" ] },
-    { mime = "*/application/pdf", cmd = "zathura \"$1\"", use = [ "zathura" ] },
-    { mime = "*", use = [ "open" ] },
+    { mime = "*", use = [ "open", "reveal", "edit" ] },
 ]
 
 [tasks]
