@@ -8,13 +8,18 @@ cat << "EOF"
 |_|                                   |_____|
 EOF
 
-if [ $EUID -ne 0 ]; then
-    echo "This should run as sudo"
+# Ensure the script runs with sudo
+if [ "$EUID" -ne 0 ]; then
+    echo "This script must be run as root (sudo)."
     exit 1
 fi
 
+# Get the script's directory
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+
 echo "Setting up pacman..."
 
-cp ./pacman.conf /etc/
+# Copy pacman.conf using absolute path
+cp "$SCRIPT_DIR/pacman.conf" /etc/
 
-echo "Pacman setup complete"
+echo "Pacman setup complete."
