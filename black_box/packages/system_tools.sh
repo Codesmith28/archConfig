@@ -16,6 +16,9 @@ packages=(
     "wget"
     "dunst"
     "starship"
+    "dhcpcd"
+    "iwd"
+    "networkmanager"
 )
 
 for package in "${packages[@]}"; do

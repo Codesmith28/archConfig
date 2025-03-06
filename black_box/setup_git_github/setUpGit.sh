@@ -12,7 +12,9 @@ EOF
 echo "Setting up Git and GitHub CLI..."
 
 packages=(
+    "openssh"
     "git"
+    "nodejs"
     "github-cli"
     "lazygit"
 )

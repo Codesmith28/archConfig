@@ -13,7 +13,6 @@ packages=(
     "noto-fonts-cjk"
     "otf-font-awesome"
     "ttf-fira-sans"
-    "ttf-firacode-nerd"
     "ttf-recursive-nerd"
     "ttf-cascadia-code-nerd"
     "ttf-jetbrains-mono-nerd"

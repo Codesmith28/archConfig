@@ -24,9 +24,12 @@ setup_service() {
         echo "${service_file} found."
 
         echo "Enabling ${service_file}..."
-        systemctl --user enable "${service_file}"
+        # systemctl --user enable "${service_file}"
+        sudo systemctl enable "${service_file}"
+
         echo "Starting ${service_file}..."
-        systemctl --user start "${service_file}"
+        # systemctl --user start "${service_file}"
+        sudo systemctl start "${service_file}"
 
         echo "${service_name^} startup script set!"
     else

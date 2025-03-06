@@ -13,5 +13,8 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
+echo "Setting up pacman..."
+
 cp ./pacman.conf /etc/
+
 echo "Pacman setup complete"

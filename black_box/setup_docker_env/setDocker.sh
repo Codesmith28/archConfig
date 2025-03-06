@@ -28,7 +28,6 @@ for package in "${packages[@]}"; do
 done
 echo "All required packages are installed!"
 
-
 sudo systemctl enable --now docker.service
 sudo systemctl start --now docker.service
 sudo usermod -aG docker $USER

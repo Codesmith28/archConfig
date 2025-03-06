@@ -14,6 +14,8 @@ packages=(
     "nautilus-open-any-terminal"
     "eog"
     "unzip"
+    "yazi"
+    "televsion"
 )
 
 for package in "${packages[@]}"; do

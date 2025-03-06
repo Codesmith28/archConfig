@@ -19,18 +19,10 @@ packages=(
     "neovide"
     "distrobox"
     "mongodb-compass"
-    "clang"
     "go"
     "fzf"
     "zsh"
     "bat"
-    "nvm"
-    "pnpm"
-    "yarn"
-    "typescript"
-    "ts-node"
-    "bun"
-    "python-pipx"
 )
 
 for package in "${packages[@]}"; do

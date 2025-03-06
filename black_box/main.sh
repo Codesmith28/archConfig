@@ -29,12 +29,19 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Install yay:
+
+echo "Installing yay..."
+
 cd ~/Downloads
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 cd ..
 rm -rf yay
+
+echo "yay installed."
+
+echo "Installing packages..."
 
 cd ~/Downloads
 
@@ -46,7 +53,7 @@ declare -A scripts=(
     ["./link_dotfiles/link.sh"]=false
     ["./setup_dev_env/setup.sh"]=true
     ["./setup_docker_env/setDocker.sh"]=true
-    ["./setup_startup_apps/setup.sh"]=false
+    ["./setup_startup_apps/setup.sh"]=true
     ["./setup_uni_wifi/setup.sh"]=true
     ["./remap_keys/remap.sh"]=true
     ["./config_grub/setup.sh"]=true
@@ -56,3 +63,5 @@ declare -A scripts=(
 for script_path in "${!scripts[@]}"; do
     run_script "$script_path" "${scripts[$script_path]}"
 done
+
+echo ""

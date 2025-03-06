@@ -15,6 +15,10 @@ packages=(
     "rust-analyzer"
     "rustup"
     "nvm"
+    "pnpm"
+    "yarn"
+    "typescript"
+    "ts-node"
     "bun"
     "python-pipx"
 )
