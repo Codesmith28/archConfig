@@ -11,9 +11,8 @@ EOF
 
 packages=(
     "go"
-    "rust"
-    "rust-analyzer"
     "rustup"
+    "rust-analyzer"
     "nvm"
     "pnpm"
     "yarn"
@@ -28,11 +27,11 @@ packages=(
 # -------------------------------------------------------
 
 for package in "${packages[@]}"; do
-    if yay -Qi "$package" &> /dev/null; then
+    if pacman -Qq "$package" &> /dev/null; then
         echo "$package is already installed. Skipping..."
     else
         echo "Installing $package..."
-        sudo yay -S --noconfirm "$package"
+        yay -S --noconfirm "$package"
     fi
 done
 echo "All required packages are installed!"
@@ -40,11 +39,10 @@ echo "All required packages are installed!"
 # Ensure pipx path
 pipx ensurepath
 
-# Set rust environment
-if ! command -v rustc &> /dev/null
-then
-    echo "Rust is not installed. Installing Rust..."
-    sudo pacman -S --noconfirm rustup
+# Set up Rust if not installed
+if ! command -v rustc &> /dev/null; then
+    echo "Rust is not installed. Installing via rustup..."
+    rustup install stable
     rustup default stable
     echo "Rust installed and configured."
 else

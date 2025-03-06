@@ -15,11 +15,10 @@ packages=(
     "docker"
     "docker-compose"
     "gnome-terminal"
-    "docker-desktop"
 )
 
 for package in "${packages[@]}"; do
-    if yay -Qi "$package" &> /dev/null; then
+    if pacman -Qq "$package" &> /dev/null; then
         echo "$package is already installed. Skipping..."
     else
         echo "Installing $package..."
@@ -29,5 +28,7 @@ done
 echo "All required packages are installed!"
 
 sudo systemctl enable --now docker.service
-sudo systemctl start --now docker.service
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
+
+echo "Docker setup complete!"
+echo "You must log out and log back in (or restart) for the group changes to take effect."

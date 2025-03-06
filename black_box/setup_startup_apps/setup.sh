@@ -6,45 +6,51 @@ cat <<"EOF"
 / __| __/ _` | '__| __| | | | '_ \
 \__ \ || (_| | |  | |_| |_| | |_) |
 |___/\__\__,_|_|   \__|\__,_| .__/
-                            |_|
+                             |_|
 EOF
 
+echo "Setting up startup applications for Arch Linux..."
 
-echo "Setting the startup apps for arch linux..."
-STARTUP_DIR=~/dotfiles/systemd/user
+STARTUP_DIR="$HOME/dotfiles/systemd/user"
+
+# Ensure the startup directory exists
+if [ ! -d "$STARTUP_DIR" ]; then
+    echo "Error: $STARTUP_DIR does not exist."
+    exit 1
+fi
 
 setup_service() {
-    local service_name=$1
+    local service_name="$1"
     local service_file="${service_name}.service"
+    local service_path="$STARTUP_DIR/$service_file"
 
     echo "Setting up ${service_name} startup script..."
-    echo "Checking for ${service_file} in current directory..."
 
-    if [ -f "./${service_file}" ]; then
-        echo "${service_file} found."
+    if [ -f "$service_path" ]; then
+        echo "${service_file} found in $STARTUP_DIR."
 
         echo "Enabling ${service_file}..."
-        # systemctl --user enable "${service_file}"
-        sudo systemctl enable "${service_file}"
+        systemctl --user enable "$service_file"
 
         echo "Starting ${service_file}..."
-        # systemctl --user start "${service_file}"
-        sudo systemctl start "${service_file}"
+        systemctl --user start "$service_file"
 
         echo "${service_name^} startup script set!"
     else
-        echo "Error: ${service_file} not found in the current directory."
-        echo "Current directory contents:"
-        ls -l
+        echo "Error: ${service_file} not found in $STARTUP_DIR."
     fi
 }
 
-for service in $(ls ${STARTUP_DIR}/*.service); do
-    echo "Setting up $(basename -s .service $service) startup script..."
-    setup_service $(basename -s .service $service)
+# Loop through service files in the startup directory
+for service_path in "$STARTUP_DIR"/*.service; do
+    if [ -f "$service_path" ]; then
+        service_name=$(basename "$service_path" .service)
+        setup_service "$service_name"
+    fi
 done
 
-# Enable bluetooth service
-sudo systemctl enable bluetooth.service
+# Enable system-level Bluetooth service
+echo "Enabling Bluetooth service..."
+sudo systemctl enable --now bluetooth.service
 
 echo "Script execution completed."

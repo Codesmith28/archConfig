@@ -19,6 +19,8 @@ packages=(
     "dhcpcd"
     "iwd"
     "networkmanager"
+    "xdg-desktop-portal-hyprland"
+    "gtk"
 )
 
 for package in "${packages[@]}"; do

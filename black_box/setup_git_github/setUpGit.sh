@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cat <<"EOF"
   ____ _ _
  / ___(_) |_
@@ -6,8 +8,6 @@ cat <<"EOF"
  \____|_|\__|
 
 EOF
-
-#!/bin/bash
 
 echo "Setting up Git and GitHub CLI..."
 
@@ -19,23 +19,23 @@ packages=(
     "lazygit"
 )
 
-# ------------------------------w-------------------------
+# -------------------------------------------------------
 # Install packages using yay
 # -------------------------------------------------------
 
 for package in "${packages[@]}"; do
-    if yay -Qi "$package" &> /dev/null; then
+    if pacman -Qq "$package" &> /dev/null; then
         echo "$package is already installed. Skipping..."
     else
         echo "Installing $package..."
-        sudo yay -S --noconfirm "$package"
+        yay -S --noconfirm "$package"
     fi
 done
 
 echo "All required packages are installed!"
 
 # -------------------------------------------------------
-#  Configure git and GitHub CLI
+# Configure git and GitHub CLI
 # -------------------------------------------------------
 
 echo "Configuring git and GitHub CLI..."
@@ -47,18 +47,36 @@ git config --global user.email "$git_email"
 git config --global pull.rebase false
 
 # -------------------------------------------------------
-# Setting up ssh keys:
+# Setting up SSH keys
 # -------------------------------------------------------
 
-ssh-keygen -t rsa -C "$git_email"
+SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+
+if [ -f "$SSH_KEY_PATH" ]; then
+    echo "SSH key already exists at $SSH_KEY_PATH. Skipping key generation."
+else
+    echo "Generating new SSH key..."
+    ssh-keygen -t rsa -b 4096 -C "$git_email" -f "$SSH_KEY_PATH" -N ""
+fi
+
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa.pub
+ssh-add "$SSH_KEY_PATH"
+
+echo "Your SSH key has been added to the agent. Copy it to GitHub:"
+echo "------------------------------------------------------------"
+cat "$SSH_KEY_PATH.pub"
+echo "------------------------------------------------------------"
 
 # -------------------------------------------------------
-# Setting up github cli:
+# Setting up GitHub CLI
 # -------------------------------------------------------
 
+echo "Logging into GitHub via CLI..."
 gh auth login
-sudo gh extension install github/copilot
+
+read -p "Do you want to install GitHub Copilot CLI? (y/n): " install_copilot
+if [[ "$install_copilot" =~ ^[Yy]$ ]]; then
+    sudo gh extension install github/copilot
+fi
 
 echo "Git environment setup successfully!"

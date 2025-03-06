@@ -35,22 +35,28 @@ scripts=(
 # Function to prompt and run a script
 run_script() {
     local script_path="$1"
-    if [[ -x "$script_path" ]]; then
-        read -p "Do you want to run $(basename "$script_path")? (y/n): " choice
+    local script_name
+    script_name=$(basename "$script_path")
+
+    if [[ -f "$script_path" ]]; then
+        chmod +x "$script_path"  # Ensure script is executable
+        read -p "Do you want to run $script_name? (Y/n): " choice
+        choice=${choice:-y}  # Default to "y" if the user presses Enter
         case "$choice" in
             y|Y)
-                echo "Running $(basename "$script_path")..."
+                echo "Running $script_name..."
                 "$script_path"
                 ;;
             n|N)
-                echo "Skipping $(basename "$script_path")."
+                echo "Skipping $script_name."
                 ;;
             *)
-                echo "Invalid choice. Skipping $(basename "$script_path")."
+                echo "Invalid choice. Running $script_name by default."
+                "$script_path"
                 ;;
         esac
     else
-        echo "Error: $(basename "$script_path") is not executable or does not exist. Skipping."
+        echo "Error: $script_name does not exist. Skipping."
     fi
 }
 

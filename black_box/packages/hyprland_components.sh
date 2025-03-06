@@ -18,7 +18,6 @@ packages=(
     "hyprshade"
     "hyprshot"
     "hyprswitch"
-    "xdg-desktop-portal-hyprland"
 
     "waybar"
     "grim"
