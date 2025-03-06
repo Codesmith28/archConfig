@@ -11,7 +11,7 @@ EOF
 #!/bin/bash
 
 # Set the directory where you want to clone the repositories
-base_dir="/home/codesmith28/Downloads"
+base_dir="/$HOME/Downloads"
 
 # Clone and install Colloid icon theme
 cd "$base_dir"
