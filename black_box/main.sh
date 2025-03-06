@@ -15,7 +15,7 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 # Function to run a script with sudo if necessary
 run_script() {
     local script_path="$1"
-    local require_sudo="${2:-false}"
+    local require_sudo="$2"
 
     if [ -f "$script_path" ]; then
         if [ "$require_sudo" = true ]; then
@@ -46,25 +46,41 @@ fi
 
 echo "Installing packages..."
 
-# Define scripts with their paths
-declare -A scripts=(
-    ["$SCRIPT_DIR/config_pacman/setup.sh"]=true
-    ["$SCRIPT_DIR/packages/install_packages.sh"]=true
-    ["$SCRIPT_DIR/setup_git_github/setUpGit.sh"]=true
-    ["$SCRIPT_DIR/config_gnome/config.sh"]=false
-    ["$SCRIPT_DIR/link_dotfiles/link.sh"]=false
-    ["$SCRIPT_DIR/setup_dev_env/setup.sh"]=true
-    ["$SCRIPT_DIR/setup_docker_env/setDocker.sh"]=true
-    ["$SCRIPT_DIR/setup_startup_apps/setup.sh"]=true
-    ["$SCRIPT_DIR/setup_uni_wifi/setup.sh"]=true
-    ["$SCRIPT_DIR/remap_keys/remap.sh"]=true
-    ["$SCRIPT_DIR/config_grub/setup.sh"]=true
-    ["$SCRIPT_DIR/configure_system_fonts/setup.sh"]=true
+# Ordered list of script paths
+scripts=(
+    "$SCRIPT_DIR/config_pacman/setup.sh"
+    "$SCRIPT_DIR/packages/install_packages.sh"
+    "$SCRIPT_DIR/setup_git_github/setUpGit.sh"
+    "$SCRIPT_DIR/config_gnome/config.sh"
+    "$SCRIPT_DIR/link_dotfiles/link.sh"
+    "$SCRIPT_DIR/setup_dev_env/setup.sh"
+    "$SCRIPT_DIR/setup_docker_env/setDocker.sh"
+    "$SCRIPT_DIR/setup_startup_apps/setup.sh"
+    "$SCRIPT_DIR/setup_uni_wifi/setup.sh"
+    "$SCRIPT_DIR/remap_keys/remap.sh"
+    "$SCRIPT_DIR/config_grub/setup.sh"
+    "$SCRIPT_DIR/configure_system_fonts/setup.sh"
 )
 
-# Run each script
-for script_path in "${!scripts[@]}"; do
-    run_script "$script_path" "${scripts[$script_path]}"
+# Corresponding sudo requirements (in the same order)
+sudo_requirements=(
+    true  # config_pacman/setup.sh
+    true  # packages/install_packages.sh
+    true  # setup_git_github/setUpGit.sh
+    false # config_gnome/config.sh
+    false # link_dotfiles/link.sh
+    true  # setup_dev_env/setup.sh
+    true  # setup_docker_env/setDocker.sh
+    true  # setup_startup_apps/setup.sh
+    true  # setup_uni_wifi/setup.sh
+    true  # remap_keys/remap.sh
+    true  # config_grub/setup.sh
+    true  # configure_system_fonts/setup.sh
+)
+
+# Loop through scripts and execute them in order
+for i in "${!scripts[@]}"; do
+    run_script "${scripts[$i]}" "${sudo_requirements[$i]}"
 done
 
 echo "Setup complete."
