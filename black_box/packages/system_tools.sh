@@ -26,6 +26,7 @@ packages=(
     "cpio"
     "meson"
     "pkg-config"
+    "swww"
 )
 
 for package in "${packages[@]}"; do
