@@ -15,7 +15,7 @@ packages=(
     "eog"
     "unzip"
     "yazi"
-    "televsion"
+    "television"
 )
 
 for package in "${packages[@]}"; do

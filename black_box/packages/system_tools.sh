@@ -21,6 +21,11 @@ packages=(
     "networkmanager"
     "xdg-desktop-portal-hyprland"
     "gtk"
+
+    "cmake"
+    "cpio"
+    "meson"
+    "pkg-config"
 )
 
 for package in "${packages[@]}"; do
