@@ -27,6 +27,8 @@ packages=(
     "meson"
     "pkg-config"
     "swww"
+    "wireplumber"
+    "rsync"
 )
 
 for package in "${packages[@]}"; do
