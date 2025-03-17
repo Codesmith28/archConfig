@@ -29,6 +29,7 @@ packages=(
     "swww"
     "wireplumber"
     "rsync"
+    "7zip"
 )
 
 for package in "${packages[@]}"; do

@@ -20,6 +20,11 @@ packages=(
     "ts-node"
     "bun"
     "python-pipx"
+    "openssl"
+    "zlib"
+    "xz"
+    "tk"
+    "base-devel"
 )
 
 # -------------------------------------------------------
@@ -35,6 +40,9 @@ for package in "${packages[@]}"; do
     fi
 done
 echo "All required packages are installed!"
+
+# install pyenv:
+curl https://pyenv.run | bash
 
 # Ensure pipx path
 pipx ensurepath
