@@ -31,7 +31,7 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 [open]
 rules = [
     { name = "*/", use = [ "edit", "open", "reveal" ] },
-    { mime = "*", use = [ "open", "reveal", "edit" ] },
+    { mime = "*", use = [ "edit", "open", "reveal" ] },
 ]
 
 [tasks]

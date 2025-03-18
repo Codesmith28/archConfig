@@ -1,12 +1,12 @@
 /*
-#  ____        __ _  
-# |  _ \ ___  / _(_) 
-# | |_) / _ \| |_| | 
-# |  _ < (_) |  _| | 
-# |_| \_\___/|_| |_| 
-#                    
-# by Stephan Raabe (2023) 
-# ----------------------------------------------------- 
+#  ____        __ _
+# |  _ \ ___  / _(_)
+# | |_) / _ \| |_| |
+# |  _ < (_) |  _| |
+# |_| \_\___/|_| |_|
+#
+# by Stephan Raabe (2023)
+# -----------------------------------------------------
 */
 
 /* ---- Configuration ---- */
@@ -14,7 +14,6 @@ configuration {
     modi:                       "drun,run";
     font:                       "Fira Sans 11";
     show-icons:                 false;
-    icon-theme:                 "kora";
     display-drun:               "APPS";
     display-run:                "RUN";
     display-filebrowser:        "FILES";
@@ -24,7 +23,7 @@ configuration {
     me-accept-entry:            "MousePrimary";
     drun-display-format:        "{name}";
     window-format:              "{w} · {c} · {t}";
-    
+
 }
 
 /* ---- Load font ---- */
@@ -47,7 +46,7 @@ window {
     y-offset:                     65px;
     spacing:                      0px;
     padding:                      0px;
-    margin:                       0px; 
+    margin:                       0px;
     color:                        #FFFFFF;
     border:                       @border-width;
     border-color:                 #FFFFFF;

@@ -30,6 +30,7 @@ packages=(
     "wireplumber"
     "rsync"
     "7zip"
+    "net-tools"
 )
 
 for package in "${packages[@]}"; do

@@ -11,6 +11,9 @@ PS1='[\u@\h \W]\$ '
 
 # Define Editor
 export EDITOR=nvim
+export XDG_CURRENT_DESKTOP=Hyprland
+export BROWSER=dolphin
+
 alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
 
@@ -170,7 +173,7 @@ neo() {
 
 alias pj='cd ~/Projects'
 alias thunar='setsid thunar'
-alias files='setsid nautilus'
+alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
@@ -195,14 +198,15 @@ alias lazy='./Downloads/lazyAiReleases/v1/lazyAi_v1.0.0_unix/lazyAi'
 # Yazi file manager exit on quit:
 # -----------------------------------------------------
 
-function yz() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        cd -- "$cwd"
-    fi
-    rm -f -- "$tmp"
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
 }
+
 spf() {
     os=$(uname -s)
 
@@ -225,3 +229,8 @@ spf() {
 }
 
 alias dafq='thefuck'
+
+export QT_QPA_PLATFORM=wayland
+export XDG_CURRENT_DESKTOP=KDE
+export XDG_SESSION_TYPE=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
