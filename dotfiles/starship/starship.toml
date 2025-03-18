@@ -22,7 +22,7 @@ disabled = false
 format = "[$time](white)"
 time_format = "󱑏 %H:%M"  # Display as HH:MM
 
-[battery]
+ [battery]
 charging_symbol = " "
 
 [[battery.display]]

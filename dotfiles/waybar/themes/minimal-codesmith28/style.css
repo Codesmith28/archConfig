@@ -30,7 +30,7 @@ window#waybar {
 #workspaces button {
     border: 0;
     margin: 3px 3px 3px 0;
-    padding: 0 4px;
+    padding: 0 8px;
     color: @c2;
     border-radius: 5px;
     transition: all 0.25s ease-in-out;
@@ -165,5 +165,6 @@ tooltip label {
 }
 
 #backlight {
+    color: #ffffff;
     margin-right: 15px;
 }

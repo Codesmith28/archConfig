@@ -36,6 +36,12 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
 
-# Pipx
-export PATH="$PATH:/home/codesmith28/.local/bin"
+export QT_QPA_PLATFORM=wayland
+export XDG_CURRENT_DESKTOP=KDE
+export XDG_SESSION_TYPE=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 
+# Pipx
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"

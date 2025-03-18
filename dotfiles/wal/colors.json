@@ -1,28 +1,28 @@
 {
-    "wallpaper": "/home/codesmith28/wallpaper/src/Fantasy-Lake3_1.png",
+    "wallpaper": "/home/codesmith28/wallpaper/src/aurora_borealis.jpg",
     "alpha": "100",
 
     "special": {
-        "background": "#0D0E0E",
-        "foreground": "#cad9db",
-        "cursor": "#cad9db"
+        "background": "#071618",
+        "foreground": "#93e0d0",
+        "cursor": "#93e0d0"
     },
     "colors": {
-        "color0": "#0D0E0E",
-        "color1": "#4E7A91",
-        "color2": "#3789A8",
-        "color3": "#5998A9",
-        "color4": "#67AEC7",
-        "color5": "#9DA9A3",
-        "color6": "#D9D1B9",
-        "color7": "#cad9db",
-        "color8": "#8d9799",
-        "color9": "#4E7A91",
-        "color10": "#3789A8",
-        "color11": "#5998A9",
-        "color12": "#67AEC7",
-        "color13": "#9DA9A3",
-        "color14": "#D9D1B9",
-        "color15": "#cad9db"
+        "color0": "#071618",
+        "color1": "#169972",
+        "color2": "#553190",
+        "color3": "#2D628A",
+        "color4": "#5B5B9F",
+        "color5": "#A66CBB",
+        "color6": "#239F9A",
+        "color7": "#93e0d0",
+        "color8": "#669c91",
+        "color9": "#169972",
+        "color10": "#553190",
+        "color11": "#2D628A",
+        "color12": "#5B5B9F",
+        "color13": "#A66CBB",
+        "color14": "#239F9A",
+        "color15": "#93e0d0"
     }
 }

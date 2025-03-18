@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/rin_itoshi.png",
+    "alpha": "100",
+    "special": {
+        "background": "#050C11",
+        "foreground": "#c5f5f6",
+        "cursor": "#c5f5f6"
+    },
+    "colors": {
+        "color0": "#050C11",
+        "color1": "#036789",
+        "color2": "#5A7786",
+        "color3": "#059AA0",
+        "color4": "#1CD1D7",
+        "color5": "#68FCFD",
+        "color6": "#B8A598",
+        "color7": "#c5f5f6",
+        "color8": "#89abac",
+        "color9": "#036789",
+        "color10": "#5A7786",
+        "color11": "#059AA0",
+        "color12": "#1CD1D7",
+        "color13": "#68FCFD",
+        "color14": "#B8A598",
+        "color15": "#c5f5f6"
+    }
+}

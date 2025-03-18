@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/warmForest.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0E130C",
+        "foreground": "#f4edc5",
+        "cursor": "#f4edc5"
+    },
+    "colors": {
+        "color0": "#0E130C",
+        "color1": "#EB5D0F",
+        "color2": "#718E33",
+        "color3": "#B59F3A",
+        "color4": "#F89C1A",
+        "color5": "#D5AD5A",
+        "color6": "#F0D366",
+        "color7": "#f4edc5",
+        "color8": "#aaa589",
+        "color9": "#EB5D0F",
+        "color10": "#718E33",
+        "color11": "#B59F3A",
+        "color12": "#F89C1A",
+        "color13": "#D5AD5A",
+        "color14": "#F0D366",
+        "color15": "#f4edc5"
+    }
+}

@@ -14,7 +14,6 @@ configuration {
     modi:                       "drun,run";
     font:                       "Fira Sans 11";
     show-icons:                 false;
-    icon-theme:                 "kora";
     display-drun:               "APPS";
     display-run:                "RUN";
     display-filebrowser:        "FILES";
