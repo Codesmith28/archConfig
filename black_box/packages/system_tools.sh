@@ -31,6 +31,7 @@ packages=(
     "rsync"
     "7zip"
     "net-tools"
+    "expect"
 )
 
 for package in "${packages[@]}"; do
