@@ -6,59 +6,60 @@
 
 /* ----------------------------------------------------- * General * ----------------------------------------------------- */
 * {
-    font-family: Monospace;
-    font-size: 15.5px;
-    /*font-size: 15px;*/
-    border: none;
-    border-radius: 0;
+  font-family: Monospace;
+  font-size: 14px;
+  /*font-size: 15.5px;*/
+  /*font-size: 15px;*/
+  border: none;
+  border-radius: 0;
 }
 
 window#waybar {
-    background-color: rgba(0, 0, 0, 0.5);
-    transition-property: background-color;
-    transition-duration: 0.5s;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition-property: background-color;
+  transition-duration: 0.5s;
 }
 
 /* ----------------------------------------------------- * Workspaces * ----------------------------------------------------- */
 #workspaces {
-    border: 0;
-    margin: 1px 0px 1px 3px;
-    border-radius: 5px;
-    color: @c1;
+  border: 0;
+  margin: 1px 0px 1px 3px;
+  border-radius: 5px;
+  color: @c1;
 }
 
 #workspaces button {
-    border: 0;
-    margin: 3px 3px 3px 0;
-    padding: 0 8px;
-    color: @c2;
-    border-radius: 5px;
-    transition: all 0.25s ease-in-out;
+  border: 0;
+  margin: 3px 3px 3px 0;
+  padding: 0 8px;
+  color: @c2;
+  border-radius: 5px;
+  transition: all 0.25s ease-in-out;
 }
 
 #workspaces button.active {
-    color: @c1;
-    background: @active;
-    border-radius: 8px;
+  color: @c1;
+  background: @active;
+  border-radius: 8px;
 }
 
 #workspaces button:hover {
-    color: @c1;
-    background: @hover;
-    border-radius: 8px;
+  color: @c1;
+  background: @hover;
+  border-radius: 8px;
 }
 
 /* ----------------------------------------------------- * Tray * ----------------------------------------------------- */
 #tray {
-    margin: 0 10px 0 5px;
+  margin: 0 10px 0 5px;
 }
 
-#tray>.passive {
-    -gtk-icon-effect: dim;
+#tray > .passive {
+  -gtk-icon-effect: dim;
 }
 
-#tray>.needs-attention {
-    -gtk-icon-effect: highlight;
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
 }
 
 /*#taskbar {*/
@@ -66,105 +67,105 @@ window#waybar {
 /*}*/
 
 #taskbar button {
-    padding-right: 7px;
-    padding-left: 7px;
+  padding-right: 7px;
+  padding-left: 7px;
 }
 
 /* ----------------------------------------------------- * Tooltips * ----------------------------------------------------- */
 tooltip {
-    border-radius: 10px;
-    background-color: @c1;
-    opacity: 0.8;
-    padding: 20px;
-    margin: 0;
+  border-radius: 10px;
+  background-color: @c1;
+  opacity: 0.8;
+  padding: 20px;
+  margin: 0;
 }
 
 tooltip label {
-    color: @c2;
+  color: @c2;
 }
 
 #custom-cliphist {
-    margin: 0 10px 0 0;
-    font-weight: bold;
-    color: @icon;
+  margin: 0 10px 0 0;
+  font-weight: bold;
+  color: @icon;
 }
 
 /* ----------------------------------------------------- * Custom Modules * ----------------------------------------------------- */
 #custom-appmenuicon {
-    font-size: 21px;
-    color: @textcolor;
-    margin: 6px 10px 6px 10px;
+  font-size: 21px;
+  color: @textcolor;
+  margin: 6px 10px 6px 10px;
 }
 
 #custom-updates {
-    color: @textcolor;
-    border-radius: 15px;
-    /*margin: 0 15px 0 0;*/
-    margin: 0 5px 0 10px;
+  color: @textcolor;
+  border-radius: 15px;
+  /*margin: 0 15px 0 0;*/
+  margin: 0 5px 0 10px;
 }
 
 #custom-updates.yellow {
-    color: #ff9a3c;
+  color: #ff9a3c;
 }
 
 #custom-updates.red {
-    color: #dc2f2f;
+  color: #dc2f2f;
 }
 
 /* ----------------------------------------------------- * Clock * ----------------------------------------------------- */
 #clock {
-    color: @textcolor;
-    margin: 0 10px 0 0;
+  color: @textcolor;
+  margin: 0 10px 0 0;
 }
 
 /* ----------------------------------------------------- * Pulseaudio * ----------------------------------------------------- */
 #pulseaudio {
-    color: @textcolor;
-    border-radius: 15px;
-    margin: 0 15px 0 0;
+  color: @textcolor;
+  border-radius: 15px;
+  margin: 0 15px 0 0;
 }
 
 #pulseaudio.muted {
-    color: @textcolor;
+  color: @textcolor;
 }
 
 /* ----------------------------------------------------- * Network * ----------------------------------------------------- */
 #network {
-    color: @textcolor;
-    border-radius: 15px;
-    margin: 0 15px 0 0;
+  color: @textcolor;
+  border-radius: 15px;
+  margin: 0 15px 0 0;
 }
 
 #network.ethernet,
 #network.wifi {
-    color: @textcolor;
+  color: @textcolor;
 }
 
 /* ----------------------------------------------------- * Battery -----------------------------------------------------  */
 #battery {
-    color: @textcolor;
-    border-radius: 15px;
-    margin: 0px 15px 0 0;
+  color: @textcolor;
+  border-radius: 15px;
+  margin: 0px 15px 0 0;
 }
 
 #battery.charging,
 #battery.plugged {
-    color: @textcolor;
+  color: @textcolor;
 }
 
 @keyframes blink {
-    to {
-        /* background-color: @backgroundlight; */
-        color: @c2;
-    }
+  to {
+    /* background-color: @backgroundlight; */
+    color: @c2;
+  }
 }
 
 #battery.critical:not(.charging) {
-    color: #f53c3c;
-    animation: blink 0.5s linear infinite alternate;
+  color: #f53c3c;
+  animation: blink 0.5s linear infinite alternate;
 }
 
 #backlight {
-    color: #ffffff;
-    margin-right: 15px;
+  color: #ffffff;
+  margin-right: 15px;
 }
