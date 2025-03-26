@@ -1,0 +1,83 @@
+//   _____ _____ _____ _____ _____ _____ _____ _____ _____
+//  |   __|  _  |   __|_   _|   __|   __|_   _|     |  |  |
+//  |   __|     |__   | | | |   __|   __| | | |   --|     |
+//  |__|  |__|__|_____| |_| |__|  |_____| |_| |_____|__|__|  ARCH
+//
+//  by Bina
+//
+//  Execute with: fastfetch --colors-block-range-start 9 --colors-block-width 3
+
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "~/dotfiles/fastfetch/ascii/arch.txt",
+    "padding": {
+      "right": 4,
+      "top": 1,
+    },
+  },
+  "display": {
+    "separator": " ",
+  },
+  "modules": [
+    "break",
+    {
+      "type": "title",
+      "keyWidth": 10,
+    },
+    {
+      "type": "os",
+      "key": " ",
+      "keyColor": "34",
+    },
+    {
+      "type": "kernel",
+      "key": " ",
+      "keyColor": "34",
+    },
+    {
+      "type": "host",
+      "key": "󰍹 ",
+      "keyColor": "34",
+    },
+    {
+      "type": "uptime",
+      "key": " ",
+      "keyColor": "34",
+    },
+    {
+      "type": "packages",
+      "format": "{} (pacman)",
+      "key": "󰏓 ",
+      "keyColor": "34",
+    },
+    "break",
+    {
+      "type": "memory",
+      "key": " ",
+      "keyColor": "34",
+    },
+    {
+      "type": "battery",
+      "key": "󰗱 ",
+      "keyColor": "34",
+      "format": "{/4}{-}{/}{4}{?5} [{5}]{?}",
+    },
+    {
+      "type": "datetime",
+      "key": "󰃶 ",
+      "keyColor": "34",
+    },
+    {
+      "type": "swap",
+      "key": "󰯍 ",
+      "keyColor": "34",
+    },
+    {
+      "type": "bluetooth",
+      "key": " ",
+      "keyColor": "34",
+    },
+    "break",
+  ],
+}

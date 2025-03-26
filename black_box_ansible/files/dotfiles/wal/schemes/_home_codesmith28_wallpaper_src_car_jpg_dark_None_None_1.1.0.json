@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/car.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#090808",
+        "foreground": "#e4c39d",
+        "cursor": "#e4c39d"
+    },
+    "colors": {
+        "color0": "#090808",
+        "color1": "#30454B",
+        "color2": "#5C605A",
+        "color3": "#982911",
+        "color4": "#9F5422",
+        "color5": "#AD5635",
+        "color6": "#D46D22",
+        "color7": "#e4c39d",
+        "color8": "#9f886d",
+        "color9": "#30454B",
+        "color10": "#5C605A",
+        "color11": "#982911",
+        "color12": "#9F5422",
+        "color13": "#AD5635",
+        "color14": "#D46D22",
+        "color15": "#e4c39d"
+    }
+}

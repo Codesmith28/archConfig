@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/explorer_green_day_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0F1E25",
+        "foreground": "#dceabf",
+        "cursor": "#dceabf"
+    },
+    "colors": {
+        "color0": "#0F1E25",
+        "color1": "#3F8D62",
+        "color2": "#54986D",
+        "color3": "#5CA174",
+        "color4": "#8FBA7A",
+        "color5": "#77B188",
+        "color6": "#A8CE88",
+        "color7": "#dceabf",
+        "color8": "#9aa385",
+        "color9": "#3F8D62",
+        "color10": "#54986D",
+        "color11": "#5CA174",
+        "color12": "#8FBA7A",
+        "color13": "#77B188",
+        "color14": "#A8CE88",
+        "color15": "#dceabf"
+    }
+}

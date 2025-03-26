@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/expanse_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#050C11",
+        "foreground": "#e1dad0",
+        "cursor": "#e1dad0"
+    },
+    "colors": {
+        "color0": "#050C11",
+        "color1": "#555D62",
+        "color2": "#AD6652",
+        "color3": "#DC986A",
+        "color4": "#6C7B84",
+        "color5": "#77878E",
+        "color6": "#989FA4",
+        "color7": "#e1dad0",
+        "color8": "#9d9891",
+        "color9": "#555D62",
+        "color10": "#AD6652",
+        "color11": "#DC986A",
+        "color12": "#6C7B84",
+        "color13": "#77878E",
+        "color14": "#989FA4",
+        "color15": "#e1dad0"
+    }
+}

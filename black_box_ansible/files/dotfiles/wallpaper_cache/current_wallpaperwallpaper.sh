@@ -1,0 +1,1 @@
+/home/codesmith28/wallpaper/src/path.jpg

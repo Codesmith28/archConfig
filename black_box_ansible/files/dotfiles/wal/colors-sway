@@ -1,0 +1,21 @@
+set $wallpaper /home/codesmith28/wallpaper/src/path.jpg
+
+set $background #090e0a
+set $foreground #bdbca3
+
+set $color0 #090e0a
+set $color1 #2F4C29
+set $color2 #336127
+set $color3 #525B2A
+set $color4 #3C4E44
+set $color5 #556652
+set $color6 #638C4A
+set $color7 #bdbca3
+set $color8 #848372
+set $color9 #2F4C29
+set $color10 #336127
+set $color11 #525B2A
+set $color12 #3C4E44
+set $color13 #556652
+set $color14 #638C4A
+set $color15 #bdbca3

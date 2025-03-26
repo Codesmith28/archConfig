@@ -1,0 +1,23 @@
+" Special
+let wallpaper  = "/home/codesmith28/wallpaper/src/path.jpg"
+let background = "#090e0a"
+let foreground = "#bdbca3"
+let cursor     = "#bdbca3"
+
+" Colors
+let color0  = "#090e0a"
+let color1  = "#2F4C29"
+let color2  = "#336127"
+let color3  = "#525B2A"
+let color4  = "#3C4E44"
+let color5  = "#556652"
+let color6  = "#638C4A"
+let color7  = "#bdbca3"
+let color8  = "#848372"
+let color9  = "#2F4C29"
+let color10 = "#336127"
+let color11 = "#525B2A"
+let color12 = "#3C4E44"
+let color13 = "#556652"
+let color14 = "#638C4A"
+let color15 = "#bdbca3"

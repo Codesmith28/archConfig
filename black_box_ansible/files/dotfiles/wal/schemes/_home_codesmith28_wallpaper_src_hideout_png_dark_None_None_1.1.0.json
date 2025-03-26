@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/hideout.png",
+    "alpha": "100",
+    "special": {
+        "background": "#090b0c",
+        "foreground": "#a9bcce",
+        "cursor": "#a9bcce"
+    },
+    "colors": {
+        "color0": "#090b0c",
+        "color1": "#2B3846",
+        "color2": "#304958",
+        "color3": "#58585A",
+        "color4": "#956D51",
+        "color5": "#C69367",
+        "color6": "#456C95",
+        "color7": "#a9bcce",
+        "color8": "#768390",
+        "color9": "#2B3846",
+        "color10": "#304958",
+        "color11": "#58585A",
+        "color12": "#956D51",
+        "color13": "#C69367",
+        "color14": "#456C95",
+        "color15": "#a9bcce"
+    }
+}

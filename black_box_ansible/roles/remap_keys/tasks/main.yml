@@ -1,0 +1,23 @@
+---
+- name: Install keyd
+  ansible.builtin.pacman:
+    name: keyd
+    state: present
+  become: yes
+
+- name: Copy keyd configuration file
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../files/configurations/default.conf"
+    dest: /etc/keyd/default.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  notify: Restart keyd
+
+- name: Enable and start keyd service
+  ansible.builtin.systemd:
+    name: keyd
+    state: started
+    enabled: yes
+  become: yes

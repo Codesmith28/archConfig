@@ -1,0 +1,74 @@
+[[manager.prepend_keymap]]
+on   = "T"
+run  = "plugin max-preview"
+desc = "Maximize or restore preview"
+
+[[manager.prepend_keymap]]
+on = [ "m" ]
+run = "plugin relative-motions"
+desc = "Trigger a new relative motion"
+
+[[manager.prepend_keymap]]
+on = [ "E" ]
+run = "plugin eza-preview"
+desc = "Toggle tree/list dir preview"
+
+[[manager.prepend_keymap]]
+on = [ "-" ]
+run = "plugin eza-preview '--inc-level'"
+desc = "Increment tree level"
+
+[[manager.prepend_keymap]]
+on = [ "_" ]
+run = "plugin eza-preview '--dec-level'"
+desc = "Decrement tree level"
+
+[[manager.prepend_keymap]]
+on = [ "$" ]
+run = "plugin eza-preview '--toggle-follow-symlinks'"
+desc = "Toggle tree follow symlinks"
+
+[[manager.prepend_keymap]]
+on = [ "u", "a" ]
+run = "plugin yamb save"
+desc = "Add bookmark"
+
+[[manager.prepend_keymap]]
+on = [ "u", "g" ]
+run = "plugin yamb jump_by_key"
+desc = "Jump bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "G" ]
+run = "plugin yamb jump_by_fzf"
+desc = "Jump bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = [ "u", "d" ]
+run = "plugin yamb delete_by_key"
+desc = "Delete bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "D" ]
+run = "plugin yamb delete_by_fzf"
+desc = "Delete bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = [ "u", "A" ]
+run = "plugin yamb delete_all"
+desc = "Delete all bookmarks"
+
+[[manager.prepend_keymap]]
+on = [ "u", "r" ]
+run = "plugin yamb rename_by_key"
+desc = "Rename bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "R" ]
+run = "plugin yamb rename_by_fzf"
+desc = "Rename bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = ["C"]
+run = "plugin ouch zip"
+desc = "Compress with ouch"

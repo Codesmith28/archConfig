@@ -1,0 +1,6 @@
+---
+# Wi-Fi configuration variables (populated at runtime)
+wifi_ssid: "{{ wifi_ssid_prompt | default('AU_Connect') }}"
+wifi_identity: "{{ wifi_identity_prompt }}"
+wifi_password: "{{ wifi_password_prompt }}"
+wifi_interface: "{{ wifi_interface_prompt | default('wlan0') }}"

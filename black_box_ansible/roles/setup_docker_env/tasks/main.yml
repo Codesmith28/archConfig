@@ -1,0 +1,27 @@
+---
+- name: Install Docker packages
+  ansible.builtin.pacman:
+    name:
+      - docker
+      - docker-compose
+      - gnome-terminal
+    state: present
+  become: yes
+
+- name: Enable and start Docker service
+  ansible.builtin.systemd:
+    name: docker.service
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: yes # Adds to group without removing existing groups
+  become: yes
+
+- name: Display group change notification
+  ansible.builtin.debug:
+    msg: "Docker setup complete! You must log out and log back in (or restart) for the 'docker' group changes to take effect."

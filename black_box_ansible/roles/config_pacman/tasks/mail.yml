@@ -1,0 +1,9 @@
+---
+- name: Copy custom pacman.conf to /etc
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../files/pacman.conf"
+    dest: /etc/pacman.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: yes

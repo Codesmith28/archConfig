@@ -1,0 +1,6 @@
+---
+- name: Restart keyd
+  ansible.builtin.systemd:
+    name: keyd
+    state: restarted
+  become: yes

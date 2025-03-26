@@ -1,0 +1,21 @@
+---
+gnome_gtk_pacman:
+  - brightnessctl
+  - gum
+  - man-pages
+  - nm-connection-editor
+  - network-manager-applet
+  - xarchiver
+  - zip
+  - fuse2
+  - qalculate-gtk
+  - imagemagick
+  - guvcview
+  - jq
+  - blueman
+  - gnome-tweaks
+gnome_gtk_yay:
+  - gnome-shell-extensions
+  - gnome-shell-extension-dash-to-dock
+  - gnome-shell-extension-appindicator
+  - gnome-shell-extension-blur-my-shell

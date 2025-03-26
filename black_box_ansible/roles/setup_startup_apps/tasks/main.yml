@@ -1,0 +1,41 @@
+---
+- name: Ensure ~/.config/systemd/user directory exists
+  ansible.builtin.file:
+    path: ~/.config/systemd/user
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0755"
+  become: no
+
+- name: Copy systemd user service files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../files/systemd/user/{{ item }}"
+    dest: ~/.config/systemd/user/{{ item }}
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0644"
+  loop:
+    - bluetooth.service
+    - discord.service
+  become: no
+  register: service_files
+
+- name: Enable and start user systemd services
+  ansible.builtin.systemd:
+    name: "{{ item | replace('.service', '') }}"
+    scope: user
+    state: started
+    enabled: yes
+  loop:
+    - bluetooth.service
+    - discord.service
+  become: no
+  when: service_files.changed
+
+- name: Enable and start system-level Bluetooth service
+  ansible.builtin.systemd:
+    name: bluetooth.service
+    state: started
+    enabled: yes
+  become: yes

@@ -1,0 +1,22 @@
+---
+- name: Ensure yay is installed
+  ansible.builtin.pacman:
+    name: yay
+    state: present
+  become: yes
+
+- name: Install pacman packages
+  ansible.builtin.pacman:
+    name: "{{ pacman_packages }}"
+    state: present
+  become: yes
+
+- name: Install yay packages
+  ansible.builtin.command:
+    cmd: yay -S --noconfirm {{ item }}
+    creates: /usr/bin/{{ item }} # Rough idempotency check
+  loop: "{{ yay_packages }}"
+  become: yes
+  register: yay_install
+  changed_when: yay_install.rc == 0
+  failed_when: yay_install.rc != 0 and yay_install.rc != 1 # Ignore "already installed" errors

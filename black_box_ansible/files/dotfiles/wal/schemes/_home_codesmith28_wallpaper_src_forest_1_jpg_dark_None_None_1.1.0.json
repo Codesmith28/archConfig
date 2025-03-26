@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/forest_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#03020A",
+        "foreground": "#bcb4d5",
+        "cursor": "#bcb4d5"
+    },
+    "colors": {
+        "color0": "#03020A",
+        "color1": "#282853",
+        "color2": "#363766",
+        "color3": "#433E6A",
+        "color4": "#484572",
+        "color5": "#A84E24",
+        "color6": "#AF8279",
+        "color7": "#bcb4d5",
+        "color8": "#837d95",
+        "color9": "#282853",
+        "color10": "#363766",
+        "color11": "#433E6A",
+        "color12": "#484572",
+        "color13": "#A84E24",
+        "color14": "#AF8279",
+        "color15": "#bcb4d5"
+    }
+}

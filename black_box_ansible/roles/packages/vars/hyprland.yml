@@ -1,0 +1,16 @@
+---
+hyprland_pacman:
+  - rofi-wayland
+  - hyprland
+  - hyprpaper
+  - hyprlock
+  - hypridle
+  - waybar
+  - grim
+  - slurp
+  - swappy
+  - cliphist
+hyprland_yay:
+  - hyprshade
+  - hyprshot
+  - hyprswitch

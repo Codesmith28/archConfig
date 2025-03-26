@@ -2,12 +2,15 @@
 - setup the following files init:
 
   - `wifi_backend.conf`:
-    ```
+
+    ```conf
     [device]
     wifi.backend=iwd
     ```
+
   - `wifi_rand_mac.conf`:
-    ```
+
+    ```conf
     [device]
     wifi.scan-rand-mac-address=no
     ```
@@ -17,7 +20,7 @@
   - create a new Wifi entry using `nm-connection-editor`
   - create the file `{name}.nmconnection`
 
-    ````
+    ````conf
     // this will pre-filled as we create using nm-connection-editor
     [connection]
     id=
@@ -57,7 +60,7 @@
 
   - create the following file `{name}.8021x`
 
-  ```
+  ```conf
   [IPv6]
   Enabled=true
 

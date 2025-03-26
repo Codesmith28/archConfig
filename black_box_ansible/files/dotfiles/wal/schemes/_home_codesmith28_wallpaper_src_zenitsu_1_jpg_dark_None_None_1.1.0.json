@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/zenitsu_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#07080F",
+        "foreground": "#e9e8e0",
+        "cursor": "#e9e8e0"
+    },
+    "colors": {
+        "color0": "#07080F",
+        "color1": "#A75C27",
+        "color2": "#E3B23B",
+        "color3": "#1C538E",
+        "color4": "#50668E",
+        "color5": "#6391A2",
+        "color6": "#CAC4A9",
+        "color7": "#e9e8e0",
+        "color8": "#a3a29c",
+        "color9": "#A75C27",
+        "color10": "#E3B23B",
+        "color11": "#1C538E",
+        "color12": "#50668E",
+        "color13": "#6391A2",
+        "color14": "#CAC4A9",
+        "color15": "#e9e8e0"
+    }
+}

@@ -1,0 +1,10 @@
+---
+utility_pacman:
+  - gvfs
+  - w3m
+  - glow
+  - texlive
+  - xclip
+  - less
+  - alsa-utils
+utility_yay: []  # No yay packages in this category

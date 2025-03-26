@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/arch_ayu.png",
+    "alpha": "100",
+    "special": {
+        "background": "#0F1419",
+        "foreground": "#bee4d8",
+        "cursor": "#bee4d8"
+    },
+    "colors": {
+        "color0": "#0F1419",
+        "color1": "#4A726A",
+        "color2": "#57877C",
+        "color3": "#67A091",
+        "color4": "#76B7A4",
+        "color5": "#7DC2AE",
+        "color6": "#86CFB8",
+        "color7": "#bee4d8",
+        "color8": "#859f97",
+        "color9": "#4A726A",
+        "color10": "#57877C",
+        "color11": "#67A091",
+        "color12": "#76B7A4",
+        "color13": "#7DC2AE",
+        "color14": "#86CFB8",
+        "color15": "#bee4d8"
+    }
+}

@@ -1,0 +1,62 @@
+[
+    {
+        "key": "waybar_timeformat",
+        "value": "%H:%M"
+    },
+    {
+        "key": "waybar_dateformat",
+        "value": "%a"
+    },
+    {
+        "key": "waybar_custom_timedateformat",
+        "value": ""
+    },
+    {
+        "key": "waybar_workspaces",
+        "value": 5
+    },
+    {
+        "key": "rofi_bordersize",
+        "value": 1
+    },
+    {
+        "key": "waybar_toggle",
+        "value": true
+    },
+    {
+        "key": "waybar_taskbar",
+        "value": false
+    },
+    {
+        "key": "waybar_network",
+        "value": true
+    },
+    {
+        "key": "waybar_chatgpt",
+        "value": true
+    },
+    {
+        "key": "waybar_systray",
+        "value": true
+    },
+    {
+        "key": "waybar_screenlock",
+        "value": true
+    },
+    {
+        "key": "waybar_window",
+        "value": true
+    },
+    {
+        "key": "hypridle_hyprlock_timeout",
+        "value": 600
+    },
+    {
+        "key": "hypridle_dpms_timeout",
+        "value": 660
+    },
+    {
+        "key": "hypridle_suspend_timeout",
+        "value": 1800
+    }
+]

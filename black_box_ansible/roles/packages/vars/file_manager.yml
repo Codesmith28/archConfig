@@ -1,0 +1,10 @@
+---
+file_manager_pacman:
+  - nautilus
+  - eog
+  - unzip
+  - yazi
+file_manager_yay:
+  - nautilus-code
+  - nautilus-open-any-terminal
+  - television

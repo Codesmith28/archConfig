@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/waves_2.png",
+    "alpha": "100",
+    "special": {
+        "background": "#13161f",
+        "foreground": "#cbd8e5",
+        "cursor": "#cbd8e5"
+    },
+    "colors": {
+        "color0": "#13161f",
+        "color1": "#63748E",
+        "color2": "#768AA5",
+        "color3": "#849BB7",
+        "color4": "#8BA3BF",
+        "color5": "#8FA8C3",
+        "color6": "#A2BCD6",
+        "color7": "#cbd8e5",
+        "color8": "#8e97a0",
+        "color9": "#63748E",
+        "color10": "#768AA5",
+        "color11": "#849BB7",
+        "color12": "#8BA3BF",
+        "color13": "#8FA8C3",
+        "color14": "#A2BCD6",
+        "color15": "#cbd8e5"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/rain_sky.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0e110c",
+        "foreground": "#c1cacd",
+        "cursor": "#c1cacd"
+    },
+    "colors": {
+        "color0": "#0e110c",
+        "color1": "#7A8140",
+        "color2": "#949437",
+        "color3": "#4C7488",
+        "color4": "#6F8F9E",
+        "color5": "#718D96",
+        "color6": "#96A5AA",
+        "color7": "#c1cacd",
+        "color8": "#878d8f",
+        "color9": "#7A8140",
+        "color10": "#949437",
+        "color11": "#4C7488",
+        "color12": "#6F8F9E",
+        "color13": "#718D96",
+        "color14": "#96A5AA",
+        "color15": "#c1cacd"
+    }
+}

@@ -1,0 +1,32 @@
+#  _                      _     _ _
+# | |__  _   _ _ __  _ __(_) __| | | ___
+# | '_ \| | | | '_ \| '__| |/ _` | |/ _ \
+# | | | | |_| | |_) | |  | | (_| | |  __/
+# |_| |_|\__, | .__/|_|  |_|\__,_|_|\___|
+#        |___/|_|
+#
+# Version 2.8.3
+# DO NOT REMOVE THE REPLACEMENT COMMENTS
+# REQUIRED BY THE ML4W SETTINGS APP
+# https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/
+
+# general {
+#     ignore_dbus_inhibit = false
+# }
+
+general {
+    lock_timeout = 999999
+    before_sleep_cmd = notify-send "System would sleep now but won't!"
+    after_sleep_cmd = notify-send "System is still awake!"
+}
+
+listener {
+    timeout = 600
+    on-timeout = hyprctl dispatch dpms off
+    on-resume = hyprctl dispatch dpms on
+}
+
+listener {
+    timeout = 300
+    on-timeout = systemctl suspend-inhibit --what=cpu --mode=block --who=hypridle --why="Keep system awake indefinitely!"
+}

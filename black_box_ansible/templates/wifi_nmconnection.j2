@@ -1,0 +1,30 @@
+[connection]
+id={{ wifi_ssid }}
+uuid={{ ansible_date_time.epoch }}-{{ 99999999999999 | random }}
+type=wifi
+interface-name={{ wifi_interface }}
+permissions=
+
+[wifi]
+mode=infrastructure
+ssid={{ wifi_ssid }}
+
+[wifi-security]
+auth-alg=open
+key-mgmt=wpa-eap
+
+[802-1x]
+anonymous-identity={{ wifi_identity }}
+eap=peap;
+identity={{ wifi_identity }}
+password={{ wifi_password }}
+phase2-auth=mschapv2
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=stable-privacy
+method=auto
+
+[proxy]

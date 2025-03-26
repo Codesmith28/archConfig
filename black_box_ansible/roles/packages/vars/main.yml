@@ -1,0 +1,3 @@
+---
+pacman_packages: "{{ (system_tools_pacman + general_pacman + fonts_pacman + file_manager_pacman + multi_media_pacman + additional_tools_pacman + dev_pacman + utility_pacman + gnome_gtk_pacman + hyprland_pacman) | unique }}"
+yay_packages: "{{ (general_yay + fonts_yay + file_manager_yay + multi_media_yay + additional_tools_yay + dev_yay + gnome_gtk_yay + hyprland_yay) | unique }}"
