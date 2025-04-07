@@ -1,1 +1,1 @@
-/home/codesmith28/wallpaper/src/path.jpg
+/home/codesmith28/wallpaper/src/dune_night_v2_1.jpg

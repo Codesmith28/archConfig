@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/tree.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0f130a",
+        "foreground": "#ced5d8",
+        "cursor": "#ced5d8"
+    },
+    "colors": {
+        "color0": "#0f130a",
+        "color1": "#3282BD",
+        "color2": "#4F88B7",
+        "color3": "#6C93B4",
+        "color4": "#2F8AC8",
+        "color5": "#66A0CE",
+        "color6": "#91B4D4",
+        "color7": "#ced5d8",
+        "color8": "#909597",
+        "color9": "#3282BD",
+        "color10": "#4F88B7",
+        "color11": "#6C93B4",
+        "color12": "#2F8AC8",
+        "color13": "#66A0CE",
+        "color14": "#91B4D4",
+        "color15": "#ced5d8"
+    }
+}
