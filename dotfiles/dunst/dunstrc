@@ -134,7 +134,7 @@
 
     ### Text ###
 
-    font = "monospace 11"
+    font = "monospace 10"
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -212,7 +212,7 @@
     enable_recursive_icon_lookup = true
 
     # Set icon theme (only used for recursive icon lookup)
-    icon_theme = "Colloid-Dark"
+    icon_theme = "Papirus Dark"
     # You can also set multiple icon themes, with the leftmost one being used first.
     # icon_theme = "Adwaita, breeze"
 

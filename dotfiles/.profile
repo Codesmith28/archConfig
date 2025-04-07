@@ -146,7 +146,7 @@ fixD() {
     sudo umount /home/run/media/localdiskD && echo "Disk unmounted."
 }
 alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
-alias netrs='sudo systemctl restart NetworkManager'
+alias netrs='sudo systemctl restart NetworkManager && sudo systemctl restart iwd'
 
 # -----------------------------------------------------
 # STARSHIP export
@@ -177,8 +177,8 @@ alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
-# alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
-alias ivm='$EDITOR $(tv)'
+alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
+# alias ivm='$EDITOR $(tv)'
 
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/underwater-01.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#020F18",
+        "foreground": "#90c6c7",
+        "cursor": "#90c6c7"
+    },
+    "colors": {
+        "color0": "#020F18",
+        "color1": "#1A4B6E",
+        "color2": "#225F69",
+        "color3": "#1C528A",
+        "color4": "#21568B",
+        "color5": "#25738B",
+        "color6": "#425F9D",
+        "color7": "#90c6c7",
+        "color8": "#648a8b",
+        "color9": "#1A4B6E",
+        "color10": "#225F69",
+        "color11": "#1C528A",
+        "color12": "#21568B",
+        "color13": "#25738B",
+        "color14": "#425F9D",
+        "color15": "#90c6c7"
+    }
+}

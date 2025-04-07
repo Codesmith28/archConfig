@@ -28,10 +28,15 @@ packages=(
     "pkg-config"
     "swww"
     "wireplumber"
+    "pipewire-pulse"
     "rsync"
     "7zip"
     "net-tools"
     "expect"
+
+    "cliphist"
+    "wl-clipboard"
+    "wl-clip-persist"
 )
 
 for package in "${packages[@]}"; do
