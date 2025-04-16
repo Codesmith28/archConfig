@@ -1,9 +1,9 @@
 return {
     "A7lavinraj/assistant.nvim",
-    event = "VimEnter",
-    dependencies = { "stevearc/dressing.nvim" }, -- optional but recommended
+    dependencies = { "folke/snacks.nvim" }, -- optional but recommended
+    lazy = false, -- Start TCP Listener on Neovim startup
     keys = {
-        { "<leader>a", "<cmd>AssistantToggle<cr>", desc = "Toggle Assistant.nvim window" },
+        { "<leader>a", "<cmd>Assistant<cr>", desc = "Assistant.nvim" },
     },
     opts = {},
 }

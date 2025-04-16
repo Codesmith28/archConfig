@@ -76,7 +76,7 @@ local get_compression_target = ya.sync(function()
       return
     end
   else
-    default_name = tab.current.cwd:name()
+    default_name = tab.current.cwd.name
     for _, url in pairs(tab.selected) do
       table.insert(paths, tostring(url))
     end
@@ -112,6 +112,9 @@ end
 
 function M:entry(job)
   local default_fmt = job.args[1]
+  if default_fmt == nil then
+    default_fmt = "zip"
+  end
 
   ya.manager_emit("escape", { visual = true })
 

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/night_ship.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0C0F17",
+        "foreground": "#c1cbcc",
+        "cursor": "#c1cbcc"
+    },
+    "colors": {
+        "color0": "#0C0F17",
+        "color1": "#325269",
+        "color2": "#4F626D",
+        "color3": "#A37958",
+        "color4": "#4D7489",
+        "color5": "#6B919F",
+        "color6": "#76B0C5",
+        "color7": "#c1cbcc",
+        "color8": "#878e8e",
+        "color9": "#325269",
+        "color10": "#4F626D",
+        "color11": "#A37958",
+        "color12": "#4D7489",
+        "color13": "#6B919F",
+        "color14": "#76B0C5",
+        "color15": "#c1cbcc"
+    }
+}

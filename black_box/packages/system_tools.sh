@@ -37,6 +37,8 @@ packages=(
     "cliphist"
     "wl-clipboard"
     "wl-clip-persist"
+
+    "wlroots"
 )
 
 for package in "${packages[@]}"; do

@@ -19,6 +19,10 @@ system_tools_pacman:
   - wireplumber
   - rsync
   - 7zip
+  - wlroots
   - net-tools
   - expect
-system_tools_yay: []  # No yay packages in this category
+  - cliphist
+  - wl-clipboard
+  - wl-clip-persist
+system_tools_yay: [] # No yay packages in this category

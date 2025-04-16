@@ -10,22 +10,21 @@
 
 ## Installation
 
-If you use latest Yazi from main branch
+### Yazi package manager
+```bash
+ya pack -a ndtoan96/ouch
+```
+
+### Git
 ```bash
 # Linux/macOS
 git clone https://github.com/ndtoan96/ouch.yazi.git ~/.config/yazi/plugins/ouch.yazi
 
-# Windows
+# Windows with cmd
 git clone https://github.com/ndtoan96/ouch.yazi.git %AppData%\yazi\config\plugins\ouch.yazi
-```
 
-If you use Yazi <= 0.3.3
-```bash
-# Linux/macOS
-git clone --branch v0.2.1 --single-branch https://github.com/ndtoan96/ouch.yazi.git ~/.config/yazi/plugins/ouch.yazi
-
-# Windows
-git clone --branch v0.2.1 --single-branch https://github.com/ndtoan96/ouch.yazi.git %AppData%\yazi\config\plugins\ouch.yazi
+# Windows with powershell
+git clone https://github.com/ndtoan96/ouch.yazi.git "$($env:APPDATA)\yazi\config\plugins\ouch.yazi"
 ```
 
 Make sure you have [ouch](https://github.com/ouch-org/ouch) installed and in your `PATH`.
@@ -44,7 +43,8 @@ prepend_previewers = [
 	{ mime = "application/x-bzip2",         run = "ouch" },
 	{ mime = "application/x-7z-compressed", run = "ouch" },
 	{ mime = "application/x-rar",           run = "ouch" },
-	{ mime = "application/x-xz",            run = "ouch" },
+        { mime = "application/x-xz",            run = "ouch" },
+	{ mime = "application/xz",              run = "ouch" },
 ]
 ```
 
@@ -58,11 +58,13 @@ For compession, add this to your `keymap.toml`:
 ```toml
 [[manager.prepend_keymap]]
 on = ["C"]
-run = "plugin ouch --args=zip"
+run = "plugin ouch"
 desc = "Compress with ouch"
 ```
 
-The `--args=zip` part tells the plugin that default format is `zip`. You can change that to whatever format you want.
+The plugin uses `zip` format by default. You can change the format when you name the output file, `ouch` will detect format based on file extension.
+
+And, for example, if you would like to set `7z` as default format, you can use `plugin ouch 7z`.
 
 ### Decompression
 This plugin does not provide a decompression feature because it already is supported by Yazi.
