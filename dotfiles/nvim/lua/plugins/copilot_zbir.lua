@@ -24,7 +24,7 @@ return {
                     open = "<M-CR>",
                 },
                 layout = {
-                    position = "vertical", -- | top | left | right | horizontal | vertical
+                    position = "bottom", -- | top | left | right | horizontal | vertical
                     ratio = 0.4,
                 },
             },

@@ -50,6 +50,31 @@ run = "eza-preview"
 name = "*.md"
 run = "glow"
 
+# [[plugin.prepend_previewers]]
+# name = "*.md"
+# run = "rich-preview"
+
+[[plugin.prepend_previewers]]
+name = "*.csv"
+run = "rich-preview"
+
+[[plugin.prepend_previewers]]
+name = "*.rst"
+run = "rich-preview"
+
+[[plugin.prepend_previewers]]
+name = "*.ipynb"
+run = "rich-preview"
+
+[[plugin.prepend_previewers]]
+name = "*.json"
+run = "rich-preview"
+
+# Example for language-specific previews
+# [[plugin.prepend_previewers]]
+# name = "*.py"
+# run = "rich-preview"
+
 [input]
 # cd
 cd_title  = "Change directory:"
@@ -113,3 +138,13 @@ open_offset = [ 0, 1, 50, 7 ]
 
 [log]
 enabled = false
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"

@@ -1,29 +1,29 @@
 const char *colorname[] = {
 
   /* 8 normal colors */
-  [0] = "#050C1E", /* black   */
-  [1] = "#102540", /* red     */
-  [2] = "#192C47", /* green   */
-  [3] = "#273A52", /* yellow  */
-  [4] = "#2D465A", /* blue    */
-  [5] = "#2F5368", /* magenta */
-  [6] = "#33657A", /* cyan    */
-  [7] = "#97abb0", /* white   */
+  [0] = "#0C0F17", /* black   */
+  [1] = "#325269", /* red     */
+  [2] = "#4F626D", /* green   */
+  [3] = "#A37958", /* yellow  */
+  [4] = "#4D7489", /* blue    */
+  [5] = "#6B919F", /* magenta */
+  [6] = "#76B0C5", /* cyan    */
+  [7] = "#c1cbcc", /* white   */
 
   /* 8 bright colors */
-  [8]  = "#69777b",  /* black   */
-  [9]  = "#102540",  /* red     */
-  [10] = "#192C47", /* green   */
-  [11] = "#273A52", /* yellow  */
-  [12] = "#2D465A", /* blue    */
-  [13] = "#2F5368", /* magenta */
-  [14] = "#33657A", /* cyan    */
-  [15] = "#97abb0", /* white   */
+  [8]  = "#878e8e",  /* black   */
+  [9]  = "#325269",  /* red     */
+  [10] = "#4F626D", /* green   */
+  [11] = "#A37958", /* yellow  */
+  [12] = "#4D7489", /* blue    */
+  [13] = "#6B919F", /* magenta */
+  [14] = "#76B0C5", /* cyan    */
+  [15] = "#c1cbcc", /* white   */
 
   /* special colors */
-  [256] = "#050C1E", /* background */
-  [257] = "#97abb0", /* foreground */
-  [258] = "#97abb0",     /* cursor */
+  [256] = "#0C0F17", /* background */
+  [257] = "#c1cbcc", /* foreground */
+  [258] = "#c1cbcc",     /* cursor */
 };
 
 /* Default colors (colorname index)

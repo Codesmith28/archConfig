@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/night_mnt.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#07181E",
+        "foreground": "#bed1dc",
+        "cursor": "#bed1dc"
+    },
+    "colors": {
+        "color0": "#07181E",
+        "color1": "#486375",
+        "color2": "#156F8D",
+        "color3": "#30708E",
+        "color4": "#437D9A",
+        "color5": "#5C92AF",
+        "color6": "#5A9EBA",
+        "color7": "#bed1dc",
+        "color8": "#85929a",
+        "color9": "#486375",
+        "color10": "#156F8D",
+        "color11": "#30708E",
+        "color12": "#437D9A",
+        "color13": "#5C92AF",
+        "color14": "#5A9EBA",
+        "color15": "#bed1dc"
+    }
+}
