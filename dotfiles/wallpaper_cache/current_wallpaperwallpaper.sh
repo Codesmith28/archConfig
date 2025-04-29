@@ -1,1 +1,1 @@
-/home/codesmith28/wallpaper/src/sunset.jpg
+/home/codesmith28/wallpaper/src/earth.jpg

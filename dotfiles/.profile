@@ -229,4 +229,4 @@ spf() {
 }
 
 alias dafq='thefuck'
-
+export QT_QPA_PLATFORMTHEME=kde
