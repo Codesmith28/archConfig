@@ -30,8 +30,14 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [open]
 rules = [
-    { name = "*/", use = [ "edit", "open", "reveal" ] },
-    { mime = "*", use = [ "edit", "open", "reveal" ] },
+    { mime = "application/pdf", use = "open-pdf" },  # Rule for PDFs
+    { name = "*/", use = [ "edit", "open", "reveal" ] },  # Existing rule
+    { mime = "*", use = [ "edit", "open", "reveal" ] },  # Existing fallback rule
+]
+
+[opener]
+open-pdf = [
+    { run = 'firefox "$@"', desc = "Open PDF in Firefox" },
 ]
 
 [tasks]
