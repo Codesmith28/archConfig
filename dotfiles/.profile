@@ -11,7 +11,6 @@ PS1='[\u@\h \W]\$ '
 
 # Define Editor
 export EDITOR=nvim
-export XDG_CURRENT_DESKTOP=Hyprland
 export BROWSER=dolphin
 
 alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
@@ -42,7 +41,7 @@ alias ts='~/dotfiles/scripts/snapshot.sh'
 alias matrix='cmatrix -u 2'
 alias wifi='nmtui'
 alias od='~/private/onedrive.sh'
-alias rw='~/dotfiles/waybar/reload.sh'
+alias tw='~/dotfiles/waybar/toggle.sh'
 alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/dotfiles"
 alias hypr="cd ~/dotfiles/hypr"
@@ -177,8 +176,8 @@ alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
 alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
-alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
-# alias ivm='$EDITOR $(tv)'
+# alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
+alias ivm='f() { local file; file=$(tv); [ -n "$file" ] && "$EDITOR" "$file"; }; f'
 
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
@@ -192,7 +191,7 @@ runcc() {
 }
 
 alias cpp='cd ~/Projects/cp/ && code . && exit'
-alias lazy='./Downloads/lazyAiReleases/v1/lazyAi_v1.0.0_unix/lazyAi'
+alias lazy='~/Downloads/lazyAi_v1.1.0_unix/lazyAi'
 
 # -----------------------------------------------------
 # Yazi file manager exit on quit:
@@ -229,4 +228,3 @@ spf() {
 }
 
 alias dafq='thefuck'
-export QT_QPA_PLATFORMTHEME=kde

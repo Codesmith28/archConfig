@@ -1,12 +1,3 @@
-#      _                 _
-#   __| |_   _ _ __  ___| |_
-#  / _` | | | | '_ \/ __| __|
-# | (_| | |_| | | | \__ \ |_
-#  \__,_|\__,_|_| |_|___/\__|
-#
-# by Codesmith28
-# -----------------------------------------------------
-
 [global]
     ### Display ###
     monitor = 0
@@ -14,9 +5,9 @@
 
     ### Geometry ###
     width = (350, 500)
-    height = 350
+    height = (0, 300)
     origin = top-right
-    offset = 10x10
+    offset = (10, 10)
     scale = 0
     notification_limit = 20
 
@@ -26,7 +17,7 @@
     progress_bar_frame_width = 1
     progress_bar_min_width = 150
     progress_bar_max_width = 300
-    progress_bar_corner_radius = 15
+    progress_bar_corner_radius = 5
     icon_corner_radius = 0
 
     ### Appearance ###
@@ -50,6 +41,7 @@
     alignment = left
     vertical_alignment = center
     show_age_threshold = 60
+    word_wrap = no
     ellipsize = middle
     ignore_newline = no
     stack_duplicates = true
@@ -58,18 +50,19 @@
 
     ### Icons ###
     enable_recursive_icon_lookup = true
-    icon_theme = "Papirus-Dark,hicolor,Adwaita"
+    icon_theme = "breeze-dark, Papirus-Dark"
+    icon_path = /usr/share/icons/Papirus-Dark/:/usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
     icon_position = left
     min_icon_size = 0
-    max_icon_size = 128
+    max_icon_size = 64
     default_icon = "emblem-success"
 
     ### History ###
     sticky_history = yes
-    history_length = 20
+    history_length = 50
 
     ### Misc/Advanced ###
-    dmenu = /usr/bin/dmenu -p dunst:
+    dmenu = /usr/bin/dmenu -i -fn Ubuntu-18 -l 30 -p dunst:
     browser = /usr/bin/xdg-open
     always_run_script = true
     title = Dunst
@@ -95,13 +88,13 @@
     background = "#000000CC"
     foreground = "#888888"
     timeout = 10
-    default_icon = "emblem-success"
+    # default_icon = "emblem-success"
 
 [urgency_normal]
     background = "#000000CC"
     foreground = "#ffffff"
     timeout = 10
-    default_icon = "emblem-success"
+    # default_icon = "emblem-success"
 
 [urgency_critical]
     background = "#900000CC"
@@ -110,7 +103,6 @@
     timeout = 10
     default_icon = "dialog-error"
 
-# Rule for screenshot notifications with thumbnails
 [screenshots]
     summary = "Screenshot*"
     urgency = normal
