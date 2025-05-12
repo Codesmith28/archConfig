@@ -7,15 +7,15 @@
 /* ----------------------------------------------------- * General * ----------------------------------------------------- */
 * {
     font-family: Monospace;
-    /* font-size: 14.7px; */
+    font-size: 14.7px;
     /* font-size: 15.5px; */
-    font-size: 15px;
+    /* font-size: 15px; */
     border: none;
     border-radius: 0;
 }
 
 window#waybar {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.55);
     transition-property: background-color;
     transition-duration: 0.5s;
 }
@@ -92,9 +92,9 @@ tooltip label {
 
 /* ----------------------------------------------------- * Custom Modules * ----------------------------------------------------- */
 #custom-appmenuicon {
-    font-size: 21px;
+    font-size: 20px;
     color: @textcolor;
-    margin: 6px 10px 6px 10px;
+    margin: 5px 15px 5px 10px;
 }
 
 #custom-updates {

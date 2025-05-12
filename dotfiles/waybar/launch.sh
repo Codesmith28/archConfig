@@ -8,19 +8,27 @@
 # by Stephan Raabe (2023)
 # -----------------------------------------------------
 
+# -----------------------------------------------------
+# Only run in Hyprland
+# -----------------------------------------------------
+if [ "$XDG_SESSION_DESKTOP" != "Hyprland" ]; then
+    echo "Not in Hyprland session. Exiting Waybar launcher."
+    exit 0
+fi
+
+# -----------------------------------------------------
 # Check if waybar-disabled file exists
-if [ -f $HOME/.cache/waybar-disabled ] ;then
+# -----------------------------------------------------
+if [ -f ~/.cache/waybar-disabled ]; then
     killall waybar
-    pkill waybar
-    exit 1
+    # exit 0
 fi
 
 # -----------------------------------------------------
 # Quit all running waybar instances
 # -----------------------------------------------------
 killall waybar
-pkill waybar
-sleep 0.2
+sleep 0.5
 
 # -----------------------------------------------------
 # Default theme: /THEMEFOLDER;/VARIATION
@@ -42,6 +50,7 @@ echo "Theme: ${arrThemes[0]}"
 
 if [ ! -f ~/dotfiles/waybar/themes${arrThemes[1]}/style.css ]; then
     themestyle="/ml4w;/ml4w/light"
+    IFS=';' read -ra arrThemes <<< "$themestyle"
 fi
 
 # -----------------------------------------------------
@@ -51,10 +60,10 @@ config_file="config"
 style_file="style.css"
 
 # Standard files can be overwritten with an existing config-custom or style-custom.css
-if [ -f ~/dotfiles/waybar/themes${arrThemes[0]}/config-custom ] ;then
+if [ -f ~/dotfiles/waybar/themes${arrThemes[0]}/config-custom ]; then
     config_file="config-custom"
 fi
-if [ -f ~/dotfiles/waybar/themes${arrThemes[1]}/style-custom.css ] ;then
+if [ -f ~/dotfiles/waybar/themes${arrThemes[1]}/style-custom.css ]; then
     style_file="style-custom.css"
 fi
 

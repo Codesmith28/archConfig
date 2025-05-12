@@ -30,10 +30,17 @@
   // Taskbar
   "wlr/taskbar": {
     "format": "{icon}",
-    "icon-size": 21,
+    "icon-size": 20,
     "tooltip-format": "{title}",
     "on-click": "activate",
     "on-click-middle": "close",
+    //"app_ids-mapping": {
+    //  "firefoxdeveloperedition": "firefox-developer-edition",
+    //},
+    //"rewrite": {
+    //  "Firefox Web Browser": "Firefox",
+    //  "Foot Server": "Terminal",
+    //},
   },
 
   // Hyprland Window
@@ -73,7 +80,7 @@
     "tooltip": false,
   },
   "custom/cliphist": {
-    "format": "",
+    "format": " ",
     "on-click": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh",
     "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
     "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
@@ -135,6 +142,12 @@
     "on-click": "~/dotfiles/scripts/launchvm.sh",
     "tooltip": false,
   },
+  //"custom/appmenu": {
+  //  "format": "Apps",
+  //  "on-click": "sleep 0.2;rofi -show drun -replace",
+  //  "on-click-right": "~/dotfiles/hypr/scripts/keybindings.sh",
+  //  "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings",
+  //},
   "custom/appmenuicon": {
     "format": "",
     "on-click": "rofi -show drun -replace",
@@ -177,7 +190,7 @@
   // System tray
   "tray": {
     "icon-size": 20,
-    "spacing": 10,
+    "spacing": 5,
   },
 
   "clock": {
@@ -289,8 +302,9 @@
       "warning": 30,
       "critical": 15,
     },
-    "format": "{icon}  {capacity}%",
+    "format": "{icon} {capacity}%",
     "format-charging": " {capacity}%",
+    "format-plugged": "󰗱 {capacity}%",
     "format-alt": "{icon}  {time}",
     "format-icons": ["", "", "", "", ""],
   },
@@ -302,8 +316,8 @@
     "format-bluetooth": "{volume}% {icon} {format_source}",
     "format-bluetooth-muted": "  {icon} {format_source}",
     "format-muted": " {format_source}",
-    "format-source": "",
-    "format-source-muted": " ",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
     "format-icons": {
       "headphone": " ",
       "hands-free": "",
@@ -353,6 +367,6 @@
       "",
       "",
     ],
-    "scroll-step": +2,
+    "scroll-step": -2,
   },
 }
