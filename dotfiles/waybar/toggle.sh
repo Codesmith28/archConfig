@@ -7,10 +7,18 @@
 #            |___/ |___/                         |___/
 #
 
-if [ -f ~/.cache/waybar-disabled ] ;then
-    rm ~/.cache/waybar-disabled
+WAYBAR_DISABLED=~/.cache/waybar-disabled
+
+# Toggle the disabled flag
+if [ -f "$WAYBAR_DISABLED" ]; then
+    rm "$WAYBAR_DISABLED"
+    echo "Waybar re-enabled."
 else
-    touch ~/.cache/waybar-disabled
+    touch "$WAYBAR_DISABLED"
+    echo "Waybar disabled."
+    pkill -x waybar
+    exit 0
 fi
 
-~/dotfiles/waybar/launch.sh &
+# Relaunch Waybar using your launch script
+~/.config/waybar/launch.sh &
