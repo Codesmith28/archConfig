@@ -5,7 +5,7 @@
 #  ___) | || (_| | |  | |_    \ V  V / (_| | |_| | |_) | (_| | |
 # |____/ \__\__,_|_|   \__|    \_/\_/ \__,_|\__, |_.__/ \__,_|_|
 #                                           |___/
-# by Stephan Raabe (2023)
+# by Codesmith28 (2025)
 # -----------------------------------------------------
 
 # -----------------------------------------------------
@@ -17,17 +17,22 @@ if [ "$XDG_SESSION_DESKTOP" != "Hyprland" ]; then
 fi
 
 # -----------------------------------------------------
-# Check if waybar-disabled file exists
+# Respect waybar-disabled only if Waybar is already running
 # -----------------------------------------------------
 if [ -f ~/.cache/waybar-disabled ]; then
-    killall waybar
-    # exit 0
+    if pgrep -x waybar >/dev/null; then
+        echo "Waybar is disabled. Killing existing instance."
+        killall waybar
+    else
+        echo "Waybar is disabled. Not launching."
+    fi
+    exit 0
 fi
 
 # -----------------------------------------------------
 # Quit all running waybar instances
 # -----------------------------------------------------
-killall waybar
+killall waybar 2>/dev/null
 sleep 0.5
 
 # -----------------------------------------------------
@@ -41,14 +46,16 @@ themestyle="/ml4w;/ml4w/light"
 if [ -f ~/.cache/.themestyle.sh ]; then
     themestyle=$(cat ~/.cache/.themestyle.sh)
 else
-    touch ~/.cache/.themestyle.sh
+    mkdir -p ~/.cache
     echo "$themestyle" > ~/.cache/.themestyle.sh
 fi
 
 IFS=';' read -ra arrThemes <<< "$themestyle"
 echo "Theme: ${arrThemes[0]}"
 
+# Fallback if style doesn't exist
 if [ ! -f ~/dotfiles/waybar/themes${arrThemes[1]}/style.css ]; then
+    echo "Theme style not found, falling back to default."
     themestyle="/ml4w;/ml4w/light"
     IFS=';' read -ra arrThemes <<< "$themestyle"
 fi
@@ -67,4 +74,8 @@ if [ -f ~/dotfiles/waybar/themes${arrThemes[1]}/style-custom.css ]; then
     style_file="style-custom.css"
 fi
 
-waybar -c ~/dotfiles/waybar/themes${arrThemes[0]}/$config_file -s ~/dotfiles/waybar/themes${arrThemes[1]}/$style_file &
+# -----------------------------------------------------
+# Launch Waybar with chosen config
+# -----------------------------------------------------
+waybar -c ~/dotfiles/waybar/themes${arrThemes[0]}/$config_file \
+       -s ~/dotfiles/waybar/themes${arrThemes[1]}/$style_file &
