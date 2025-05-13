@@ -9,7 +9,7 @@ MUTE_STATUS=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -o 'MUTED')
 
 # If 'MUTED' is found in output, it means the microphone is muted
 if [ "$MUTE_STATUS" == "MUTED" ]; then
-    notify-send -r 999 "Microphone Status" "Muted"
+    notify-send -t 1000 -r 999 "Microphone Status" "Muted"
 else
-    notify-send -r 999 "Microphone Status" "Unmuted"
+    notify-send -t 1000 -r 999 "Microphone Status" "Unmuted"
 fi

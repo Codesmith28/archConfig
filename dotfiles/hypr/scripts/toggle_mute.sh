@@ -14,4 +14,4 @@ else
 fi
 
 # Send notification with the current audio status in a two-line format
-notify-send -r 999 "Audio Status" "$MUTE_STATUS"
+notify-send -t 1000 -r 999 "Audio Status" "$MUTE_STATUS"

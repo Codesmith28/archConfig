@@ -7,4 +7,4 @@ brightnessctl set 5%"$1"
 BRIGHTNESS_LEVEL=$(brightnessctl i | grep "Current brightness" | awk '{print $4}' | tr -d '()%')
 
 # Display a two-line notification with brightness level
-notify-send -r 999 "Brightness" "$BRIGHTNESS_LEVEL%"
+notify-send -t 1000 -r 999 "Brightness" "$BRIGHTNESS_LEVEL%"

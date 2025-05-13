@@ -11,7 +11,7 @@
 # -----------------------------------------------------
 # Only run in Hyprland
 # -----------------------------------------------------
-if [ "$XDG_SESSION_DESKTOP" != "Hyprland" ]; then
+if [[ "$XDG_SESSION_DESKTOP" != "Hyprland" || "$XDG_CURRENT_DESKTOP" != "Hyprland" ]]; then
     echo "Not in Hyprland session. Exiting Waybar launcher."
     exit 0
 fi
@@ -77,5 +77,5 @@ fi
 # -----------------------------------------------------
 # Launch Waybar with chosen config
 # -----------------------------------------------------
-waybar -c ~/dotfiles/waybar/themes${arrThemes[0]}/$config_file \
+sleep 0.125 && waybar -c ~/dotfiles/waybar/themes${arrThemes[0]}/$config_file \
        -s ~/dotfiles/waybar/themes${arrThemes[1]}/$style_file &

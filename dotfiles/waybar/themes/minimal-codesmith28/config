@@ -45,7 +45,7 @@
             "battery",
             "network",
             // "group/hardware",
-            "custom/cliphist",
+            // "custom/cliphist",
             // "idle_inhibitor",
             // "custom/exit",
             "tray",

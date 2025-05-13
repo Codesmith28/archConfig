@@ -7,4 +7,4 @@ pactl set-sink-volume @DEFAULT_SINK@ "$1"1%
 VOLUME_LEVEL=$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}')
 
 # Display a two-line notification with Volume level
-notify-send -r 998 "Volume" "$VOLUME_LEVEL"
+notify-send -t 1000 -r 998 "Volume" "$VOLUME_LEVEL"

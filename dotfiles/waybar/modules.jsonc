@@ -81,9 +81,9 @@
   },
   "custom/cliphist": {
     "format": " ",
-    "on-click": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh",
-    "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
-    "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
+    "on-click": "sleep 0.1 && kitty --class small_float -e ~/dotfiles/scripts/Clipboard.sh",
+    // "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
+    // "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
     "tooltip-format": "Clipboard Manager",
   },
   "custom/updates": {
