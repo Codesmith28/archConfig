@@ -25,4 +25,5 @@ system_tools_pacman:
   - cliphist
   - wl-clipboard
   - wl-clip-persist
+  - clipse
 system_tools_yay: [] # No yay packages in this category

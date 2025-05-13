@@ -15,6 +15,7 @@ export BROWSER=dolphin
 
 alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
+alias res_idle='~/dotfiles/hypr/scripts/restart-hypridle.sh'
 
 # -----------------------------------------------------
 # ALIASES
@@ -192,6 +193,7 @@ runcc() {
 
 alias cpp='cd ~/Projects/cp/ && code . && exit'
 alias lazy='~/Downloads/lazyAi_v1.1.0_unix/lazyAi'
+alias calc='~/dotfiles/scripts/auto_qalc.sh'
 
 # -----------------------------------------------------
 # Yazi file manager exit on quit:

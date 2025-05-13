@@ -39,6 +39,7 @@ packages=(
     "wl-clip-persist"
 
     "wlroots"
+    "clipse"
 )
 
 for package in "${packages[@]}"; do

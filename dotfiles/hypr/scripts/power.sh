@@ -9,11 +9,8 @@
 if [[ "$1" == "exit" ]]; then
     echo ":: Exit"
      # Logout script
+    sleep 1
     hyprctl dispatch exit
-    sleep 2
-    killall -q waybar
-    rm -f ~/.cache/waybar-disabled
-
 fi
 
 if [[ "$1" == "lock" ]]; then
