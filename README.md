@@ -10,6 +10,15 @@ To install that version of dotfiles use the following link:
 git clone -b 2.9.1 https://github.com/mylinuxforwork/dotfiles.git
 ```
 
+### Note
+
+- Setup keyrings before installation usnig:
+
+```bash
+sudo pacman-key --init
+sudo pacman-key --populate archlinux
+```
+
 ## Installation
 
 After installing the minimal configuration from archInstall, follow these steps to integrate additional configurations:
