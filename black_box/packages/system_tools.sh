@@ -40,6 +40,7 @@ packages=(
 
     "wlroots"
     "clipse"
+    "power-profiles-daemon"
 )
 
 for package in "${packages[@]}"; do

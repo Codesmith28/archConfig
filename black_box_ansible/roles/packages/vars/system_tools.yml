@@ -26,4 +26,5 @@ system_tools_pacman:
   - wl-clipboard
   - wl-clip-persist
   - clipse
+  - power-profiles-daemon
 system_tools_yay: [] # No yay packages in this category
