@@ -11,36 +11,78 @@ return {
         end,
     },
 
+    -- {
+    --     "nvimtools/none-ls.nvim",
+    --     ft = "all",
+    --     event = "VeryLazy",
+    --     config = function()
+    --         local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+    --         local null_ls = require "null-ls"
+    --         null_ls.setup {
+    --             sources = {
+    --                 null_ls.builtins.formatting.clang_format,
+    --                 null_ls.builtins.formatting.prettierd,
+    --                 null_ls.builtins.formatting.gofumpt,
+    --                 null_ls.builtins.formatting.goimports_reviser,
+    --                 null_ls.builtins.formatting.golines,
+    --                 null_ls.builtins.formatting.stylua,
+    --                 null_ls.builtins.formatting.sqlformat,
+    --             },
+    --             on_attach = function(client, bufnr)
+    --                 if client.supports_method "textDocument/formatting" then
+    --                     vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+    --                     vim.api.nvim_create_autocmd("BufWritePre", {
+    --                         group = augroup,
+    --                         buffer = bufnr,
+    --                         callback = function()
+    --                             vim.lsp.buf.format { async = false }
+    --                         end,
+    --                     })
+    --                 end
+    --             end,
+    --         }
+    --     end,
+    -- },
+
     {
-        "nvimtools/none-ls.nvim",
-        ft = "all",
-        event = "VeryLazy",
+        "stevearc/conform.nvim",
+        event = { "BufWritePre" },
         config = function()
-            local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-            local null_ls = require "null-ls"
-            null_ls.setup {
-                sources = {
-                    null_ls.builtins.formatting.clang_format,
-                    null_ls.builtins.formatting.prettierd,
-                    null_ls.builtins.formatting.gofumpt,
-                    null_ls.builtins.formatting.goimports_reviser,
-                    null_ls.builtins.formatting.golines,
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.sqlformat,
+            require("conform").setup {
+                formatters_by_ft = {
+                    lua = { "stylua" },
+                    cpp = { "clang_format" },
+                    javascript = { "prettierd" },
+                    typescript = { "prettierd" },
+                    go = { "goimports-reviser", "gofumpt", "golines" },
+                    sql = { "sql-formatter" },
                 },
-                on_attach = function(client, bufnr)
-                    if client.supports_method "textDocument/formatting" then
-                        vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
-                        vim.api.nvim_create_autocmd("BufWritePre", {
-                            group = augroup,
-                            buffer = bufnr,
-                            callback = function()
-                                vim.lsp.buf.format { async = false }
-                            end,
-                        })
-                    end
-                end,
+                format_on_save = {
+                    lsp_fallback = true,
+                    timeout_ms = 750,
+                },
             }
+        end,
+    },
+    {
+        "mfussenegger/nvim-lint",
+        event = { "BufReadPost", "BufWritePost", "InsertLeave" },
+        config = function()
+            local lint = require "lint"
+
+            lint.linters_by_ft = {
+                lua = { "luacheck" },
+                javascript = { "eslint_d" },
+                typescript = { "eslint_d" },
+                go = { "golangcilint" },
+                -- Add more linters as needed
+            }
+
+            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+                callback = function()
+                    lint.try_lint()
+                end,
+            })
         end,
     },
 
@@ -75,8 +117,8 @@ return {
 
     {
         "mrcjkb/rustaceanvim",
-        version = "^5", -- Recommended
-        lazy = false, -- This plugin is already lazy
+        version = "^6", -- Recommended
+        lazy = false,   -- This plugin is already lazy
     },
     {
         "rust-lang/rust.vim",
