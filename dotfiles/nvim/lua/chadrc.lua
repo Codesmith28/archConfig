@@ -6,7 +6,7 @@
 local M = {}
 
 M.base46 = {
-    theme = "everblush",
+    theme = "material-deep-ocean",
 
     hl_override = {
         Comment = { italic = true },
@@ -83,7 +83,7 @@ M.mason = {
         "dockerfile-language-server",
         "docker-compose-language-service",
         -- for rust:
-        "rust-analyzer",
+        -- "rust-analyzer",
         -- for markdown:
         "markdownlint",
     },

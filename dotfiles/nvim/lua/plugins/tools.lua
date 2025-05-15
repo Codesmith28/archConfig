@@ -25,13 +25,6 @@ return {
         end,
     },
     {
-        "stevearc/conform.nvim",
-        event = "BufWritePre", -- uncomment for format on save
-        config = function()
-            require "configs.conform"
-        end,
-    },
-    {
         "wakatime/vim-wakatime",
         lazy = false,
     },
@@ -95,8 +88,10 @@ return {
         opts = overrides.copilot,
     },
     {
-	'xeluxee/competitest.nvim',
-	dependencies = 'MunifTanjim/nui.nvim',
-	config = function() require('competitest').setup() end,
+        "xeluxee/competitest.nvim",
+        dependencies = "MunifTanjim/nui.nvim",
+        config = function()
+            require("competitest").setup()
+        end,
     },
 }
