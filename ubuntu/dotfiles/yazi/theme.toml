@@ -1,0 +1,8 @@
+[flavor]
+use = "catppuccin-mocha"
+# use = "tokyo-night"
+# use = "dracula"
+
+dark = "catppuccin-mocha"
+# dark = "tokyo-night"
+# dark = "dracula"
