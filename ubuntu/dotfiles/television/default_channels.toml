@@ -1,5 +1,10 @@
 # GIT
 [[cable_channel]]
+name = "git-diff"
+source_command = "git diff --name-only"
+preview_command = "git diff --color=always {0}"
+
+[[cable_channel]]
 name = "git-reflog"
 source_command = 'git reflog'
 preview_command = 'git show -p --stat --pretty=fuller --color=always {0}'
@@ -35,11 +40,11 @@ preview_command = ":files:"
 # Shell history
 [[cable_channel]]
 name = "zsh-history"
-source_command = "sed '1!G;h;$!d' $HOME/.zsh_history | cut -d\";\" -f 2-"
+source_command = "sed '1!G;h;$!d' ${HISTFILE:-${HOME}/.zsh_history} | cut -d\";\" -f 2-"
 
 [[cable_channel]]
 name = "bash-history"
-source_command = "sed '1!G;h;$!d' $HOME/.bash_history"
+source_command = "sed '1!G;h;$!d' ${HISTFILE:-${HOME}/.bash_history}"
 
 [[cable_channel]]
 name = "fish-history"

@@ -1,74 +1,74 @@
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "E" ]
 run = "plugin eza-preview"
 desc = "Toggle tree/list dir preview"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "-" ]
 run = "plugin eza-preview '--inc-level'"
 desc = "Increment tree level"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "_" ]
 run = "plugin eza-preview '--dec-level'"
 desc = "Decrement tree level"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "$" ]
 run = "plugin eza-preview '--toggle-follow-symlinks'"
 desc = "Toggle tree follow symlinks"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "a" ]
 run = "plugin yamb save"
 desc = "Add bookmark"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "g" ]
 run = "plugin yamb jump_by_key"
 desc = "Jump bookmark by key"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "G" ]
 run = "plugin yamb jump_by_fzf"
 desc = "Jump bookmark by fzf"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "d" ]
 run = "plugin yamb delete_by_key"
 desc = "Delete bookmark by key"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "D" ]
 run = "plugin yamb delete_by_fzf"
 desc = "Delete bookmark by fzf"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "A" ]
 run = "plugin yamb delete_all"
 desc = "Delete all bookmarks"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "r" ]
 run = "plugin yamb rename_by_key"
 desc = "Rename bookmark by key"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = [ "u", "R" ]
 run = "plugin yamb rename_by_fzf"
 desc = "Rename bookmark by fzf"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on = ["C"]
 run = "plugin ouch zip"
 desc = "Compress with ouch"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on   = [ "g", "i" ]
 run  = "plugin lazygit"
 desc = "run lazygit"
 
-[[mgr.prepend_keymap]]
+[[manager.prepend_keymap]]
 on   = [ "c", "m" ]
 run  = "plugin chmod"
 desc = "Chmod on selected files"
