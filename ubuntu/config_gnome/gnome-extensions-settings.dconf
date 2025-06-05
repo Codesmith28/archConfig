@@ -69,7 +69,12 @@ check-x11wayland=true
 show-home=false
 
 [rounded-window-corners-reborn]
+border-width=0
+enable-preferences-entry=false
+global-rounded-corner-settings={'padding': <{'left': uint32 1, 'right': 1, 'top': 1, 'bottom': 1}>, 'keepRoundedCorners': <{'maximized': false, 'fullscreen': false}>, 'borderRadius': <uint32 12>, 'smoothing': <0.0>, 'borderColor': <(0.5, 0.5, 0.5, 1.0)>, 'enabled': <true>}
 settings-version=uint32 7
+skip-libadwaita-app=true
+tweak-kitty-terminal=true
 
 [tactile]
 col-0=0
