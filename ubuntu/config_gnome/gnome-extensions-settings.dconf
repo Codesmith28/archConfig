@@ -1,3 +1,29 @@
+[Bluetooth-Battery-Meter]
+color-10='#e01b24'
+color-100='#15c931'
+color-20='#ff7800'
+color-30='#f6d32d'
+color-40='#f6d32d'
+color-50='#15c931'
+color-60='#15c931'
+color-70='#15c931'
+color-80='#15c931'
+color-90='#15c931'
+device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1749204003,"disconnected-time":1749204003}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":true,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
+enable-battery-indicator-text=false
+enable-battery-level-text=true
+enable-upower-level-icon=false
+hide-bluetooth-indicator=0
+level-indicator-color=2
+level-indicator-type=0
+sort-devices-by-history=true
+swap-icon-text=false
+
+[bluetooth_battery_indicator]
+devices=['{"name":"R220358","mac":"471B","isActive":false}', '{"name":"JBL TUNE760NC","mac":"84:D3:52:F4:CF:B2","icon":"audio-headphones-symbolic","isActive":true}']
+hide-indicator=true
+interval=5
+
 [blur-my-shell]
 settings-version=2
 
