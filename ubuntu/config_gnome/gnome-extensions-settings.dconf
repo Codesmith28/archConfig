@@ -9,7 +9,7 @@ color-60='#15c931'
 color-70='#15c931'
 color-80='#15c931'
 color-90='#15c931'
-device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1749204003,"disconnected-time":1749204003}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":true,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
+device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1749404593,"disconnected-time":1749413354}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":true,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
 enable-battery-indicator-text=false
 enable-battery-level-text=true
 enable-upower-level-icon=false
@@ -18,6 +18,13 @@ level-indicator-color=2
 level-indicator-type=0
 sort-devices-by-history=true
 swap-icon-text=false
+
+[appindicator]
+icon-brightness=2.7755575615628914e-17
+icon-opacity=240
+icon-size=0
+legacy-tray-enabled=true
+tray-pos='right'
 
 [bluetooth_battery_indicator]
 devices=['{"name":"R220358","mac":"471B","isActive":false}', '{"name":"JBL TUNE760NC","mac":"84:D3:52:F4:CF:B2","icon":"audio-headphones-symbolic","isActive":true}']
@@ -93,6 +100,69 @@ show-trash=true
 [ding]
 check-x11wayland=true
 show-home=false
+
+[forge]
+auto-split-enabled=true
+css-last-update=uint32 37
+css-updated='1749447345290'
+dnd-center-layout='stacked'
+float-always-on-top-enabled=false
+focus-border-toggle=false
+focus-on-hover-enabled=false
+move-pointer-focus-enabled=false
+preview-hint-enabled=true
+quick-settings-enabled=true
+split-border-toggle=false
+stacked-tiling-mode-enabled=false
+tabbed-tiling-mode-enabled=false
+tiling-mode-enabled=true
+window-gap-hidden-on-single=false
+window-gap-size=uint32 4
+window-gap-size-increment=uint32 1
+workspace-skip-tile=''
+
+[forge/keybindings]
+con-split-horizontal=['<Super>z']
+con-split-layout-toggle=['<Super>g']
+con-split-vertical=@as []
+con-stacked-layout-toggle=@as []
+con-tabbed-layout-toggle=@as []
+con-tabbed-showtab-decoration-toggle=@as []
+focus-border-toggle=['<Super>x']
+mod-mask-mouse-tile='Super'
+prefs-open=['<Super>comma']
+prefs-tiling-toggle=['<Shift><Super>t']
+window-focus-down=['<Super>j']
+window-focus-left=@as []
+window-focus-right=['<Super>l']
+window-focus-up=['<Super>k']
+window-gap-size-decrease=['<Control><Super>minus']
+window-gap-size-increase=['<Control><Super>plus']
+window-move-down=['<Shift><Super>j']
+window-move-left=['<Shift><Super>h']
+window-move-right=['<Shift><Super>l']
+window-move-up=['<Shift><Super>k']
+window-resize-bottom-decrease=['<Shift><Control><Super>i']
+window-resize-bottom-increase=['<Control><Super>u']
+window-resize-left-decrease=['<Shift><Control><Super>o']
+window-resize-left-increase=['<Control><Super>y']
+window-resize-right-decrease=['<Shift><Control><Super>y']
+window-resize-right-increase=['<Control><Super>o']
+window-resize-top-decrease=['<Shift><Control><Super>u']
+window-resize-top-increase=['<Control><Super>i']
+window-snap-center=['<Super>c']
+window-snap-one-third-left=['<Control><Alt>d']
+window-snap-one-third-right=['<Control><Alt>g']
+window-snap-two-third-left=['<Control><Alt>e']
+window-snap-two-third-right=@as []
+window-swap-down=['<Control><Super>j']
+window-swap-last-active=@as []
+window-swap-left=['<Control><Super>h']
+window-swap-right=['<Control><Super>l']
+window-swap-up=['<Control><Super>k']
+window-toggle-always-float=@as []
+window-toggle-float=['<Super>t']
+workspace-active-tile-toggle=@as []
 
 [rounded-window-corners-reborn]
 border-width=0
