@@ -8,7 +8,7 @@ sudo pacman -S scrcpy
 sudo pacman -S adb
 ```
 
-main link : https://www.androidpolice.com/use-wireless-adb-android-phone/
+main link : <https://www.androidpolice.com/use-wireless-adb-android-phone/>
 
 on your android device
 

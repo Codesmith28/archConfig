@@ -1,3 +1,21 @@
+[Battery-Health-Charging]
+amend-power-indicator=false
+current-bal-end-threshold=80
+current-ful-end-threshold=80
+current-max-end-threshold=60
+default-threshold=false
+device-type=1
+dummy-apply-threshold=true
+dummy-default-threshold=true
+ful-end-threshold=80
+icon-style-type=0
+polkit-status='installed'
+show-notifications=true
+show-preferences=true
+show-quickmenu-subtitle=false
+show-system-indicator=false
+skip-threshold-verification=true
+
 [Bluetooth-Battery-Meter]
 color-10='#e01b24'
 color-100='#15c931'
@@ -9,7 +27,8 @@ color-60='#15c931'
 color-70='#15c931'
 color-80='#15c931'
 color-90='#15c931'
-device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1749404593,"disconnected-time":1749413354}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":true,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
+device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1750150156,"disconnected-time":1750150736}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":true,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
+enable-battery-indicator=true
 enable-battery-indicator-text=false
 enable-battery-level-text=true
 enable-upower-level-icon=false
@@ -56,9 +75,9 @@ pipeline='pipeline_default'
 pipeline='pipeline_default'
 
 [blur-my-shell/panel]
-brightness=0.59999999999999998
+brightness=0.68999999999999995
 pipeline='pipeline_default'
-sigma=30
+sigma=26
 static-blur=false
 
 [blur-my-shell/screenshot]
@@ -70,6 +89,7 @@ sigma=30
 
 [clipboard-indicator]
 cache-size=1000
+history-size=10000
 move-item-first=true
 preview-size=45
 toggle-menu=['<Super>v']
@@ -82,7 +102,7 @@ custom-background-color=false
 custom-theme-running-dots-border-color='rgb(255,255,255)'
 custom-theme-running-dots-color='rgb(255,255,255)'
 custom-theme-shrink=true
-dash-max-icon-size=28
+dash-max-icon-size=26
 dock-fixed=false
 dock-position='BOTTOM'
 extend-height=false
@@ -115,10 +135,10 @@ quick-settings-enabled=true
 split-border-toggle=false
 stacked-tiling-mode-enabled=false
 tabbed-tiling-mode-enabled=false
-tiling-mode-enabled=true
-window-gap-hidden-on-single=false
-window-gap-size=uint32 4
-window-gap-size-increment=uint32 1
+tiling-mode-enabled=false
+window-gap-hidden-on-single=true
+window-gap-size=uint32 0
+window-gap-size-increment=uint32 2
 workspace-skip-tile=''
 
 [forge/keybindings]
@@ -129,18 +149,18 @@ con-stacked-layout-toggle=@as []
 con-tabbed-layout-toggle=@as []
 con-tabbed-showtab-decoration-toggle=@as []
 focus-border-toggle=['<Super>x']
-mod-mask-mouse-tile='Super'
+mod-mask-mouse-tile='None'
 prefs-open=['<Super>comma']
 prefs-tiling-toggle=['<Shift><Super>t']
 window-focus-down=['<Super>j']
 window-focus-left=@as []
-window-focus-right=['<Super>l']
+window-focus-right=@as []
 window-focus-up=['<Super>k']
 window-gap-size-decrease=['<Control><Super>minus']
 window-gap-size-increase=['<Control><Super>plus']
 window-move-down=['<Shift><Super>j']
 window-move-left=['<Shift><Super>h']
-window-move-right=['<Shift><Super>l']
+window-move-right=@as []
 window-move-up=['<Shift><Super>k']
 window-resize-bottom-decrease=['<Shift><Control><Super>i']
 window-resize-bottom-increase=['<Control><Super>u']
@@ -151,18 +171,21 @@ window-resize-right-increase=['<Control><Super>o']
 window-resize-top-decrease=['<Shift><Control><Super>u']
 window-resize-top-increase=['<Control><Super>i']
 window-snap-center=['<Super>c']
-window-snap-one-third-left=['<Control><Alt>d']
-window-snap-one-third-right=['<Control><Alt>g']
-window-snap-two-third-left=['<Control><Alt>e']
+window-snap-one-third-left=@as []
+window-snap-one-third-right=@as []
+window-snap-two-third-left=@as []
 window-snap-two-third-right=@as []
 window-swap-down=['<Control><Super>j']
 window-swap-last-active=@as []
 window-swap-left=['<Control><Super>h']
-window-swap-right=['<Control><Super>l']
+window-swap-right=@as []
 window-swap-up=['<Control><Super>k']
-window-toggle-always-float=@as []
+window-toggle-always-float=['<Shift><Super>f']
 window-toggle-float=['<Super>t']
 workspace-active-tile-toggle=@as []
+
+[lockkeys]
+style='show-hide'
 
 [rounded-window-corners-reborn]
 border-width=0
@@ -171,6 +194,10 @@ global-rounded-corner-settings={'padding': <{'left': uint32 1, 'right': 1, 'top'
 settings-version=uint32 7
 skip-libadwaita-app=true
 tweak-kitty-terminal=true
+
+[switcher]
+activate-immediately=false
+show-switcher=['<Control>space']
 
 [tactile]
 col-0=0
@@ -184,3 +211,10 @@ focus-hint-color='rgb(203,67,20)'
 last-version-installed=51
 overridden-settings={'org.gnome.mutter.edge-tiling': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-left': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-right': <@mb nothing>}
 tiling-popup-all-workspace=true
+
+[tilingshell]
+last-version-name-installed='16.4'
+layouts-json='[{"id":"Layout 1","tiles":[{"x":0,"y":0,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0,"y":0.5,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[2,3]},{"x":0.78,"y":0,"width":0.22,"height":0.5,"groups":[3,4]},{"x":0.78,"y":0.5,"width":0.22,"height":0.5,"groups":[3,4]}]},{"id":"Layout 2","tiles":[{"x":0,"y":0,"width":0.22,"height":1,"groups":[1]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[1,2]},{"x":0.78,"y":0,"width":0.22,"height":1,"groups":[2]}]},{"id":"Layout 3","tiles":[{"x":0,"y":0,"width":0.33,"height":1,"groups":[1]},{"x":0.33,"y":0,"width":0.67,"height":1,"groups":[1]}]},{"id":"Layout 4","tiles":[{"x":0,"y":0,"width":0.67,"height":1,"groups":[1]},{"x":0.67,"y":0,"width":0.33,"height":1,"groups":[1]}]}]'
+overridden-settings='{}'
+quarter-tiling-threshold=uint32 33
+selected-layouts=[['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1']]
