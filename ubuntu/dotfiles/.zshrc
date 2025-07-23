@@ -9,10 +9,15 @@ source $ZSH/oh-my-zsh.sh
 
 # Starship prompt
 eval "$(starship init zsh)"
-eval "$(fzf --zsh)"
 
 # FZF support
+eval "$(fzf --zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Television support:
+# ctrl + r -> shell history
+# ctrl + t -> smart autocompletion
+eval "$(tv init zsh)"
 
 # PNPM
 export PNPM_HOME="/home/codesmith28/.local/share/pnpm"

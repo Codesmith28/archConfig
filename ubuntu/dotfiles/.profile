@@ -1,4 +1,3 @@
-#                     __ _ _
 #    _ __  _ __ ___  / _(_) | ___
 #   | '_ \| '__/ _ \| |_| | |/ _ \
 #  _| |_) | | | (_) |  _| | |  __/
@@ -17,6 +16,7 @@ export MANPAGER='nvim +Man!'
 # alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias res_idle='~/dotfiles/hypr/scripts/restart-hypridle.sh'
+alias cursor='/opt/cursor.appimage --no-sandbox >/dev/null 2>&1 & disown'
 
 # -----------------------------------------------------
 # ALIASES
@@ -34,7 +34,7 @@ alias la='eza -a --icons'
 alias lla='eza -al --icons'
 lt() {
     local level=${1:-1}
-    eza -a --tree --level=$level --icons
+    eza -a --tree --level="$level" --icons
 }
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
@@ -49,6 +49,10 @@ alias dot="cd ~/dotfiles"
 alias hypr="cd ~/dotfiles/hypr"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
+alias copy='xclip -selection clipboard'
+alias bat='batcat'
+alias source_z='source ~/.zshrc'
+alias update_all='sudo apt update && sudo apt upgrade'
 
 # -----------------------------------------------------
 # System Controls
@@ -118,6 +122,13 @@ alias confq='$EDITOR ~/dotfiles/qtile/config.py'
 alias confp='$EDITOR ~/dotfiles/.profile'
 alias confb='$EDITOR ~/dotfiles/.bashrc'
 alias confz='$EDITOR ~/dotfiles/.zshrc'
+alias confn='$EDITOR ~/.config/nvim'
+
+# -----------------------------------------------------
+# GoQuant
+# -----------------------------------------------------
+
+alias reset_db='~/dotfiles/GoQuant/reset_db.sh'
 
 # -----------------------------------------------------
 # EDIT NOTES
@@ -145,11 +156,11 @@ mntd() {
     [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD
     sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"
 }
-alias D='cd /home/run/media/localdiskD'
+alias D='cd /media/codesmith28/D/'
 fixD() {
     sudo umount /home/run/media/localdiskD && echo "Disk unmounted."
 }
-alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
+alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | cat'
 alias netrs='sudo systemctl restart NetworkManager && sudo systemctl restart iwd'
 
 # -----------------------------------------------------
@@ -171,9 +182,10 @@ export DOCKER_HOST=unix:///var/run/docker.sock
 vsc() {
     code "$1" && exit
 }
-neo() {
-    setsid neovide "$1" && exit -f
-}
+# Set blinking underline cursor (only when not in Neovim)
+if [ "$TERM" = "xterm-256color" ] && [ -z "$VIM" ]; then
+    echo -ne '\e[3 q'
+fi
 
 alias pj='cd ~/Projects'
 alias thunar='setsid thunar'
@@ -234,3 +246,12 @@ spf() {
 }
 
 alias dafq='thefuck'
+
+rog() {
+    sudo rogauracore "$@"
+    sudo systemctl restart upower.service
+}
+
+#   -----------------------------------------------------
+#   GEMINI api Key
+#   -----------------------------------------------------
