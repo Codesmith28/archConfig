@@ -119,9 +119,9 @@ alias fontsearch='~/dotfiles/scripts/fontsearch.sh'
 # -----------------------------------------------------
 
 alias confq='$EDITOR ~/dotfiles/qtile/config.py'
-alias confp='$EDITOR ~/dotfiles/.profile'
-alias confb='$EDITOR ~/dotfiles/.bashrc'
-alias confz='$EDITOR ~/dotfiles/.zshrc'
+alias confp='$EDITOR ~/.profile'
+alias confb='$EDITOR ~/.bashrc'
+alias confz='$EDITOR ~/.zshrc'
 alias confn='$EDITOR ~/.config/nvim'
 
 # -----------------------------------------------------
@@ -255,3 +255,7 @@ rog() {
 #   -----------------------------------------------------
 #   GEMINI api Key
 #   -----------------------------------------------------
+# Load only GEMINI_API_KEY from .env, without leaking other variables
+if [ -f "$HOME/.env" ]; then
+    export GEMINI_API_KEY="$(grep '^GEMINI_API_KEY=' "$HOME/.env" | cut -d '=' -f2- | sed 's/^"//;s/"$//')"
+fi
