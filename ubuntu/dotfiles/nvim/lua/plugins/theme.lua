@@ -1,35 +1,38 @@
 return {
     {
-        "marko-cerovac/material.nvim",
-        opts = {
-            contrast = {
-                terminal = true, -- Enable contrast for the built-in terminal
-                sidebars = true, -- Enable contrast for sidebar-like windows ( for example Nvim-Tree )
-                floating_windows = true, -- Enable contrast for floating windows
-                cursor_line = false, -- Enable darker background for the cursor line
-                lsp_virtual_text = false, -- Enable contrasted background for lsp virtual text
-                non_current_windows = false, -- Enable contrasted background for non-current windows
-                filetypes = {}, -- Specify which filetypes get the contrasted (darker) background
-            },
-
-            high_visibility = {
-                lighter = false, -- Enable higher contrast text for lighter style
-                darker = true, -- Enable higher contrast text for darker style
-            },
-
-            disable = {
-                colored_cursor = true, -- Disable the colored cursor
-                borders = false, -- Disable borders between vertically split windows
-                background = false, -- Prevent the theme from setting the background (NeoVim then uses your terminal background)
-                term_colors = false, -- Prevent the theme from setting terminal colors
-                eob_lines = false, -- Hide the end-of-buffer lines
-            },
-        },
+        "ellisonleao/gruvbox.nvim",
+        priority = 1000,
+        config = function()
+            require("gruvbox").setup({
+                terminal_colors = true,
+                undercurl = true,
+                underline = true,
+                bold = true,
+                italic = {
+                    strings = true,
+                    comments = true,
+                    operators = false,
+                    folds = true,
+                    emphasis = true,
+                },
+                strikethrough = true,
+                invert_selection = false,
+                invert_signs = false,
+                invert_tabline = false,
+                invert_intend_guides = false,
+                inverse = true, -- invert background for search, diffs, statuslines
+                contrast = "hard", -- options: "hard", "soft", "medium"
+                palette_overrides = {},
+                overrides = {},
+                dim_inactive = false,
+                transparent_mode = true,
+            })
+        end,
     },
     {
         "LazyVim/LazyVim",
         opts = {
-            -- colorscheme = "material-darke",
+            colorscheme = "gruvbox",
         },
     },
 }

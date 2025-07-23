@@ -27,7 +27,7 @@ color-60='#15c931'
 color-70='#15c931'
 color-80='#15c931'
 color-90='#15c931'
-device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1750150156,"disconnected-time":1750150736}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":true,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
+device-list=['{"path":"/org/bluez/hci0/dev_84_D3_52_F4_CF_B2","icon":"audio-headset","alias":"JBL TUNE760NC","paired":true,"battery-reported":true,"qs-level":true,"indicator-mode":2,"connected-time":1753164806,"disconnected-time":1753160956}', '{"path":"/org/bluez/hci0/dev_9C_A6_68_4A_F0_ED","icon":"audio-headset","alias":"Mivi DuoPods F30","paired":false,"battery-reported":false,"qs-level":false,"indicator-mode":0,"connected-time":1749204003,"disconnected-time":1749204003}']
 enable-battery-indicator=true
 enable-battery-indicator-text=false
 enable-battery-level-text=true
@@ -51,11 +51,22 @@ hide-indicator=true
 interval=5
 
 [blur-my-shell]
+pipelines={'pipeline_default': {'name': <'Default'>, 'effects': <[<{'type': <'native_static_gaussian_blur'>, 'id': <'effect_96622128341645'>, 'params': <{'brightness': <0.28000000000000003>, 'unscaled_radius': <30>}>}>, <{'type': <'noise'>, 'id': <'effect_67586600701187'>, 'params': <{'noise': <0.26000000000000001>}>}>]>}, 'pipeline_default_rounded': {'name': <'Default rounded'>, 'effects': <[<{'type': <'native_static_gaussian_blur'>, 'id': <'effect_000000000001'>, 'params': <{'radius': <30>, 'brightness': <0.59999999999999998>}>}>, <{'type': <'corner'>, 'id': <'effect_000000000002'>, 'params': <{'radius': <24>}>}>]>}, 'pipeline_78465941389221': {'name': <'Default - backup'>, 'effects': <[<{'type': <'native_static_gaussian_blur'>, 'id': <'effect_62120740607871'>, 'params': <{'radius': <30>, 'brightness': <0.40999999999999998>, 'unscaled_radius': <11>}>}>]>}}
 settings-version=2
 
 [blur-my-shell/appfolder]
 brightness=0.59999999999999998
 sigma=30
+style-dialogs=1
+
+[blur-my-shell/applications]
+blur=false
+blur-on-overview=false
+brightness=1.0
+dynamic-opacity=false
+enable-all=false
+opacity=255
+sigma=100
 
 [blur-my-shell/coverflow-alt-tab]
 pipeline='pipeline_default'
@@ -63,10 +74,15 @@ pipeline='pipeline_default'
 [blur-my-shell/dash-to-dock]
 blur=false
 brightness=0.59999999999999998
-pipeline='pipeline_default_rounded'
+override-background=true
+pipeline='pipeline_default'
 sigma=30
 static-blur=true
 style-dash-to-dock=0
+unblur-in-overview=false
+
+[blur-my-shell/hidetopbar]
+compatibility=false
 
 [blur-my-shell/lockscreen]
 pipeline='pipeline_default'
@@ -75,34 +91,50 @@ pipeline='pipeline_default'
 pipeline='pipeline_default'
 
 [blur-my-shell/panel]
-brightness=0.68999999999999995
+blur=true
+brightness=0.26000000000000001
+force-light-text=false
+override-background=true
+override-background-dynamically=false
 pipeline='pipeline_default'
-sigma=26
-static-blur=false
+sigma=10
+static-blur=true
+style-panel=0
+unblur-in-overview=true
 
 [blur-my-shell/screenshot]
 pipeline='pipeline_default'
 
 [blur-my-shell/window-list]
-brightness=0.40000000000000002
-sigma=30
+brightness=0.0
+sigma=51
+
+[clipboard-history]
+cache-size=1024
+display-mode=0
+history-size=100000
+toggle-menu=['<Super>v']
+topbar-preview-size=30
+window-width-percentage=25
 
 [clipboard-indicator]
 cache-size=1000
 history-size=10000
+keep-selected-on-clear=false
 move-item-first=true
-preview-size=45
+preview-size=20
 toggle-menu=['<Super>v']
 
 [dash-to-dock]
 apply-custom-theme=false
-background-opacity=0.80000000000000004
+background-opacity=1.0
 click-action='minimize'
 custom-background-color=false
 custom-theme-running-dots-border-color='rgb(255,255,255)'
 custom-theme-running-dots-color='rgb(255,255,255)'
 custom-theme-shrink=true
-dash-max-icon-size=26
+dash-max-icon-size=24
+disable-overview-on-startup=true
 dock-fixed=false
 dock-position='BOTTOM'
 extend-height=false
@@ -116,6 +148,7 @@ preview-size-scale=0.17999999999999999
 running-indicator-dominant-color=true
 show-mounts=false
 show-trash=true
+transparency-mode='DEFAULT'
 
 [ding]
 check-x11wayland=true
@@ -124,7 +157,7 @@ show-home=false
 [forge]
 auto-split-enabled=true
 css-last-update=uint32 37
-css-updated='1749447345290'
+css-updated='1752722490226'
 dnd-center-layout='stacked'
 float-always-on-top-enabled=false
 focus-border-toggle=false
@@ -136,9 +169,9 @@ split-border-toggle=false
 stacked-tiling-mode-enabled=false
 tabbed-tiling-mode-enabled=false
 tiling-mode-enabled=false
-window-gap-hidden-on-single=true
-window-gap-size=uint32 0
-window-gap-size-increment=uint32 2
+window-gap-hidden-on-single=false
+window-gap-size=uint32 1
+window-gap-size-increment=uint32 1
 workspace-skip-tile=''
 
 [forge/keybindings]
@@ -189,8 +222,9 @@ style='show-hide'
 
 [rounded-window-corners-reborn]
 border-width=0
+custom-rounded-corner-settings=@a{sv} {}
 enable-preferences-entry=false
-global-rounded-corner-settings={'padding': <{'left': uint32 1, 'right': 1, 'top': 1, 'bottom': 1}>, 'keepRoundedCorners': <{'maximized': false, 'fullscreen': false}>, 'borderRadius': <uint32 12>, 'smoothing': <0.0>, 'borderColor': <(0.5, 0.5, 0.5, 1.0)>, 'enabled': <true>}
+global-rounded-corner-settings={'padding': <{'left': uint32 1, 'right': 1, 'top': 1, 'bottom': 1}>, 'keepRoundedCorners': <{'maximized': false, 'fullscreen': false}>, 'borderRadius': <uint32 5>, 'smoothing': <0.0>, 'borderColor': <(0.5, 0.5, 0.5, 1.0)>, 'enabled': <true>}
 settings-version=uint32 7
 skip-libadwaita-app=true
 tweak-kitty-terminal=true
@@ -207,10 +241,49 @@ row-1=1
 row-2=0
 
 [tiling-assistant]
+activate-layout0=@as []
+activate-layout1=@as []
+activate-layout2=@as []
+activate-layout3=@as []
+auto-tile=@as []
+center-window=@as []
+debugging-free-rects=@as []
+debugging-show-tiled-rects=@as []
+default-move-mode=0
+dynamic-keybinding-behavior=0
+focus-hint=0
 focus-hint-color='rgb(203,67,20)'
+import-layout-examples=false
 last-version-installed=51
+maximize-with-gap=false
 overridden-settings={'org.gnome.mutter.edge-tiling': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-left': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-right': <@mb nothing>}
+restore-window=['<Super>Down']
+search-popup-layout=@as []
+single-screen-gap=0
+tile-bottom-half=['<Super>KP_2']
+tile-bottom-half-ignore-ta=@as []
+tile-bottomleft-quarter=['<Super>KP_1']
+tile-bottomleft-quarter-ignore-ta=@as []
+tile-bottomright-quarter=['<Super>KP_3']
+tile-bottomright-quarter-ignore-ta=@as []
+tile-edit-mode=@as []
+tile-left-half=['<Super>Left', '<Super>KP_4']
+tile-left-half-ignore-ta=@as []
+tile-maximize=['<Super>Up', '<Super>KP_5']
+tile-maximize-horizontally=@as []
+tile-maximize-vertically=@as []
+tile-right-half=['<Super>Right', '<Super>KP_6']
+tile-right-half-ignore-ta=@as []
+tile-top-half=['<Super>KP_8']
+tile-top-half-ignore-ta=@as []
+tile-topleft-quarter=['<Super>KP_7']
+tile-topleft-quarter-ignore-ta=@as []
+tile-topright-quarter=['<Super>KP_9']
+tile-topright-quarter-ignore-ta=@as []
 tiling-popup-all-workspace=true
+toggle-always-on-top=@as []
+toggle-tiling-popup=@as []
+window-gap=0
 
 [tilingshell]
 last-version-name-installed='16.4'
@@ -218,3 +291,11 @@ layouts-json='[{"id":"Layout 1","tiles":[{"x":0,"y":0,"width":0.22,"height":0.5,
 overridden-settings='{}'
 quarter-tiling-threshold=uint32 33
 selected-layouts=[['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1'], ['Layout 1']]
+
+[useless-gaps]
+gap-size=1
+margin-bottom=5
+margin-left=5
+margin-right=5
+margin-top=5
+no-gap-when-maximized=false

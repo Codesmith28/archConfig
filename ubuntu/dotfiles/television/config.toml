@@ -15,7 +15,7 @@
 
 # General settings
 # ----------------------------------------------------------------------------
-frame_rate = 60 # DEPRECATED: this option is no longer used
+frame_rate = 60
 tick_rate = 50
 
 [ui]
@@ -56,7 +56,7 @@ input_bar_position = "top"
 # A list of builtin themes can be found in the `themes` directory of the television
 # repository. You may also create your own theme by creating a new file in a `themes`
 # directory in your configuration directory (see the `config.toml` location above).
-theme = "default"
+# theme = "catppuccin"
 
 # Previewers settings
 # ----------------------------------------------------------------------------
@@ -65,16 +65,16 @@ theme = "default"
 # Bulitin syntax highlighting uses the same syntax highlighting engine as bat.
 # To get a list of your currently available themes, run `bat --list-themes`
 # Note that setting the BAT_THEME environment variable will override this setting.
-theme = "TwoDark"
+theme = "Coldark-Dark"
 
 # Keybindings
 # ----------------------------------------------------------------------------
 #
 # Channel mode
 # ------------------------
-[keybindings]
+[keybindings.Channel]
 # Quit the application
-quit = ["esc", "ctrl-c"]
+quit = "esc"
 # Scrolling through entries
 select_next_entry = ["down", "ctrl-n", "ctrl-j"]
 select_prev_entry = ["up", "ctrl-p", "ctrl-k"]
@@ -83,16 +83,52 @@ select_prev_page = "pageup"
 # Scrolling the preview pane
 scroll_preview_half_page_down = "ctrl-d"
 scroll_preview_half_page_up = "ctrl-u"
-# Add entry to selection and move to the next entry
-toggle_selection_down = "tab"
-# Add entry to selection and move to the previous entry
-toggle_selection_up = "backtab"
-# Confirm selection
-confirm_selection = "enter"
+# Select an entry
+select_entry = "enter"
 # Copy the selected entry to the clipboard
 copy_entry_to_clipboard = "ctrl-y"
 # Toggle the remote control mode
 toggle_remote_control = "ctrl-r"
+# Toggle the send to channel mode
+toggle_send_to_channel = "ctrl-s"
+# Toggle the help bar
+toggle_help = "ctrl-g"
+# Toggle the preview panel
+toggle_preview = "ctrl-o"
+
+
+# Remote control mode
+# -------------------------------
+[keybindings.RemoteControl]
+# Quit the application
+quit = "esc"
+# Scrolling through entries
+select_next_entry = ["down", "ctrl-n", "ctrl-j"]
+select_prev_entry = ["up", "ctrl-p", "ctrl-k"]
+select_next_page = "pagedown"
+select_prev_page = "pageup"
+# Select an entry
+select_entry = "enter"
+# Toggle the remote control mode
+toggle_remote_control = "ctrl-r"
+# Toggle the help bar
+toggle_help = "ctrl-g"
+# Toggle the preview panel
+toggle_preview = "ctrl-o"
+
+
+# Send to channel mode
+# --------------------------------
+[keybindings.SendToChannel]
+# Quit the application
+quit = "esc"
+# Scrolling through entries
+select_next_entry = ["down", "ctrl-n", "ctrl-j"]
+select_prev_entry = ["up", "ctrl-p", "ctrl-k"]
+select_next_page = "pagedown"
+select_prev_page = "pageup"
+# Select an entry
+select_entry = "enter"
 # Toggle the send to channel mode
 toggle_send_to_channel = "ctrl-s"
 # Toggle the help bar
@@ -109,68 +145,46 @@ toggle_preview = "ctrl-o"
 # E.g. typing `git checkout <CTRL-T>` will open television with a list of
 # branches to choose from.
 
-[shell_integration]
-# This specifies the default fallback channel if no other channel is matched.
-fallback_channel = "files"
-
-[shell_integration.channel_triggers]
-# Add your channel triggers here. Each key is a channel that will be triggered
-# by the corresponding commands.
-# Example: say you want the following commands to trigger the following channels
+[shell_integration.commands]
+# Add your commands here. Each key is a command that will trigger tv with the
+# corresponding channel as value.
+# Example: say you want the following prompts to trigger the following channels
 # when pressing <CTRL-T>:
-#          `git checkout`  should trigger the `git-branches` channel
-#          `ls`            should trigger the `dirs` channel
-#          `cat` and `cp`  should trigger the `files` channel
+#          `git checkout` should trigger the `git-branches` channel
+#          `ls`           should trigger the `dirs` channel
+#          `cat`          should trigger the `files` channel
 #
 # You would add the following to your configuration file:
 # ```
-# [shell_integration.channel_triggers]
-# "git-branches" = ["git checkout"]
-# "dirs" = ["ls"]
-# "files" = ["cat", "cp"]
+# [shell_integration.commands]
+# "git checkout" = "git-branch"
+# "ls" = "dirs"
+# "cat" = "files"
 # ```
-"alias" = ["alias", "unalias"]
-"env" = ["export", "unset"]
-"dirs" = ["cd", "ls", "rmdir"]
-"files" = [
-  "cat",
-  "less",
-  "head",
-  "tail",
-  "vim",
-  "nano",
-  "bat",
-  "cp",
-  "mv",
-  "rm",
-  "touch",
-  "chmod",
-  "chown",
-  "ln",
-  "tar",
-  "zip",
-  "unzip",
-  "gzip",
-  "gunzip",
-  "xz",
-]
-"git-diff" = ["git add", "git restore"]
-"git-branch" = [
-  "git checkout",
-  "git branch",
-  "git merge",
-  "git rebase",
-  "git pull",
-  "git push",
-]
-"docker-images" = ["docker run"]
-"git-repos" = ["nvim", "code", "hx", "git clone"]
 
+# environment variables
+"export" = "env"
+"unset" = "env"
 
-[shell_integration.keybindings]
-# controls which key binding should trigger tv
-# for shell autocomplete
-"smart_autocomplete" = "ctrl-t"
-# controls which keybinding should trigger tv
-# for command history
-"command_history" = "ctrl-r"
+# dirs channel
+"cd" = "dirs"
+"ls" = "dirs"
+"rmdir" = "dirs"
+
+# files channel
+"cat" = "files"
+"less" = "files"
+"head" = "files"
+"tail" = "files"
+"vim" = "files"
+"bat" = "files"
+
+# git-branch channel
+"git checkout" = "git-branch"
+"git branch -d" = "git-branch"
+
+# docker-images channel
+"docker run" = "docker-images"
+
+# gitrepos channel
+"nvim" = "git-repos"

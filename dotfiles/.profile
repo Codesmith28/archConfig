@@ -32,7 +32,7 @@ alias ls='eza  --icons'
 alias ll='eza -l --icons'
 alias la='eza -a --icons'
 alias lla='eza -al --icons'
-lt () {
+lt() {
     local level=${1:-1}
     eza -a --tree --level=$level --icons
 }
@@ -54,14 +54,14 @@ alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 # System Controls
 # -----------------------------------------------------
 
-bu () {
+bu() {
     if [[ -z $1 ]]; then
         echo "Please specify a percentage to increase, e.g., bu 10"
     else
         brightnessctl set "$1"%+
     fi
 }
-bd () {
+bd() {
     if [[ -z $1 ]]; then
         echo "Please specify a percentage to decrease, e.g., bd 10"
     else
@@ -75,7 +75,7 @@ vu() {
         pactl set-sink-volume @DEFAULT_SINK@ +"$1"%
     fi
 }
-vd () {
+vd() {
     if [[ -z $1 ]]; then
         echo "Please specify a percentage to decrease, e.g., vd 10"
     else
@@ -96,7 +96,7 @@ alias gst="git stash"
 alias gsp="git stash; git pull"
 alias lg='lazygit'
 alias gcheck="git checkout"
-ghcs () {
+ghcs() {
     gh copilot suggest "$1"
 }
 
@@ -115,9 +115,10 @@ alias fontsearch='~/dotfiles/scripts/fontsearch.sh'
 # -----------------------------------------------------
 
 alias confq='$EDITOR ~/dotfiles/qtile/config.py'
-alias confp='$EDITOR ~/dotfiles/.profile'
-alias confb='$EDITOR ~/dotfiles/.bashrc'
-alias confz='$EDITOR ~/dotfiles/.zshrc'
+alias confp='$EDITOR ~/.profile'
+alias confb='$EDITOR ~/.bashrc'
+alias confz='$EDITOR ~/.zshrc'
+alias confn='$EDITOR ~/.config/nvim'
 
 # -----------------------------------------------------
 # EDIT NOTES
@@ -138,7 +139,10 @@ alias MC='java -jar ~/.minecraft/TLauncher*.jar'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias setkb='setxkbmap us;echo "Keyboard set back to us."'
 mntd() {
-    command -v ntfs-3g >/dev/null 2>&1 || { echo >&2 "ntfs-3g is not installed. Installing..."; yay -S ntfs-3g; }
+    command -v ntfs-3g >/dev/null 2>&1 || {
+        echo >&2 "ntfs-3g is not installed. Installing..."
+        yay -S ntfs-3g
+    }
     [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD
     sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"
 }
@@ -201,12 +205,13 @@ alias calc='~/dotfiles/scripts/auto_qalc.sh'
 # -----------------------------------------------------
 
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+    declare tmp
+    tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd" || exit
+    fi
+    rm -f -- "$tmp"
 }
 
 spf() {
@@ -226,7 +231,7 @@ spf() {
 
     [ ! -f "$SPF_LAST_DIR" ] || {
         . "$SPF_LAST_DIR"
-        rm -f -- "$SPF_LAST_DIR" > /dev/null
+        rm -f -- "$SPF_LAST_DIR" >/dev/null
     }
 }
 
