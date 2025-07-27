@@ -38,7 +38,7 @@ lt() {
 }
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
-alias vim='$EDITOR'
+# alias vim='$EDITOR'
 alias ts='~/dotfiles/scripts/snapshot.sh'
 alias matrix='cmatrix -u 2'
 alias wifi='nmtui'
@@ -51,8 +51,11 @@ alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 alias copy='xclip -selection clipboard'
 alias bat='batcat'
+alias update_all='sudo apt update && sudo apt full-upgrade'
+
 alias source_z='source ~/.zshrc'
-alias update_all='sudo apt update && sudo apt upgrade'
+alias source_venv='source venv/bin/activate'
+alias prime-run='env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
 
 # -----------------------------------------------------
 # System Controls
@@ -128,7 +131,7 @@ alias confn='$EDITOR ~/.config/nvim'
 # GoQuant
 # -----------------------------------------------------
 
-alias reset_db='~/dotfiles/GoQuant/reset_db.sh'
+alias reset_db='~/.config/work/reset_db.sh'
 
 # -----------------------------------------------------
 # EDIT NOTES
@@ -209,7 +212,7 @@ runcc() {
 
 alias cpp='cd ~/Projects/cp/ && code . && exit'
 alias lazy='~/Downloads/lazyAi_v1.1.0_unix/lazyAi'
-alias calc='~/dotfiles/scripts/auto_qalc.sh'
+alias calc='~/.config/scripts/auto_qalc.sh'
 
 # -----------------------------------------------------
 # Yazi file manager exit on quit:
@@ -259,3 +262,4 @@ rog() {
 if [ -f "$HOME/.env" ]; then
     export GEMINI_API_KEY="$(grep '^GEMINI_API_KEY=' "$HOME/.env" | cut -d '=' -f2- | sed 's/^"//;s/"$//')"
 fi
+. "$HOME/.cargo/env"

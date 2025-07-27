@@ -11,7 +11,6 @@ source $ZSH/oh-my-zsh.sh
 eval "$(starship init zsh)"
 
 # FZF support
-eval "$(fzf --zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Television support:
@@ -43,7 +42,10 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
 
 # Pipx
-export PATH="$HOME/.pyenv/bin:$PATH"
+# Pyenv setup
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
