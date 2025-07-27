@@ -1,0 +1,12 @@
+[Unit]
+Description=Set Battery Charging Limit
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set-battery-limit.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+

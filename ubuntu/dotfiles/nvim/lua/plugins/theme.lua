@@ -30,9 +30,21 @@ return {
         end,
     },
     {
+        "Mofiqul/vscode.nvim",
+        priority = 1000,
+        config = function()
+            require("vscode").setup({
+                transparent = true,
+                italic_comments = true,
+                disable_nvimtree_bg = true,
+            })
+        end,
+    },
+    {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "gruvbox",
+            -- colorscheme = "tokyonight-night",
+            colorscheme = "vscode",
         },
     },
 }
