@@ -56,8 +56,10 @@ return {
                 -- Markdown
                 "markdownlint",
 
-                -- Rust (uncomment if needed)
-                -- "rust-analyzer",
+                -- json:
+                "json-lsp",
+                "json-to-struct",
+                "biome",
             },
         },
     },
