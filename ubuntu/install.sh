@@ -26,7 +26,6 @@ sudo apt-get install -y \
     eza \
     fastfetch \
     cmatrix \
-    starship \
     zsh \
     fzf \
     dconf-cli \
