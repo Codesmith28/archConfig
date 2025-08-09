@@ -134,6 +134,11 @@ alias confn='$EDITOR ~/.config/nvim'
 alias reset_db='~/.config/work/reset_db.sh'
 
 # -----------------------------------------------------
+# Go
+# -----------------------------------------------------
+export PATH="$PATH:$(go env GOPATH)/bin"
+
+# -----------------------------------------------------
 # EDIT NOTES
 # -----------------------------------------------------
 
@@ -151,17 +156,17 @@ alias MC='java -jar ~/.minecraft/TLauncher*.jar'
 
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias setkb='setxkbmap us;echo "Keyboard set back to us."'
-mntd() {
-    command -v ntfs-3g >/dev/null 2>&1 || {
-        echo >&2 "ntfs-3g is not installed. Installing..."
-        yay -S ntfs-3g
-    }
-    [ -d "/home/run/media/localdiskD" ] || mkdir -p /home/run/media/localdiskD
-    sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"
-}
-alias D='cd /media/codesmith28/D/'
+# mntd() {
+#     command -v ntfs-3g >/dev/null 2>&1 || {
+#         echo >&2 "ntfs-3g is not installed. Installing..."
+#         yay -S ntfs-3g
+#     }
+#     [ -d "/media/codesmith28/D" ] || mkdir -p /media/codesmith28/D
+#     sudo mount /dev/nvme0n1p4 /home/run/media/localdiskD && echo "Disk successfully mounted at /home/run/media/localdiskD"
+# }
+alias D='cd /media/codesmith28/D'
 fixD() {
-    sudo umount /home/run/media/localdiskD && echo "Disk unmounted."
+    sudo umount /media/codesmith28/D && echo "Disk unmounted."
 }
 alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | cat'
 alias netrs='sudo systemctl restart NetworkManager && sudo systemctl restart iwd'
