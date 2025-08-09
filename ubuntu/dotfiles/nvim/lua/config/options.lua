@@ -9,15 +9,6 @@ o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "c", "cpp" },
-    callback = function()
-        vim.opt_local.tabstop = 8
-        vim.opt_local.shiftwidth = 8
-        vim.opt_local.expandtab = false -- optional, depends on style
-    end,
-})
-
 o.encoding = "utf-8"
 o.fileencoding = "utf-8"
 

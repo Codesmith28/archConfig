@@ -36,7 +36,8 @@ return {
             require("vscode").setup({
                 transparent = true,
                 italic_comments = true,
-                disable_nvimtree_bg = true,
+                disable_nvimtree_bg = false,
+                terminal_colors = true,
             })
         end,
     },
