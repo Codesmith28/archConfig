@@ -9,6 +9,8 @@ echo "Starting installation..."
 # ----------------------------------------------------
 # Update and Upgrade
 # ----------------------------------------------------
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
 sudo apt-get update
 sudo apt-get full-upgrade -y
 
@@ -24,16 +26,11 @@ sudo apt-get install -y \
     eza \
     fastfetch \
     cmatrix \
-    nmtui \
-    xprop \
-    qtile \
     starship \
-    python3-pywal \
     zsh \
     fzf \
     dconf-cli \
     tmux \
-    lazygit \
     bat \
     fd-find \
     ripgrep \
@@ -41,6 +38,11 @@ sudo apt-get install -y \
     wget \
     libssl-dev \
     net-tools
+
+# ----------------------------------------------------
+# starship
+# ----------------------------------------------------
+curl -sS https://starship.rs/install.sh | sh
 
 # ----------------------------------------------------
 # Install nvm (Node Version Manager)
