@@ -19,7 +19,7 @@ eval "$(starship init zsh)"
 eval "$(tv init zsh)"
 
 # PNPM
-export PNPM_HOME="/home/codesmith28/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
 # NVM and Node.js
@@ -39,7 +39,7 @@ DEFAULT_NODE_VER_PATH="$(find $NVM_DIR/versions/node -maxdepth 1 -name "v${DEFAU
 # Bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Pipx
 # Pyenv setup
@@ -49,5 +49,19 @@ eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-# GoPath
+# Go Path
 export PATH="$PATH:$(go env GOPATH)/bin"
+
+# Java Path
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export PATH=$PATH:$JAVA_HOME/bin
+
+# Hadoop Path
+export HADOOP_HOME="$HOME/hadoop-2.7.3"
+export HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop"
+export HADOOP_MAPRED_HOME="$HADOOP_HOME"
+export HADOOP_COMMON_HOME="$HADOOP_HOME"
+export HADOOP_HDFS_HOME="$HADOOP_HOME"
+export YARN_HOME="$HADOOP_HOME"
+export PATH="$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin"
+
