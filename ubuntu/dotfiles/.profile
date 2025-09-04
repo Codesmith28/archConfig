@@ -11,7 +11,6 @@ PS1='[\u@\h \W]\$ '
 # Define Editor
 export EDITOR=nvim
 export BROWSER=nautilus
-export MANPAGER='nvim +Man!'
 
 # alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
@@ -45,7 +44,7 @@ alias wifi='nmtui'
 alias od='~/private/onedrive.sh'
 alias tw='~/dotfiles/waybar/toggle.sh'
 alias winclass="xprop | grep 'CLASS'"
-alias dot="cd ~/dotfiles"
+alias dot="cd ~/.config"
 alias hypr="cd ~/dotfiles/hypr"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
@@ -134,11 +133,6 @@ alias confn='$EDITOR ~/.config/nvim'
 alias reset_db='~/.config/work/reset_db.sh'
 
 # -----------------------------------------------------
-# Go
-# -----------------------------------------------------
-export PATH="$PATH:$(go env GOPATH)/bin"
-
-# -----------------------------------------------------
 # EDIT NOTES
 # -----------------------------------------------------
 
@@ -169,7 +163,11 @@ fixD() {
     sudo umount /media/codesmith28/D && echo "Disk unmounted."
 }
 alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | cat'
-alias netrs='sudo systemctl restart NetworkManager && sudo systemctl restart iwd'
+# alias netrs='sudo systemctl restart NetworkManager && sudo systemctl restart iwd'
+netrs() {
+    sudo systemctl restart NetworkManager && echo "NetworkManager restarted."
+    # sudo systemctl restart iwd && echo "iwd restarted."
+}
 
 # -----------------------------------------------------
 # STARSHIP export

@@ -46,6 +46,7 @@ return {
         opts = {
             -- colorscheme = "tokyonight-night",
             colorscheme = "vscode",
+            -- colorscheme = "gruvbox",
         },
     },
 }
