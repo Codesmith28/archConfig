@@ -36,7 +36,10 @@ sudo apt-get install -y \
     unzip \
     wget \
     libssl-dev \
-    net-tools
+    net-tools \
+    gnome-calculator \
+    xournalpp \
+    cheese
 
 # ----------------------------------------------------
 # starship
