@@ -34,7 +34,7 @@ global_history = false
 # Whether to use nerd font icons in the UI
 # This option requires a font patched with Nerd Font in order to properly
 # display glyphs (see https://www.nerdfonts.com/ for more information)
-use_nerd_font_icons = false
+use_nerd_font_icons = true
 # How much space to allocate for the UI (in percentage of the screen)
 # ┌───────────────────────────────────────┐
 # │                                       │
@@ -218,35 +218,35 @@ fallback_channel = "files"
 "env" = ["export", "unset"]
 "dirs" = ["cd", "ls", "rmdir"]
 "files" = [
-  "cat",
-  "less",
-  "head",
-  "tail",
-  "vim",
-  "nano",
-  "bat",
-  "cp",
-  "mv",
-  "rm",
-  "touch",
-  "chmod",
-  "chown",
-  "ln",
-  "tar",
-  "zip",
-  "unzip",
-  "gzip",
-  "gunzip",
-  "xz",
+    "cat",
+    "less",
+    "head",
+    "tail",
+    "vim",
+    "nano",
+    "bat",
+    "cp",
+    "mv",
+    "rm",
+    "touch",
+    "chmod",
+    "chown",
+    "ln",
+    "tar",
+    "zip",
+    "unzip",
+    "gzip",
+    "gunzip",
+    "xz",
 ]
 "git-diff" = ["git add", "git restore"]
 "git-branch" = [
-  "git checkout",
-  "git branch",
-  "git merge",
-  "git rebase",
-  "git pull",
-  "git push",
+    "git checkout",
+    "git branch",
+    "git merge",
+    "git rebase",
+    "git pull",
+    "git push",
 ]
 "git-log" = ["git log", "git show"]
 "docker-images" = ["docker run"]
