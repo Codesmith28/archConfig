@@ -131,6 +131,7 @@ alias confn='$EDITOR ~/.config/nvim'
 # -----------------------------------------------------
 
 alias reset_db='~/.config/work/reset_db.sh'
+alias fastapiup='cd ~/gotrade/fastapi && source venv/bin/activate && poetry run uvicorn gotrade.src.main:app --host 0.0.0.0 --port 8001'
 
 # -----------------------------------------------------
 # EDIT NOTES
@@ -266,3 +267,18 @@ if [ -f "$HOME/.env" ]; then
     export GEMINI_API_KEY="$(grep '^GEMINI_API_KEY=' "$HOME/.env" | cut -d '=' -f2- | sed 's/^"//;s/"$//')"
 fi
 . "$HOME/.cargo/env"
+
+#  -----------------------------------------------------
+#  fix kitty on ssh
+#  -----------------------------------------------------
+
+[ "$TERM" = "xterm-kitty" ] && export TERM=xterm-256color
+
+# -----------------------------------------------------
+# BIG DATA ALIASES
+# -----------------------------------------------------
+
+alias hadoop_start='~/University/BigData/start_hadoop.sh'
+hdfs-tree() {
+    hdfs dfs -ls -R "$1" | awk '{print $8}' | sed 's/[^/]*\//|   /g;s/|   \([^|]\)/+--- \1/'
+}
