@@ -39,7 +39,8 @@ sudo apt-get install -y \
     net-tools \
     gnome-calculator \
     xournalpp \
-    cheese
+    cheese \
+    glow
 
 # ----------------------------------------------------
 # starship

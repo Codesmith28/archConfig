@@ -10,7 +10,7 @@ return {
                 bold = true,
                 italic = {
                     strings = true,
-                    comments = true,
+                    comments = false,
                     operators = false,
                     folds = true,
                     emphasis = true,
@@ -35,17 +35,74 @@ return {
         config = function()
             require("vscode").setup({
                 transparent = true,
-                italic_comments = true,
+                italic_comments = false,
                 disable_nvimtree_bg = false,
                 terminal_colors = true,
             })
         end,
     },
     {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        config = function()
+            require("tokyonight").setup({
+                transparent = true,
+                styles = {
+                    sidebars = "transparent",
+                    floats = "transparent",
+                    comments = {},
+                },
+            })
+        end,
+    },
+    {
+        "catppuccin/nvim",
+        name = "catppuccin",
+        config = function()
+            require("catppuccin").setup({
+                flavour = "mocha", -- or "latte", "frappe", "macchiato"
+                transparent_background = true,
+                show_end_of_buffer = false, -- hide ~ at end of buffer
+                term_colors = true, -- terminal colors matching theme
+
+                styles = {
+                    comments = {},
+                    conditionals = {},
+                    loops = {},
+                    functions = {},
+                    keywords = {},
+                    strings = {},
+                    variables = {},
+                    numbers = {},
+                    booleans = {},
+                    properties = {},
+                    types = {},
+                    operators = {},
+                },
+
+                integrations = {
+                    native_lsp = {
+                        enabled = true,
+                        inlay_hints = { background = true },
+                    },
+                    cmp = true,
+                    gitsigns = true,
+                    nvimtree = true,
+                    treesitter = true,
+                    telescope = { style = "transparent" },
+                    mason = true,
+                    which_key = true,
+                },
+            })
+        end,
+    },
+    {
         "LazyVim/LazyVim",
         opts = {
+            colorscheme = "catppuccin",
             -- colorscheme = "tokyonight-night",
-            colorscheme = "vscode",
+            -- colorscheme = "vscode",
+            -- colorscheme = "everblush",
             -- colorscheme = "gruvbox",
         },
     },

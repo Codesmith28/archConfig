@@ -1,11 +1,11 @@
 return {
     {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         opts = {
             ensure_installed = {
                 -- C/C++
-                -- "clangd",
                 "clang-format",
+                "clangd",
                 "codelldb",
 
                 -- Python
@@ -22,20 +22,21 @@ return {
 
                 -- JS/TS, Web dev
                 "nextls",
-                "eslint-lsp",
+                "eslint-lsp", -- eslint
                 "js-debug-adapter",
                 "prettierd",
-                "typescript-language-server",
-                "tailwindcss-language-server",
-                "yaml-language-server",
+                "typescript-language-server", -- ts_ls
+                "vtsls",
+                "tailwindcss-language-server", -- tailwindcss
+                "yaml-language-server", -- yamlls
                 "yamlfix",
                 "yamllint",
-                "html-lsp",
-                "css-lsp",
+                "html-lsp", -- html
+                "css-lsp", -- cssls
                 "mdformat",
 
                 -- Lua
-                "lua-language-server",
+                "lua-language-server", -- lua_ls
                 "stylua",
 
                 -- Go
@@ -45,21 +46,34 @@ return {
                 "gofumpt",
 
                 -- Shell
-                "bash-language-server",
+                "bash-language-server", -- bashls
                 "shellcheck",
                 "shfmt",
 
                 -- Docker
-                "dockerfile-language-server",
-                "docker-compose-language-service",
+                "dockerfile-language-server", -- dockerls
+                "docker-compose-language-service", -- docker_compose_language_service
 
                 -- Markdown
                 "markdownlint",
+                "markdownlint-cli2",
+                "markdown-toc",
+                "marksman",
 
-                -- json:
-                "json-lsp",
+                -- JSON
+                "json-lsp", -- jsonls
                 "json-to-struct",
                 "biome",
+
+                -- Java
+                "jdtls",
+                "google-java-format",
+
+                -- Configs / Misc
+                "taplo", -- TOML
+                "mesonlsp",
+                "tree-sitter-cli",
+                "xmlformatter",
             },
         },
     },

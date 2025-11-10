@@ -15,7 +15,6 @@ export BROWSER=nautilus
 # alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias res_idle='~/dotfiles/hypr/scripts/restart-hypridle.sh'
-alias cursor='/opt/cursor.appimage --no-sandbox >/dev/null 2>&1 & disown'
 
 # -----------------------------------------------------
 # ALIASES
@@ -110,9 +109,6 @@ ghcs() {
 # SCRIPTS
 # -----------------------------------------------------
 
-alias gr='python ~/dotfiles/scripts/growthrate.py'
-alias ChatGPT='python ~/mychatgpt/mychatgpt.py'
-alias chat='python ~/mychatgpt/mychatgpt.py'
 alias ascii='~/dotfiles/scripts/figlet.sh'
 alias fontsearch='~/dotfiles/scripts/fontsearch.sh'
 
@@ -137,7 +133,7 @@ alias fastapiup='cd ~/gotrade/fastapi && source venv/bin/activate && poetry run 
 # EDIT NOTES
 # -----------------------------------------------------
 
-alias rough='$EDITOR ~/rough.md'
+alias notes='mkdir -p ~/notes && $EDITOR ~/notes/.'
 
 # -----------------------------------------------------
 # MINECRAFT
@@ -199,7 +195,7 @@ alias thunar='setsid thunar'
 alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
-alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
+alias fzf='fzf --preview="batcat --color=always --style=header,grid --line-range :500 {}"'
 # alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 alias ivm='f() { local file; file=$(tv); [ -n "$file" ] && "$EDITOR" "$file"; }; f'
 
@@ -215,7 +211,7 @@ runcc() {
 }
 
 alias cpp='cd ~/Projects/cp/ && code . && exit'
-alias lazy='~/Downloads/lazyAi_v1.1.0_unix/lazyAi'
+alias lazy='~/Downloads/lazyAi'
 alias calc='~/.config/scripts/auto_qalc.sh'
 
 # -----------------------------------------------------

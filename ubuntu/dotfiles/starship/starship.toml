@@ -12,11 +12,12 @@ symbol = ' '
 
 # Time on the first line (right)
 [time]
-disabled = false
+disabled = true
 format = "[$time](white)"
 time_format = "󱑏 %H:%M"   # Display as HH:MM
 
 [battery]
+disabled = true
 charging_symbol = " "
 
 [[battery.display]]
