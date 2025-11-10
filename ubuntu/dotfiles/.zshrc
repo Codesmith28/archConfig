@@ -55,16 +55,3 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 # Java Path
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
-
-# Hadoop Path
-export HADOOP_HOME="$HOME/hadoop-2.7.3"
-export HADOOP_CONF_DIR="$HADOOP_HOME/etc/hadoop"
-export HADOOP_MAPRED_HOME="$HADOOP_HOME"
-export HADOOP_COMMON_HOME="$HADOOP_HOME"
-export HADOOP_HDFS_HOME="$HADOOP_HOME"
-export YARN_HOME="$HADOOP_HOME"
-export PATH="$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin"
-
-# Hive Path
-export HIVE_HOME="$HOME/apache-hive-2.1.0-bin"
-export PATH="$PATH:$HIVE_HOME/bin"

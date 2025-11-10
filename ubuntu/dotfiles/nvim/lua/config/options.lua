@@ -4,8 +4,6 @@
 
 local o = vim.opt
 
-o.tabstop = 4
-o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
 
@@ -26,3 +24,13 @@ vim.g.copilot_assume_mapped = true
 o.shell = "zsh"
 o.ignorecase = true
 o.smartcase = true
+
+--  default to dark mode
+o.termguicolors = true
+o.background = "dark"
+
+o.listchars = {
+    tab = "> ",
+    trail = "_",
+    nbsp = "+",
+}
