@@ -1,0 +1,10 @@
+[Unit]
+Description=Disable XHCI USB controller wake from suspend
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo XHCI > /proc/acpi/wakeup'
+
+[Install]
+WantedBy=multi-user.target

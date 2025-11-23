@@ -3,25 +3,25 @@
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
 [mgr]
-ratio          = [ 1, 2, 3 ]
-sort_by        = "natural"
+ratio = [1, 2, 3]
+sort_by = "natural"
 sort_sensitive = false
-sort_reverse   = false
+sort_reverse = false
 sort_dir_first = true
-linemode       = "size"
-show_hidden    = false
-show_symlink   = false
+linemode = "size"
+show_hidden = false
+show_symlink = false
 
 [preview]
-tab_size        = 2
-max_width       = 1000
-max_height      = 1500
-cache_dir       = ""
-image_filter    = "triangle"
-image_quality   = 75
-sixel_fraction  = 15
-ueberzug_scale  = 1
-ueberzug_offset = [ 0, 0, 0, 0 ]
+tab_size = 2
+max_width = 1000
+max_height = 1500
+cache_dir = ""
+image_filter = "triangle"
+image_quality = 75
+sixel_fraction = 15
+ueberzug_scale = 1
+ueberzug_offset = [0, 0, 0, 0]
 
 # [opener]
 # open = [
@@ -30,22 +30,20 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [open]
 rules = [
-    { mime = "application/pdf", use = "open-pdf" },  # Rule for PDFs
-    { name = "*/", use = [ "edit", "open", "reveal" ] },  # Existing rule
-    { mime = "*", use = [ "edit", "open", "reveal" ] },  # Existing fallback rule
+    { mime = "application/pdf", use = "open-pdf" },    # Rule for PDFs
+    { name = "*/", use = ["edit", "open", "reveal"] }, # Existing rule
+    { mime = "*", use = ["edit", "open", "reveal"] },  # Existing fallback rule
 ]
 
 [opener]
-open-pdf = [
-    { run = 'firefox "$@"', desc = "Open PDF in Firefox" },
-]
+open-pdf = [{ run = 'firefox "$@"', desc = "Open PDF in Firefox" }]
 
 [tasks]
-micro_workers    = 10
-macro_workers    = 25
-bizarre_retry    = 5
-image_alloc      = 536870912  # 512MB
-image_bound      = [ 0, 0 ]
+micro_workers = 10
+macro_workers = 25
+bizarre_retry = 5
+image_alloc = 536870912  # 512MB
+image_bound = [0, 0]
 suppress_preload = false
 
 [[plugin.prepend_previewers]]
@@ -55,10 +53,6 @@ run = "eza-preview"
 [[plugin.prepend_previewers]]
 name = "*.md"
 run = "glow"
-
-# [[plugin.prepend_previewers]]
-# name = "*.md"
-# run = "rich-preview"
 
 [[plugin.prepend_previewers]]
 name = "*.csv"
@@ -76,81 +70,76 @@ run = "rich-preview"
 name = "*.json"
 run = "rich-preview"
 
-# Example for language-specific previews
-# [[plugin.prepend_previewers]]
-# name = "*.py"
-# run = "rich-preview"
-
 [input]
 # cd
-cd_title  = "Change directory:"
+cd_title = "Change directory:"
 cd_origin = "top-center"
-cd_offset = [ 0, 2, 50, 3 ]
+cd_offset = [0, 2, 50, 3]
 
 # create
 create_title = ["Create:", "Create (dir):"]
 create_origin = "top-center"
-create_offset = [ 0, 2, 50, 3 ]
+create_offset = [0, 2, 50, 3]
 
 # rename
-rename_title  = "Rename:"
+rename_title = "Rename:"
 rename_origin = "hovered"
-rename_offset = [ 0, 1, 50, 3 ]
+rename_offset = [0, 1, 50, 3]
 
 # trash
-trash_title 	= "Move {n} selected file{s} to trash? (y/N)"
-trash_origin	= "top-center"
-trash_offset	= [ 0, 2, 50, 3 ]
+trash_title = "Move {n} selected file{s} to trash? (y/N)"
+trash_origin = "top-center"
+trash_offset = [0, 2, 50, 3]
 
 # delete
-delete_title 	= "Delete {n} selected file{s} permanently? (y/N)"
-delete_origin	= "top-center"
-delete_offset	= [ 0, 2, 50, 3 ]
+delete_title = "Delete {n} selected file{s} permanently? (y/N)"
+delete_origin = "top-center"
+delete_offset = [0, 2, 50, 3]
 
 # filter
-filter_title  = "Filter:"
+filter_title = "Filter:"
 filter_origin = "top-center"
-filter_offset = [ 0, 2, 50, 3 ]
+filter_offset = [0, 2, 50, 3]
 
 # find
-find_title  = [ "Find next:", "Find previous:" ]
+find_title = ["Find next:", "Find previous:"]
 find_origin = "top-center"
-find_offset = [ 0, 2, 50, 3 ]
+find_offset = [0, 2, 50, 3]
 
 # search
-search_title  = "Search via {n}:"
+search_title = "Search via {n}:"
 search_origin = "top-center"
-search_offset = [ 0, 2, 50, 3 ]
+search_offset = [0, 2, 50, 3]
 
 # shell
-shell_title  = [ "Shell:", "Shell (block):" ]
+shell_title = ["Shell:", "Shell (block):"]
 shell_origin = "top-center"
-shell_offset = [ 0, 2, 50, 3 ]
+shell_offset = [0, 2, 50, 3]
 
 # overwrite
-overwrite_title  = "Overwrite an existing file? (y/N)"
+overwrite_title = "Overwrite an existing file? (y/N)"
 overwrite_origin = "top-center"
-overwrite_offset = [ 0, 2, 50, 3 ]
+overwrite_offset = [0, 2, 50, 3]
 
 # quit
-quit_title  = "{n} task{s} running, sure to quit? (y/N)"
+quit_title = "{n} task{s} running, sure to quit? (y/N)"
 quit_origin = "top-center"
-quit_offset = [ 0, 2, 50, 3 ]
+quit_offset = [0, 2, 50, 3]
 
 [select]
-open_title  = "Open with:"
+open_title = "Open with:"
 open_origin = "hovered"
-open_offset = [ 0, 1, 50, 7 ]
+open_offset = [0, 1, 50, 7]
 
 [log]
 enabled = false
 
 [[plugin.prepend_fetchers]]
-id   = "git"
+id = "git"
 name = "*"
-run  = "git"
+run = "git"
 
 [[plugin.prepend_fetchers]]
-id   = "git"
+id = "git"
 name = "*/"
-run  = "git"
+run = "git"

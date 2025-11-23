@@ -26,7 +26,7 @@ alias nf='neofetch'
 alias pf='pfetch'
 alias ff='fastfetch'
 alias cf='c && fastfetch'
-alias ls='eza  --icons'
+alias ls='eza --icons'
 alias ll='eza -l --icons'
 alias la='eza -a --icons'
 alias lla='eza -al --icons'
@@ -133,7 +133,14 @@ alias fastapiup='cd ~/gotrade/fastapi && source venv/bin/activate && poetry run 
 # EDIT NOTES
 # -----------------------------------------------------
 
-alias notes='mkdir -p ~/notes && $EDITOR ~/notes/.'
+notes() {
+    local orig="$PWD"
+    local notes_dir=~/Projects/Obsidian_Vault/_notes
+    mkdir -p "$notes_dir"
+    cd "$notes_dir"
+    ${EDITOR:-nvim} .
+    cd "$orig"
+}
 
 # -----------------------------------------------------
 # MINECRAFT
@@ -262,7 +269,6 @@ rog() {
 if [ -f "$HOME/.env" ]; then
     export GEMINI_API_KEY="$(grep '^GEMINI_API_KEY=' "$HOME/.env" | cut -d '=' -f2- | sed 's/^"//;s/"$//')"
 fi
-. "$HOME/.cargo/env"
 
 #  -----------------------------------------------------
 #  fix kitty on ssh
