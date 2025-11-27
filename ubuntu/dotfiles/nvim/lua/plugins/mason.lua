@@ -9,13 +9,7 @@ return {
                 "codelldb",
 
                 -- Python
-                "pyright",
-                "mypy",
-                "ruff",
-                "black",
-                "isort",
-                "flake8",
-                "pylint",
+                "pyrefly",
 
                 -- SQL
                 "sql-formatter",
