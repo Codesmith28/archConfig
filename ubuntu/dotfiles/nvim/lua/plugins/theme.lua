@@ -65,6 +65,12 @@ return {
                 show_end_of_buffer = false, -- hide ~ at end of buffer
                 term_colors = true, -- terminal colors matching theme
 
+                custom_highlights = function(colors)
+                    return {
+                        Normal = { bg = "#171717", fg = "#deddda" },
+                    }
+                end,
+
                 styles = {
                     comments = {},
                     conditionals = {},
