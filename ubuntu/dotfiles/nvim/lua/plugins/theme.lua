@@ -30,28 +30,16 @@ return {
         end,
     },
     {
-        "Mofiqul/vscode.nvim",
-        priority = 1000,
-        config = function()
-            require("vscode").setup({
-                transparent = true,
-                italic_comments = false,
-                disable_nvimtree_bg = false,
-                terminal_colors = true,
-            })
-        end,
-    },
-    {
         "folke/tokyonight.nvim",
         lazy = false,
         config = function()
             require("tokyonight").setup({
-                transparent = true,
-                styles = {
-                    sidebars = "transparent",
-                    floats = "transparent",
-                    comments = {},
-                },
+                -- transparent = true,
+                -- styles = {
+                --     sidebars = "transparent",
+                --     floats = "transparent",
+                --     comments = {},
+                -- },
             })
         end,
     },
@@ -65,9 +53,23 @@ return {
                 show_end_of_buffer = false, -- hide ~ at end of buffer
                 term_colors = true, -- terminal colors matching theme
 
+                -- Adwaita Background
                 custom_highlights = function(colors)
                     return {
                         Normal = { bg = "#171717", fg = "#deddda" },
+                        -- NormalFloat = { bg = "#171717", fg = "#deddda" },
+                        -- FloatBorder = { bg = "#171717", fg = "#deddda" },
+
+                        -- Selections
+                        Visual = { bg = "#303030", fg = "#c0bfbc" },
+                        VisualNOS = { bg = "#303030", fg = "#c0bfbc" },
+
+                        -- Cursor line (optional but recommended)
+                        CursorLine = { bg = "#1f1f1f" },
+
+                        -- UI Elements
+                        LineNr = { fg = "#5a5a5a" },
+                        CursorLineNr = { fg = "#deddda" },
                     }
                 end,
 
@@ -106,10 +108,6 @@ return {
         "LazyVim/LazyVim",
         opts = {
             colorscheme = "catppuccin",
-            -- colorscheme = "tokyonight-night",
-            -- colorscheme = "vscode",
-            -- colorscheme = "everblush",
-            -- colorscheme = "gruvbox",
         },
     },
 }
