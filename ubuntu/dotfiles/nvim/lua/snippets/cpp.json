@@ -415,7 +415,7 @@
             "using namespace __gnu_pbds;",
             "template <typename T>",
             "using ordered_set = tree<T,                                  // key type",
-            "                         null_type,                          // mapped type; null_type → like `set`, not `map`",
+            "                         null_type,                          // mapped type; null_type -> like `set`, not `map`",
             "                         std::less<T>,                       // comparator",
             "                         rb_tree_tag,                        // red-black tree (also supports splay trees etc.)",
             "                         tree_order_statistics_node_update>; // adds order-statistics operations"

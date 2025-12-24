@@ -284,3 +284,4 @@ alias hadoop_start='~/University/BigData/start_hadoop.sh'
 hdfs-tree() {
     hdfs dfs -ls -R "$1" | awk '{print $8}' | sed 's/[^/]*\//|   /g;s/|   \([^|]\)/+--- \1/'
 }
+. "$HOME/.cargo/env"

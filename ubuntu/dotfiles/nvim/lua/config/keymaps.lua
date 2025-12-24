@@ -28,10 +28,6 @@ map("n", "<leader>fm", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<CR>",
 map("v", "<C-j>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true, desc = "Move line down" })
 map("v", "<C-k>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true, desc = "Move line up" })
 
--- change tab not buffer:
-map("n", "<M-]>", "<cmd>tabnext<CR>", { desc = "Next tab" })
-map("n", "<M-[>", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
-
 -- indenting
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
@@ -39,3 +35,5 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- Add go tags:
 map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
+
+-- open file picker using ctrl + p: File files using snacks
