@@ -1,0 +1,13 @@
+[Unit]
+Description=Disable ACPI wake sources except power button
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '\
+for dev in PEG1 RP09 RP13 RP06 RP25 XHCI AWAC; do \
+  echo $dev > /proc/acpi/wakeup 2>/dev/null; \
+done'
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Disable PCIe wakeup sources (keep only power button)
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '\
+echo disabled > /sys/bus/pci/devices/0000:02:00.0/power/wakeup || true'
+
+[Install]
+WantedBy=multi-user.target
