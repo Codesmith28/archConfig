@@ -1,136 +1,135 @@
-# Arch Configuration by Codesmith28
+# archConfig
 
-## Introduction
+Personal Linux bootstrap + dotfiles repo.
 
-This repository is inspired by the Arch Linux configuration from [stephan-raabe/dotfiles - v2.9.1](https://github.com/mylinuxforwork/dotfiles.git) with additional dotfiles and configurations.
+This repo primarily targets:
 
-To install that version of dotfiles use the following link:
+- **Arch Linux (KDE)** via a separate set of scripts and package lists.
+- **Ubuntu** via a dedicated installer + dotfile sync.
+- **Arch Linux (Hyprland/GNOME)** via a shell “black box” installer. ( Inspired by the Arch Linux dotfiles from `mylinuxforwork/dotfiles` (v2.9.1) and extended with additional configuration. )
 
-```bash
-git clone -b 2.9.1 https://github.com/mylinuxforwork/dotfiles.git
-```
+## Table of contents
 
-### Note
+- [Quick start](#quick-start)
+- [Arch KDE](#arch-kde)
+- [GRUB / Windows dual-boot notes (Arch KDE)](#grub--windows-dual-boot-notes-arch-kde)
+- [Ubuntu](#ubuntu)
+- [Arch (shell installer)](#arch-shell-installer)
+- [Repo layout](#repo-layout)
 
-- Setup keyrings before installation usnig:
+## Quick start
 
-```bash
-sudo pacman-key --init
-sudo pacman-key --populate archlinux
-```
-
-## Installation
-
-After installing the minimal configuration from archInstall, follow these steps to integrate additional configurations:
-
-1. Clone this repository to your local machine. Assuming you have installed the base configuration in your home directory:
-
-   ```bash
-    git clone https://github.com/Codesmith28/archConfig.git ~/Downloads/arch/archConfig
-   ```
-
-1. Navigate to the downloaded folder and view the content:
-
-   ```bash
-    cd ~/Downloads/arch/archConfig
-   ```
-
-1. Copy / Move the contents accordingly and run the setup scripts.
-
-## Packages
-
-All the packages are available under setupScripts directory.
-
-1. To install basic packages, run the following command:
-
-   ```bash
-   ./packages.sh
-   ```
-
-2. To setup ssh keys, run the following command:
-
-   ```bash
-   ./ssh.sh
-   ```
-
-3. To setup the development environment, run:
-
-   ```bash
-   ./dev.sh
-   ```
-
-## Backup
-
-You can also backup your current configuration by running:
+Clone the repo:
 
 ```bash
-./backup.sh
+git clone https://github.com/Codesmith28/archConfig.git ~/archConfig
+cd ~/archConfig
 ```
 
-## Fixing Grub
+### Arch KDE
 
-### Grub not showing up
+Typical flow:
 
-After the minimal installation, you may face the issue of the grub not showing up. Thus, we click on yes for post installation configuration and then run the following commands sequentially:
+1. Install packages (official repos + AUR):
+
+	```bash
+	cd arch_kde/packages
+	chmod +x installPackages.sh
+	./installPackages.sh
+	```
+
+2. Link dotfiles into your home directory:
+
+	```bash
+	cd arch_kde/dotfiles
+	chmod +x sync.sh
+	./sync.sh
+	```
+
+3. (Optional) Install systemd services + helper executables:
+
+	```bash
+	cd arch_kde/setup_scripts
+	chmod +x setup.sh
+	./setup.sh
+	```
+
+    These include:
+    - battery-limit service
+    - disable acpi and pci wakeup service (so that only power button can wake the laptop)
+    - nvidia persistence mode service
+
+4. (Optional) One-off helpers:
+
+- Git + GitHub CLI: [arch_kde/basics/setGit.sh](arch_kde/basics/setGit.sh) ; configures user name, email, and SSH keys
+- Docker: [arch_kde/basics/setDocker.sh](arch_kde/basics/setDocker.sh) ; installs Docker, adds user to `docker` group, and enables the Docker service
+- Restore GRUB: [arch_kde/basics/restoreGrub.sh](arch_kde/basics/restoreGrub.sh) ; reinstalls GRUB bootloader and fixes it if not working
+
+### GRUB / Windows dual-boot notes (Arch KDE)
+
+#### GRUB not showing up
+
+If GRUB is missing after a minimal install (or after something overwrote your EFI entry), you can run:
 
 ```bash
-pacman -Sy grub efibootmgr dosfstools mtools
+sudo bash arch_kde/basics/restoreGrub.sh
 ```
+
+That script runs:
 
 ```bash
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+sudo pacman -Sy grub efibootmgr dosfstools mtools
+sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+#### Windows not visible in GRUB
+
+1. Install `os-prober`:
+
+	```bash
+	sudo pacman -S os-prober
+	```
+
+2. Edit `/etc/default/grub` and ensure this is set:
+
+	```bash
+	GRUB_DISABLE_OS_PROBER=false
+	```
+
+3. Regenerate the GRUB config:
+
+	```bash
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
+	```
+
+### Ubuntu
+
+Ubuntu has a dedicated installer. After it completes, follow the printed “Next steps”.
 
 ```bash
-grub-mkconfig -o /boot/grub/grub.cfg
+cd ubuntu
+./install.sh
 ```
 
-Then exit and shutdown the system and then boot it up again.
+### Arch (shell installer)
 
-### Windows not showing up in Grub
+Runs an ordered setup pipeline (pacman, packages, git, dotfiles, dev env, docker, etc.).
 
-If you have Windows installed and it is not showing up in the grub, then run the following commands sequentially:
+```bash
+cd arch/black_box
+chmod +x main.sh
+./main.sh
+```
 
-- Install os-prober, if not already installed:
+Notes:
 
-  ```bash
-  pacman -S os-prober
-  ```
+- Some steps require sudo.
+- Docker group changes require a logout/login (or reboot).
+- Wi‑Fi setup uses `nm-connection-editor` and expects a GUI.
 
-- Edit the file `etc/default/grub` and add the following line:
+## Repo layout
 
-  ```bash
-  GRUB_DISABLE_OS_PROBER=false
-  ```
-
-- Update the grub configuration:
-
-  ```bash
-  grub-mkconfig -o /boot/grub/grub.cfg
-  ```
-
-### How to revive arch linux after any windows updates?
-
-1. Boot into the arch linux live usb.
-
-2. Connect to the internet and update all the packages as follows:
-
-   ```bash
-   pacman -Sy
-   ```
-
-3. Mount the root partition of the arch linux to /mnt and the boot partition to /mnt/boot like:
-
-   ```bash
-   mount /dev/nvme0n1p5 /mnt
-   ```
-
-   ```bash
-   mount /dev/nvme0n1p6 /mnt/boot
-   ```
-
-   ```bash
-   arch-chroot /mnt
-   ```
-
-4. Run the grub-install and grub-mkconfig commands as mentioned above.
+- `arch/` — Arch Linux setup (shell + Ansible) and dotfiles
+- `arch_kde/` — Arch KDE setup scripts + package lists
+- `ubuntu/` — Ubuntu installer, setup scripts, and dotfiles

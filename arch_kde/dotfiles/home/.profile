@@ -48,9 +48,9 @@ alias hypr="cd ~/dotfiles/hypr"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
 alias copy='xclip -selection clipboard'
-alias bat='batcat --theme=base16'
+# alias bat='batcat --theme=base16'
 # alias update_all='sudo apt update && sudo apt full-upgrade'
-alias update_all='sudo apt update && sudo apt full-upgrade'
+alias update_all='yay -Syu'
 
 alias source_z='source ~/.zshrc'
 alias source_venv='source venv/bin/activate'
@@ -167,7 +167,7 @@ alias D='cd /media/codesmith28/D'
 fixD() {
     sudo umount /media/codesmith28/D && echo "Disk unmounted."
 }
-alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | cat'
+alias battery='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | bat'
 # alias netrs='sudo systemctl restart NetworkManager && sudo systemctl restart iwd'
 netrs() {
     sudo systemctl restart NetworkManager && echo "NetworkManager restarted."
@@ -203,7 +203,7 @@ alias thunar='setsid thunar'
 alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
-alias fzf='fzf --preview="batcat --color=always --style=header,grid --line-range :500 {}"'
+alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
 # alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 alias ivm='f() { local file; file=$(tv); [ -n "$file" ] && "$EDITOR" "$file"; }; f'
 
