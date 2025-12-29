@@ -1,0 +1,9 @@
+asusctl
+google-chrome
+pacseek
+spotify-adblock
+supergfxctl
+visual-studio-code-bin
+yay
+yay-debug
+zen-browser-bin
