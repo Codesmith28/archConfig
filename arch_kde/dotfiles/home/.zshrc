@@ -24,8 +24,7 @@ compinit -C
 
 
 # ========== Deferred plugins ==========
-# Install if missing: git clone https://github.com/romkatv/zsh-defer ~/.zsh/zsh-defer
-source ~/zsh-defer/zsh-defer.plugin.zsh 2>/dev/null
+source ~/.zsh-defer/zsh-defer.plugin.zsh 2>/dev/null
 
 # These are heavy → defer them
 [ -f ~/.fzf.zsh ] && zsh-defer source ~/.fzf.zsh
