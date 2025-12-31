@@ -25,7 +25,7 @@ return {
                 palette_overrides = {},
                 overrides = {},
                 dim_inactive = false,
-                transparent_mode = true,
+                -- transparent_mode = true,
             })
         end,
     },
@@ -37,7 +37,7 @@ return {
                 -- transparent = true,
                 -- styles = {
                 --     sidebars = "transparent",
-                --     floats = "transparent",
+                --     -- floats = "transparent",
                 --     comments = {},
                 -- },
             })
@@ -108,6 +108,7 @@ return {
         "LazyVim/LazyVim",
         opts = {
             colorscheme = "catppuccin",
+            -- colorscheme = "gruvbox",
         },
     },
 }
