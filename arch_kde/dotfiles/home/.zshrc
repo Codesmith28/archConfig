@@ -6,6 +6,12 @@
 #
 # plugins=(git zsh-autosuggestions) # remove zsh-syntax-highlighting here; load it last
 # source $ZSH/oh-my-zsh.sh
+# Use cached compinit for fast startup
+
+autoload -Uz compinit
+ZSH_COMPDUMP="$HOME/.cache/zsh/.zcompdump"
+zstyle ':completion:*' rehash true
+compinit -C
 
 # ---------- Antidote ----------
 source ~/.antidote/antidote.zsh
@@ -14,14 +20,6 @@ antidote load ~/.config/zsh/plugins.txt
 # ============ Basic config ============
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 eval "$(starship init zsh)"
-
-
-# Use cached compinit for fast startup
-autoload -Uz compinit
-ZSH_COMPDUMP="$HOME/.cache/zsh/.zcompdump"
-zstyle ':completion:*' rehash true
-compinit -C
-
 
 # ========== Deferred plugins ==========
 source ~/.zsh-defer/zsh-defer.plugin.zsh 2>/dev/null
