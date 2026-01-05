@@ -1,0 +1,14 @@
+eza
+fastfetch
+gcc
+git
+go
+lazygit
+lua
+neovim
+node
+rust
+rust-analyzer
+starship
+television
+yazi
