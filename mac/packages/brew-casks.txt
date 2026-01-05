@@ -1,4 +1,3 @@
-font-hack-nerd-font
 font-jetbrains-mono-nerd-font
 kitty
 visual-studio-code
