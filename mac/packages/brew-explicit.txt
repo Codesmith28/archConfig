@@ -1,3 +1,5 @@
+bat
+btop
 eza
 fastfetch
 gcc
@@ -7,6 +9,7 @@ lazygit
 lua
 neovim
 node
+openjdk
 rust
 rust-analyzer
 starship
