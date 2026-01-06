@@ -2,5 +2,6 @@ font-fira-code-nerd-font
 font-jetbrains-mono-nerd-font
 intellij-idea
 kitty
+onedrive
 telegram
 visual-studio-code

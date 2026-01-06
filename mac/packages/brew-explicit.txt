@@ -8,9 +8,9 @@ git
 go
 lazygit
 lua
+maven
 neovim
 node
-openjdk
 rust
 rust-analyzer
 starship
