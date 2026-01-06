@@ -75,9 +75,10 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 
 
 # ========== Java Path ==========
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=$PATH:$JAVA_HOME/bin
-export PATH=$HOME/.local/bin:$PATH
+# export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+# export PATH=$PATH:$JAVA_HOME/bin
+# export PATH=$HOME/.local/bin:$PATH
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # bun completions
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
