@@ -20,3 +20,6 @@ xargs brew install --cask <brew-casks.txt
 [ -d "$HOME/.zsh-defer" ] ||
     git clone https://github.com/romkatv/zsh-defer.git \
         "$HOME/.zsh-defer"
+
+# install rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
