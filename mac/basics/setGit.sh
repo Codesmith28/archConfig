@@ -11,33 +11,6 @@ EOF
 
 echo "Setting up Git and GitHub CLI..."
 
-packages=(
-    "openssh"
-    "git"
-    "nodejs"
-    "github-cli"
-    "lazygit"
-)
-
-# -------------------------------------------------------
-# Install packages using yay
-# -------------------------------------------------------
-
-for package in "${packages[@]}"; do
-    if pacman -Qq "$package" &>/dev/null; then
-        echo "$package is already installed. Skipping..."
-    else
-        echo "Installing $package..."
-        yay -S --noconfirm "$package"
-    fi
-done
-
-echo "All required packages are installed!"
-
-# -------------------------------------------------------
-# Configure git and GitHub CLI
-# -------------------------------------------------------
-
 echo "Configuring git and GitHub CLI..."
 read -p "Enter your Git username: " git_username
 read -p "Enter your Git email: " git_email

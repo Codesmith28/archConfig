@@ -3,6 +3,7 @@ btop
 eza
 fastfetch
 gcc
+gh
 git
 go
 lazygit
