@@ -3,53 +3,75 @@
 cat <<"EOF"
   ____ _ _
  / ___(_) |_
-| |  _| | __|
+| |   _| | __|
 | |_| | | |_
  \____|_|\__|
 
 EOF
 
-echo "Setting up Git and GitHub CLI..."
+echo "--- Individual Git Profile Setup (Enhanced for SSH) ---"
 
-echo "Configuring git and GitHub CLI..."
-read -p "Enter your Git username: " git_username
-read -p "Enter your Git email: " git_email
+# 1. Collect Profile Label (e.g., work, personal)
+read -rp "Enter a label for this profile (e.g., work, personal): " LABEL
+LABEL=$(echo "$LABEL" | tr '[:upper:]' '[:lower:]') # Force lowercase
 
-git config --global user.name "$git_username"
-git config --global user.email "$git_email"
+# 2. Collect Identity Details
+read -rp "Enter Git Name for $LABEL: " GIT_NAME
+read -rp "Enter Git Email for $LABEL: " GIT_EMAIL
+
+# 3. Define and Create Paths
+TARGET_DIR="$HOME/$LABEL"
+mkdir -p "$TARGET_DIR"
+
+CONFIG_FILE="$HOME/.gitconfig-$LABEL"
+SSH_KEY_PATH="$HOME/.ssh/id_$LABEL"
+
+# 4. Create the Profile-Specific Git Config (Updated with sshCommand)
+# This forces git to use the specific key whenever you are inside TARGET_DIR
+echo "[user]
+    name = $GIT_NAME
+    email = $GIT_EMAIL
+[core]
+    sshCommand = \"ssh -i $SSH_KEY_PATH\"" >"$CONFIG_FILE"
+
+# 5. Add Conditional Include to Global Config
+git config --global "includeIf.gitdir:$TARGET_DIR/".path "$CONFIG_FILE"
 git config --global pull.rebase false
 
-# -------------------------------------------------------
-# Setting up SSH keys
-# -------------------------------------------------------
+echo "Git config created and linked to $TARGET_DIR"
 
-SSH_KEY_PATH="$HOME/.ssh/id_rsa"
-
+# 6. Setup SSH Key
 if [ -f "$SSH_KEY_PATH" ]; then
-    echo "SSH key already exists at $SSH_KEY_PATH. Skipping key generation."
+    echo "SSH key for $LABEL already exists. Skipping generation."
 else
-    echo "Generating new SSH key..."
-    ssh-keygen -t rsa -b 4096 -C "$git_email" -f "$SSH_KEY_PATH" -N ""
+    echo "Generating SSH key for $LABEL..."
+    ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY_PATH" -N ""
 fi
 
+# 7. Start SSH Agent and Add Key
 eval "$(ssh-agent -s)"
-ssh-add "$SSH_KEY_PATH"
+# On Mac, we add it to the keychain so it persists after reboot
+ssh-add --apple-use-keychain "$SSH_KEY_PATH"
 
-echo "Your SSH key has been added to the agent. Copy it to GitHub:"
+# 8. Output Public Key for GitHub
+echo -e "\n------------------------------------------------------------"
+echo "SETUP SUCCESSFUL"
+echo "Profile: $LABEL"
+echo "Directory: $TARGET_DIR"
+echo "SSH Key: $SSH_KEY_PATH"
 echo "------------------------------------------------------------"
-cat "$SSH_KEY_PATH.pub"
+echo "Copy this Public Key to your GitHub account ($GIT_EMAIL):"
+cat "${SSH_KEY_PATH}.pub"
 echo "------------------------------------------------------------"
 
-# -------------------------------------------------------
-# Setting up GitHub CLI
-# -------------------------------------------------------
-
-echo "Logging into GitHub via CLI..."
-gh auth login
-
-read -p "Do you want to install GitHub Copilot CLI? (y/n): " install_copilot
-if [[ "$install_copilot" =~ ^[Yy]$ ]]; then
-    sudo gh extension install github/copilot
+# 9. GitHub CLI Login
+read -rp "Do you want to log into GitHub CLI for this profile? (y/n): " LOGIN_GH
+if [[ "$LOGIN_GH" =~ ^[Yy]$ ]]; then
+    gh auth login
+    # Ensure gh uses SSH protocol
+    gh config set git_protocol ssh
 fi
 
-echo "Git environment setup successfully!"
+echo -e "\nAll set! Any project inside $TARGET_DIR will use your $LABEL credentials."
+echo "To clone the FIRST time into this folder, use:"
+echo "git -c core.sshCommand=\"ssh -i $SSH_KEY_PATH\" clone <url>"
