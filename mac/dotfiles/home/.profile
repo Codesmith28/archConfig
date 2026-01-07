@@ -10,7 +10,6 @@ PS1='[\u@\h \W]\$ '
 
 # Define Editor
 export EDITOR=nvim
-export BROWSER=nautilus
 
 # alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
@@ -105,6 +104,12 @@ alias gcheck="git checkout"
 ghcs() {
     gh copilot suggest "$1"
 }
+setgit() {
+    ~/archConfig/mac/basics/setGit.sh
+}
+
+alias gcl-work='git -c core.sshCommand="ssh -i ~/.ssh/id_work" clone'
+alias gcl-personal='git -c core.sshCommand="ssh -i ~/.ssh/id_personal" clone'
 
 # -----------------------------------------------------
 # SCRIPTS
@@ -198,7 +203,7 @@ if [ "$TERM" = "xterm-256color" ] && [ -z "$VIM" ]; then
     echo -ne '\e[3 q'
 fi
 
-alias pj='cd ~/Projects'
+alias pj='cd ~/personal/Projects/'
 alias thunar='setsid thunar'
 alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
