@@ -45,7 +45,7 @@ if [ -f "$SSH_KEY_PATH" ]; then
     echo "SSH key for $LABEL already exists. Skipping generation."
 else
     echo "Generating SSH key for $LABEL..."
-    ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY_PATH" -N ""
+    ssh-keygen -t rsa -b 4096 -C "$GIT_EMAIL" -f "$SSH_KEY_PATH" -N ""
 fi
 
 # 7. Start SSH Agent and Add Key
