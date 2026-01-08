@@ -105,7 +105,7 @@ ghcs() {
     gh copilot suggest "$1"
 }
 setgit() {
-    ~/archConfig/mac/basics/setGit.sh
+    ~/personal/archConfig/mac/basics/setGit.sh
 }
 
 alias gcl-work='git -c core.sshCommand="ssh -i ~/.ssh/id_work" clone'
