@@ -55,6 +55,7 @@ sudo apt install -y \
     jq \
     poppler-utils \
     zoxide \
+    btop \
     imagemagick
 
 # 1. Create the local bin directory if it doesn't exist
