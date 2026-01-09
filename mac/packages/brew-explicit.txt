@@ -1,7 +1,9 @@
+bash
 bat
 btop
 eza
 fastfetch
+fzf
 gcc
 gh
 git
@@ -9,10 +11,14 @@ go
 lazygit
 lua
 maven
+minikube
 neovim
 node
+ripgrep
 rust
 rust-analyzer
 starship
 television
+tmux
 yazi
+zoxide
