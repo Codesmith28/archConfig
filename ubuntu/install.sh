@@ -32,7 +32,6 @@ sudo apt install -y \
     procps \
     file \
     git \
-    eza \
     fastfetch \
     cmatrix \
     zsh \
@@ -56,6 +55,13 @@ sudo apt install -y \
     poppler-utils \
     zoxide \
     imagemagick
+
+# 1. Create the local bin directory if it doesn't exist
+mkdir -p ~/.local/bin
+# 2. Download and extract directly into that directory
+wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz -C ~/.local/bin
+# 3. Ensure it is executable (tar usually preserves this, but just in case)
+chmod +x ~/.local/bin/eza
 
 # Symlink batcat -> bat and fdfind -> fd
 sudo ln -sf /usr/bin/batcat /usr/local/bin/bat
