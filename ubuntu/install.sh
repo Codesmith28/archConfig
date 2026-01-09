@@ -49,7 +49,6 @@ sudo apt install -y \
     gnome-calculator \
     xournalpp \
     cheese \
-    glow \
     ffmpeg \
     p7zip-full \
     p7zip-rar \
