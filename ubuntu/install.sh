@@ -38,6 +38,7 @@ sudo apt install -y \
     fzf \
     dconf-cli \
     tmux \
+    lua5.4 \
     bat \
     fd-find \
     ripgrep \
@@ -66,6 +67,13 @@ chmod +x ~/.local/bin/eza
 # Symlink batcat -> bat and fdfind -> fd
 sudo ln -sf /usr/bin/batcat /usr/local/bin/bat
 sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
+
+# vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# nvim
+sudo snap install nvim --classic
 
 # ----------------------------------------------------
 # starship prompt

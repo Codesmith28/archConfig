@@ -82,3 +82,5 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # bun completions
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
+
+export PATH="$HOME/.local/bin:$PATH"
