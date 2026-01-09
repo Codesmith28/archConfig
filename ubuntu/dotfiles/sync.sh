@@ -1,37 +1,33 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Map of items to destinations
-declare -A SYMLINKS=(
-    [.bashrc]="$HOME"
-    [.profile]="$HOME"
-    [.tmux]="$HOME"
-    [.zshrc]="$HOME"
-    [kitty]="$HOME/.config"
-    [nvim]="$HOME/.config"
-    [starship]="$HOME/.config"
-    [television]="$HOME/.config"
-    [tmux]="$HOME/.config"
-    [yazi]="$HOME/.config"
-    [work]="$HOME/.config"
-    [scripts]="$HOME/.config"
-)
+link() {
+  local src="$1"
+  local dest="$2"
 
-link_item() {
-    local item="$1"
-    local dest="${SYMLINKS[$item]}"
-    local target="$dest/$item"
-    local source="$DOTFILES_DIR/$item"
-
-    [ -e "$target" ] || [ -L "$target" ] && rm -rf "$target"
-    mkdir -p "$dest"
-    ln -s "$source" "$target"
-    echo "Linked $source -> $target"
+  rm -rf "$dest"
+  mkdir -p "$(dirname "$dest")"
+  ln -s "$src" "$dest"
+  echo "Linked $src -> $dest"
 }
 
-for item in "${!SYMLINKS[@]}"; do
-    link_item "$item"
-done
+echo "==> Linking home dotfiles"
+if [ -d "$DOTFILES_DIR/home" ]; then
+  for file in "$DOTFILES_DIR/home"/.*; do
+    [ "$(basename "$file")" = "." ] && continue
+    [ "$(basename "$file")" = ".." ] && continue
+    link "$file" "$HOME/$(basename "$file")"
+  done
+fi
 
-echo "All symlinks created."
+echo "==> Linking ~/.config"
+if [ -d "$DOTFILES_DIR/config" ]; then
+  for item in "$DOTFILES_DIR/config"/*; do
+    link "$item" "$HOME/.config/$(basename "$item")"
+  done
+fi
+
+echo "✅ All symlinks created"
+
