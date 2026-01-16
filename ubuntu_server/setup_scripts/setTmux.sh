@@ -1,8 +1,10 @@
 #!/bin/bash
 
-rm -rf ~/.tmux
+# antidote bundle <~/.config/zsh/plugins.txt >~/.config/zsh/plugins.zsh
 
-antidote bundle <~/.config/zsh/plugins.txt >~/.config/zsh/plugins.zsh
+# install fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --all
 
 # 1. Create the directory if it doesn't exist
 mkdir -p ~/.tmux/plugins/tpm

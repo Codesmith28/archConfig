@@ -54,7 +54,6 @@ if [[ -n "$DEFAULT_NODE_VER" ]]; then
 fi
 
 
-# ========== Bun ==========
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 # bun autocomplete is slow → defer
@@ -82,3 +81,28 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # bun completions
 [ -s "/home/codesmith28/.bun/_bun" ] && source "/home/codesmith28/.bun/_bun"
+
+# brew
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+
+# Added by setup-java-toolchains.sh
+export JAVA_11_HOME="/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home"
+
+# Added by setup-java-toolchains.sh
+export JAVA_21_HOME="/Library/Java/JavaVirtualMachines/openjdk-21.jdk/Contents/Home"
+
+export JAVA_HOME="$JAVA_21_HOME"
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# Added by Antigravity
+export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
+
+eval "$(/usr/libexec/path_helper)"
+
+# Added by Antigravity
+export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

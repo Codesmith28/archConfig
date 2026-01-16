@@ -1,12 +1,18 @@
 adjust_line_height  0
 adjust_column_width 0
 
-# font_family Hack
 
-font_size 12
+# BEGIN_KITTY_FONTS
+font_family      family="Monaco"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
+# END_KITTY_FONTS
+
+font_size 14
+# bold_font        auto
+# italic_font      auto
+# bold_italic_font auto
 
 force_ltr yes
 adjust_baseline 1
@@ -75,8 +81,8 @@ bell_on_tab yes
 command_on_bell none
 
 remember_window_size no
-initial_window_width 150c
-initial_window_height 50c
+initial_window_width 135c
+initial_window_height 40c
 enabled_layouts splits,stack
 window_resize_step_cells 2
 window_resize_step_lines 2
@@ -210,3 +216,4 @@ map kitty_mod+f6 debug_config
 
 # Theme selection
 include ./Catppuccin-Mocha-Adwaita.conf
+
