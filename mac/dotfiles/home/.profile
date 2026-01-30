@@ -110,7 +110,7 @@ setgit() {
 
 alias gcl-work='git -c core.sshCommand="ssh -i ~/.ssh/id_work" clone'
 alias gcl-personal='git -c core.sshCommand="ssh -i ~/.ssh/id_personal" clone'
-
+alias work='cd ~/work'
 alias ssh-work='ssh -i "~/.ssh/id_work"'
 
 # -----------------------------------------------------
