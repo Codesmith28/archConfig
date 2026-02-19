@@ -101,6 +101,7 @@ alias gst="git stash"
 alias gsp="git stash; git pull"
 alias lg='lazygit'
 alias gcheck="git checkout"
+alias gwt='git worktree'
 ghcs() {
     gh copilot suggest "$1"
 }
@@ -201,9 +202,9 @@ vsc() {
     code "$1" && exit
 }
 # Set blinking underline cursor (only when not in Neovim)
-if [ "$TERM" = "xterm-256color" ] && [ -z "$VIM" ]; then
-    echo -ne '\e[3 q'
-fi
+# if [ "$TERM" = "xterm-256color" ] && [ -z "$VIM" ]; then
+#     echo -ne '\e[3 q'
+# fi
 
 alias pj='cd ~/personal/Projects/'
 alias thunar='setsid thunar'
@@ -294,3 +295,4 @@ hdfs-tree() {
 }
 
 . "$HOME/.cargo/env"
+export PATH=~/.adaptive/bin/:$PATH

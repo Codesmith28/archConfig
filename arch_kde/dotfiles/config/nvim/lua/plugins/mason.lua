@@ -64,7 +64,6 @@ return {
                 "google-java-format",
 
                 -- Configs / Misc
-                "taplo", -- TOML
                 "mesonlsp",
                 "tree-sitter-cli",
                 "xmlformatter",

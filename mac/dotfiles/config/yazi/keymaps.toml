@@ -1,0 +1,4 @@
+[[mgr.prepend_keymap]]
+on = ["b", "s"]
+run = "plugin what-size"
+desc = "Calc size of selection or cwd"

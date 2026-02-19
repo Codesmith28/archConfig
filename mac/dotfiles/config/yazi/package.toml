@@ -13,5 +13,12 @@ use = "yazi-rs/plugins:full-border"
 rev = "4e55902"
 hash = "3996fc74044bc44144b323686f887e1"
 
-[flavor]
-deps = []
+[[plugin.deps]]
+use = "pirafrank/what-size"
+rev = "179ebf6"
+hash = "57056b9728006881d580ccabe8154a9c"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "8e6296f"
+hash = "d9da921c3bd37ba32ee27a8a7a40461f"

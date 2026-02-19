@@ -35,11 +35,11 @@ return {
         config = function()
             require("tokyonight").setup({
                 -- transparent = true,
-                -- styles = {
-                --     sidebars = "transparent",
-                --     -- floats = "transparent",
-                --     comments = {},
-                -- },
+                styles = {
+                    sidebars = "transparent",
+                    -- floats = "transparent",
+                    comments = {},
+                },
             })
         end,
     },
@@ -105,10 +105,20 @@ return {
         end,
     },
     {
-        "LazyVim/LazyVim",
-        opts = {
-            colorscheme = "catppuccin",
-            -- colorscheme = "gruvbox",
-        },
+        "projekt0n/github-nvim-theme",
+        name = "github-theme",
+        lazy = false, -- make sure we load this during startup if it is your main colorscheme
+        config = function()
+            require("github-theme").setup({
+                -- ...
+            })
+        end,
     },
+    -- {
+    --     "LazyVim/LazyVim",
+    --     opts = {
+    --         colorscheme = "catppuccin",
+    --         colorscheme = "gruvbox",
+    --     },
+    -- },
 }

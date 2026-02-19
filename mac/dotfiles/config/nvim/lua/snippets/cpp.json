@@ -2,18 +2,22 @@
     "Leetcode boilerplate": {
         "prefix": "leet",
         "body": [
-            "#include<bits/stdc++.h>",
             "#ifndef ONLINE_JUDGE",
+            "#define _GLIBCXX_DEBUG",
             "#include \"debug.h\"",
             "#else",
             "#define dbg(x...)",
             "#endif",
+            "#include<bits/stdc++.h>",
             "",
             "using namespace std;",
             "/* (╯°□°)╯︵ ┻━┻ */",
             "",
             "$1",
             "",
+            "/*",
+            "",
+            "*/",
             "int main() {",
             "    $0",
             "    return 0;",
@@ -60,12 +64,13 @@
     "Boilerplate debugged": {
         "prefix": "dboi",
         "body": [
-            "#include <bits/stdc++.h>",
             "#ifndef ONLINE_JUDGE",
-            "#include \"debug.h\"",
+            "#define _GLIBCXX_DEBUG",
+            "#include \"library/debug.h\"",
             "#else",
             "#define dbg(x...)",
             "#endif",
+            "#include <bits/stdc++.h>",
             "",
             "using namespace std;",
             "/* (╯°□°)╯︵ ┻━┻ */",
@@ -103,12 +108,13 @@
     "Boilerplate with debugging": {
         "prefix": "doi",
         "body": [
-            "#include <bits/stdc++.h>",
             "#ifndef ONLINE_JUDGE",
-            "#include \"debug.h\"",
+            "#define _GLIBCXX_DEBUG",
+            "#include \"library/debug.h\"",
             "#else",
             "#define dbg(x...)",
             "#endif",
+            "#include <bits/stdc++.h>",
             "",
             "using namespace std;",
             "/* (╯°□°)╯︵ ┻━┻ */",
@@ -1211,5 +1217,38 @@
             "using mint = modint<mod>;"
         ],
         "description": "mod arithmatic"
+    },
+    "generate submasks": {
+        "prefix": "gensubmasks",
+        "body": [
+            "void genSubmasks(int mask) {",
+            "        for (int sub = mask;; sub = (sub - 1) & mask) {",
+            "                cout << bitset<4>(sub) << \"\\n\"; // adjust size if needed",
+            "                if (sub == 0) break;",
+            "        }",
+            "}"
+        ],
+        "description": "generate submasks"
+    },
+    "Sum over Subset": {
+        "prefix": "sos",
+        "body": [
+            "// SOS: Sum Over Subsets",
+            "vector<int> SOS(int n, vector<int> &arr) { ",
+            "        vector<int> dp(1 << n, 0);",
+            "        for (int mask = 0; mask < (1 << n); mask++) {",
+            "                dp[mask] = arr[mask];",
+            "        }",
+            "        for (int i = 0; i < n; i++) {",
+            "                for (int mask = 0; mask < (1 << n); mask++) {",
+            "                        if ((mask & (1 << i))) {                 // subset condition",
+            "                                dp[mask] += dp[mask ^ (1 << i)]; // operation",
+            "                        }",
+            "                }",
+            "        }",
+            "        return dp;",
+            "}"
+        ],
+        "description": "Sum over Subset"
     }
 }

@@ -8,7 +8,7 @@ end
 ---------------------------------------------------------
 
 -- System default monospace font (no explicit family)
-vim.o.guifont = "monospace:h12"
+-- vim.o.guifont = "monospace:h12"
 
 -- Line/column adjustments
 vim.g.neovide_font_adjust_line_height = 0
