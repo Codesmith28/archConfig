@@ -104,14 +104,66 @@ return {
             })
         end,
     },
+    -- add dracula
+    {
+        "Mofiqul/dracula.nvim",
+        priority = 1000, -- make sure it loads first
+        config = function()
+            local dracula = require("dracula")
+
+            dracula.setup({
+                transparent_bg = false, -- set true only if you handle floats below
+                show_end_of_buffer = true,
+                italic_comment = true,
+
+                -- colors = {
+                --     bg = "#282A36",
+                --     fg = "#F8F8F2",
+                --     selection = "#44475A",
+                --     comment = "#6272A4",
+                --     red = "#FF5555",
+                --     orange = "#FFB86C",
+                --     yellow = "#F1FA8C",
+                --     green = "#50fa7b",
+                --     purple = "#BD93F9",
+                --     cyan = "#8BE9FD",
+                --     pink = "#FF79C6",
+                --     menu = "#21222C",
+                --     visual = "#3E4452",
+                --     gutter_fg = "#4B5263",
+                --     nontext = "#3B4048",
+                -- },
+
+                overrides = function(colors)
+                    return {
+                        -- 🔹 Floats
+                        NormalFloat = { bg = colors.menu },
+                        FloatBorder = { fg = colors.purple, bg = colors.menu },
+                        FloatTitle = { fg = colors.cyan, bg = colors.menu },
+
+                        -- 🔹 Telescope / Snacks style popups
+                        Pmenu = { bg = colors.menu },
+                        PmenuSel = { bg = colors.selection },
+                        PmenuBorder = { fg = colors.purple },
+
+                        -- 🔹 LazyVim UI consistency
+                        NormalDark = { bg = colors.bg },
+                        CursorLine = { bg = colors.selection },
+
+                        -- 🔹 Snacks (if using fancy borders)
+                        SnacksNormal = { bg = colors.menu },
+                        SnacksBorder = { fg = colors.purple, bg = colors.menu },
+                    }
+                end,
+            })
+        end,
+    },
     {
         "projekt0n/github-nvim-theme",
         name = "github-theme",
         lazy = false, -- make sure we load this during startup if it is your main colorscheme
         config = function()
-            require("github-theme").setup({
-                -- ...
-            })
+            require("github-theme").setup({})
         end,
     },
     -- {
