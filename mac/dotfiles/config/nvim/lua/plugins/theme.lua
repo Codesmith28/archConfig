@@ -16,17 +16,29 @@ return {
                     emphasis = true,
                 },
                 strikethrough = true,
+
                 invert_selection = false,
                 invert_signs = false,
                 invert_tabline = false,
-                invert_intend_guides = false,
-                inverse = true, -- invert background for search, diffs, statuslines
-                contrast = "hard", -- options: "hard", "soft", "medium"
+                invert_indent_guides = false,
+                inverse = true,
+
+                contrast = "hard", -- "hard" | "medium" | "soft"
+
                 palette_overrides = {},
-                overrides = {},
+
+                overrides = {
+                    -- keep floats non-transparent
+                    NormalFloat = { bg = "#282828" },
+                    FloatBorder = { bg = "#282828" },
+                    Pmenu = { bg = "#282828" },
+                },
+
                 dim_inactive = false,
-                -- transparent_mode = true,
+                transparent_mode = true,
             })
+
+            -- vim.cmd.colorscheme("gruvbox")
         end,
     },
     {
@@ -54,24 +66,24 @@ return {
                 term_colors = true, -- terminal colors matching theme
 
                 -- Adwaita Background
-                custom_highlights = function(colors)
-                    return {
-                        Normal = { bg = "#171717", fg = "#deddda" },
-                        -- NormalFloat = { bg = "#171717", fg = "#deddda" },
-                        -- FloatBorder = { bg = "#171717", fg = "#deddda" },
-
-                        -- Selections
-                        Visual = { bg = "#303030", fg = "#c0bfbc" },
-                        VisualNOS = { bg = "#303030", fg = "#c0bfbc" },
-
-                        -- Cursor line (optional but recommended)
-                        CursorLine = { bg = "#1f1f1f" },
-
-                        -- UI Elements
-                        LineNr = { fg = "#5a5a5a" },
-                        CursorLineNr = { fg = "#deddda" },
-                    }
-                end,
+                -- custom_highlights = function(colors)
+                --     return {
+                --         Normal = { bg = "#171717", fg = "#deddda" },
+                --         -- NormalFloat = { bg = "#171717", fg = "#deddda" },
+                --         -- FloatBorder = { bg = "#171717", fg = "#deddda" },
+                --
+                --         -- Selections
+                --         Visual = { bg = "#303030", fg = "#c0bfbc" },
+                --         VisualNOS = { bg = "#303030", fg = "#c0bfbc" },
+                --
+                --         -- Cursor line (optional but recommended)
+                --         CursorLine = { bg = "#1f1f1f" },
+                --
+                --         -- UI Elements
+                --         LineNr = { fg = "#5a5a5a" },
+                --         CursorLineNr = { fg = "#deddda" },
+                --     }
+                -- end,
 
                 styles = {
                     comments = {},
@@ -112,7 +124,7 @@ return {
             local dracula = require("dracula")
 
             dracula.setup({
-                transparent_bg = false, -- set true only if you handle floats below
+                transparent_bg = true, -- set true only if you handle floats below
                 show_end_of_buffer = true,
                 italic_comment = true,
 
@@ -166,11 +178,11 @@ return {
             require("github-theme").setup({})
         end,
     },
-    -- {
-    --     "LazyVim/LazyVim",
-    --     opts = {
-    --         colorscheme = "catppuccin",
-    --         colorscheme = "gruvbox",
-    --     },
-    -- },
+    {
+        "LazyVim/LazyVim",
+        opts = {
+            colorscheme = "catppuccin",
+            -- colorscheme = "gruvbox",
+        },
+    },
 }

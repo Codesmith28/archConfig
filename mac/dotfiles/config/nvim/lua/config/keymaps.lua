@@ -35,5 +35,3 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- Add go tags:
 map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
-
--- open file picker using ctrl + p: File files using snacks
