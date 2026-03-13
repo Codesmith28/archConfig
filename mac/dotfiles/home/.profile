@@ -201,19 +201,10 @@ export DOCKER_HOST=unix:///var/run/docker.sock
 vsc() {
     code "$1" && exit
 }
-# Set blinking underline cursor (only when not in Neovim)
-# if [ "$TERM" = "xterm-256color" ] && [ -z "$VIM" ]; then
-#     echo -ne '\e[3 q'
-# fi
 
 alias pj='cd ~/personal/Projects/'
-alias thunar='setsid thunar'
-alias files='setsid $BROWSER'
-# alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
-# alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
-alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
-# alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
-alias ivm='f() { local file; file=$(tv); [ -n "$file" ] && "$EDITOR" "$file"; }; f'
+alias fzf="fzf --style full --preview 'fzf-preview.sh {}' --bind 'focus:transform-header:file --brief {}'"
+alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
@@ -221,6 +212,7 @@ runcpp() {
     clang++ "$1" -o run && "./run"
     rm run
 }
+
 runcc() {
     clang "$1" -o run && "./run"
     rm run
@@ -296,3 +288,7 @@ hdfs-tree() {
 
 . "$HOME/.cargo/env"
 export PATH=~/.adaptive/bin/:$PATH
+
+# CP fixes
+export CC=gcc-15
+export CXX=g++-15

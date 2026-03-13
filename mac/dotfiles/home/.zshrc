@@ -26,7 +26,8 @@ source ~/.zsh-defer/zsh-defer.plugin.zsh 2>/dev/null
 
 # These are heavy → defer them
 [ -f ~/.fzf.zsh ] && zsh-defer source ~/.fzf.zsh
-zsh-defer eval "$(tv init zsh)"
+source <(fzf --zsh)
+# zsh-defer eval "$(tv init zsh)"
 
 # zsh-syntax-highlighting must load last → defer!
 zsh-defer source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
