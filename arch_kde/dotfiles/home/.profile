@@ -10,7 +10,7 @@ PS1='[\u@\h \W]\$ '
 
 # Define Editor
 export EDITOR=nvim
-export BROWSER=nautilus
+export BROWSER=zen-browser
 
 # alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
