@@ -1,0 +1,18 @@
+configuration {
+    modi: "drun,run,window,emoji";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    matching: "fuzzy";
+    sort: true;
+    sorting-method: "fzf";
+    hover-select: false;
+    drun-display-format: "{icon}  {name}";
+    display-drun: "Apps";
+    display-run: "Run";
+    display-window: "Windows";
+    display-emoji: "Emoji";
+    terminal: "kitty";
+    font: "JetBrainsMono Nerd Font 12";
+}
+
+@theme "themes/hypr-mono.rasi"

@@ -1,0 +1,169 @@
+* {
+    font: "JetBrainsMono Nerd Font 12";
+
+    bg-main:         rgba (0, 0, 0, 62%);
+    bg-surface:      rgba (10, 10, 10, 74%);
+    bg-surface-hi:   rgba (18, 18, 18, 86%);
+    bg-chip:         rgba (8, 8, 8, 68%);
+
+    fg-main:         rgba (242, 245, 250, 100%);
+    fg-dim:          rgba (220, 224, 230, 100%);
+    fg-muted:        rgba (156, 162, 172, 100%);
+
+    accent:          rgba (170, 176, 186, 88%);
+    accent-strong:   rgba (236, 239, 244, 100%);
+    stroke:          rgba (118, 122, 128, 48%);
+
+    radius:          10px;
+    spacing:         8px;
+}
+
+window {
+    width: 16%;
+    location: center;
+    anchor: center;
+    transparency: "real";
+
+    background-color: @bg-main;
+    border: 1px;
+    border-radius: @radius;
+    border-color: @accent;
+
+    padding: 14px;
+}
+
+mainbox,
+inputbar,
+listview,
+mode-switcher {
+    background-color: transparent;
+}
+
+mainbox {
+    spacing: @spacing;
+}
+
+inputbar {
+    children: [ prompt, entry ];
+    background-color: @bg-surface;
+    border: 1px;
+    border-color: @stroke;
+    border-radius: @radius;
+    padding: 10px 12px;
+    spacing: 10px;
+}
+
+prompt,
+entry,
+element-text,
+element-icon,
+case-indicator,
+textbox,
+num-filtered-rows,
+num-rows {
+    background-color: transparent;
+}
+
+prompt {
+    text-color: @accent-strong;
+    padding: 0 2px 0 0;
+}
+
+entry {
+    text-color: @fg-main;
+    placeholder: "Search";
+    placeholder-color: @fg-muted;
+    cursor-color: @accent;
+}
+
+message {
+    enabled: false;
+}
+
+listview {
+    lines: 11;
+    columns: 1;
+    dynamic: true;
+    fixed-height: false;
+    cycle: false;
+    scrollbar: true;
+    spacing: 5px;
+    padding: 4px 2px 2px 2px;
+}
+
+element {
+    orientation: horizontal;
+    children: [ element-icon, element-text ];
+    spacing: 12px;
+
+    background-color: @bg-surface;
+    border: 1px;
+    border-color: @stroke;
+    border-radius: @radius;
+    padding: 8px 10px;
+}
+
+element selected {
+    background-color: @bg-surface-hi;
+    border-color: @accent;
+}
+
+element-text {
+    text-color: @fg-dim;
+    vertical-align: 0.5;
+    highlight: none;
+}
+
+element selected element-text {
+    text-color: @fg-main;
+}
+
+element-icon {
+    size: 1.10em;
+    vertical-align: 0.5;
+}
+
+mode-switcher {
+    enabled: true;
+    spacing: 8px;
+}
+
+button {
+    background-color: @bg-chip;
+    border: 1px;
+    border-color: @stroke;
+    border-radius: @radius;
+    padding: 5px 10px;
+    text-color: @fg-muted;
+}
+
+button selected {
+    background-color: @bg-surface;
+    border-color: @accent;
+    text-color: @fg-main;
+}
+
+scrollbar {
+    background-color: transparent;
+    width: 3px;
+    border: 0;
+    handle-width: 6px;
+    handle-color: @accent;
+    handle-rounded-corners: true;
+}
+
+@media ( max-width: 1500 ) {
+    window {
+        width: 19%;
+    }
+}
+
+@media ( max-width: 1100 ) {
+    window {
+        width: 32%;
+    }
+
+    listview {
+        lines: 9;
+    }
+}
