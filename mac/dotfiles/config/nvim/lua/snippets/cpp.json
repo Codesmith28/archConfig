@@ -32,7 +32,7 @@
             "    return 0;",
             "}"
         ],
-        "description": "boilerplate code for leetcode problems in C++"
+        "description": "[Boilerplate] LeetCode-style template. Includes bits/stdc++.h, mt19937_64 RNG seeded from system clock, and a main() with high-resolution nanosecond timer (printed to stderr). Conditional debug header included via #ifndef ONLINE_JUDGE. Use $1 for helper functions/structs, $0 for main logic.\nUsage:\n  // $1 = helper structs/functions area\n  // $0 = main logic cursor\n  // RNG, timer, debug guard included automatically"
     },
     "Boilerplate debugged": {
         "prefix": "dboi",
@@ -84,7 +84,7 @@
             "    return 0;",
             "}"
         ],
-        "description": "debugged boiler plate"
+        "description": "[Boilerplate] Full competitive-programming template with debug support. Features: #define int long long, pii, endl='\\n', mt19937_64 RNG, fast I/O (sync_with_stdio+cin.tie), file redirection (_in.txt/_out.txt) under ONLINE_JUDGE guard, multi-test-case loop via solve(). Millisecond timer printed to stderr. $1 to toggle test-case input, $0 inside solve().\nUsage:\n  // $0 inside solve(); $1 toggles 'cin >> testCases'\n  // Locally: reads _in.txt, writes _out.txt\n  // On judge: #ifdef guard disables file I/O and debug"
     },
     "Boilerplate with debugging": {
         "prefix": "doi",
@@ -131,7 +131,7 @@
             "    return 0;",
             "}"
         ],
-        "description": ""
+        "description": "[Boilerplate] Competitive-programming template without file I/O redirection. Same as 'dboi' (int=ll, pii, RNG, fast I/O, multi-testcase loop, ms timer) but reads stdin/stdout directly \u2014 safe to submit as-is. $1 to toggle test-case read, $0 inside solve().\nUsage:\n  // $0 inside solve(); $1 toggles test-case read\n  // stdout/stdin direct; safe to submit as-is"
     },
     "Rolling hash simpler": {
         "prefix": "rollsimple",
@@ -167,7 +167,7 @@
             "    return res;",
             "}"
         ],
-        "description": "Rolling hash simpler"
+        "description": "[String Hashing] Simple polynomial rolling hash over a string. Base=911, uses unsigned long long (natural mod 2^64). Functions: precalc() \u2014 precomputes power array p[]; build(s) \u2014 fills prefix hash array ha[]; get_hash(l,r) \u2014 O(1) hash of substring s[l..r]; pattern_hash(s) \u2014 hash of a short pattern string. Collision chance ~1/2^64; fast but no explicit modulus guard. O(N) build, O(1) query.\nUsage:\n  precalc();\n  build(s);\n  ull h  = get_hash(l, r);    // hash of s[l..r]\n  ull ph = pattern_hash(pat); // hash of pattern string"
     },
     "Fenwick Tree 1 based": {
         "prefix": "fenwick",
@@ -206,7 +206,7 @@
             "};",
             ""
         ],
-        "description": "Fenwick Tree 1 based"
+        "description": "[Data Structure] Binary Indexed Tree (BIT / Fenwick Tree), 1-based indexing. Supports: update(i, val) \u2014 add val to position i, O(log N); query(i) \u2014 prefix sum [1..i], O(log N); range_query(l, r) \u2014 sum over [l..r], O(log N). Internal tree vector sized n+1. Construct with BIT(size). Ideal for point-update / prefix-sum problems.\nUsage:\n  BIT bit(n);\n  bit.update(i, val);            // point add at index i (1-based)\n  int s = bit.query(i);          // prefix sum [1..i]\n  int r = bit.range_query(l, r); // range sum [l..r]"
     },
     "Lazy Segment Tree 1 based": {
         "prefix": "segtree",
@@ -296,7 +296,7 @@
             "};",
             ""
         ],
-        "description": "Lazy Segment Tree 1 based"
+        "description": "[Data Structure] Lazy Segment Tree (struct-based, 0-based array, 1-based node indexing). Supports range-add updates and range-max queries with lazy propagation. Methods: build(arr,node,st,en) \u2014 O(N) construction; query(node,st,en,l,r) \u2014 max in [l,r], O(log N); range_update(node,st,en,l,r,val) \u2014 add val to [l,r], O(log N); pt_update(node,st,en,idx,val) \u2014 point set, O(log N). tree/lazy arrays sized 4*n.\nUsage:\n  segtree st(n);\n  st.build(arr, 1, 0, n-1);\n  int mx = st.query(1, 0, n-1, l, r);            // range max\n  st.range_update(1, 0, n-1, l, r, val);         // range add\n  st.pt_update(1, 0, n-1, idx, val);             // point set"
     },
     "Sieve of Eratosthenes snippet for prime numbers": {
         "prefix": "sieve",
@@ -321,7 +321,7 @@
             "}",
             "$0"
         ],
-        "description": "Sieve of Eratosthenes for prime numbers"
+        "description": "[Number Theory] Sieve of Eratosthenes up to N=2e6. After calling sieve(): isPrime[i] is true iff i is prime; primes[] holds all primes in sorted order. Time O(N log log N), Space O(N). Marks composites starting from i*i to avoid redundant work. Adjust N as needed.\nUsage:\n  sieve();\n  if (isPrime[k]) { ... }       // primality check\n  for (int p : primes) { ... }  // iterate all primes < N"
     },
     "vectors": {
         "prefix": "vi",
@@ -329,7 +329,7 @@
             "vector<int> $1;",
             "$0"
         ],
-        "description": "Input vector of integers"
+        "description": "[Utility] Declares a vector<int> with the given name. Quick shorthand \u2014 type 'vi' then name. $1=name, $0=next cursor.\nUsage:\n  vi arr;  // expands to: vector<int> arr;"
     },
     "vector<vector>": {
         "prefix": "vvi",
@@ -337,7 +337,7 @@
             "vector<vector<int>> $1($2, vector<int>($3));",
             "$0"
         ],
-        "description": "Input vector of integers"
+        "description": "[Utility] Declares a 2D vector<vector<int>> with given name and dimensions. $1=name, $2=rows, $3=cols, $0=next cursor.\nUsage:\n  vvi g 3 4;  // expands to: vector<vector<int>> g(3, vector<int>(4));"
     },
     "Disjoint Set Union": {
         "prefix": "dsu",
@@ -380,7 +380,7 @@
             "    }",
             "};"
         ],
-        "description": "Disjoint Set Union"
+        "description": "[Data Structure] DSU / Union-Find with path compression and union by rank. Tracks component sizes. Methods: Find(x) \u2014 returns root of x with path compression, O(\u03b1(N)); Union(x,y) \u2014 merges sets, returns false if already same, O(\u03b1(N)); getSize(x) \u2014 size of x's component. Initialize with DSU(n) for nodes 0..n.\nUsage:\n  DSU dsu(n);\n  dsu.Union(u, v);           // merge components of u and v\n  int r  = dsu.Find(x);     // root / representative of x\n  int sz = dsu.getSize(x);  // size of x's component"
     },
     "sortSnippet": {
         "prefix": "sa",
@@ -388,7 +388,7 @@
             "sort($1.begin(), $1.end() $2);",
             "$0"
         ],
-        "description": "Sort a vector"
+        "description": "[Utility] Calls std::sort on a container using begin()/end(). $1=container name, $2=optional comparator (e.g. greater<int>()). Leave $2 empty for ascending order.\nUsage:\n  sort(v.begin(), v.end());                 // ascending\n  sort(v.begin(), v.end(), greater<int>()); // descending"
     },
     "Trie": {
         "prefix": "trie",
@@ -447,7 +447,7 @@
             "};",
             ""
         ],
-        "description": "Trie"
+        "description": "[Data Structure] Standard Trie for lowercase English strings (26 children). Methods: insert(key) \u2014 O(|key|); search(key) \u2014 exact match, O(|key|), returns bool; starts_with(pref) \u2014 prefix existence check, O(|pref|), returns bool. Each TrieNode holds child[26] pointers and an is_end flag. Memory: O(total chars * 26).\nUsage:\n  Trie t;\n  t.insert(\"apple\");\n  t.search(\"apple\");       // true\n  t.starts_with(\"app\");   // true"
     },
     "Singly Linked List Node": {
         "prefix": "listnode",
@@ -461,7 +461,7 @@
             "    }",
             "};"
         ],
-        "description": "Snippet for a singly linked list node structure"
+        "description": "[Data Structure] Singly linked list node struct (LeetCode-style). Fields: val (int), next (ListNode*). Constructor sets val and next=NULL. Use as building block for linked-list problems.\nUsage:\n  ListNode* head = new ListNode(1);\n  head->next = new ListNode(2);"
     },
     "Binary Tree Node": {
         "prefix": "btnode",
@@ -477,7 +477,7 @@
             "    }",
             "};"
         ],
-        "description": "Snippet for a binary tree node structure"
+        "description": "[Data Structure] Binary tree node struct (LeetCode-style). Fields: val (int), left/right (TreeNode*). Constructor sets val and both children to NULL. Standard base for tree traversal problems.\nUsage:\n  TreeNode* root = new TreeNode(1);\n  root->left  = new TreeNode(2);\n  root->right = new TreeNode(3);"
     },
     "ordered_set": {
         "prefix": "pbds",
@@ -492,7 +492,7 @@
             "                         rb_tree_tag,                        // red-black tree (also supports splay trees etc.)",
             "                         tree_order_statistics_node_update>; // adds order-statistics operations"
         ],
-        "description": "ordered_set"
+        "description": "[Data Structure] Policy-based ordered_set from GCC PBDS (pb_ds). Backed by red-black tree. Like std::set but adds: order_of_key(x) \u2014 number of elements < x, O(log N); find_by_order(k) \u2014 iterator to k-th element (0-indexed), O(log N). Use with #include <ext/pb_ds/...>. Template alias: ordered_set<T>.\nUsage:\n  ordered_set<int> s;\n  s.insert(3);\n  s.order_of_key(3);    // # of elements strictly < 3\n  *s.find_by_order(0);  // 0-th smallest element"
     },
     "Custom Hash Struct": {
         "prefix": "custom_hash",
@@ -512,7 +512,7 @@
             "    }",
             "};"
         ],
-        "description": "Generates a custom hash function using splitmix64"
+        "description": "[Utility] Anti-hack custom hash for unordered_map/set using splitmix64 mixer. Avoids worst-case O(N) collisions from adversarial inputs. The FIXED_RANDOM salt is seeded from system clock at runtime. Based on http://xorshift.di.unimi.it/splitmix64.c.\nUsage:\n  unordered_map<ll, int, custom_hash> mp;\n  unordered_set<ll, custom_hash> st;"
     },
     "Dijkstra Lambda Alt": {
         "prefix": "dijkstraAlt",
@@ -536,7 +536,7 @@
             "    }",
             "};"
         ],
-        "description": "Dijkstra's algorithm (lambda) using custom spacing."
+        "description": "[Graph] Dijkstra's SSSP as a capture-by-reference lambda. Requires: adj (adjacency list of {neighbor,weight} pairs), spath (dist vector pre-filled with INF, except spath[src]=0). Uses min-heap (priority_queue with greater<>). Time O((V+E) log V). Skips stale entries via the spath[curr_node] < curr_dis guard.\nUsage:\n  // adj: vector<vector<pair<int,int>>> adj(n)\n  vector<int> dist(n, INF); dist[src] = 0;\n  dj(src, dist); // fills dist[] with shortest paths"
     },
     "Rabin-Karp Rolling Hash": {
         "prefix": "rabinkarp",
@@ -589,7 +589,7 @@
             "}",
             "$0"
         ],
-        "description": "Rabin-Karp rolling hash algorithm implementation"
+        "description": "[String Hashing] Rabin-Karp class with polynomial rolling hash (BASE=256, MOD=1e9+7). Methods: RabinKarp(maxLen) \u2014 precomputes powers; computeHash(s) \u2014 O(|s|) full hash; updateHash(oldHash, oldChar, newChar, patLen) \u2014 O(1) sliding-window hash update. Best used for multi-pattern matching. Beware single-mod collisions on adversarial input.\nUsage:\n  RabinKarp rk(maxLen);\n  ll ph = rk.computeHash(pattern);\n  ll th = rk.computeHash(text.substr(0, m));\n  th = rk.updateHash(th, text[i], text[i+m], m); // slide window"
     },
     "rolling_hash": {
         "prefix": "rollhash",
@@ -638,7 +638,7 @@
             "    return res;",
             "}"
         ],
-        "description": ""
+        "description": "[String Hashing] High-quality polynomial rolling hash using __int128 arithmetic (base=33, prime mod=1e18+3). Collision-resistant for competitive programming. Functions: precalc() \u2014 O(N) power & inverse-power tables; build(s) \u2014 O(N) prefix hash; getHash(x,y) \u2014 O(1) normalized hash of s[x..y] (position-independent, comparable across substrings). Use to compare substrings in O(1) after O(N) build.\nUsage:\n  precalc();\n  build(s);\n  __int128 h = getHash(l, r);             // normalized hash of s[l..r]\n  if (getHash(l1,r1) == getHash(l2,r2))  // compare substrings"
     },
     "power_function": {
         "prefix": "exp",
@@ -655,7 +655,7 @@
             "    return res;",
             "}"
         ],
-        "description": "modular exponentiation"
+        "description": "[Math] Fast modular exponentiation: computes (a^x) % mod in O(log x) via binary exponentiation (repeated squaring). Requires a global 'mod' variable. Note: function signature has a typo ('whilx' should be 'while(x)') \u2014 fix before use.\nUsage:\n  int res = power(base, exp); // (base^exp) % mod\n  // FIX: 'whilx)' -> 'while(x)' before submitting"
     },
     "bellman_ford": {
         "prefix": "bellman_ford",
@@ -687,7 +687,7 @@
             "    };",
             " "
         ],
-        "description": ""
+        "description": "[Graph] Bellman-Ford SSSP as a lambda (capture by ref). Runs N-1 relaxation passes over all edges (edge struct with .a, .b, .x fields). Then a second N-1 pass detects negative cycles by setting reachable nodes to -inf. Requires: edges[], dist[] (pre-filled with inf/\u2212inf sentinels), n (node count). Time O(V*E).\nUsage:\n  // set dist[src]=0, all others=INF\n  bellman_ford();\n  // dist[v] == -INF -> v on or reachable from a negative cycle"
     },
     "Topological Sort": {
         "prefix": "topo",
@@ -739,7 +739,7 @@
             "        }",
             "};"
         ],
-        "description": "Topological Sort"
+        "description": "[Graph] Kahn's BFS-based topological sort (class). Takes adjacency list by reference. Constructor computes in-degrees and runs BFS. Methods: getTopo() \u2014 returns topological order vector (empty or partial if graph has a cycle); isDAG() \u2014 returns true iff no cycle detected (sorted count == n). Time O(V+E).\nUsage:\n  Topology tp(adj);\n  if (tp.isDAG()) {\n    auto order = tp.getTopo(); // valid topological ordering\n  }"
     },
     "Least Common Ancestor": {
         "prefix": "lca",
@@ -818,7 +818,7 @@
             "};",
             ""
         ],
-        "description": "Least Common Ancestor"
+        "description": "[Tree] Binary Lifting LCA on an unweighted tree. LOG=21 supports trees up to 2^21 nodes. Constructor LCA(n,adj,root) runs DFS to fill ancestor table in O(N log N). Methods: getLCA(a,b) \u2014 LCA of nodes a and b, O(log N); getAncs(node,lvl) \u2014 2^lvl-th ancestor, O(1); getDepth(node) \u2014 depth from root, O(1); getDistAncs(node,dist) \u2014 ancestor exactly 'dist' steps up, O(log N); getDist(a,b) \u2014 tree distance, O(log N).\nUsage:\n  LCA lca(n, adj, root);\n  lca.getLCA(u, v);          // LCA node id\n  lca.getDist(u, v);         // edge distance between u and v\n  lca.getDepth(node);        // depth from root\n  lca.getDistAncs(node, k);  // ancestor exactly k steps above"
     },
     "SegmentTree Snippet v2": {
         "prefix": "segtree2",
@@ -924,7 +924,7 @@
             "    }",
             "};"
         ],
-        "description": "SegmentTree Snippet v2"
+        "description": "[Data Structure] Cleaner Segment Tree v2 (class-based, 0-based array). Stores reference to original array. Supports range-add lazy updates and range-max queries. Public interface: query(l,r) \u2014 max in [l..r]; rangeUpdate(l,r,val) \u2014 add val to [l..r]; pointUpdate(idx,val) \u2014 set arr[idx]=val. All O(log N). push() helper propagates lazy values. Construct with SegTree(sz, arr).\nUsage:\n  SegTree st(n, arr);\n  st.query(l, r);             // max in [l..r]\n  st.rangeUpdate(l, r, val);  // add val to all in [l..r]\n  st.pointUpdate(idx, val);   // set arr[idx] = val"
     },
     "Knuth-Morris-Pratt Algorithm": {
         "prefix": "kmp",
@@ -1000,7 +1000,7 @@
             "    }",
             "};"
         ],
-        "description": "Knuth-Morris-Pratt Algorithm"
+        "description": "[String] KMP pattern matching (class). Constructor KMP(pat) builds the LPS (Longest Proper Prefix-Suffix) failure function in O(M). Methods: getLPS() \u2014 returns the lps vector; getOccurrences(text) \u2014 returns set<int> of 0-based start indices where pattern occurs in text, O(N+M). No spurious re-scanning thanks to LPS fallback.\nUsage:\n  KMP kmp(\"pattern\");\n  auto occ = kmp.getOccurrences(text); // set<int> of match positions\n  auto lps = kmp.getLPS();             // failure function vector"
     },
     "Matrix exponentiation": {
         "prefix": "mexp",
@@ -1048,7 +1048,7 @@
             "    }",
             "};"
         ],
-        "description": "Matrix exponentiation"
+        "description": "[Math] Generic matrix template for fast exponentiation. Matrix<T>(r,c,identity) \u2014 constructs r\u00d7c matrix, optionally as identity. mult(B) \u2014 matrix multiply this*B, O(r*cols*B.cols); power(exp) \u2014 raises square matrix to power exp via binary exponentiation, O(n^3 log exp). Use for linear recurrences (e.g. Fibonacci in O(n^3 log k)). Add modular reduction inside mult() as needed.\nUsage:\n  Matrix<ll> A(2, 2);\n  A.mat = {{1,1},{1,0}}; // Fibonacci recurrence matrix\n  auto res = A.power(n); // A^n\n  ll fib_n = res.mat[0][1]; // n-th Fibonacci number"
     },
     "check if a large number is prime or not": {
         "prefix": "isprime",
@@ -1109,7 +1109,7 @@
             "    return true;",
             "}"
         ],
-        "description": "check if a large number is prime or not"
+        "description": "[Number Theory] Miller-Rabin deterministic primality test for n < 3*10^18. Uses 12 fixed witnesses {2,3,5,7,11,13,17,19,23,29,31,37} \u2014 deterministic for all 64-bit integers. Steps: factors n-1 as d*2^r, then tests each witness via binary exponentiation with __int128 to avoid overflow. Time O(k log^2 n) where k=12. Returns true iff n is prime.\nUsage:\n  isPrimeMillerRabin(7);          // true\n  isPrimeMillerRabin(1000000007); // true (1e9+7 is prime)\n  isPrimeMillerRabin(100);        // false"
     },
     "modular arithmatic package": {
         "prefix": "mint",
@@ -1157,7 +1157,7 @@
             "using mint = ModInt<MOD>;",
             "// clang-format on"
         ],
-        "description": "modular arithmatic package"
+        "description": "[Math] Lightweight ModInt<MOD> struct for clean modular arithmetic. Supports: +, -, *, / operators (all mod MOD); pow(n) \u2014 fast exponentiation; inv() \u2014 modular inverse via Fermat (MOD must be prime); cin/cout overloads for seamless I/O. Default MOD=998244353. Alias: 'using mint = ModInt<MOD>'. All operations O(1) except pow/inv O(log MOD).\nUsage:\n  mint a = 3, b = 5;\n  mint c = a + b;     // 8 % MOD\n  mint d = a.pow(10); // 3^10 % MOD\n  mint e = b.inv();   // b^-1 % MOD (Fermat)\n  cout << c;          // uses ostream<< overload"
     },
     "mod int template": {
         "prefix": "minty",
@@ -1240,7 +1240,7 @@
             "const int mod = 998244353;",
             "using mint = modint<mod>;"
         ],
-        "description": "mod int template"
+        "description": "[Math] Verbose modint<mod> template with inline operator comments. Includes standalone pow_mod(a,n,mod) and inv_mod(a,mod) free functions. The modint struct supports: =, +=, -=, *=, /= (via inv), unary -, pow(n), inv(); and friend binary +,-,*,/. Constructor normalizes negative values. More explicit than ModInt<> \u2014 good for learning/debugging.\nUsage:\n  using mint = modint<998244353>;\n  mint a = 3;\n  mint b = a.pow(10);  // 3^10 % mod\n  mint c = a.inv();    // a^-1 % mod\n  ll v = pow_mod(3, 10, MOD); // standalone helper"
     },
     "generate submasks": {
         "prefix": "gensubmasks",
@@ -1252,7 +1252,7 @@
             "        }",
             "}"
         ],
-        "description": "generate submasks"
+        "description": "[Bitmask] Enumerates all submasks of a given bitmask in O(2^popcount(mask)). The loop 'for(sub=mask;;sub=(sub-1)&mask)' visits every subset of set bits, ending at sub=0. Prints each submask as a 4-bit binary string (adjust bitset size). Commonly used in bitmask DP over subsets.\nUsage:\n  genSubmasks(0b1011);\n  // visits: 1011, 1010, 1001, 1000, 0011, 0010, 0001, 0000"
     },
     "sum over subsets": {
         "prefix": "sos",
@@ -1270,7 +1270,7 @@
             "        return F;",
             "}"
         ],
-        "description": "sum over subsets"
+        "description": "[Bitmask DP] Sum Over Subsets (SOS) DP. Given array A of values, builds F[] where F[mask] = count of elements in A that are submasks of mask. Runs in O(N * 2^N). Standard technique for subset-sum convolution and bitmask DP optimizations. Returns F after transformation.\nUsage:\n  auto F = SOS(N, A);\n  // F[mask] = # of A[i] values that are submasks of mask"
     },
     "Coordinate Compression": {
         "prefix": "cordcomp",
@@ -1282,7 +1282,7 @@
             "        return lower_bound(sarr.begin( ), sarr.end( ), x) - sarr.begin( ) + 1;",
             "};"
         ],
-        "description": "Coordinate Compression"
+        "description": "[Utility] Coordinate compression snippet. Sorts and deduplicates values into sarr[], then provides getRank(x) lambda \u2014 returns 1-based compressed rank of x via lower_bound, O(log N). Useful to compress large value ranges into small indices for Fenwick/Segtree. Assumes input vector named 'nums'; rename as needed.\nUsage:\n  // input: vector<int> nums\n  int r = getRank(x); // 1-based compressed rank of x"
     },
     "block comment": {
         "prefix": "/*",
@@ -1308,7 +1308,7 @@
             "        cout << \"! \" << x << endl;",
             "}"
         ],
-        "description": "interactive problem"
+        "description": "[Utility] Interactive problem template. ask(args...) \u2014 prints '? arg1 arg2 ...' with flush (endl), reads int response; exits if response==-1 or EOF. ans(x) \u2014 prints '! x' as the final answer. Variadic template supports multiple query arguments. Remember to flush after every output in interactive problems.\nUsage:\n  int res = ask(l, r); // prints \"? l r\", reads judge's answer\n  ans(result);         // prints \"! result\" as final answer"
     },
     "factorials and combinations": {
         "prefix": "combi",
@@ -1331,7 +1331,7 @@
             "combi<mint, N> cb;",
             ""
         ],
-        "description": "factorials and combinations"
+        "description": "[Math] Compile-time combinatorics table using ModInt. combi<MI,SZ> precomputes fact[] and invfact[] up to SZ in O(SZ). Method C(a,b) \u2014 returns nCr(a,b) mod MOD in O(1); returns 0 for invalid inputs (a<0, b<0, a<b). Requires a ModInt type MI with inv() support. SZ=1e6 typical.\nUsage:\n  combi<mint, N> cb;\n  mint ways = cb.C(10, 3);  // C(10,3) % MOD\n  mint f    = cb.fact[10];  // 10! % MOD"
     },
     "function to measure time ": {
         "prefix": "time",
@@ -1345,7 +1345,7 @@
             "}",
             ""
         ],
-        "description": "function to measure time "
+        "description": "[Utility] Wraps any callable in a nanosecond-precision timer. measure_time(name, func) \u2014 runs func(), measures wall-clock duration via chrono::high_resolution_clock, prints 'name: X ms' to stderr. Output goes to stderr so it doesn't interfere with stdout answers.\nUsage:\n  measure_time(\"solve\", [&]() { solve(); });\n  // stderr: \"solve: 12.34 ms\""
     },
     "Trie-with-Aho-Corasik": {
         "prefix": "aho",
@@ -1413,6 +1413,6 @@
             "};",
             ""
         ],
-        "description": "Trie-with-Aho-Corasik"
+        "description": "[String] Aho-Corasick automaton built on a Trie. Supports multi-pattern matching. Methods: insert(s, id) \u2014 add pattern string s with integer id; build() \u2014 constructs BFS-based failure links (like KMP's LPS but on a Trie), also propagates output links so every node's out[] contains all matching pattern ids. After build(), traverse text char-by-char and check node->out. Time: O(total pattern length) build + O(text length + matches) search.\nUsage:\n  TrieAC ac;\n  ac.insert(\"he\", 0); ac.insert(\"she\", 1);\n  ac.build();\n  // traverse text: follow child links, check node->out for matched ids"
     }
 }
