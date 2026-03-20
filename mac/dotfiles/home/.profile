@@ -209,7 +209,7 @@ alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
     # clang++ "$1" -o $filename && ./$filename
-    clang++ "$1" -o run && "./run"
+    g++-15 "$1" -o run && "./run"
     rm run
 }
 
