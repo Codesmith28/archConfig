@@ -22,3 +22,13 @@ vim.api.nvim_create_autocmd("FileType", {
         end
     end,
 })
+
+-- Force Neovim to follow your file into subdirectories
+-- Dynamically update system environment variables with absolute paths
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*.cpp",
+    callback = function()
+        vim.env.CP_FILE = vim.fn.expand("%:p") -- Absolute path to the source code
+        vim.env.CP_OUT = vim.fn.expand("%:p:r") -- Absolute path for the output binary
+    end,
+})

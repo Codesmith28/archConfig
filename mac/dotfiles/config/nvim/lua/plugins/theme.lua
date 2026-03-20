@@ -170,18 +170,106 @@ return {
             })
         end,
     },
+
     {
-        "projekt0n/github-nvim-theme",
-        name = "github-theme",
-        lazy = false, -- make sure we load this during startup if it is your main colorscheme
+        "loctvl842/monokai-pro.nvim",
+        lazy = false,
+        priority = 1000,
         config = function()
-            require("github-theme").setup({})
+            require("monokai-pro").setup({
+                transparent_background = true,
+                terminal_colors = true,
+                devicons = true,
+
+                styles = {
+                    comment = { italic = true },
+                    keyword = { italic = true },
+                    type = { italic = true },
+                    storageclass = { italic = true },
+                    structure = { italic = true },
+                    parameter = { italic = true },
+                    annotation = { italic = true },
+                    tag_attribute = { italic = true },
+                },
+
+                filter = "machine",
+
+                day_night = {
+                    enable = false,
+                    day_filter = "pro",
+                    night_filter = "spectrum",
+                },
+
+                inc_search = "background",
+
+                background_clear = {
+                    "toggleterm",
+                    "telescope",
+                    "renamer",
+                    "notify",
+                },
+
+                plugins = {
+                    bufferline = {
+                        underline_selected = false,
+                        underline_visible = false,
+                        underline_fill = false,
+                        bold = true,
+                    },
+                    indent_blankline = {
+                        context_highlight = "default",
+                        context_start_underline = false,
+                    },
+                },
+
+                override = function(scheme)
+                    return {
+                        -- keep transparency
+                        Normal = { bg = "NONE" },
+                        NormalNC = { bg = "NONE" },
+                        SignColumn = { bg = "NONE" },
+                        EndOfBuffer = { bg = "NONE" },
+
+                        -- floats
+                        NormalFloat = { bg = scheme.base2 },
+                        FloatBorder = { bg = scheme.base2 },
+
+                        -- popup menu
+                        Pmenu = { bg = scheme.base2 },
+                        PmenuSel = { bg = scheme.base3 },
+
+                        -- telescope
+                        TelescopeNormal = { bg = scheme.base2 },
+                        TelescopeBorder = { bg = scheme.base2 },
+
+                        -- cursor line
+                        CursorLine = { bg = scheme.base2 },
+
+                        -- splits
+                        VertSplit = { fg = scheme.base4 },
+                        WinSeparator = { fg = scheme.base4 },
+
+                        -- LSP
+                        LspInfoBorder = { fg = scheme.base5 },
+                    }
+                end,
+
+                override_palette = function(filter)
+                    return {}
+                end,
+
+                override_scheme = function(scheme, palette, colors)
+                    return {}
+                end,
+            })
         end,
     },
+
     {
         "LazyVim/LazyVim",
         opts = {
             colorscheme = "catppuccin",
+            -- colorscheme = "monokai-pro-machine",
             -- colorscheme = "gruvbox",
         },
     },

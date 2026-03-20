@@ -8,20 +8,21 @@ return {
         commands = {
             cpp = {
                 compile = {
-                    -- Explicitly point to your M4 Homebrew compiler
-                    main = "/opt/homebrew/bin/g++-15",
-                    -- args = {
-                    --     -- Modern C++ and strict warnings
-                    --     "-std=c++2b",
-                    --     "-Wall",
-                    --     "-Wextra",
-                    --     -- GCC's built-in bounds checking for vectors/strings!
-                    --     "-D_GLIBCXX_DEBUG",
-                    --     -- The plugin's required variables for I/O
-                    --     "$FILENAME_WITH_EXTENSION",
-                    --     "-o",
-                    --     "$FILENAME_WITHOUT_EXTENSION",
-                    -- },
+                    -- Delegate to the shell to securely read our environment variables
+                    main = "sh",
+                    args = {
+                        "-c",
+                        '/opt/homebrew/bin/g++-15 -std=c++2b -Wall -Wextra -D_GLIBCXX_DEBUG "$CP_FILE" -o "$CP_OUT"',
+                    },
+                },
+                execute = {
+                    -- Ensure the plugin runs the binary from the correct subdirectory
+                    main = "sh",
+                    args = {
+                        "-c",
+                        -- 'exec' ensures the binary connects directly to the plugin's test case pipes
+                        'exec "$CP_OUT"',
+                    },
                 },
             },
         },
