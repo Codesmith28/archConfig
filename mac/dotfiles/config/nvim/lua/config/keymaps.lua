@@ -35,3 +35,7 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- Add go tags:
 map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
+
+-- Invert horizontal scroll for touchpad
+vim.keymap.set("n", "<ScrollWheelRight>", "<ScrollWheelLeft>", { noremap = true, silent = true })
+vim.keymap.set("n", "<ScrollWheelLeft>", "<ScrollWheelRight>", { noremap = true, silent = true })
