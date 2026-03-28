@@ -110,11 +110,6 @@ sudo apt install -y golang
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # ----------------------------------------------------
-# Install television (tv)
-# ----------------------------------------------------
-curl -fsSL https://alexpasmantier.github.io/television/install.sh | bash
-
-# ----------------------------------------------------
 # Install Yazi (manual step advisory)
 # ----------------------------------------------------
 echo "Yazi binary not included."
