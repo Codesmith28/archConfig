@@ -111,3 +111,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # Added by Antigravity
 export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
 export PATH=~/.adaptive/bin/:$PATH
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
