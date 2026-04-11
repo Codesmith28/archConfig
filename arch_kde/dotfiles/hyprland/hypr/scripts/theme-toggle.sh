@@ -18,7 +18,11 @@ if [ "$CURRENT" == "light" ]; then
 
     # 1. System/Web Apps (VS Code, Zen, GTK)
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-    gsettings set org.gnome.desktop.interface gtk-theme 'Breeze-Dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+    
+    # Update gtk-3.0 settings.ini
+    sed -i 's/gtk-theme-name=.*/gtk-theme-name=adw-gtk3-dark/' ~/.config/gtk-3.0/settings.ini
+    sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=true/' ~/.config/gtk-3.0/settings.ini
 
     # 2. KDE/Qt Apps (Dolphin)
     # This natively applies the KDE color scheme and sends the DBus signal to update instantly
@@ -36,7 +40,11 @@ else
 
     # 1. System/Web Apps (VS Code, Zen, GTK)
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
-    gsettings set org.gnome.desktop.interface gtk-theme 'Breeze'
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+    
+    # Update gtk-3.0 settings.ini
+    sed -i 's/gtk-theme-name=.*/gtk-theme-name=adw-gtk3/' ~/.config/gtk-3.0/settings.ini
+    sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=false/' ~/.config/gtk-3.0/settings.ini
 
     # 2. KDE/Qt Apps (Dolphin)
     plasma-apply-colorscheme BreezeLight
