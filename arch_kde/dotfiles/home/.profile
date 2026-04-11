@@ -102,6 +102,7 @@ alias gst="git stash"
 alias gsp="git stash; git pull"
 alias lg='lazygit'
 alias gcheck="git checkout"
+alias gwt="git worktree"
 ghcs() {
     gh copilot suggest "$1"
 }
