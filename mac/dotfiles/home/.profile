@@ -112,7 +112,7 @@ setgit() {
 alias gcl-work='git -c core.sshCommand="ssh -i ~/.ssh/id_work" clone'
 alias gcl-personal='git -c core.sshCommand="ssh -i ~/.ssh/id_personal" clone'
 alias work='cd ~/work'
-alias ssh-work='ssh -i "~/.ssh/id_work"'
+alias ssh-work='ssh -i ~/.ssh/id_work'
 
 # -----------------------------------------------------
 # SCRIPTS
@@ -209,13 +209,13 @@ alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
     # clang++ "$1" -o $filename && ./$filename
-    g++-15 "$1" -o run && "./run"
-    rm run
+    g++-15 -std=c++23 "$1" -o run && "./run"
+    rm -f run
 }
 
 runcc() {
     clang "$1" -o run && "./run"
-    rm run
+    rm -f run
 }
 
 alias cpp='cd ~/Projects/cp/ && code . && exit'
