@@ -91,7 +91,7 @@ alias lg='~/dotfiles/scripts/looking-glass.sh'
 
 alias confq='$EDITOR ~/dotfiles/qtile/config.py'
 alias confp='$EDITOR ~/dotfiles/picom/picom.conf'
-alias confb='$EDITOR ~/dotfiles/.bashrc'
+alias confb='$EDITOR ~/.bashrc'
 
 # -----------------------------------------------------
 # EDIT NOTES
