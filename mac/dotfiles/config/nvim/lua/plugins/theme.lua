@@ -92,10 +92,34 @@ return {
     },
 
     {
+        "folke/tokyonight.nvim",
+        lazy = true,
+        opts = {
+            transparent = true, -- Enable transparent background
+            -- Optional: adjust specific highlight groups if you want even more transparency
+            on_highlights = function(hl, c)
+                hl.TelescopeNormal = {
+                    bg = c.none,
+                    fg = c.fg_dark,
+                }
+                hl.TelescopeBorder = {
+                    bg = c.none,
+                    fg = c.fg_dark,
+                }
+                hl.LspInlayHint = {
+                    bg = c.none, -- Removes the background entirely
+                    fg = c.dark3, -- Keeps the text muted
+                }
+            end,
+        },
+    },
+
+    {
         "LazyVim/LazyVim",
         opts = {
             -- colorscheme = "catppuccin-mocha",
-            colorscheme = "vscode",
+            -- colorscheme = "vscode",
+            colorscheme = "tokyonight-night",
         },
     },
 }
