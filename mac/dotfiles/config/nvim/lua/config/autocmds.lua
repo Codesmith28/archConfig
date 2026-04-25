@@ -23,6 +23,7 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+-- Required for snippets.lua
 -- Force Neovim to follow your file into subdirectories
 -- Dynamically update system environment variables with absolute paths
 vim.api.nvim_create_autocmd("BufEnter", {
