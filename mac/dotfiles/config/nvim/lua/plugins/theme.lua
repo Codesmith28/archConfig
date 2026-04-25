@@ -96,6 +96,11 @@ return {
         lazy = true,
         opts = {
             transparent = true, -- Enable transparent background
+
+            styles = {
+                comments = { italic = false },
+            },
+
             -- Optional: adjust specific highlight groups if you want even more transparency
             on_highlights = function(hl, c)
                 hl.TelescopeNormal = {

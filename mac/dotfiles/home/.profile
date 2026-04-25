@@ -36,57 +36,11 @@ lt() {
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 # alias vim='$EDITOR'
-alias ts='~/dotfiles/scripts/snapshot.sh'
 alias matrix='cmatrix -u 2'
-alias wifi='nmtui'
-alias od='~/private/onedrive.sh'
-alias tw='~/dotfiles/waybar/toggle.sh'
-alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/.config"
-alias hypr="cd ~/dotfiles/hypr"
-alias cleanup='~/dotfiles/scripts/cleanup.sh'
-alias ml4w='~/dotfiles/apps/ML4W_Welcome-x86_64.AppImage'
-alias copy='xclip -selection clipboard'
-# alias bat='batcat --theme=base16'
-# alias update_all='sudo apt update && sudo apt full-upgrade'
-alias update_all='yay -Syu'
 
 alias source_z='source ~/.zshrc'
 alias source_venv='source venv/bin/activate'
-alias prime-run='env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia'
-
-# -----------------------------------------------------
-# System Controls
-# -----------------------------------------------------
-
-bu() {
-    if [[ -z $1 ]]; then
-        echo "Please specify a percentage to increase, e.g., bu 10"
-    else
-        brightnessctl set "$1"%+
-    fi
-}
-bd() {
-    if [[ -z $1 ]]; then
-        echo "Please specify a percentage to decrease, e.g., bd 10"
-    else
-        brightnessctl set "$1"%-
-    fi
-}
-vu() {
-    if [[ -z $1 ]]; then
-        echo "Please specify a percentage to increase, e.g., vu 10"
-    else
-        pactl set-sink-volume @DEFAULT_SINK@ +"$1"%
-    fi
-}
-vd() {
-    if [[ -z $1 ]]; then
-        echo "Please specify a percentage to decrease, e.g., vd 10"
-    else
-        pactl set-sink-volume @DEFAULT_SINK@ -"$1"%
-    fi
-}
 
 # -----------------------------------------------------
 # GIT
@@ -203,7 +157,37 @@ vsc() {
 }
 
 alias pj='cd ~/personal/Projects/'
+
 alias fzf="fzf --style full --preview 'fzf-preview.sh {}' --bind 'focus:transform-header:file --brief {}'"
+ts() {
+    local selection target
+
+    # 1. Generate the list using a hidden Tab-separated column for the exact target
+    selection=$(
+        tmux list-sessions -F "#{session_name}	#S: #{session_windows} windows" 2>/dev/null | while IFS=$'\t' read -r s_target s_display; do
+            printf "%s\t%s\n" "$s_target" "$s_display"
+
+            tmux list-windows -t "$s_target" -F "#{session_name}:#{window_index}	│  ├─> #{window_index}: #W#{?window_active,*,} (#{window_panes} panes)" | while IFS=$'\t' read -r w_target w_display; do
+                printf "%s\t%s\n" "$w_target" "$w_display"
+            done
+        done | fzf --query="$1" --reverse --height=80% --prompt="TMUX > " \
+            --delimiter='\t' \
+            --with-nth=2 \
+            --preview-window="right:50%:wrap" \
+            --preview="tmux capture-pane -e -p -t {1} 2>/dev/null"
+    )
+
+    # 2. Extract the hidden target (cut splits by Tab by default)
+    if [ -n "$selection" ]; then
+        target=$(echo "$selection" | cut -f1)
+
+        if [ -n "$TMUX" ]; then
+            tmux switch-client -t "$target"
+        else
+            tmux attach-session -t "$target"
+        fi
+    fi
+}
 alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
 runcpp() {
