@@ -65,8 +65,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 # VERY heavy init → defer! [don't use this if pyenv installed from AUR]
-# zsh-defer eval "$(pyenv init --path)"
-# zsh-defer eval "$(pyenv init -)"
+zsh-defer eval "$(pyenv init --path)"
+zsh-defer eval "$(pyenv init -)"
 # zsh-defer eval "$(pyenv virtualenv-init -)"
 
 
@@ -112,5 +112,8 @@ export SDKMAN_DIR="$HOME/.sdkman"
 export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
 export PATH=~/.adaptive/bin/:$PATH
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+# CP fixes
+export CC=gcc-15
+export CXX=g++-15
