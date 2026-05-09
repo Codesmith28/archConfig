@@ -159,15 +159,20 @@ vsc() {
 alias pj='cd ~/personal/Projects/'
 
 alias fzf="fzf --style full --preview 'fzf-preview.sh {}' --bind 'focus:transform-header:file --brief {}'"
+
 ts() {
     local selection target
 
+    # Define a literal tab variable to make the tmux format string bulletproof
+    # against accidental space-conversions in editors.
+    local tab=$'\t'
+
     # 1. Generate the list using a hidden Tab-separated column for the exact target
     selection=$(
-        tmux list-sessions -F "#{session_name}	#S: #{session_windows} windows" 2>/dev/null | while IFS=$'\t' read -r s_target s_display; do
+        tmux list-sessions -F "#{session_name}${tab}#S: #{session_windows} windows" 2>/dev/null | while IFS=$'\t' read -r s_target s_display; do
             printf "%s\t%s\n" "$s_target" "$s_display"
 
-            tmux list-windows -t "$s_target" -F "#{session_name}:#{window_index}	│  ├─> #{window_index}: #W#{?window_active,*,} (#{window_panes} panes)" | while IFS=$'\t' read -r w_target w_display; do
+            tmux list-windows -t "$s_target" -F "#{session_name}:#{window_index}${tab}│  ├─> #{window_index}: #W#{?window_active,*,} (#{window_panes} panes)" | while IFS=$'\t' read -r w_target w_display; do
                 printf "%s\t%s\n" "$w_target" "$w_display"
             done
         done | fzf --query="$1" --reverse --height=80% --prompt="TMUX > " \
@@ -181,13 +186,20 @@ ts() {
     if [ -n "$selection" ]; then
         target=$(echo "$selection" | cut -f1)
 
-        if [ -n "$TMUX" ]; then
+        # 3. Robust switch/attach logic
+        # Check $TERM to genuinely verify we are inside an active tmux pane
+        if [[ "$TERM" == screen* ]] || [[ "$TERM" == tmux* ]]; then
+            # We are actively inside a tmux pane
             tmux switch-client -t "$target"
         else
-            tmux attach-session -t "$target"
+            # We are outside tmux (e.g., bare VSCode terminal).
+            # We unset the $TMUX variable for this specific command to prevent
+            # the "sessions should be nested with care" error if VSCode inherited it.
+            env -u TMUX tmux attach-session -t "$target"
         fi
     fi
 }
+
 alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
 runcpp() {
@@ -270,9 +282,11 @@ hdfs-tree() {
     hdfs dfs -ls -R "$1" | awk '{print $8}' | sed 's/[^/]*\//|   /g;s/|   \([^|]\)/+--- \1/'
 }
 
-. "$HOME/.cargo/env"
-export PATH=~/.adaptive/bin/:$PATH
+# SSH Wrapper: Automatically disable mouse tracking upon exit/disconnect
+ssh() {
+    # Run the actual SSH command with all passed arguments
+    command ssh "$@"
 
-# CP fixes
-export CC=gcc-15
-export CXX=g++-15
+    # Automatically fire the scrollback-safe reset sequence when the process dies
+    printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'
+}
