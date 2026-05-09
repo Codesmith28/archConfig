@@ -46,10 +46,10 @@ if [ -n "$SELECTED_NAME" ]; then
         done
         hyprctl hyprpaper unload all
         
-        # Save to config so it persists on next boot
-        echo "preload = $SELECTED" > "$HYPRPAPER_CONF"
-        for m in $MONITORS; do
-            echo "wallpaper = $m,$SELECTED" >> "$HYPRPAPER_CONF"
-        done
+        # Save a monitor-agnostic wallpaper so it survives output changes
+        {
+            echo "preload = $SELECTED"
+            echo "wallpaper = ,$SELECTED"
+        } > "$HYPRPAPER_CONF"
     fi
 fi
