@@ -58,12 +58,19 @@ Typical flow:
     - battery-limit service
     - disable acpi and pci wakeup service (so that only power button can wake the laptop)
     - nvidia persistence mode service
+    - `/usr/local/bin/configure-supergfxctl-exclusive.sh` (installed from `arch_kde/setup_scripts/executables/` by `arch_kde/setup_scripts/setup.sh`)
 
 4. (Optional) One-off helpers:
 
 - Git + GitHub CLI: [arch_kde/basics/setGit.sh](arch_kde/basics/setGit.sh) ; configures user name, email, and SSH keys
 - Docker: [arch_kde/basics/setDocker.sh](arch_kde/basics/setDocker.sh) ; installs Docker, adds user to `docker` group, and enables the Docker service
 - Restore GRUB: [arch_kde/basics/restoreGrub.sh](arch_kde/basics/restoreGrub.sh) ; reinstalls GRUB bootloader and fixes it if not working
+
+GPU + power workflow notes:
+
+- Use `sudo /usr/local/bin/configure-supergfxctl-exclusive.sh --gpu-mode <mode>` (or positional mode) to switch `supergfxctl` mode (`Integrated`, `Hybrid`, `Vfio`, `AsusEgpu`, `AsusMuxDgpu`).
+- In `Integrated` mode, `nvidia-smi` showing no NVIDIA device is expected; in non-`Integrated` modes, `nvidia-smi` should detect NVIDIA hardware (after reboot/logout if needed).
+- `~/.config/scripts/cycle-power-mode.sh` cycles `powerprofilesctl` modes (`power-saver -> balanced -> performance`), is bound in Hyprland to `XF86Launch4`, and KDE keeps the Launch4 power-profile shortcut in `arch_kde/basics/config_kde/keyboardscs.kksrc`.
 
 ### GRUB / Windows dual-boot notes (Arch KDE)
 

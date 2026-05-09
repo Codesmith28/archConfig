@@ -204,9 +204,38 @@ alias thunar='setsid thunar'
 alias files='setsid $BROWSER'
 alias obsidian='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias obsi='setsid obsidian --enable-features=UseOzonePlatform --ozone-platform=wayland && exit -f'
-alias fzf='fzf --preview="bat --color=always --style=header,grid --line-range :500 {}"'
-# alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
-alias ivm='f() { local file; file=$(tv); [ -n "$file" ] && "$EDITOR" "$file"; }; f'
+
+alias fzf="fzf --style full --preview 'fzf-preview.sh {}' --bind 'focus:transform-header:file --brief {}'"
+ts() {
+    local selection target
+
+    # 1. Generate the list using a hidden Tab-separated column for the exact target
+    selection=$(
+        tmux list-sessions -F "#{session_name}	#S: #{session_windows} windows" 2>/dev/null | while IFS=$'\t' read -r s_target s_display; do
+            printf "%s\t%s\n" "$s_target" "$s_display"
+
+            tmux list-windows -t "$s_target" -F "#{session_name}:#{window_index}	│  ├─> #{window_index}: #W#{?window_active,*,} (#{window_panes} panes)" | while IFS=$'\t' read -r w_target w_display; do
+                printf "%s\t%s\n" "$w_target" "$w_display"
+            done
+        done | fzf --query="$1" --reverse --height=80% --prompt="TMUX > " \
+            --delimiter='\t' \
+            --with-nth=2 \
+            --preview-window="right:50%:wrap" \
+            --preview="tmux capture-pane -e -p -t {1} 2>/dev/null"
+    )
+
+    # 2. Extract the hidden target (cut splits by Tab by default)
+    if [ -n "$selection" ]; then
+        target=$(echo "$selection" | cut -f1)
+
+        if [ -n "$TMUX" ]; then
+            tmux switch-client -t "$target"
+        else
+            tmux attach-session -t "$target"
+        fi
+    fi
+}
+alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --line-range :500 {}")'
 
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')

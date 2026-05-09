@@ -64,9 +64,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 # VERY heavy init → defer! [don't use this if pyenv installed from AUR]
-# zsh-defer eval "$(pyenv init --path)"
-# zsh-defer eval "$(pyenv init -)"
-# zsh-defer eval "$(pyenv virtualenv-init -)"
+zsh-defer eval "$(pyenv init --path)"
+zsh-defer eval "$(pyenv init -)"
+zsh-defer eval "$(pyenv virtualenv-init -)"
 
 
 # ========== Go Path ==========
