@@ -112,8 +112,8 @@ return {
                     fg = c.fg_dark,
                 }
                 hl.LspInlayHint = {
-                    bg = c.none, -- Removes the background entirely
-                    fg = c.dark3, -- Keeps the text muted
+                    -- bg = c.none, -- Removes the background entirely
+                    fg = c.dark5, -- Keeps the text muted
                 }
             end,
         },
