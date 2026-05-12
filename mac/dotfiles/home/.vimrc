@@ -31,4 +31,5 @@ inoremap " ""<Left>
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-commentary'
+Plug 'wakatime/vim-wakatime'
 call plug#end()

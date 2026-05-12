@@ -10,7 +10,7 @@ background-opacity = .70
 background-blur-radius = 55
 
 # --- Font Rendering ---
-# font-family = Blexmono Nerd Font
+font-family = Meslolgs Nerd Font
 font-size = 12     
 font-thicken = true   
 
