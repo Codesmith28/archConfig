@@ -1,11 +1,12 @@
 # --- Theme ---
-theme = Apple System Colors
+# theme = Apple System Colors
 # theme = Abernathy
+theme = Adwaita Dark
 background = 000000
  
 # --- Background & Blur ---
 # 70% opacity
-background-opacity = .70
+background-opacity = .60
 # Enable background blur (uses macOS native glass effect)
 background-blur-radius = 55
 
@@ -41,5 +42,6 @@ term = xterm-256color
 keybind = cmd+s=text:\x13
 keybind = cmd+c=copy_to_clipboard
 keybind = cmd+v=paste_from_clipboard
+macos-option-as-alt = true
 
 
