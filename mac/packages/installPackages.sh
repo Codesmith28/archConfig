@@ -21,5 +21,10 @@ xargs brew install --cask <brew-casks.txt
     git clone https://github.com/romkatv/zsh-defer.git \
         "$HOME/.zsh-defer"
 
+echo "==> Installing vim plugins"
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim +PlugInstall
+
 # install rustup
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
