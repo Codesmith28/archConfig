@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/ship.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#00090E",
+        "foreground": "#a2cdcd",
+        "cursor": "#a2cdcd"
+    },
+    "colors": {
+        "color0": "#00090E",
+        "color1": "#1F6966",
+        "color2": "#4C6B49",
+        "color3": "#2C8579",
+        "color4": "#5D926A",
+        "color5": "#31928E",
+        "color6": "#7DB497",
+        "color7": "#a2cdcd",
+        "color8": "#718f8f",
+        "color9": "#1F6966",
+        "color10": "#4C6B49",
+        "color11": "#2C8579",
+        "color12": "#5D926A",
+        "color13": "#31928E",
+        "color14": "#7DB497",
+        "color15": "#a2cdcd"
+    }
+}

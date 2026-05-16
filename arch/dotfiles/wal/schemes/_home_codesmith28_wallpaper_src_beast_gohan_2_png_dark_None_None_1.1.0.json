@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/beast_gohan_2.png",
+    "alpha": "100",
+    "special": {
+        "background": "#191135",
+        "foreground": "#d3d6ef",
+        "cursor": "#d3d6ef"
+    },
+    "colors": {
+        "color0": "#191135",
+        "color1": "#4854AE",
+        "color2": "#3664D4",
+        "color3": "#5862DF",
+        "color4": "#A45FDB",
+        "color5": "#5F8DF2",
+        "color6": "#9B9FF4",
+        "color7": "#d3d6ef",
+        "color8": "#9395a7",
+        "color9": "#4854AE",
+        "color10": "#3664D4",
+        "color11": "#5862DF",
+        "color12": "#A45FDB",
+        "color13": "#5F8DF2",
+        "color14": "#9B9FF4",
+        "color15": "#d3d6ef"
+    }
+}

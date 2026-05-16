@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/itachi.png",
+    "alpha": "100",
+    "special": {
+        "background": "#050505",
+        "foreground": "#dedede",
+        "cursor": "#dedede"
+    },
+    "colors": {
+        "color0": "#050505",
+        "color1": "#D12A37",
+        "color2": "#976C6C",
+        "color3": "#86807F",
+        "color4": "#8B8B8A",
+        "color5": "#AFAFAF",
+        "color6": "#E8A1A2",
+        "color7": "#dedede",
+        "color8": "#9b9b9b",
+        "color9": "#D12A37",
+        "color10": "#976C6C",
+        "color11": "#86807F",
+        "color12": "#8B8B8A",
+        "color13": "#AFAFAF",
+        "color14": "#E8A1A2",
+        "color15": "#dedede"
+    }
+}

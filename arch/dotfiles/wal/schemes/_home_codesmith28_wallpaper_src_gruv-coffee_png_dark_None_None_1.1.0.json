@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/gruv-coffee.png",
+    "alpha": "100",
+    "special": {
+        "background": "#242120",
+        "foreground": "#e2dbc9",
+        "cursor": "#e2dbc9"
+    },
+    "colors": {
+        "color0": "#242120",
+        "color1": "#FE8019",
+        "color2": "#C99B32",
+        "color3": "#F9BC2F",
+        "color4": "#998E75",
+        "color5": "#B3A78A",
+        "color6": "#CBBD9B",
+        "color7": "#e2dbc9",
+        "color8": "#9e998c",
+        "color9": "#FE8019",
+        "color10": "#C99B32",
+        "color11": "#F9BC2F",
+        "color12": "#998E75",
+        "color13": "#B3A78A",
+        "color14": "#CBBD9B",
+        "color15": "#e2dbc9"
+    }
+}

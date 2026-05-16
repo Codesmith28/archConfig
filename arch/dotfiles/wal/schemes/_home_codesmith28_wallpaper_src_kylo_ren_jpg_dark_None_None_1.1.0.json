@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/kylo_ren.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0A0F14",
+        "foreground": "#cfb6bc",
+        "cursor": "#cfb6bc"
+    },
+    "colors": {
+        "color0": "#0A0F14",
+        "color1": "#2D4557",
+        "color2": "#2D546D",
+        "color3": "#30516D",
+        "color4": "#555563",
+        "color5": "#AC5B60",
+        "color6": "#476A89",
+        "color7": "#cfb6bc",
+        "color8": "#907f83",
+        "color9": "#2D4557",
+        "color10": "#2D546D",
+        "color11": "#30516D",
+        "color12": "#555563",
+        "color13": "#AC5B60",
+        "color14": "#476A89",
+        "color15": "#cfb6bc"
+    }
+}

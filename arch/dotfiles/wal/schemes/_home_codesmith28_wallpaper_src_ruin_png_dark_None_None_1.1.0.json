@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/ruin.png",
+    "alpha": "100",
+    "special": {
+        "background": "#090f0a",
+        "foreground": "#d3d6aa",
+        "cursor": "#d3d6aa"
+    },
+    "colors": {
+        "color0": "#090f0a",
+        "color1": "#596933",
+        "color2": "#5E654E",
+        "color3": "#88785A",
+        "color4": "#738936",
+        "color5": "#778860",
+        "color6": "#96A068",
+        "color7": "#d3d6aa",
+        "color8": "#939576",
+        "color9": "#596933",
+        "color10": "#5E654E",
+        "color11": "#88785A",
+        "color12": "#738936",
+        "color13": "#778860",
+        "color14": "#96A068",
+        "color15": "#d3d6aa"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/od_scorpio.png",
+    "alpha": "100",
+    "special": {
+        "background": "#121419",
+        "foreground": "#d1d3d8",
+        "cursor": "#d1d3d8"
+    },
+    "colors": {
+        "color0": "#121419",
+        "color1": "#616869",
+        "color2": "#BCB374",
+        "color3": "#A27087",
+        "color4": "#5C97A4",
+        "color5": "#5FB0E1",
+        "color6": "#A1AEAB",
+        "color7": "#d1d3d8",
+        "color8": "#929397",
+        "color9": "#616869",
+        "color10": "#BCB374",
+        "color11": "#A27087",
+        "color12": "#5C97A4",
+        "color13": "#5FB0E1",
+        "color14": "#A1AEAB",
+        "color15": "#d1d3d8"
+    }
+}

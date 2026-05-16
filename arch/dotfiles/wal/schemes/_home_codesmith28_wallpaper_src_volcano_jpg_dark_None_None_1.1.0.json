@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/volcano.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#1a0f0b",
+        "foreground": "#adbab8",
+        "cursor": "#adbab8"
+    },
+    "colors": {
+        "color0": "#1a0f0b",
+        "color1": "#A44E25",
+        "color2": "#D36427",
+        "color3": "#8F7359",
+        "color4": "#CB7A46",
+        "color5": "#9F8C70",
+        "color6": "#E8A04E",
+        "color7": "#adbab8",
+        "color8": "#798280",
+        "color9": "#A44E25",
+        "color10": "#D36427",
+        "color11": "#8F7359",
+        "color12": "#CB7A46",
+        "color13": "#9F8C70",
+        "color14": "#E8A04E",
+        "color15": "#adbab8"
+    }
+}

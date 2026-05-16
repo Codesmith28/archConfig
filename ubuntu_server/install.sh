@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Installation script for Ubuntu
+set -e
+
+echo "Starting installation..."
+
+# ----------------------------------------------------
+# Update and Upgrade
+# ----------------------------------------------------
+sudo apt update -y
+sudo apt install -y software-properties-common
+sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
+sudo apt update -y
+sudo apt full-upgrade -y
+
+# ----------------------------------------------------
+# Install packages from apt
+# ----------------------------------------------------
+sudo apt install -y \
+    curl \
+    build-essential \
+    procps \
+    file \
+    git \
+    fastfetch \
+    cmatrix \
+    zsh \
+    fzf \
+    dconf-cli \
+    tmux \
+    lua5.4 \
+    bat \
+    fd-find \
+    ripgrep \
+    unzip \
+    wget \
+    libssl-dev \
+    net-tools \
+    gnome-calculator \
+    xournalpp \
+    cheese \
+    ffmpeg \
+    p7zip-full \
+    p7zip-rar \
+    jq \
+    poppler-utils \
+    zoxide \
+    btop \
+    gh \
+    imagemagick
+
+# 1. Create the local bin directory if it doesn't exist
+mkdir -p ~/.local/bin
+# 2. Download and extract directly into that directory
+wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz -C ~/.local/bin
+# 3. Ensure it is executable (tar usually preserves this, but just in case)
+chmod +x ~/.local/bin/eza
+
+# Symlink batcat -> bat and fdfind -> fd
+sudo ln -sf /usr/bin/batcat /usr/local/bin/bat
+sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
+
+# vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# lazyvim
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+tar xf lazygit.tar.gz lazygit
+sudo install lazygit -D -t /usr/local/bin/
+
+# ----------------------------------------------------
+# starship prompt
+# ----------------------------------------------------
+curl -sS https://starship.rs/install.sh | sh
+
+# ----------------------------------------------------
+# Install television (tv)
+# ----------------------------------------------------
+curl -fsSL https://alexpasmantier.github.io/television/install.sh | bash
+

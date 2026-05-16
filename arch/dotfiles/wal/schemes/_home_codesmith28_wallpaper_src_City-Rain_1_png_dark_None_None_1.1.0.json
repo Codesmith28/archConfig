@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/City-Rain_1.png",
+    "alpha": "100",
+    "special": {
+        "background": "#04030D",
+        "foreground": "#adc0c6",
+        "cursor": "#adc0c6"
+    },
+    "colors": {
+        "color0": "#04030D",
+        "color1": "#9C2107",
+        "color2": "#ED1C01",
+        "color3": "#A25D3C",
+        "color4": "#EF5F08",
+        "color5": "#F0B723",
+        "color6": "#5B7687",
+        "color7": "#adc0c6",
+        "color8": "#79868a",
+        "color9": "#9C2107",
+        "color10": "#ED1C01",
+        "color11": "#A25D3C",
+        "color12": "#EF5F08",
+        "color13": "#F0B723",
+        "color14": "#5B7687",
+        "color15": "#adc0c6"
+    }
+}

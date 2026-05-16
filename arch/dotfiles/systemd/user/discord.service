@@ -1,0 +1,11 @@
+[Unit]
+Description=Discord
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/discord --start-minimized --enable-features=UseOzonePlatform --ozone-platform=wayland
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
