@@ -1,0 +1,76 @@
+---
+- name: Install iwd and NetworkManager
+  ansible.builtin.pacman:
+    name:
+      - iwd
+      - networkmanager
+    state: present
+  become: yes
+
+- name: Ensure NetworkManager conf.d directory exists
+  ansible.builtin.file:
+    path: /etc/NetworkManager/conf.d
+    state: directory
+    mode: "0755"
+  become: yes
+
+- name: Copy Wi-Fi backend config
+  ansible.builtin.copy:
+    src: wifi_configs/wifi_backend.conf
+    dest: /etc/NetworkManager/conf.d/wifi_backend.conf
+    mode: "0644"
+  become: yes
+
+- name: Copy Wi-Fi random MAC config
+  ansible.builtin.copy:
+    src: wifi_configs/wifi_rand_mac.conf
+    dest: /etc/NetworkManager/conf.d/wifi_rand_mac.conf
+    mode: "0644"
+  become: yes
+
+- name: Copy Wi-Fi powersave config
+  ansible.builtin.copy:
+    src: wifi_configs/wifi_powersave.conf
+    dest: /etc/NetworkManager/conf.d/wifi_powersave.conf
+    mode: "0644"
+  become: yes
+
+- name: Ensure NetworkManager system-connections directory exists
+  ansible.builtin.file:
+    path: /etc/NetworkManager/system-connections
+    state: directory
+    mode: "0700"
+  become: yes
+
+- name: Deploy Wi-Fi connection file
+  ansible.builtin.template:
+    src: wifi_nmconnection.j2
+    dest: "/etc/NetworkManager/system-connections/{{ wifi_ssid }}.nmconnection"
+    mode: "0600"
+  become: yes
+
+- name: Ensure iwd directory exists
+  ansible.builtin.file:
+    path: /var/lib/iwd
+    state: directory
+    mode: "0700"
+  become: yes
+
+- name: Deploy iwd 802.1x config
+  ansible.builtin.template:
+    src: wifi_8021x.j2
+    dest: "/var/lib/iwd/{{ wifi_ssid }}.8021x"
+    mode: "0600"
+  become: yes
+
+- name: Restart NetworkManager
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+  become: yes
+
+- name: Restart iwd
+  ansible.builtin.systemd:
+    name: iwd
+    state: restarted
+  become: yes

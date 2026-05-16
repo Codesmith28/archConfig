@@ -1,0 +1,12 @@
+---
+fonts_pacman:
+  - noto-fonts
+  - noto-fonts-cjk
+  - otf-font-awesome
+  - ttf-fira-sans
+  - figlet
+fonts_yay:
+  - ttf-recursive-nerd
+  - ttf-cascadia-code-nerd
+  - ttf-jetbrains-mono-nerd
+  - fontpreview

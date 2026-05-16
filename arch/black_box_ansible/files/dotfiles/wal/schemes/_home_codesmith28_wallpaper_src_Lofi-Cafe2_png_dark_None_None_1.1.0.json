@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/Lofi-Cafe2.png",
+    "alpha": "100",
+    "special": {
+        "background": "#000000",
+        "foreground": "#77b2dc",
+        "cursor": "#77b2dc"
+    },
+    "colors": {
+        "color0": "#000000",
+        "color1": "#00396C",
+        "color2": "#024773",
+        "color3": "#5D464F",
+        "color4": "#9B2D12",
+        "color5": "#CD4A17",
+        "color6": "#005A96",
+        "color7": "#77b2dc",
+        "color8": "#537c9a",
+        "color9": "#00396C",
+        "color10": "#024773",
+        "color11": "#5D464F",
+        "color12": "#9B2D12",
+        "color13": "#CD4A17",
+        "color14": "#005A96",
+        "color15": "#77b2dc"
+    }
+}

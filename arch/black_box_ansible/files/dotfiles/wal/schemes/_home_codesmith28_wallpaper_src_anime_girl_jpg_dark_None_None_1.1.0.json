@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/anime_girl.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#070415",
+        "foreground": "#e1a4cf",
+        "cursor": "#e1a4cf"
+    },
+    "colors": {
+        "color0": "#070415",
+        "color1": "#693778",
+        "color2": "#963678",
+        "color3": "#EE8979",
+        "color4": "#6C3585",
+        "color5": "#623C88",
+        "color6": "#9A3889",
+        "color7": "#e1a4cf",
+        "color8": "#9d7290",
+        "color9": "#693778",
+        "color10": "#963678",
+        "color11": "#EE8979",
+        "color12": "#6C3585",
+        "color13": "#623C88",
+        "color14": "#9A3889",
+        "color15": "#e1a4cf"
+    }
+}

@@ -1,0 +1,14 @@
+---
+general_pacman:
+  - git
+  - kitty
+  - fastfetch
+  - btop
+  - ripgrep
+  - baobab
+  - pacseek
+  - discord
+  - telegram-desktop
+  - firefox
+general_yay:
+  - google-chrome

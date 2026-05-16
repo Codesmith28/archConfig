@@ -1,0 +1,32 @@
+---
+- name: Unbind Shift+Ctrl+Alt+Arrow keys for workspace switching
+  ansible.builtin.command:
+    cmd: gsettings set org.gnome.desktop.wm.keybindings {{ item.key }} "['']"
+  loop:
+    - { key: "switch-to-workspace-up" }
+    - { key: "switch-to-workspace-down" }
+  become: no # Run as the user, not root
+  changed_when: false # gsettings doesn’t report changes reliably
+  register: unbind_result
+  failed_when: unbind_result.rc != 0
+
+- name: Set new workspace switching keybindings
+  ansible.builtin.command:
+    cmd: gsettings set org.gnome.desktop.wm.keybindings {{ item.key }} "{{ item.value }}"
+  loop:
+    - { key: "switch-to-workspace-up", value: "['<Super>Page_Up']" }
+    - { key: "switch-to-workspace-down", value: "['<Super>Page_Down']" }
+    - { key: "move-to-workspace-up", value: "['<Super><Shift>Page_Up']" }
+    - { key: "move-to-workspace-down", value: "['<Super><Shift>Page_Down']" }
+  become: no
+  changed_when: false
+  register: keybind_result
+  failed_when: keybind_result.rc != 0
+
+- name: Center new windows
+  ansible.builtin.command:
+    cmd: gsettings set org.gnome.mutter center-new-windows true
+  become: no
+  changed_when: false
+  register: center_result
+  failed_when: center_result.rc != 0

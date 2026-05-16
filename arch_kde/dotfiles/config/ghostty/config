@@ -1,0 +1,45 @@
+# --- Theme ---
+theme = Apple System Colors
+# theme = Abernathy
+background = 000000
+ 
+# --- Background & Blur ---
+# 70% opacity
+background-opacity = .70
+# Enable background blur (uses macOS native glass effect)
+background-blur-radius = 55
+
+# --- Font Rendering ---
+# font-family = Blexmono Nerd Font
+font-size = 12     
+font-thicken = true   
+
+# --- Cursor ---    
+# Changes the cursor shape to an underscore
+cursor-style = underline
+# Increases the thickness of the cursor (1 is default)
+adjust-cursor-thickness = 3
+# Prevents the shell from overriding your custom cursor shape
+shell-integration-features = no-cursor
+
+# --- Window & Tabs (macOS) ---
+# Places the tab bar directly inline with the macOS traffic light buttons
+macos-titlebar-style = tabs
+window-padding-color = background
+
+# --- Clipboard ---
+# Automatically copies selected text to your system clipboard
+copy-on-select = clipboard
+clipboard-paste-protection = false
+
+# --- Compatibility ---
+# Disguises Ghostty as a standard terminal so remote servers recognize it
+term = xterm-256color
+
+# --- Custom Keybindings ---
+# Maps Cmd+S to send the hex code for Ctrl+S (\x13)	
+keybind = cmd+s=text:\x13
+keybind = cmd+c=copy_to_clipboard
+keybind = cmd+v=paste_from_clipboard
+
+

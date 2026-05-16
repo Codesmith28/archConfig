@@ -1,0 +1,285 @@
+/* Swaync custom CSS with monospace fonts throughout */
+
+:root {
+  --small-float-size: 13px;
+  --large-float-size: 15px;
+  --fg-main: #dcd7ba;
+  --fg-dim: #a2a3a8;
+  --bg-main: rgba(8, 8, 10, 0.56);
+  --bg-hover: rgba(18, 18, 22, 0.68);
+  --cc-bg: rgba(0, 0, 0, 0.72);
+  --cc-card: rgba(10, 10, 12, 0.56);
+  --border-main: rgba(118, 148, 106, 0.7);
+  --border-soft: rgba(86, 105, 82, 0.45);
+  --accent-blue: #7e9cd8;
+  --accent-green: #98bb6c;
+}
+
+window {
+  all: unset;
+  background: transparent;
+  color: #e6e8ee;
+  font-family: monospace;
+}
+
+.notification-window {
+  background: transparent;
+}
+
+.notification {
+  background: linear-gradient(135deg, var(--bg-main) 0%, rgba(16, 18, 22, 0.6) 100%);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin: 6px 0;
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent-blue);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.42);
+  overflow: visible;
+  font-family: monospace;
+}
+
+.notification:hover {
+  background: linear-gradient(135deg, var(--bg-hover) 0%, rgba(30, 35, 44, 0.94) 100%);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+.notification-content {
+  padding: 6px 4px 4px;
+  font-family: monospace;
+}
+
+.notification-summary {
+  font-size: var(--large-float-size);
+  font-weight: 700;
+  color: var(--accent-green);
+  margin-bottom: 2px;
+  font-family: monospace;
+}
+
+.notification-body {
+  font-size: var(--small-float-size);
+  color: var(--fg-main);
+  margin-top: 1px;
+  font-family: monospace;
+}
+
+.notification-action {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, #9fb4e8 100%);
+  color: #0c0d10;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 4px 2px;
+  font-size: var(--small-float-size);
+  font-weight: 600;
+  border: none;
+  font-family: monospace;
+}
+
+.notification-action:hover {
+  background: linear-gradient(135deg, #9eb7f0 0%, #b6caee 100%);
+}
+
+/* Progress bar styling for volume/brightness */
+.notification.progress {
+  padding: 8px 12px 10px;
+  min-height: 56px;
+  overflow: visible;
+  font-family: monospace;
+}
+
+.notification.progress .notification-content {
+  padding-top: 7px;
+  padding-bottom: 6px;
+}
+
+.notification.progress .notification-summary,
+.notification.progress .summary {
+  line-height: 1.35;
+  margin-top: 1px;
+  margin-bottom: 6px;
+}
+
+.notification.progress .notification-body,
+.notification.progress .body {
+  font-size: var(--small-float-size);
+  color: #aaaaaa;
+  line-height: 1.35;
+  margin-top: 2px;
+  margin-bottom: 6px;
+  font-family: monospace;
+}
+
+progress {
+  -gtk-progress-fill: var(--accent-blue);
+  font-family: monospace;
+}
+
+progress trough {
+  all: unset;
+  background: rgba(117, 130, 154, 0.3);
+  border-radius: 4px;
+  min-height: 6px;
+  margin-top: 6px;
+}
+
+progress progress {
+  all: unset;
+  background: var(--accent-blue);
+  border-radius: 4px;
+  min-height: 6px;
+}
+
+/* Critical urgency (red) */
+.notification.critical {
+  border-left-color: #ff4444;
+  font-family: monospace;
+}
+
+/* Normal urgency (blue) */
+.notification.normal {
+  border-left-color: var(--accent-blue);
+  font-family: monospace;
+}
+
+/* Low urgency (gray) */
+.notification.low {
+  border-left-color: #7a8395;
+  font-family: monospace;
+}
+
+/* Control center styling */
+#control-center {
+  background: linear-gradient(180deg, var(--cc-bg) 0%, rgba(6, 6, 8, 0.64) 100%);
+  border: 1px solid var(--border-main);
+  border-radius: 12px;
+  box-shadow: 0 26px 56px rgba(0, 0, 0, 0.85);
+  color: var(--fg-main);
+  font-family: monospace;
+}
+
+#control-center .widget-title,
+#control-center .widget-dnd,
+#control-center .floating-notifications {
+  background: var(--cc-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  margin: 8px 10px;
+  padding: 8px 10px;
+}
+
+#control-center .widget-title label,
+#control-center .summary {
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+#control-center .time,
+#control-center .widget-dnd label {
+  color: var(--fg-dim);
+}
+
+#control-center .body {
+  color: var(--fg-main);
+}
+
+#control-center .widget-title > button {
+  background: rgba(30, 38, 32, 0.7);
+  color: var(--fg-main);
+  border: 1px solid var(--border-main);
+  border-radius: 8px;
+}
+
+#control-center .widget-title > button:hover {
+  background: rgba(42, 52, 44, 0.8);
+}
+
+#control-center .widget-dnd > switch {
+  background: rgba(40, 46, 56, 0.62);
+}
+
+#control-center .widget-dnd > switch:checked {
+  background: var(--accent-blue);
+}
+
+#control-center .body {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* ── Media controller (mpris) ───────────────────────────── */
+.widget-mpris {
+  background: var(--cc-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  margin: 8px 10px;
+  padding: 4px 6px;
+}
+
+.widget-mpris-player {
+  padding: 6px 4px;
+}
+
+.widget-mpris-album-art {
+  border-radius: 6px;
+  min-width: 56px;
+  min-height: 56px;
+}
+
+.widget-mpris-title {
+  font-weight: 700;
+  color: var(--accent-green);
+  font-size: 14px;
+  font-family: monospace;
+}
+
+.widget-mpris-subtitle {
+  color: var(--fg-dim);
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.widget-mpris button {
+  background: rgba(30, 33, 40, 0.5);
+  border: 1px solid rgba(86, 98, 114, 0.25);
+  border-radius: 6px;
+  color: var(--fg-dim);
+  min-width: 28px;
+  min-height: 28px;
+  padding: 2px 4px;
+  font-family: monospace;
+}
+
+.widget-mpris button:hover {
+  background: rgba(50, 56, 68, 0.7);
+  color: var(--fg-main);
+  border-color: var(--border-soft);
+}
+
+/* ── Power menu (buttons-grid) ──────────────────────────── */
+.widget-buttons-grid {
+  background: var(--cc-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  margin: 8px 10px;
+  padding: 8px 6px;
+}
+
+.widget-buttons-grid button {
+  background: rgba(28, 30, 36, 0.52);
+  border: 1px solid rgba(80, 88, 100, 0.22);
+  border-radius: 7px;
+  color: var(--fg-dim);
+  font-size: 13px;
+  font-family: monospace;
+  min-width: 90px;
+  min-height: 40px;
+  padding: 6px 10px;
+  margin: 3px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.widget-buttons-grid button:hover {
+  background: rgba(48, 52, 62, 0.68);
+  color: var(--fg-main);
+  border-color: rgba(118, 148, 106, 0.28);
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=Enable NVIDIA Persistence Mode
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nvidia-smi -pm 1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+

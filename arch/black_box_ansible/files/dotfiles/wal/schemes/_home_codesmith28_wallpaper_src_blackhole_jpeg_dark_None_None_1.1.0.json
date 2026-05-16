@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/blackhole.jpeg",
+    "alpha": "100",
+    "special": {
+        "background": "#0F1D32",
+        "foreground": "#80e4f0",
+        "cursor": "#80e4f0"
+    },
+    "colors": {
+        "color0": "#0F1D32",
+        "color1": "#93366F",
+        "color2": "#148D6E",
+        "color3": "#156296",
+        "color4": "#4D5994",
+        "color5": "#A85B9B",
+        "color6": "#229FC3",
+        "color7": "#80e4f0",
+        "color8": "#599fa8",
+        "color9": "#93366F",
+        "color10": "#148D6E",
+        "color11": "#156296",
+        "color12": "#4D5994",
+        "color13": "#A85B9B",
+        "color14": "#229FC3",
+        "color15": "#80e4f0"
+    }
+}

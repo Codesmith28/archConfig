@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/blacksmith.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0e090d",
+        "foreground": "#b0b5b9",
+        "cursor": "#b0b5b9"
+    },
+    "colors": {
+        "color0": "#0e090d",
+        "color1": "#3D3A44",
+        "color2": "#615756",
+        "color3": "#8F4E2E",
+        "color4": "#AB592D",
+        "color5": "#AF6038",
+        "color6": "#E9A250",
+        "color7": "#b0b5b9",
+        "color8": "#7b7e81",
+        "color9": "#3D3A44",
+        "color10": "#615756",
+        "color11": "#8F4E2E",
+        "color12": "#AB592D",
+        "color13": "#AF6038",
+        "color14": "#E9A250",
+        "color15": "#b0b5b9"
+    }
+}

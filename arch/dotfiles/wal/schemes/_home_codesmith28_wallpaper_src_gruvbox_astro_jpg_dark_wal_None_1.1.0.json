@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/gruvbox_astro.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0e1010",
+        "foreground": "#d0c69b",
+        "cursor": "#d0c69b"
+    },
+    "colors": {
+        "color0": "#0e1010",
+        "color1": "#4D3D42",
+        "color2": "#2C6060",
+        "color3": "#5C5954",
+        "color4": "#617F7D",
+        "color5": "#975F64",
+        "color6": "#C25540",
+        "color7": "#d0c69b",
+        "color8": "#918a6c",
+        "color9": "#4D3D42",
+        "color10": "#2C6060",
+        "color11": "#5C5954",
+        "color12": "#617F7D",
+        "color13": "#975F64",
+        "color14": "#C25540",
+        "color15": "#d0c69b"
+    }
+}

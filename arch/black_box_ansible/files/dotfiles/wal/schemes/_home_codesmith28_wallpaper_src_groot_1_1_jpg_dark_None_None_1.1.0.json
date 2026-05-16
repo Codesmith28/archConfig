@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/groot_1_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#040001",
+        "foreground": "#c48bd8",
+        "cursor": "#c48bd8"
+    },
+    "colors": {
+        "color0": "#040001",
+        "color1": "#5A1762",
+        "color2": "#461675",
+        "color3": "#1B5568",
+        "color4": "#1C4678",
+        "color5": "#671F9D",
+        "color6": "#266390",
+        "color7": "#c48bd8",
+        "color8": "#896197",
+        "color9": "#5A1762",
+        "color10": "#461675",
+        "color11": "#1B5568",
+        "color12": "#1C4678",
+        "color13": "#671F9D",
+        "color14": "#266390",
+        "color15": "#c48bd8"
+    }
+}

@@ -1,0 +1,57 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "b12a9ab"
+hash = "1f3dad061209081a6b04dd6ff2cb06c7"
+
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "c070754"
+hash = "ebe49da58741aa3bf06c49ee394e0a5a"
+
+[[plugin.deps]]
+use = "ahkohd/eza-preview"
+rev = "6575a9a"
+hash = "72355a6c8b7c8de6ed4dda0f98f86fee"
+
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "2da96e3"
+hash = "f9ee1436e3b853508d87f7d49dce56e6"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "2496cd9"
+hash = "5b9dea47776a30946cfbf83232d18fb1"
+
+[[plugin.deps]]
+use = "h-hg/yamb"
+rev = "22af003"
+hash = "7cc42012a7c2099f80064d228feb8d44"
+
+[[plugin.deps]]
+use = "Lil-Dank/lazygit"
+rev = "7a08a09"
+hash = "a1fa2b3e1826c3a34804ea8c548e9f80"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "b12a9ab"
+hash = "e0ada736ea676c2bbb3ec705a49526ef"
+
+[[plugin.deps]]
+use = "llanosrocas/yaziline"
+rev = "1342efe"
+hash = "a84a339953a568fee1d8beb63e6dca73"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "b12a9ab"
+hash = "2f1053f89d1a301a648ab181d0948e38"
+
+[[plugin.deps]]
+use = "AnirudhG07/rich-preview"
+rev = "2559e5f"
+hash = "c9a3d0731e7d7340e2c6d6126b1f3aa3"
+
+[flavor]
+deps = []

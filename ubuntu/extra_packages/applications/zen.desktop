@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Zen Browser
+Exec=/opt/zen.AppImage
+Icon=zen
+Type=Application
+Categories=Network;WebBrowser;
+Comment=Minimal distraction-free browser
+Terminal=false
+Icon=/opt/Zen-Dark.svg

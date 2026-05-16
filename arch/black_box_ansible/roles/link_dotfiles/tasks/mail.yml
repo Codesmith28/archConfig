@@ -1,0 +1,70 @@
+---
+- name: Ensure ~/dotfiles directory exists
+  ansible.builtin.file:
+    path: "~/dotfiles"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0755"
+  become: no
+
+- name: Recursively copy dotfiles to ~/dotfiles (replacive)
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../files/dotfiles/"
+    dest: "~/dotfiles/"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: preserve
+    force: yes
+    directory_mode: "0755"
+  become: no
+
+- name: Ensure ~/.cache directory exists
+  ansible.builtin.file:
+    path: "~/.cache"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0755"
+  become: no
+
+- name: Symlink wal and wallpaper_cache to ~/.cache
+  ansible.builtin.file:
+    src: "~/dotfiles/{{ item }}"
+    dest: "~/.cache/{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - wal
+    - wallpaper_cache
+  become: no
+
+- name: Symlink .zshrc, .bashrc, .profile to home directory
+  ansible.builtin.file:
+    src: "~/dotfiles/{{ item }}"
+    dest: "~/{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - .zshrc
+    - .bashrc
+    - .profile
+  become: no
+
+- name: Ensure ~/.config directory exists
+  ansible.builtin.file:
+    path: "~/.config"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0755"
+  become: no
+
+- name: Symlink remaining dotfiles to ~/.config
+  ansible.builtin.file:
+    src: "~/dotfiles/{{ item }}"
+    dest: "~/.config/{{ item }}"
+    state: link
+    force: yes
+  loop: "{{ query('fileglob', '~/dotfiles/*') | map('basename') | difference(['wal', 'wallpaper_cache', '.zshrc', '.bashrc', '.profile']) }}"
+  become: no

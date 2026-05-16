@@ -1,0 +1,101 @@
+---
+- name: Install Git and related packages
+  ansible.builtin.pacman:
+    name:
+      - openssh
+      - git
+      - nodejs
+      - github-cli
+      - lazygit
+    state: present
+  become: yes
+
+- name: Prompt for Git username
+  ansible.builtin.pause:
+    prompt: "Enter your Git username"
+  register: git_username_prompt
+
+- name: Prompt for Git email
+  ansible.builtin.pause:
+    prompt: "Enter your Git email"
+  register: git_email_prompt
+
+- name: Set Git username and email facts
+  ansible.builtin.set_fact:
+    git_username: "{{ git_username_prompt.user_input }}"
+    git_email: "{{ git_email_prompt.user_input }}"
+
+- name: Configure Git global settings
+  ansible.builtin.command:
+    cmd: git config --global {{ item.key }} "{{ item.value }}"
+  loop:
+    - { key: "user.name", value: "{{ git_username }}" }
+    - { key: "user.email", value: "{{ git_email }}" }
+    - { key: "pull.rebase", value: "false" }
+  become: no
+  changed_when: false # Git config doesn’t reliably report changes
+
+- name: Ensure SSH directory exists
+  ansible.builtin.file:
+    path: ~/.ssh
+    state: directory
+    mode: "0700"
+  become: no
+
+- name: Check if SSH key exists
+  ansible.builtin.stat:
+    path: ~/.ssh/id_rsa
+  register: ssh_key_stat
+  become: no
+
+- name: Generate SSH key if it doesn’t exist
+  ansible.builtin.command:
+    cmd: ssh-keygen -t rsa -b 4096 -C "{{ git_email }}" -f ~/.ssh/id_rsa -N ""
+    creates: ~/.ssh/id_rsa
+  become: no
+  when: not ssh_key_stat.stat.exists
+
+- name: Start SSH agent
+  ansible.builtin.shell:
+    cmd: eval "$(ssh-agent -s)"
+  become: no
+  changed_when: false # Agent start doesn’t modify state
+
+- name: Add SSH key to agent
+  ansible.builtin.command:
+    cmd: ssh-add ~/.ssh/id_rsa
+  become: no
+  changed_when: false # Idempotent if already added
+
+- name: Display SSH public key for GitHub
+  ansible.builtin.shell:
+    cmd: cat ~/.ssh/id_rsa.pub
+  register: ssh_pub_key
+  become: no
+  changed_when: false
+
+- name: Show SSH key instructions
+  ansible.builtin.debug:
+    msg: |
+      Your SSH key has been added to the agent. Copy the following to GitHub:
+      ------------------------------------------------------------
+      {{ ssh_pub_key.stdout }}
+      ------------------------------------------------------------
+      Add it at: https://github.com/settings/keys
+
+- name: Prompt for GitHub CLI login
+  ansible.builtin.pause:
+    prompt: "Log in to GitHub CLI by running 'gh auth login' manually and press Enter when done (or Ctrl+C to skip)"
+
+- name: Prompt for GitHub Copilot CLI installation
+  ansible.builtin.pause:
+    prompt: "Do you want to install GitHub Copilot CLI? (y/n)"
+  register: copilot_prompt
+
+- name: Install GitHub Copilot CLI extension
+  ansible.builtin.command:
+    cmd: gh extension install github/copilot
+  become: yes
+  when: copilot_prompt.user_input | lower == 'y'
+  register: copilot_install
+  changed_when: copilot_install.rc == 0

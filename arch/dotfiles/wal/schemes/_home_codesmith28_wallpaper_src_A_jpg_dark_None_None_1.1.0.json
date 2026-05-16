@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/A.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#060606",
+        "foreground": "#dcdcdc",
+        "cursor": "#dcdcdc"
+    },
+    "colors": {
+        "color0": "#060606",
+        "color1": "#6C6C6C",
+        "color2": "#80807F",
+        "color3": "#8E8E8E",
+        "color4": "#A0A09E",
+        "color5": "#ADADAD",
+        "color6": "#C0C0BF",
+        "color7": "#dcdcdc",
+        "color8": "#9a9a9a",
+        "color9": "#6C6C6C",
+        "color10": "#80807F",
+        "color11": "#8E8E8E",
+        "color12": "#A0A09E",
+        "color13": "#ADADAD",
+        "color14": "#C0C0BF",
+        "color15": "#dcdcdc"
+    }
+}

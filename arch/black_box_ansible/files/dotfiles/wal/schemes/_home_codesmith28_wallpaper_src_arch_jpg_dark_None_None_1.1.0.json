@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/arch.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#000000",
+        "foreground": "#e1e0e0",
+        "cursor": "#e1e0e0"
+    },
+    "colors": {
+        "color0": "#000000",
+        "color1": "#D42516",
+        "color2": "#E9C134",
+        "color3": "#15698B",
+        "color4": "#4E7B93",
+        "color5": "#6591A6",
+        "color6": "#A9A7A6",
+        "color7": "#e1e0e0",
+        "color8": "#9d9c9c",
+        "color9": "#D42516",
+        "color10": "#E9C134",
+        "color11": "#15698B",
+        "color12": "#4E7B93",
+        "color13": "#6591A6",
+        "color14": "#A9A7A6",
+        "color15": "#e1e0e0"
+    }
+}

@@ -1,0 +1,15 @@
+---
+multi_media_pacman:
+  - pipewire-alsa
+  - pipewire-jack
+  - pipewire-pulse
+  - obs-studio
+  - mpv
+  - ffmpeg
+  - ffmpegthumbnailer
+  - xwaylandvideobridge
+  - gimp
+  - libreoffice-fresh
+multi_media_yay:
+  - spotify-adblock
+  - zoom

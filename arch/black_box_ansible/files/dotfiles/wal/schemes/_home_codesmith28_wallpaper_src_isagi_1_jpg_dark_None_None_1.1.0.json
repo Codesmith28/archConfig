@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/isagi_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0F111E",
+        "foreground": "#e8e7ea",
+        "cursor": "#e8e7ea"
+    },
+    "colors": {
+        "color0": "#0F111E",
+        "color1": "#4B57AD",
+        "color2": "#787EA2",
+        "color3": "#566FCC",
+        "color4": "#ADABB8",
+        "color5": "#D3D3D5",
+        "color6": "#D7DAE7",
+        "color7": "#e8e7ea",
+        "color8": "#a2a1a3",
+        "color9": "#4B57AD",
+        "color10": "#787EA2",
+        "color11": "#566FCC",
+        "color12": "#ADABB8",
+        "color13": "#D3D3D5",
+        "color14": "#D7DAE7",
+        "color15": "#e8e7ea"
+    }
+}

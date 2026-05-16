@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/arcade.png",
+    "alpha": "100",
+    "special": {
+        "background": "#010709",
+        "foreground": "#a5cbe7",
+        "cursor": "#a5cbe7"
+    },
+    "colors": {
+        "color0": "#010709",
+        "color1": "#2E546D",
+        "color2": "#BC3226",
+        "color3": "#D7707E",
+        "color4": "#215394",
+        "color5": "#4777A2",
+        "color6": "#4F92C1",
+        "color7": "#a5cbe7",
+        "color8": "#738ea1",
+        "color9": "#2E546D",
+        "color10": "#BC3226",
+        "color11": "#D7707E",
+        "color12": "#215394",
+        "color13": "#4777A2",
+        "color14": "#4F92C1",
+        "color15": "#a5cbe7"
+    }
+}

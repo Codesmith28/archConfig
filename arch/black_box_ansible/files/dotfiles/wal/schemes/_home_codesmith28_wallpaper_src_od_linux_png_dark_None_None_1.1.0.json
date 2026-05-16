@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/od_linux.png",
+    "alpha": "100",
+    "special": {
+        "background": "#181a1f",
+        "foreground": "#ccd0d6",
+        "cursor": "#ccd0d6"
+    },
+    "colors": {
+        "color0": "#181a1f",
+        "color1": "#E5C07B",
+        "color2": "#757A85",
+        "color3": "#7C828D",
+        "color4": "#878D99",
+        "color5": "#949AA6",
+        "color6": "#9CA2AF",
+        "color7": "#ccd0d6",
+        "color8": "#8e9195",
+        "color9": "#E5C07B",
+        "color10": "#757A85",
+        "color11": "#7C828D",
+        "color12": "#878D99",
+        "color13": "#949AA6",
+        "color14": "#9CA2AF",
+        "color15": "#ccd0d6"
+    }
+}

@@ -1,0 +1,72 @@
+---
+- name: Ensure yay is installed
+  ansible.builtin.pacman:
+    name: yay
+    state: present
+  become: yes
+
+- name: Install pacman development packages
+  ansible.builtin.pacman:
+    name:
+      - go
+      - rustup
+      - rust-analyzer
+      - pnpm
+      - yarn
+      - typescript
+      - ts-node
+      - python-pipx
+      - openssl
+      - zlib
+      - xz
+      - tk
+      - base-devel
+    state: present
+  become: yes
+
+- name: Install yay development packages
+  ansible.builtin.command:
+    cmd: yay -S --noconfirm {{ item }}
+    creates: /usr/bin/{{ item }} # Rough idempotency check
+  loop:
+    - nvm
+    - bun
+  become: yes
+  register: yay_install
+  changed_when: yay_install.rc == 0
+  failed_when: yay_install.rc != 0 and yay_install.rc != 1 # Ignore "already installed" errors
+
+- name: Install pyenv
+  ansible.builtin.shell:
+    cmd: curl https://pyenv.run | bash
+    creates: ~/.pyenv # Only runs if pyenv isn’t installed
+  become: no
+  register: pyenv_install
+  changed_when: pyenv_install.rc == 0
+
+- name: Ensure pipx path is set
+  ansible.builtin.command:
+    cmd: pipx ensurepath
+    creates: ~/.local/bin # Assumes pipx adds to PATH here
+  become: no
+  register: pipx_path
+  changed_when: pipx_path.rc == 0
+
+- name: Check if Rust is installed
+  ansible.builtin.command:
+    cmd: rustc --version
+  register: rustc_check
+  failed_when: false # Don’t fail if rustc isn’t found
+  changed_when: false
+  become: no
+
+- name: Install and configure Rust via rustup
+  ansible.builtin.shell:
+    cmd: |
+      rustup install stable
+      rustup default stable
+    creates: ~/.rustup # Only runs if rustup isn’t set up
+  become: no
+  when: rustc_check.rc != 0 # Only if rustc isn’t found
+  register: rustup_setup
+  changed_when: rustup_setup.rc == 0

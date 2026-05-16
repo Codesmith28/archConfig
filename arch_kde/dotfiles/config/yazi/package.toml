@@ -1,0 +1,24 @@
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "eca1861"
+hash = "e519d894e94ded741e06aae4d4775981"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "4e55902"
+hash = "36a484acf6a0a0219c543ccb4cee218f"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "4e55902"
+hash = "3996fc74044bc44144b323686f887e1"
+
+[[plugin.deps]]
+use = "pirafrank/what-size"
+rev = "179ebf6"
+hash = "57056b9728006881d580ccabe8154a9c"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "8e6296f"
+hash = "d9da921c3bd37ba32ee27a8a7a40461f"

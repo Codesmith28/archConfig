@@ -1,0 +1,29 @@
+# Hyprland essentials package list
+# One package per line. Lines starting with # are ignored.
+# Adjust names for your distro if needed.
+
+hyprland
+waybar
+rofi
+rofi-emoji
+hyprpaper
+hyprlock
+hypridle
+hyprshot
+hyprpicker
+swaync
+wlogout
+wl-clipboard
+wtype
+grim
+slurp
+swappy
+brightnessctl
+playerctl
+pavucontrol
+blueman
+kitty
+dolphin
+xdg-desktop-portal-hyprland
+polkit-kde-agent
+zen-browser

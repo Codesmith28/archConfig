@@ -1,0 +1,134 @@
+{
+  "reload_style_on_change": true,
+  "layer": "top",
+  "position": "top",
+  "spacing": 8,
+  "height": 38,
+  "modules-left": [
+    "custom/os_logo",
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "tray",
+    "bluetooth",
+    "network",
+    "backlight",
+    "pulseaudio",
+    "custom/microphone",
+    "battery"
+  ],
+  "custom/os_logo": {
+    "format": "󰣇",
+    "tooltip": false,
+    "on-click": "wofi --show drun"
+  },
+  "hyprland/workspaces": {
+    "on-click": "activate",
+    "format": "{name}",
+    "persistent-workspaces": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": []
+    }
+  },
+  "custom/microphone": {
+    "exec": "bash -c 'if command -v wpctl >/dev/null 2>&1; then if wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q \"[MUTED]\"; then echo \"{\\\"text\\\":\\\"󰍭\\\",\\\"tooltip\\\":\\\"Mic Disabled\\\",\\\"class\\\":\\\"muted\\\"}\"; else echo \"{\\\"text\\\":\\\"󰍬\\\",\\\"tooltip\\\":\\\"Mic Enabled\\\",\\\"class\\\":\\\"enabled\\\"}\"; fi; elif command -v pactl >/dev/null 2>&1; then if pactl get-source-mute @DEFAULT_SOURCE@ | grep -q yes; then echo \"{\\\"text\\\":\\\"󰍭\\\",\\\"tooltip\\\":\\\"Mic Disabled\\\",\\\"class\\\":\\\"muted\\\"}\"; else echo \"{\\\"text\\\":\\\"󰍬\\\",\\\"tooltip\\\":\\\"Mic Enabled\\\",\\\"class\\\":\\\"enabled\\\"}\"; fi; else echo \"{\\\"text\\\":\\\"󰍬\\\",\\\"tooltip\\\":\\\"Mic Unknown\\\",\\\"class\\\":\\\"unknown\\\"}\"; fi'",
+    "on-click": "bash -c 'if command -v wpctl >/dev/null 2>&1; then wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle; elif command -v pactl >/dev/null 2>&1; then pactl set-source-mute @DEFAULT_SOURCE@ toggle; fi; pkill -RTMIN+8 waybar'",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "signal": 8,
+    "tooltip": true
+  },
+  "clock": {
+    "timezone": "Asia/Kolkata",
+    "format": "{:%H:%M %a}",
+    "tooltip-format": "<span><big>{calendar}</big></span>",
+    "calendar": {
+      "on-scroll": 1,
+      "on-click-right": "mode",
+      "format": {
+        "months": "<span color='#ffead3'><b>{}</b></span>",
+        "today": "<span color='#FF4500'><b><i>{}</i></b></span>",
+        "weekdays": "<span color='#ffcc66'><b>{}</b></span>"
+      }
+    },
+    "actions": {
+      "on-scroll-up": "shift_down",
+      "on-scroll-down": "shift_up"
+    }
+  },
+  "network": {
+    "format": "{icon}",
+    "format-wifi": "   {essid}",
+    "format-ethernet": "󰈀   Ethernet",
+    "format-disconnected": "󰖪   Disconnected",
+    "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Disconnected",
+    "interval": 5,
+    "spacing": 1
+  },
+  "battery": {
+    "format": "{capacity}% {icon}",
+    "format-discharging": "{capacity}% {icon}",
+    "format-charging": "{capacity}% {icon} ",
+    "format-plugged": "{capacity}% ",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "format-full": "{capacity}% ",
+    "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
+    "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+    "interval": 5,
+    "states": {
+      "warning": 20,
+      "critical": 10
+    }
+  },
+  "bluetooth": {
+    "format": "",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "Devices connected: {num_connections}"
+  },
+  "pulseaudio": {
+    "format": "{volume}% {icon}",
+    "on-click": "pavucontrol",
+    "tooltip-format": "Playing at {volume}%",
+    "scroll-step": 5,
+    "format-muted": "󰝟",
+    "format-icons": {
+      "headphone": "",
+      "headset": "󰋎",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃠"
+    ],
+    "scroll-step": -2
+  },
+  "tray": {
+    "icon-size": 18,
+    "spacing": 10
+  }
+}

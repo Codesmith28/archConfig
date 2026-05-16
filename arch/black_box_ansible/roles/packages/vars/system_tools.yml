@@ -1,0 +1,30 @@
+---
+system_tools_pacman:
+  - pacman-contrib
+  - bluez
+  - bluez-utils
+  - wget
+  - dunst
+  - starship
+  - dhcpcd
+  - iwd
+  - networkmanager
+  - xdg-desktop-portal-hyprland
+  - gtk
+  - cmake
+  - cpio
+  - meson
+  - pkg-config
+  - swww
+  - wireplumber
+  - rsync
+  - 7zip
+  - wlroots
+  - net-tools
+  - expect
+  - cliphist
+  - wl-clipboard
+  - wl-clip-persist
+  - clipse
+  - power-profiles-daemon
+system_tools_yay: [] # No yay packages in this category

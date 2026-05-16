@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/solo_lvlin.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0A0813",
+        "foreground": "#e7e4eb",
+        "cursor": "#e7e4eb"
+    },
+    "colors": {
+        "color0": "#0A0813",
+        "color1": "#9E4E51",
+        "color2": "#473FA1",
+        "color3": "#9B65CD",
+        "color4": "#86919D",
+        "color5": "#BBA3BD",
+        "color6": "#D5D5D6",
+        "color7": "#e7e4eb",
+        "color8": "#a19fa4",
+        "color9": "#9E4E51",
+        "color10": "#473FA1",
+        "color11": "#9B65CD",
+        "color12": "#86919D",
+        "color13": "#BBA3BD",
+        "color14": "#D5D5D6",
+        "color15": "#e7e4eb"
+    }
+}

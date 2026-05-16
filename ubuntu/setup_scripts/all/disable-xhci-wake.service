@@ -1,0 +1,11 @@
+[Unit]
+Description=Isolate Wake Triggers to Power Button Only
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/isolate-wake.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

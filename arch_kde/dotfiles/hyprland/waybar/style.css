@@ -1,0 +1,129 @@
+@define-color c1 #000000;
+@define-color c2 #FFFFFF;
+@define-color icon #FFFFFF;
+@define-color active #FFFFFF;
+@define-color hover #CCCCCC;
+
+/* ----------------------------------------------------- * General * ----------------------------------------------------- */
+* {
+    font-family: 'JetBrainsMono Nerd Font', Monospace;
+    font-size: 15px;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background-color: rgba(0, 0, 0, 0.50);
+    transition-property: background-color;
+    transition-duration: 0.5s;
+}
+
+/* ----------------------------------------------------- * Workspaces * ----------------------------------------------------- */
+
+#workspaces {
+    border: 0;
+    margin: 4px 0px 4px 2px;
+    border-radius: 5px;
+    color: @c1;
+    background-color: transparent;
+}
+
+#workspaces button {
+    border: 0;
+    margin: 2px 4px 2px 0;
+    padding: 0 8px;
+    color: @c2;
+    border-radius: 8px;
+    transition: all 0.25s ease-in-out;
+}
+
+#workspaces button.active {
+    color: @c1;
+    background: @active;
+    border-radius: 4px;
+}
+
+#workspaces button:hover {
+    color: @c1;
+    background: @hover;
+    border-radius: 4px;
+}
+
+/* ----------------------------------------------------- * Modules * ----------------------------------------------------- */
+
+#custom-os_logo,
+#clock,
+#pulseaudio,
+#custom-microphone,
+#network,
+#battery,
+#backlight,
+#bluetooth,
+#tray {
+    color: @c2;
+    border-radius: 15px;
+    margin: 4px 10px 4px 0;
+    padding: 0 12px;
+}
+
+window#waybar .modules-right #pulseaudio,
+window#waybar .modules-right #custom-microphone,
+window#waybar .modules-right #network,
+window#waybar .modules-right #backlight,
+window#waybar .modules-right #bluetooth,
+window#waybar .modules-right #battery,
+window#waybar .modules-right #tray {
+    margin: 4px 0 4px 0;
+    padding: 0 5px;
+}
+
+window#waybar .modules-right #battery {
+    margin-right: 8px;
+    padding-right: 8px;
+}
+
+#custom-os_logo {
+    font-size: 22px;
+    margin-left: 10px;
+    margin-right: 1px;
+}
+
+/* ----------------------------------------------------- * Tray * ----------------------------------------------------- */
+#tray {
+    margin-right: 10px;
+}
+
+#tray>.passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray>.needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* ----------------------------------------------------- * Tooltips * ----------------------------------------------------- */
+tooltip {
+    border-radius: 10px;
+    background-color: @c1;
+    border: 1px solid @c2;
+    opacity: 0.8;
+    padding: 10px;
+    margin: 0;
+}
+
+tooltip label {
+    color: @c2;
+}
+
+/* ----------------------------------------------------- * Specifics * ----------------------------------------------------- */
+
+#battery.critical:not(.charging) {
+    color: #f53c3c;
+    animation: blink 0.5s linear infinite alternate;
+}
+
+@keyframes blink {
+    to {
+        color: @c2;
+    }
+}

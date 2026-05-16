@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/deck.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#2c0722",
+        "foreground": "#c9c9ba",
+        "cursor": "#c9c9ba"
+    },
+    "colors": {
+        "color0": "#2c0722",
+        "color1": "#A23D39",
+        "color2": "#976038",
+        "color3": "#936B5C",
+        "color4": "#A6926E",
+        "color5": "#D9A255",
+        "color6": "#798787",
+        "color7": "#c9c9ba",
+        "color8": "#8c8c82",
+        "color9": "#A23D39",
+        "color10": "#976038",
+        "color11": "#936B5C",
+        "color12": "#A6926E",
+        "color13": "#D9A255",
+        "color14": "#798787",
+        "color15": "#c9c9ba"
+    }
+}

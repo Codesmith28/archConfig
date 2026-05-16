@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/arch_dracula.png",
+    "alpha": "100",
+    "special": {
+        "background": "#181920",
+        "foreground": "#bcbecb",
+        "cursor": "#bcbecb"
+    },
+    "colors": {
+        "color0": "#181920",
+        "color1": "#63667C",
+        "color2": "#636284",
+        "color3": "#636885",
+        "color4": "#9174BF",
+        "color5": "#7C809C",
+        "color6": "#80849F",
+        "color7": "#bcbecb",
+        "color8": "#83858e",
+        "color9": "#63667C",
+        "color10": "#636284",
+        "color11": "#636885",
+        "color12": "#9174BF",
+        "color13": "#7C809C",
+        "color14": "#80849F",
+        "color15": "#bcbecb"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/ghibli-japanese-walled-garden++_1.png",
+    "alpha": "100",
+    "special": {
+        "background": "#10140f",
+        "foreground": "#c9cd9a",
+        "cursor": "#c9cd9a"
+    },
+    "colors": {
+        "color0": "#10140f",
+        "color1": "#5C6B4B",
+        "color2": "#8A7644",
+        "color3": "#388532",
+        "color4": "#6B8E28",
+        "color5": "#748A57",
+        "color6": "#9A9E5E",
+        "color7": "#c9cd9a",
+        "color8": "#8c8f6b",
+        "color9": "#5C6B4B",
+        "color10": "#8A7644",
+        "color11": "#388532",
+        "color12": "#6B8E28",
+        "color13": "#748A57",
+        "color14": "#9A9E5E",
+        "color15": "#c9cd9a"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/city2_1.jpg",
+    "alpha": "100",
+    "special": {
+        "background": "#0a0a0d",
+        "foreground": "#98c4bd",
+        "cursor": "#98c4bd"
+    },
+    "colors": {
+        "color0": "#0a0a0d",
+        "color1": "#1C3447",
+        "color2": "#273845",
+        "color3": "#0E3964",
+        "color4": "#2A4D53",
+        "color5": "#514B47",
+        "color6": "#CB213C",
+        "color7": "#98c4bd",
+        "color8": "#6a8984",
+        "color9": "#1C3447",
+        "color10": "#273845",
+        "color11": "#0E3964",
+        "color12": "#2A4D53",
+        "color13": "#514B47",
+        "color14": "#CB213C",
+        "color15": "#98c4bd"
+    }
+}

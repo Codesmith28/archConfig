@@ -1,0 +1,8 @@
+font-fira-code-nerd-font
+font-jetbrains-mono-nerd-font
+intellij-idea
+kitty
+onedrive
+postman
+telegram
+visual-studio-code

@@ -1,0 +1,15 @@
+---
+dev_pacman:
+  - clang
+  - gcc
+  - vim
+  - neovim
+  - go
+  - fzf
+  - zsh
+  - bat
+dev_yay:
+  - visual-studio-code-bin
+  - neovide
+  - distrobox
+  - mongodb-compass

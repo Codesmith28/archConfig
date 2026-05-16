@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/alto_1.png",
+    "alpha": "100",
+    "special": {
+        "background": "#030108",
+        "foreground": "#d8b4c1",
+        "cursor": "#d8b4c1"
+    },
+    "colors": {
+        "color0": "#030108",
+        "color1": "#764766",
+        "color2": "#8F354C",
+        "color3": "#8D5170",
+        "color4": "#A85674",
+        "color5": "#7C6F82",
+        "color6": "#AE6E88",
+        "color7": "#d8b4c1",
+        "color8": "#977d87",
+        "color9": "#764766",
+        "color10": "#8F354C",
+        "color11": "#8D5170",
+        "color12": "#A85674",
+        "color13": "#7C6F82",
+        "color14": "#AE6E88",
+        "color15": "#d8b4c1"
+    }
+}

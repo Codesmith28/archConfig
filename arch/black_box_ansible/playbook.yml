@@ -1,0 +1,32 @@
+---
+- name: BlackBox Setup for Arch Linux
+  hosts: localhost
+  become: yes
+  vars_prompt:
+    - name: wifi_ssid_prompt
+      prompt: "Enter Wi-Fi SSID (default: AU_Connect)"
+      private: no
+      default: "AU_Connect"
+    - name: wifi_identity_prompt
+      prompt: "Enter your Wi-Fi identity (username)"
+      private: no
+    - name: wifi_password_prompt
+      prompt: "Enter your Wi-Fi password"
+      private: yes  # Hides input for security
+    - name: wifi_interface_prompt
+      prompt: "Enter Wi-Fi interface name (default: wlan0)"
+      private: no
+      default: "wlan0"
+  roles:
+    - config_gnome
+    - config_grub
+    - config_pacman
+    - configure_system_fonts
+    - link_dotfiles
+    - packages
+    - remap_keys
+    - setup_dev_env
+    - setup_docker_env
+    - setup_git_github
+    - setup_startup_apps
+    - setup_uni_wifi

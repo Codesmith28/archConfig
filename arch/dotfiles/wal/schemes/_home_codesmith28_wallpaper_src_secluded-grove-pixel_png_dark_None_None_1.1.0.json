@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/codesmith28/wallpaper/src/secluded-grove-pixel.png",
+    "alpha": "100",
+    "special": {
+        "background": "#011219",
+        "foreground": "#e2e9e2",
+        "cursor": "#e2e9e2"
+    },
+    "colors": {
+        "color0": "#011219",
+        "color1": "#52686F",
+        "color2": "#6C8978",
+        "color3": "#5F7582",
+        "color4": "#738A8C",
+        "color5": "#93A59E",
+        "color6": "#BAC8C2",
+        "color7": "#e2e9e2",
+        "color8": "#9ea39e",
+        "color9": "#52686F",
+        "color10": "#6C8978",
+        "color11": "#5F7582",
+        "color12": "#738A8C",
+        "color13": "#93A59E",
+        "color14": "#BAC8C2",
+        "color15": "#e2e9e2"
+    }
+}
