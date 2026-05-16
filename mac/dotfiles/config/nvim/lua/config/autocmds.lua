@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 
 vim.api.nvim_create_autocmd("FileType", {
     callback = function()
-        if vim.bo.filetype == "cpp" then
+        if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
             vim.opt.tabstop = 8
             vim.opt.shiftwidth = 8
         else

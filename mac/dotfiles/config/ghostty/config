@@ -12,7 +12,7 @@ background-blur-radius = 55
 
 # --- Font Rendering ---
 font-family = Meslolgs Nerd Font
-font-size = 12     
+font-size = 12
 font-thicken = true   
 
 # --- Cursor ---    
@@ -43,5 +43,12 @@ keybind = cmd+s=text:\x13
 keybind = cmd+c=copy_to_clipboard
 keybind = cmd+v=paste_from_clipboard
 macos-option-as-alt = true
+desktop-notifications = true
 
+notify-on-command-finish = unfocused
+notify-on-command-finish-action = notify
+notify-on-command-finish-after = 1s
+
+mouse-scroll-multiplier = 1.0
+mouse-shift-capture = false
 
