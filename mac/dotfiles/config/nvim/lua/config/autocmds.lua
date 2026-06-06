@@ -8,28 +8,22 @@
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-    command = "FormatWriteLock",
+    callback = function(args)
+        -- Only attempt formatting if the buffer can actually be modified
+        if vim.api.nvim_get_option_value("modifiable", { buf = args.buf }) then
+            vim.cmd("FormatWriteLock")
+        end
+    end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
     callback = function()
         if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
-            vim.opt.tabstop = 8
-            vim.opt.shiftwidth = 8
+            vim.opt_local.tabstop = 8
+            vim.opt_local.shiftwidth = 8
         else
-            vim.opt.tabstop = 4
-            vim.opt.shiftwidth = 4
+            vim.opt_local.tabstop = 4
+            vim.opt_local.shiftwidth = 4
         end
-    end,
-})
-
--- Required for snippets.lua
--- Force Neovim to follow your file into subdirectories
--- Dynamically update system environment variables with absolute paths
-vim.api.nvim_create_autocmd("BufEnter", {
-    pattern = "*.cpp",
-    callback = function()
-        vim.env.CP_FILE = vim.fn.expand("%:p") -- Absolute path to the source code
-        vim.env.CP_OUT = vim.fn.expand("%:p:r") -- Absolute path for the output binary
     end,
 })

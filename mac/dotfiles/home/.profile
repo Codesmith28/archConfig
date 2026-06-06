@@ -290,3 +290,67 @@ ssh() {
     # Automatically fire the scrollback-safe reset sequence when the process dies
     printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'
 }
+
+alias adc='adaptive connect'
+
+# Added by Antigravity CLI installer
+export PATH="/Users/codesmith28/.local/bin:$PATH"
+
+gradlep() {
+    local root
+    root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+        echo "❌ Not inside a git repo"
+        return 1
+    }
+
+    local do_clean=false
+    local module=""
+
+    # Iterate through all arguments
+    for arg in "$@"; do
+        if [[ "$arg" == "--clean" ]]; then
+            do_clean=true
+        else
+            # If it's not the clean flag, assume it's the module name
+            module="$arg"
+        fi
+    done
+
+    # --- ROOT BUILD ---
+    if [ -z "$module" ]; then
+        echo "🚀 Building entire project..."
+        local tasks=()
+        $do_clean && tasks+=("clean")
+        tasks+=("build")
+
+        (cd "$root" && ./gradlew "${tasks[@]}" -x test --parallel)
+        return
+    fi
+
+    # --- MODULE BUILD ---
+    local match=""
+    local settings_file="$root/settings.gradle"
+
+    # Parse settings.gradle if it exists
+    if [ -f "$settings_file" ]; then
+        match=$(awk -F'["'\'']' '/^[[:space:]]*include/ {print $2}' "$settings_file" | grep -E "(^|:)$module$" | head -n 1)
+    fi
+
+    local gradle_path
+    if [ -n "$match" ]; then
+        gradle_path=":$match"
+    elif [[ "$module" == ":"* ]]; then
+        gradle_path="$module"
+    else
+        echo "⚠️ Could not find '$module' in settings.gradle. Trying standard path..."
+        gradle_path=":$module"
+    fi
+
+    # Dynamically build the task array based on the --clean flag
+    local tasks=()
+    $do_clean && tasks+=("${gradle_path}:clean")
+    tasks+=("${gradle_path}:build")
+
+    echo "🚀 Building module $gradle_path..."
+    (cd "$root" && ./gradlew "${tasks[@]}" -x test --parallel)
+}

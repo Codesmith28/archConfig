@@ -1,17 +1,20 @@
 # --- Theme ---
-# theme = Apple System Colors
-# theme = Abernathy
-theme = Adwaita Dark
+# theme = 0x96f
+# theme = Tokyonight night
+# theme = Catppuccin Mocha
 background = 000000
  
 # --- Background & Blur ---
 # 70% opacity
-background-opacity = .60
+# background-opacity = 0.95
+background-opacity = 0.70
 # Enable background blur (uses macOS native glass effect)
 background-blur-radius = 55
 
 # --- Font Rendering ---
-font-family = Meslolgs Nerd Font
+# font-family = Meslolgs Nerd Font
+font-family =   CaskaydiaCove NF SemiLight
+# font-family =   Blexmono nerd font
 font-size = 12
 font-thicken = true   
 
@@ -19,7 +22,7 @@ font-thicken = true
 # Changes the cursor shape to an underscore
 cursor-style = underline
 # Increases the thickness of the cursor (1 is default)
-adjust-cursor-thickness = 3
+adjust-cursor-thickness = 1
 # Prevents the shell from overriding your custom cursor shape
 shell-integration-features = no-cursor
 
@@ -49,6 +52,7 @@ notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
 
-mouse-scroll-multiplier = 1.0
-mouse-shift-capture = false
+mouse-scroll-multiplier = 1
+window-padding-x = 0
+window-padding-y = 10
 

@@ -6,8 +6,8 @@ vim.g.neovide_window_blurred = true
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
 vim.g.neovide_floating_shadow = false
 
--- vim.o.winblend = 2
--- vim.o.pumblend = 2
+-- Save file directly using Cmd+S across Normal, Insert, and Visual modes
+vim.keymap.set({ "n", "i", "v" }, "<D-s>", "<cmd>write<cr>", { desc = "Save file" })
 
 -- local function make_transparent()
 --     vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })

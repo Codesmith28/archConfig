@@ -117,3 +117,13 @@ export PATH=~/.adaptive/bin/:$PATH
 # CP fixes
 export CC=gcc-15
 export CXX=g++-15
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/codesmith28/.local/bin:$PATH"
+
+# Added by Antigravity IDE
+export PATH="/Users/codesmith28/.antigravity-ide/antigravity-ide/bin:$PATH"
+
+# Added by Antigravity IDE
+export PATH="/Users/codesmith28/.antigravity-ide/antigravity-ide/bin:$PATH"

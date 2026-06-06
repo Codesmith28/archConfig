@@ -155,3 +155,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 export PATH="$HOME/.local/bin:$PATH"
 export PATH=~/.adaptive/bin/:$PATH
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/codesmith28/.local/bin:$PATH"
