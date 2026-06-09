@@ -19,7 +19,7 @@ o.cursorlineopt = "both"
 
 -- other utilities
 vim.g.copilot_assume_mapped = true
-vim.opt.autochdir = true
+vim.opt.autochdir = false
 vim.opt.winblend = 0
 vim.opt.pumblend = 0
 
