@@ -52,6 +52,9 @@
             "#define pii pair<int, int>",
             "#define endl \"\\n\"",
             "",
+            "const int inf = 1e15;",
+            "const int mod = 1e9 + 7;",
+            "",
             "mt19937_64 RNG(chrono::steady_clock::now().time_since_epoch().count());",
             "",
             "void solve() {",
@@ -639,19 +642,17 @@
         ],
         "description": "[String Hashing] High-quality polynomial rolling hash using __int128 arithmetic (base=33, prime mod=1e18+3). Collision-resistant for competitive programming. Functions: precalc() \u2014 O(N) power & inverse-power tables; build(s) \u2014 O(N) prefix hash; getHash(x,y) \u2014 O(1) normalized hash of s[x..y] (position-independent, comparable across substrings). Use to compare substrings in O(1) after O(N) build.\nUsage:\n  precalc();\n  build(s);\n  __int128 h = getHash(l, r);             // normalized hash of s[l..r]\n  if (getHash(l1,r1) == getHash(l2,r2))  // compare substrings"
     },
-    "power_function": {
-        "prefix": "exp",
+    "power function": {
+        "prefix": "poww",
         "body": [
             "int power(int a, int x) {",
-            "    int res = 1;",
-            "    whilx) {",
-            "        if (x & 1) {",
-            "            res = (res * a) % mod;",
+            "        int res = 1;",
+            "        while (x) {",
+            "                if (x & 1) res = (res * a) % mod;",
+            "                a = (a * a) % mod;",
+            "                x /= 2;",
             "        }",
-            "        a = (a * a) % mod;",
-            "        x >>= 1;",
-            "    }",
-            "    return res;",
+            "        return res;",
             "}"
         ],
         "description": "[Math] Fast modular exponentiation: computes (a^x) % mod in O(log x) via binary exponentiation (repeated squaring). Requires a global 'mod' variable. Note: function signature has a typo ('whilx' should be 'while(x)') \u2014 fix before use.\nUsage:\n  int res = power(base, exp); // (base^exp) % mod\n  // FIX: 'whilx)' -> 'while(x)' before submitting"
