@@ -5,14 +5,11 @@
 background = 000000
  
 # --- Background & Blur ---
-background-opacity = 0.80
+background-opacity = 0.75
 background-blur-radius = 55
 
 # --- Font Rendering ---
 font-family = Meslolgs Nerd Font
-# font-family =   CaskaydiaCove NF SemiLight
-# font-family =   Blexmono nerd font
-# font-family = Recmonocasual nerd font
 font-size = 12
 font-thicken = true   
 
@@ -52,5 +49,4 @@ notify-on-command-finish-after = 1s
 
 mouse-scroll-multiplier = 1
 window-padding-x = 5
-window-padding-y = 10
 

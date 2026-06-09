@@ -30,21 +30,6 @@ return {
                 --     }
                 -- end
 
-                styles = {
-                    comments = {},
-                    conditionals = {},
-                    loops = {},
-                    functions = {},
-                    keywords = {},
-                    strings = {},
-                    variables = {},
-                    numbers = {},
-                    booleans = {},
-                    properties = {},
-                    types = {},
-                    operators = {},
-                },
-
                 integrations = {
                     native_lsp = {
                         enabled = false,
