@@ -19,9 +19,10 @@ o.cursorlineopt = "both"
 
 -- other utilities
 vim.g.copilot_assume_mapped = true
-vim.opt.autochdir = false
+vim.opt.autochdir = true
 vim.opt.winblend = 0
 vim.opt.pumblend = 0
+vim.opt.autoread = true
 
 -- shell and search settings
 o.shell = "zsh"
