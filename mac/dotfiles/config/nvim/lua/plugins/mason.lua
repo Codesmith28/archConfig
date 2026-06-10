@@ -61,7 +61,8 @@ return {
 
                 -- Java
                 "jdtls",
-                "google-java-format",
+                "java-debug-adapter",
+                "java-test",
 
                 -- Configs / Misc
                 "taplo", -- TOML

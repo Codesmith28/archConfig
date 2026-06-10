@@ -2,18 +2,19 @@ return {
     "L3MON4D3/LuaSnip",
     dependencies = { "rafamadriz/friendly-snippets" },
     config = function(_, opts)
-        -- Run LazyVim's default setup first so you don't break built-in behavior
+        -- Run LazyVim's default setup first
         require("luasnip").setup(opts)
 
-        -- 1. Load friendly-snippets (VSCode style)
+        -- 1. Load community friendly-snippets
         require("luasnip.loaders.from_vscode").lazy_load()
 
-        -- 2. Load your custom VSCode-style snippets safely expanding the home path
+        -- 2. Load your custom VSCode-style snippets with an absolute path
+        local snippet_path = vim.fn.stdpath("config") .. "/lua/snippets"
         require("luasnip.loaders.from_vscode").lazy_load({
-            paths = { vim.fn.stdpath("config") .. "/lua/snippets" },
+            paths = { snippet_path },
         })
 
-        -- 3. Load snipmate style snippets (looks for a "snippets" directory in runtimepath)
+        -- 3. Load snipmate style snippets if you have any
         require("luasnip.loaders.from_snipmate").lazy_load()
     end,
     opts = {

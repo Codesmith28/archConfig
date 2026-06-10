@@ -1,21 +1,15 @@
 -- Autocmds are automatically loaded on the VeryLazy event
--- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
---
--- Add any additional autocmds here
--- with `vim.api.nvim_create_autocmd`
---
--- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
--- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- 1. Safe Formatting Setup
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     callback = function(args)
-        -- Only attempt formatting if the buffer can actually be modified
         if vim.api.nvim_get_option_value("modifiable", { buf = args.buf }) then
             vim.cmd("FormatWriteLock")
         end
     end,
 })
 
+-- 2. Clean Indentation Settings
 vim.api.nvim_create_autocmd("FileType", {
     callback = function()
         if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
@@ -28,16 +22,16 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- Automatically refresh changed files when focusing Neovim or moving the cursor
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+-- 3. Optimized Refresh (Removed rapid CursorHold loops)
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
     callback = function()
-        if vim.o.buftype ~= "nofile" then
+        if vim.o.buftype ~= "nofile" and vim.fn.getcmdwintype() == "" then
             vim.cmd("checktime")
         end
     end,
 })
 
--- Notification when a file changes on disk (Optional but helpful)
+-- Notification when a file changes on disk
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
     callback = function()
         vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.INFO)
