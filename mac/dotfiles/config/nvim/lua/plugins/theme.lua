@@ -48,63 +48,6 @@ return {
     },
 
     {
-        "Mofiqul/vscode.nvim",
-        name = "vscode",
-        priority = 1000, -- Ensure it loads first if it's your main theme
-        config = function()
-            require("vscode").setup({
-                -- "dark" or "light"
-                style = "dark",
-
-                -- Enable transparent background
-                transparent = true,
-
-                -- Disable italics to match your previous styles = {} setup
-                italic_comments = false,
-
-                -- Disable nvim-tree background color to keep it transparent
-                disable_nvimtree_bg = true,
-
-                -- Override highlight groups for floating windows
-                group_overrides = {
-                    -- Set floating windows and borders to be transparent
-                    NormalFloat = { bg = "NONE" },
-                    FloatBorder = { bg = "NONE" },
-                    WhichKeyFloat = { bg = "NONE" },
-                },
-            })
-        end,
-    },
-
-    {
-        "folke/tokyonight.nvim",
-        lazy = true,
-        opts = {
-            transparent = true, -- Enable transparent background
-
-            styles = {
-                comments = { italic = false },
-            },
-
-            -- Optional: adjust specific highlight groups if you want even more transparency
-            on_highlights = function(hl, c)
-                hl.TelescopeNormal = {
-                    bg = c.none,
-                    fg = c.fg_dark,
-                }
-                hl.TelescopeBorder = {
-                    bg = c.none,
-                    fg = c.fg_dark,
-                }
-                hl.LspInlayHint = {
-                    -- bg = c.none, -- Removes the background entirely
-                    fg = c.dark5, -- Keeps the text muted
-                }
-            end,
-        },
-    },
-
-    {
         "LazyVim/LazyVim",
         opts = {
             colorscheme = "catppuccin-mocha",

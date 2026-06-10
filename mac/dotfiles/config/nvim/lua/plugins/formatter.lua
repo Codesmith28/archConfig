@@ -3,6 +3,10 @@ return {
     event = "VeryLazy",
     opts = function()
         return {
+            default_format_opts = {
+                timeout_ms = 10000,
+                lsp_format = "fallback",
+            },
             filetype = {
                 javascript = {
                     require("formatter.filetypes.javascript").prettier,
