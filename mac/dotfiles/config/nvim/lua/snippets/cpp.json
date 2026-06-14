@@ -1571,5 +1571,47 @@
             ""
         ],
         "description": "segment tree v3"
+    },
+    "Alien's trick : wqs binary search": {
+        "prefix": "wqs",
+        "body": [
+            "class WQS {",
+            "        using ll = long long;",
+            "        const static ll inf = 1e15;",
+            "",
+            "      public:",
+            "        struct State {",
+            "                ll val;",
+            "                ll cnt;",
+            "                State() : val(-inf), cnt(0) {",
+            "                }",
+            "                State(ll v, ll c) : val(v), cnt(c) {",
+            "                }",
+            "                bool operator<(const State &other) const {",
+            "                        if (val != other.val) return val < other.val;",
+            "                        return cnt < other.cnt;",
+            "                }",
+            "        };",
+            "",
+            "        ll binSearch(ll low, ll high, ll target, const function<State(ll)> check) {",
+            "                ll res = -1;",
+            "",
+            "                while (low <= high) {",
+            "                        ll mid = low + (high - low) / 2;",
+            "                        State curr = check(mid);",
+            "                        if (curr.cnt <= target) {",
+            "                                res = curr.val + mid * curr.cnt;",
+            "                                high = mid - 1;",
+            "                        } else {",
+            "                                low = mid + 1;",
+            "                        }",
+            "                }",
+            "",
+            "                return res;",
+            "        }",
+            "};",
+            ""
+        ],
+        "description": "Alien's trick : wqs binary search"
     }
 }

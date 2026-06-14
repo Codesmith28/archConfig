@@ -9,18 +9,18 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     end,
 })
 
--- 2. Clean Indentation Settings
-vim.api.nvim_create_autocmd("FileType", {
-    callback = function()
-        if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
-            vim.opt_local.tabstop = 8
-            vim.opt_local.shiftwidth = 8
-        else
-            vim.opt_local.tabstop = 4
-            vim.opt_local.shiftwidth = 4
-        end
-    end,
-})
+-- -- 2. Clean Indentation Settings
+-- vim.api.nvim_create_autocmd("FileType", {
+--     callback = function()
+--         if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
+--             vim.opt_local.tabstop = 8
+--             vim.opt_local.shiftwidth = 8
+--         else
+--             vim.opt_local.tabstop = 4
+--             vim.opt_local.shiftwidth = 4
+--         end
+--     end,
+-- })
 
 -- 3. Optimized Refresh (Removed rapid CursorHold loops)
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
