@@ -1,15 +1,24 @@
--- Automatically refresh changed files when focusing Neovim or moving the cursor
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+local autoread_group = vim.api.nvim_create_augroup("AutoReadFiles", { clear = true })
+
+-- Check whether files changed on disk
+vim.api.nvim_create_autocmd({
+  "FocusGained",
+  "BufEnter",
+  "CursorHold",
+  "CursorHoldI",
+}, {
+  group = autoread_group,
   callback = function()
-    if vim.o.buftype ~= "nofile" then
-      vim.cmd("checktime")
+    if vim.bo.buftype == "" then
+      vim.cmd("silent! checktime")
     end
   end,
 })
 
--- Notification when a file changes on disk 
+-- Notify when a file was reloaded from disk
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = autoread_group,
   callback = function()
-    vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.INFO)
+    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.INFO)
   end,
 })

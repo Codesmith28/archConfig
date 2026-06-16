@@ -1,0 +1,55 @@
+return {
+  "zbirenbaum/copilot.lua",
+  -- Lazy load when event occurs.
+  event = "InsertEnter",
+
+  opts = {
+    -- The absolute path to your NVM Node 22 binary
+    copilot_node_command = "/home/sarthak.siddhpura/.nvm/versions/node/v22.22.3/bin/node",
+
+    panel = {
+      enabled = true,
+      auto_refresh = true,
+      keymap = {
+        jump_prev = "[[",
+        jump_next = "]]",
+        accept = "<CR>",
+        refresh = "gr",
+        open = "<M-CR>",
+      },
+      layout = {
+        position = "bottom", -- | top | left | right | horizontal | vertical
+        ratio = 0.4,
+      },
+    },
+
+    suggestion = {
+      enabled = true,
+      auto_trigger = true,
+      hide_during_completion = true,
+      debounce = 75,
+      keymap = {
+        accept = "<M-a>",
+        accept_word = "<M-w>",
+        accept_line = "<M-l>",
+        next = "<M-]>",
+        prev = "<M-[>",
+        dismiss = "<C-]>",
+      },
+    },
+
+    filetypes = {
+      yaml = false,
+      markdown = false,
+      help = false,
+      gitcommit = false,
+      gitrebase = false,
+      hgcommit = false,
+      svn = false,
+      cvs = false,
+      ["."] = false,
+    },
+
+    server_opts_overrides = {},
+  },
+}
