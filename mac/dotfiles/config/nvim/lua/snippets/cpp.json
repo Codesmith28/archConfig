@@ -1572,7 +1572,7 @@
         ],
         "description": "segment tree v3"
     },
-    "Alien's trick : wqs binary search": {
+    "Alien's trick : wqs binary search | minimize penalty => maximize groups": {
         "prefix": "wqs",
         "body": [
             "class WQS {",
@@ -1589,18 +1589,19 @@
             "                }",
             "                bool operator<(const State &other) const {",
             "                        if (val != other.val) return val < other.val;",
-            "                        return cnt < other.cnt;",
+            "                        return cnt > other.cnt;",
             "                }",
             "        };",
             "",
-            "        ll binSearch(ll low, ll high, ll target, const function<State(ll)> check) {",
-            "                ll res = -1;",
-            "",
+            "        ll binSearch(ll low, ll high, ll target, const function<State(ll)> &check) {",
+            "               ll res = inf;",
+            "               // reduce penalty   => more groups",
+            "               // increase penalty => less groups",
             "                while (low <= high) {",
             "                        ll mid = low + (high - low) / 2;",
             "                        State curr = check(mid);",
             "                        if (curr.cnt <= target) {",
-            "                                res = curr.val + mid * curr.cnt;",
+            "                                res = curr.val - mid * curr.cnt;",
             "                                high = mid - 1;",
             "                        } else {",
             "                                low = mid + 1;",
