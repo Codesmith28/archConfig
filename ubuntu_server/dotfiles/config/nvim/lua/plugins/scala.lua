@@ -18,7 +18,17 @@ return {
       }
 
       metals_config.init_options.statusBarProvider = "off"
-      metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- SAFE CAPABILITIES EXTRACTION:
+      -- Works seamlessly whether LazyVim is using blink.cmp or nvim-cmp
+      local has_blink, blink = pcall(require, "blink.cmp")
+      local has_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+
+      if has_blink then
+        metals_config.capabilities = blink.get_lsp_capabilities()
+      elseif has_cmp then
+        metals_config.capabilities = cmp_lsp.default_capabilities()
+      end
 
       return metals_config
     end,

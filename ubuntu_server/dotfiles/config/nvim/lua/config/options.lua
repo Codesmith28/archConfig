@@ -31,10 +31,14 @@ o.smartcase = true
 -- System and Buffer Management
 o.encoding = "utf-8"
 o.fileencoding = "utf-8"
+
 o.autoread = true
 o.autochdir = true
 
--- Clipboard Configuration (OSC 52)
+-- Important for responsive checktime
+o.updatetime = 200
+
+-- Clipboard Configuration (OSC52)
 o.clipboard = "unnamedplus"
 
 vim.g.clipboard = {
@@ -49,6 +53,6 @@ vim.g.clipboard = {
   },
 }
 
-local java_home = "/usr/lib/jvm/java-21-openjdk-amd64" -- Adjust this path if your Java 21 home is elsewhere
+local java_home = "/usr/lib/jvm/java-21-openjdk-amd64"
 vim.env.JAVA_HOME = java_home
 vim.env.PATH = java_home .. "/bin:" .. vim.env.PATH
