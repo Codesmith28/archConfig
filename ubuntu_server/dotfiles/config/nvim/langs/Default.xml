@@ -41,7 +41,7 @@
 		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_method_invocation" value="preserve_positions"/>
 		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_enum_constant_declaration" value="preserve_positions"/>
 		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_record_declaration" value="preserve_positions"/>
-		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation" value="separate_lines_if_not_empty"/>
+		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation" value="preserve_positions"/>
 		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_lambda_declaration" value="separate_lines_if_wrapped"/>
 		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_if_while_statement" value="preserve_positions"/>
 		<setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_for_statment" value="preserve_positions"/>
@@ -348,7 +348,7 @@
 		<setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_local_variable" value="0"/>
 		<setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_parameter" value="0"/>
 		<setting id="org.eclipse.jdt.core.formatter.alignment_for_type_annotations" value="0"/>
-		<setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_annotation" value="80"/>
+		<setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_annotation" value="2"/>
 		<setting id="org.eclipse.jdt.core.formatter.alignment_for_module_statements" value="0"/>
 		<setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="200"/>
 		<setting id="org.eclipse.jdt.core.formatter.comment.count_line_length_from_starting_position" value="false"/>
