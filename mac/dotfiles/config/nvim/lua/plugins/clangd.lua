@@ -13,7 +13,7 @@ return {
                                     "--background-index",
                                     "--clang-tidy",
                                     "--fallback-style=file",
-                                    "--query-driver=/opt/homebrew/bin/g++-15",
+                                    "--query-driver=/opt/homebrew/bin/g++-16",
                                 },
                                 capabilities = {
                                     offsetEncoding = { "utf-16" },

@@ -33,7 +33,7 @@ return {
           explorer = {
             layout = {
               layout = {
-                position = "right",
+                -- position = "right",
                 width = 0.23,
               },
             },
