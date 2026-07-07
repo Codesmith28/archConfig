@@ -31,7 +31,7 @@ o.ignorecase = true
 o.smartcase = true
 
 -- Global Behavior Flags
-vim.g.autoformat = true
+vim.g.autoformat = false
 vim.g.copilot_assume_mapped = true
 
 -- UI Rendering and View Scrolloffs

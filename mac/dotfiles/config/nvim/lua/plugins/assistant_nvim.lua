@@ -9,7 +9,7 @@ return {
             cpp = {
                 compile = {
                     -- Point directly to your custom Homebrew compiler path
-                    main = "/opt/homebrew/bin/g++-15",
+                    main = "/opt/homebrew/bin/g++-16",
                     args = {
                         "-std=c++2b",
                         "-Wall",

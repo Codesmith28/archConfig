@@ -58,18 +58,18 @@
             "mt19937_64 RNG(chrono::steady_clock::now().time_since_epoch().count());",
             "",
             "void solve() {",
-            "    $0",
+            "        $0",
             "}",
             "",
             "int32_t main() {",
-            "    auto startTime = chrono::high_resolution_clock::now();",
+            "        auto startTime = chrono::high_resolution_clock::now();",
             "",
-            "    ios_base::sync_with_stdio(false);",
-            "    cin.tie(NULL);",
-            "    cout.tie(NULL);",
+            "        ios_base::sync_with_stdio(false);",
+            "        cin.tie(NULL);",
+            "        cout.tie(NULL);",
             "",
-            "    int testCases = 1;",
-            "    $1cin >> testCases;",
+            "        int testCases = 1;",
+            "        $1cin >> testCases;",
             "",
             "        for (int tc = 1; tc <= testCases; tc++) {",
             "                solve( );",
@@ -80,7 +80,7 @@
             "        auto duration = chrono::duration<double, milli>(endTime - startTime);",
             "        cerr << fixed << setprecision(5) << \"Time: \" << duration.count( ) << \" ms\\n\";",
             "",
-            "    return 0;",
+            "        return 0;",
             "}"
         ],
         "description": "[Boilerplate] Competitive-programming template without file I/O redirection. Same as 'dboi' (int=ll, pii, RNG, fast I/O, multi-testcase loop, ms timer) but reads stdin/stdout directly \u2014 safe to submit as-is. $1 to toggle test-case read, $0 inside solve().\nUsage:\n  // $0 inside solve(); $1 toggles test-case read\n  // stdout/stdin direct; safe to submit as-is"
@@ -137,6 +137,23 @@
             "}"
         ],
         "description": "[Boilerplate] Full competitive-programming template with debug support. Features: #define int long long, pii, endl='\\n', mt19937_64 RNG, fast I/O (sync_with_stdio+cin.tie), file redirection (_in.txt/_out.txt) under ONLINE_JUDGE guard, multi-test-case loop via solve(). Millisecond timer printed to stderr. $1 to toggle test-case input, $0 inside solve().\nUsage:\n  // $0 inside solve(); $1 toggles 'cin >> testCases'\n  // Locally: reads _in.txt, writes _out.txt\n  // On judge: #ifdef guard disables file I/O and debug"
+    },
+    "default": {
+        "prefix": "def",
+        "body": [
+            "#include <bits/stdc++.h>",
+            "#include <print>",
+            "using namespace std;",
+            "",
+            "class Solution {",
+            "      public:",
+            "};",
+            "",
+            "int main() {",
+            "        return 0;",
+            "}"
+        ],
+        "description": "default"
     },
     "Rolling hash simpler": {
         "prefix": "rollsimple",

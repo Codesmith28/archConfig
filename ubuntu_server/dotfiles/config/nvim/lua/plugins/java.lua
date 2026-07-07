@@ -7,11 +7,11 @@ return {
       opts.cmd = opts.cmd or {}
       vim.list_extend(opts.cmd, {
         "--jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false",
-        "-jvm-arg=-Xms8g",
-        "-jvm-arg=-Xmx16g",
-        "-jvm-arg=-XX:+UseG1GC",
-        "-jvm-arg=-Dsun.zip.disableMemoryMapping=true",
-        "-jvm-arg=-Xverify:none",
+        "--jvm-arg=-Xms8g",
+        "--jvm-arg=-Xmx16g",
+        "--jvm-arg=-XX:+UseG1GC",
+        "--jvm-arg=-Dsun.zip.disableMemoryMapping=true",
+        "--jvm-arg=-Xverify:none",
       })
 
       opts.dap_main = false
@@ -37,16 +37,32 @@ return {
               },
             },
           },
+
           autobuild = { enabled = true },
           referencesCodeLens = { enabled = false },
           implementationsCodeLens = { enabled = false },
+
           format = {
             enabled = true,
             settings = {
+              -- Point explicitly to your exported XML profile
               url = vim.uri_from_fname(vim.fn.expand("~/.config/nvim/langs/Default.xml")),
-              profile = "Default",
+              profile = "Default", -- Change this if your scheme has a custom name inside the XML
+              useProfileOptions = true, -- Merges with core local .editorconfig sizes if present
             },
           },
+
+          -- =====================================================================
+          -- INTELLIJ-STYLE INLAY HINTS
+          -- =====================================================================
+          inlayHints = {
+            parameterNames = {
+              -- Options: "none", "literals", "all"
+              -- "all" forces hints for all arguments, matching IntelliJ's behavior
+              enabled = "all",
+            },
+          },
+          -- =====================================================================
         },
       })
 
@@ -63,22 +79,17 @@ return {
 
         if client and client.server_capabilities then
           client.server_capabilities.semanticTokensProvider = nil
+
+          -- KEEP THESE TRUE so LazyVim can orchestrate formatting commands to JDTLS
+          client.server_capabilities.documentFormattingProvider = true
+          client.server_capabilities.documentRangeFormattingProvider = true
         end
 
-        -- 1. Explicit manual trigger for heavy build/classpath updates (<leader>cu)
+        -- Explicit manual trigger for heavy build/classpath updates (<leader>cu)
         vim.keymap.set("n", "<leader>cu", function()
           require("jdtls").update_project_config()
           vim.notify("JDTLS: Project configuration update triggered", vim.log.levels.INFO)
         end, { buffer = bufnr, desc = "Update JDTLS Project Config" })
-
-        -- -- 2. NATIVE FORMAT-ON-SAVE: Force JDTLS to format right before writing to disk
-        -- vim.api.nvim_create_autocmd("BufWritePre", {
-        --   buffer = bufnr,
-        --   callback = function()
-        --     -- Use a 3-second timeout to ensure the LSP finishes applying rules before saving
-        --     vim.lsp.buf.format({ bufnr = bufnr, id = client and client.id or nil, timeout_ms = 3000 })
-        --   end,
-        -- })
       end
 
       return opts

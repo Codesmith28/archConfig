@@ -39,7 +39,7 @@ return {
                     explorer = {
                         layout = {
                             layout = {
-                                position = "right",
+                                -- position = "right",
                                 width = 0.23,
                             },
                         },
@@ -120,16 +120,15 @@ return {
             },
         },
     },
-
-    {
-        "folke/trouble.nvim",
-        opts = {
-            modes = {
-                diagnostics = {
-                    auto_open = true,
-                    auto_close = false,
-                },
-            },
-        },
-    },
+    -- {
+    --     "folke/trouble.nvim",
+    --     opts = {
+    --         modes = {
+    --             diagnostics = {
+    --                 auto_open = true,
+    --                 auto_close = false,
+    --             },
+    --         },
+    --     },
+    -- },
 }

@@ -1,7 +1,7 @@
 local o = vim.opt
 
 -- Global Behavior Flags
-vim.g.autoformat = true
+vim.g.autoformat = false
 vim.g.copilot_assume_mapped = true
 
 -- Tabs and Indentation

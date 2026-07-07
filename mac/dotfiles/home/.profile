@@ -205,7 +205,7 @@ alias ivm='$EDITOR $(fzf -m --preview="bat --color=always --style=header,grid --
 runcpp() {
     # filename=$(echo $1 | cut -f 1 -d '.')
     # clang++ "$1" -o $filename && ./$filename
-    g++-15 -std=c++23 "$1" -o run && "./run"
+    g++-16 -std=c++23 "$1" -o run && "./run"
     rm -f run
 }
 
@@ -248,9 +248,10 @@ spf() {
 
     [ ! -f "$SPF_LAST_DIR" ] || {
         . "$SPF_LAST_DIR"
-        rm -f -- "$SPF_LAST_DIR" >/dev/null
+        rm -f -- "$SPF_LAST_DIR" > /dev/null
     }
 }
+
 
 alias dafq='thefuck'
 
