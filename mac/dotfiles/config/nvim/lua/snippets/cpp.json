@@ -203,10 +203,10 @@
             "        tree.assign(n + 1, 0); // 1-based indexing",
             "    }",
             "",
-            "    /// Add `val` to index `i` (1-based)",
-            "    void update(int i, int val) {",
+            "    /// Add `delta` to index `i` (1-based)",
+            "    void update(int i, int delta) {",
             "        while (i <= n) {",
-            "            tree[i] += val;",
+            "            tree[i] += delta;",
             "            i += (i & -i);",
             "        }",
             "    }",
@@ -228,7 +228,7 @@
             "};",
             ""
         ],
-        "description": "[Data Structure] Binary Indexed Tree (BIT / Fenwick Tree), 1-based indexing. Supports: update(i, val) \u2014 add val to position i, O(log N); query(i) \u2014 prefix sum [1..i], O(log N); range_query(l, r) \u2014 sum over [l..r], O(log N). Internal tree vector sized n+1. Construct with BIT(size). Ideal for point-update / prefix-sum problems.\nUsage:\n  BIT bit(n);\n  bit.update(i, val);            // point add at index i (1-based)\n  int s = bit.query(i);          // prefix sum [1..i]\n  int r = bit.range_query(l, r); // range sum [l..r]"
+        "description": "[Data Structure] Binary Indexed Tree (BIT / Fenwick Tree), 1-based indexing. Supports: update(i, delta) \u2014 add delta to position i, O(log N); query(i) \u2014 prefix sum [1..i], O(log N); range_query(l, r) \u2014 sum over [l..r], O(log N). Internal tree vector sized n+1. Construct with BIT(size). Ideal for point-update / prefix-sum problems.\nUsage:\n  BIT bit(n);\n  bit.update(i, delta);            // point add at index i (1-based)\n  int s = bit.query(i);          // prefix sum [1..i]\n  int r = bit.range_query(l, r); // range sum [l..r]"
     },
     "Lazy Segment Tree 1 based": {
         "prefix": "segtree1",

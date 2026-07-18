@@ -40,7 +40,7 @@ return {
                         layout = {
                             layout = {
                                 -- position = "right",
-                                width = 0.23,
+                                width = 0.20,
                             },
                         },
                         hidden = true,
