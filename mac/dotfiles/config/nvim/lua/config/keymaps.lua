@@ -39,3 +39,43 @@ map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct ta
 -- Invert horizontal scroll for touchpad
 vim.keymap.set("n", "<ScrollWheelRight>", "<ScrollWheelLeft>", { noremap = true, silent = true })
 vim.keymap.set("n", "<ScrollWheelLeft>", "<ScrollWheelRight>", { noremap = true, silent = true })
+
+-- Format only git-modified lines (Works for both Conform formatters & LSP/JDTLS)
+local function format_modified_lines()
+    local gs = package.loaded.gitsigns
+    if not gs then
+        vim.notify("Gitsigns not loaded", vim.log.levels.WARN)
+        return
+    end
+
+    local hunks = gs.get_hunks()
+    if not hunks or vim.tbl_isempty(hunks) then
+        vim.notify("No modified lines found to format", vim.log.levels.INFO)
+        return
+    end
+
+    local conform = require("conform")
+
+    -- Loop bottom-up (reverse order) so line-number shifts from formatting
+    -- do not break the calculated positions of earlier hunks higher up.
+    for i = #hunks, 1, -1 do
+        local hunk = hunks[i]
+        if hunk.type ~= "delete" and hunk.added.count > 0 then
+            local start_line = hunk.added.start
+            local end_line = hunk.added.start + hunk.added.count - 1
+
+            conform.format({
+                async = false, -- Crucial: Blocks execution so line positions update sequentially
+                lsp_format = "fallback", -- Crucial: Forces Java to fall back to your JDTLS XML setup
+                range = {
+                    ["start"] = { start_line, 0 },
+                    ["end"] = { end_line, 0 },
+                },
+            })
+        end
+    end
+    vim.notify("Formatted modified lines", vim.log.levels.INFO)
+end
+
+-- Bind the function to a keymap (e.g., <leader>cm for "Code Modified")
+vim.keymap.set("n", "<leader>mf", format_modified_lines, { desc = "Format modified lines" })

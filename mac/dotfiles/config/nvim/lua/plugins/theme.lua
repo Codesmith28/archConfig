@@ -10,6 +10,12 @@ return {
                 show_end_of_buffer = true, -- hide ~ at end of buffer
                 term_colors = true, -- terminal colors matching theme
 
+                -- Customizes typography styles for general token types
+                -- styles = {
+                --     comments = {},
+                --     conditionals = {},
+                -- },
+
                 integrations = {
                     native_lsp = {
                         enabled = false,
