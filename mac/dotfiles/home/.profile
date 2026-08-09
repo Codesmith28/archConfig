@@ -11,6 +11,10 @@ PS1='[\u@\h \W]\$ '
 # Define Editor
 export EDITOR=nvim
 
+# Point CC and CXX to Homebrew's generic, unversioned GCC links
+export CC=gcc
+export CXX=g++
+
 # alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias ltspice='ltspice --enable-features=UseOzonePlatform --ozone-platform=wayland'
 alias res_idle='~/dotfiles/hypr/scripts/restart-hypridle.sh'

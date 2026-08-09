@@ -1,5 +1,4 @@
 return {
-
     {
         "catppuccin/nvim",
         name = "catppuccin",
@@ -7,19 +6,28 @@ return {
             require("catppuccin").setup({
                 flavour = "mocha", -- or "latte", "frappe", "macchiato"
                 transparent_background = true,
-                show_end_of_buffer = true, -- hide ~ at end of buffer
-                term_colors = true, -- terminal colors matching theme
-
-                -- Customizes typography styles for general token types
-                -- styles = {
-                --     comments = {},
-                --     conditionals = {},
-                -- },
+                show_end_of_buffer = true,
+                term_colors = true,
 
                 integrations = {
+                    -- 1. Enable Native LSP integration so Catppuccin themes builtin LSP groups
                     native_lsp = {
-                        enabled = false,
-                        inlay_hints = { background = true },
+                        enabled = true,
+                        virtual_text = {
+                            errors = { "italic" },
+                            hints = { "italic" },
+                            warnings = { "italic" },
+                            information = { "italic" },
+                        },
+                        underlines = {
+                            errors = { "underline" },
+                            hints = { "underline" },
+                            warnings = { "underline" },
+                            information = { "underline" },
+                        },
+                        inlay_hints = {
+                            background = true,
+                        },
                     },
                     cmp = true,
                     gitsigns = true,
@@ -29,6 +37,17 @@ return {
                     mason = true,
                     which_key = true,
                 },
+
+                -- 2. Explicitly override the LspInlayHint highlight group to make text italic
+                custom_highlights = function(colors)
+                    return {
+                        LspInlayHint = {
+                            fg = colors.overlay1, -- Standard subtle Catppuccin gray
+                            bg = colors.none, -- Subtle background pill (or colors.none for transparent)
+                            style = { "italic" }, -- Enables italic styling
+                        },
+                    }
+                end,
             })
         end,
     },
@@ -38,10 +57,6 @@ return {
         lazy = true,
         opts = {
             transparent = true, -- Enable transparent background
-
-            styles = {
-                comments = { italic = false },
-            },
 
             -- Optional: adjust specific highlight groups if you want even more transparency
             on_highlights = function(hl, c)

@@ -1,13 +1,4 @@
 # ========== Oh My Zsh config ==========
-# export ZSH="$HOME/.oh-my-zsh"
-# DISABLE_AUTO_UPDATE="true"
-# DISABLE_UPDATE_PROMPT="true"
-# ZSH_DISABLE_COMPFIX=true
-#
-# plugins=(git zsh-autosuggestions) # remove zsh-syntax-highlighting here; load it last
-# source $ZSH/oh-my-zsh.sh
-# Use cached compinit for fast startup
-
 autoload -Uz compinit
 ZSH_COMPDUMP="$HOME/.cache/zsh/.zcompdump"
 zstyle ':completion:*' rehash true
@@ -74,10 +65,6 @@ zsh-defer eval "$(pyenv init -)"
 export PATH="$PATH:$(go env GOPATH)/bin"
 
 
-# ========== Java Path ==========
-# export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-# export PATH=$PATH:$JAVA_HOME/bin
-# export PATH=$HOME/.local/bin:$PATH
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # bun completions
@@ -86,12 +73,10 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # brew
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
+# ========== Java Path ==========
 # Added by setup-java-toolchains.sh
 export JAVA_11_HOME="/Library/Java/JavaVirtualMachines/openjdk-11.jdk/Contents/Home"
-
-# Added by setup-java-toolchains.sh
 export JAVA_21_HOME="/Library/Java/JavaVirtualMachines/openjdk-21.jdk/Contents/Home"
-
 export JAVA_HOME="$JAVA_21_HOME"
 
 export PATH="$HOME/.local/bin:$PATH"

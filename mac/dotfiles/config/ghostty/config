@@ -1,11 +1,9 @@
-# =============================================================================
+	# =============================================================================
 # Visuals: Theme, Background, & Window Style
 # =============================================================================
-background = 000000
-background-opacity = 0.85	
-background-blur-radius = 55 
-# theme = dark:Catppuccin Mocha,light:Catppuccin Latte
-
+background = 101011
+background-opacity = 0.95
+background-blur = 100
 
 # Places the tab bar directly inline with the macOS traffic light buttons
 macos-titlebar-style = tabs
@@ -14,12 +12,10 @@ window-padding-x = 5
 
 # =============================================================================
 # Font & Typography
-# =============================================================================
-font-family = MesloLGS nerd font
-# font-family = Lilex nerd font
+# ============================================================================
+# font-family = Lilex Nerd Font	
+# font-thicken = true
 font-size = 12
-font-thicken = true    
-window-inherit-font-size = true
 
 # =============================================================================
 # Cursor Management (Fixed Conflict)

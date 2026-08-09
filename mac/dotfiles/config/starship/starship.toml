@@ -12,7 +12,7 @@ symbol = ' '
 
 # Time on the first line (right)
 [time]
-disabled = true
+disabled = false
 format = "[$time](white)"
 time_format = "󱑏 %H:%M"   # Display as HH:MM
 
