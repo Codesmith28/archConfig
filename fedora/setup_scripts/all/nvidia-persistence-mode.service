@@ -1,11 +1,12 @@
 [Unit]
-Description=Isolate Wake Triggers to Power Button Only
+Description=Enable NVIDIA Persistence Mode
 After=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/isolate-wake.sh
+ExecStart=/usr/bin/nvidia-smi -pm 1
 RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
+
