@@ -1,0 +1,11 @@
+[Unit]
+Description=Disable all wakeups except Power Button
+Before=sleep.target
+
+[Service]
+Type=oneshot
+# Finds all *enabled devices, ignores the Power Button (PWRB), and toggles them off
+ExecStart=/bin/sh -c "grep '\\*enabled' /proc/acpi/wakeup | awk '{print $$1}' | grep -v 'PWRB' | while read dev; do echo $$dev > /proc/acpi/wakeup; done"
+
+[Install]
+WantedBy=multi-user.target sleep.target
