@@ -30,6 +30,7 @@ return {
                         },
                     },
                     cmp = true,
+                    blink_cmp = true,
                     gitsigns = true,
                     nvimtree = true,
                     treesitter = true,
@@ -80,6 +81,7 @@ return {
         "LazyVim/LazyVim",
         opts = {
             colorscheme = "catppuccin-mocha",
+            --colorscheme = "ghostty-default-style-dark",
             -- colorscheme = "vscode",
             -- colorscheme = "tokyonight-night",
         },

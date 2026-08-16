@@ -2,25 +2,41 @@ return {
     {
         "neovim/nvim-lspconfig",
         opts = {
+            inlay_hints = {
+                enabled = true,
+            },
             servers = {
                 clangd = {
-                    -- We set this to false so LazyVim doesn't use its default setup
-                    setup = {
-                        function(server, opts)
-                            require("lspconfig")[server].setup(vim.tbl_deep_extend("force", opts, {
-                                cmd = {
-                                    "clangd",
-                                    "--background-index",
-                                    "--clang-tidy",
-                                    "--fallback-style=file",
-                                    "--query-driver=/opt/homebrew/bin/g++-16",
-                                },
-                                capabilities = {
-                                    offsetEncoding = { "utf-16" },
-                                },
-                            }))
-                            return true
-                        end,
+                    cmd = {
+                        "clangd",
+                        "--background-index",
+                        "--clang-tidy",
+                        "--header-insertion=iwyu",
+                        "--completion-style=detailed",
+                        "--function-arg-placeholders",
+                        "--fallback-style=llvm",
+                        "--query-driver=/opt/homebrew/bin/g++*,/opt/homebrew/bin/**,/usr/local/bin/g++*,/usr/bin/clang++,/usr/bin/g++",
+                    },
+                    capabilities = {
+                        offsetEncoding = { "utf-16" },
+                    },
+                    init_options = {
+                        usePlaceholders = true,
+                        completeUnimported = true,
+                        clangdFileStatus = true,
+                    },
+                    settings = {
+                        clangd = {
+                            InlayHints = {
+                                Designators = true,
+                                Enabled = true,
+                                ParameterNames = true,
+                                DeducedTypes = true,
+                                BlockEnd = true,
+                                DefaultArguments = true,
+                                TypeNameLimit = 0,
+                            },
+                        },
                     },
                 },
             },
