@@ -8,17 +8,20 @@ return {
     opts = function()
       local metals_config = require("metals").bare_config()
 
-      -- Force Metals to put its cache outside the project
+      -- Metals Inlay & Implicit Hints
       metals_config.settings = {
         showImplicitArguments = true,
         showInferredType = true,
+        showImplicitConversionsAndClasses = true,
+        superMethodLensesEnabled = true,
         excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
         -- Let Metals know we are handling Java elsewhere
         javaFormat = { enabled = false },
       }
 
-      metals_config.init_options.statusBarProvider = "off"
-      metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local ok_blink, blink = pcall(require, "blink.cmp")
+      metals_config.capabilities = ok_blink and blink.get_lsp_capabilities()
+        or vim.lsp.protocol.make_client_capabilities()
 
       return metals_config
     end,

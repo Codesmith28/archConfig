@@ -4,74 +4,76 @@ return {
         opts = {
             ensure_installed = {
                 -- C/C++
-                "clang-format",
                 "clangd",
+                "clang-format",
                 "codelldb",
-
-                -- Python
-                "pyrefly",
-
-                -- SQL
-                "sql-formatter",
-
-                -- JS/TS, Web dev
-                "nextls",
-                "eslint-lsp", -- eslint
-                "js-debug-adapter",
-                "prettierd",
-                "typescript-language-server", -- ts_ls
-                "vtsls",
-                "tailwindcss-language-server", -- tailwindcss
-                "yaml-language-server", -- yamlls
-                "yamlfix",
-                "yamllint",
-                "html-lsp", -- html
-                "css-lsp", -- cssls
-                "mdformat",
-
-                -- Lua
-                "lua-language-server", -- lua_ls
-                "stylua",
-
-                -- Go
-                "gopls",
-                "goimports-reviser",
-                "golines",
-                "gofumpt",
-
-                -- Shell
-                "bash-language-server", -- bashls
-                "shellcheck",
-                "shfmt",
-
-                -- Docker
-                "dockerfile-language-server", -- dockerls
-                "docker-compose-language-service", -- docker_compose_language_service
-
-                -- Markdown
-                "markdownlint",
-                "markdownlint-cli2",
-                "markdown-toc",
-                "marksman",
-
-                -- JSON
-                "json-lsp", -- jsonls
-                "json-to-struct",
-                "biome",
 
                 -- Java
                 "jdtls",
                 "java-debug-adapter",
                 "java-test",
+                "google-java-format",
 
-                -- Configs / Misc
-                "taplo", -- TOML
-                "mesonlsp",
-                "tree-sitter-cli",
-                "xmlformatter",
-
-                --rust
+                -- Rust
                 "rust-analyzer",
+
+                -- Python
+                "pyright",
+                "pyrefly",
+                "black",
+                "isort",
+                "flake8",
+
+                -- Go
+                "gopls",
+                "delve",
+                "goimports-reviser",
+                "golines",
+                "gofumpt",
+
+                -- JS/TS, Web Dev
+                "vtsls",
+                "typescript-language-server",
+                "eslint-lsp",
+                "prettier",
+                "prettierd",
+                "tailwindcss-language-server",
+                "html-lsp",
+                "css-lsp",
+                "biome",
+                "nextls",
+                "js-debug-adapter",
+
+                -- Lua
+                "lua-language-server",
+                "stylua",
+
+                -- Shell
+                "bash-language-server",
+                "shellcheck",
+                "shfmt",
+
+                -- Markdown
+                "marksman",
+                "markdownlint",
+                "markdownlint-cli2",
+                "markdown-toc",
+                "mdformat",
+
+                -- JSON / YAML / TOML
+                "json-lsp",
+                "json-to-struct",
+                "yaml-language-server",
+                "yamlfix",
+                "yamllint",
+                "taplo",
+
+                -- SQL / XML / Docker / Misc
+                "sql-formatter",
+                "xmlformatter",
+                "dockerfile-language-server",
+                "docker-compose-language-service",
+                "tree-sitter-cli",
             },
         },
     },
