@@ -33,6 +33,7 @@ o.smartcase = true
 -- Global Behavior Flags
 vim.g.autoformat = false
 vim.g.copilot_assume_mapped = true
+vim.g.lazyvim_python_lsp = "pyrefly"
 
 -- UI Rendering and View Scrolloffs
 o.termguicolors = true
