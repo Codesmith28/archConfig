@@ -11,8 +11,13 @@ return {
             cpp = { "clang-format" },
             javascript = { "prettier" },
             typescript = { "prettier" },
+            json = { "prettier" },
             python = { "black", "isort" },
             java = { "google-java-format" },
+            lua = { "stylua" },
+            go = { "goimports-reviser", "gofumpt" },
+            sh = { "shfmt" },
+            bash = { "shfmt" },
             ["_"] = { "trim_whitespace" }, -- Conform has built-in whitespace trimming
         },
         formatters = {
