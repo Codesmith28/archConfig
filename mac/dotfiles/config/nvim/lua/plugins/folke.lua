@@ -2,6 +2,19 @@ return {
     {
         "folke/snacks.nvim",
         opts = {
+            quickfile = { enabled = true },
+            words = { enabled = true },
+            indent = {
+                enabled = true,
+                animate = {
+                    enabled = vim.fn.has("nvim-0.10") == 1,
+                    style = "out",
+                    duration = {
+                        step = 20,
+                        total = 300,
+                    },
+                },
+            },
             picker = {
                 -- 1. Tell the global pickers to adapt orientation depending on available space
                 layout = {
