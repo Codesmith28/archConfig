@@ -144,6 +144,22 @@ return {
             },
         },
     },
+    {
+        "folke/which-key.nvim",
+        opts = {
+            win = {
+                border = "rounded",
+            },
+        },
+    },
+    {
+        "folke/noice.nvim",
+        opts = {
+            presets = {
+                lsp_doc_border = true, -- Adds rounded border to hover docs and signature help
+            },
+        },
+    },
     -- {
     --     "folke/trouble.nvim",
     --     opts = {
