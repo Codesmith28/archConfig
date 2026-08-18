@@ -1,8 +1,8 @@
 # =============================================================================
 # Visuals: Theme, Background, & Window Style
 # =============================================================================
-background = 060606		
-background-opacity = 0.95
+background = 080808		
+# background-opacity = 0.9
 background-blur = 100
 
 # Places the tab bar directly inline with the macOS traffic light buttons
@@ -13,9 +13,9 @@ window-padding-x = 5
 # =============================================================================
 # Font & Typography
 # ============================================================================
-font-family = caskaydiacove nerd font
-# font-family = lilex nerd font
-# font-thicken = true
+# font-family = caskaydiacove nerd font
+font-family = lilex nerd font
+font-thicken = true
 font-size = 12
 
 # =============================================================================

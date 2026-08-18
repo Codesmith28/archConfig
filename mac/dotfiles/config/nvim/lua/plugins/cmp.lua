@@ -7,10 +7,6 @@ return {
         signature = {
             enabled = true, -- Shows function parameters context as you type
         },
-        keymap = {
-            -- Options: 'default', 'super-tab' (VSCode style), or 'enter'
-            preset = "super-tab",
-        },
         completion = {
             accept = {
                 auto_brackets = {
