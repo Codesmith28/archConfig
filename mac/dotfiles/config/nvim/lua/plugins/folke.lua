@@ -3,9 +3,11 @@ return {
         "folke/snacks.nvim",
         opts = {
             picker = {
-                -- 1. Tell the global pickers to default to your custom layout style profile
+                -- 1. Tell the global pickers to adapt orientation depending on available space
                 layout = {
-                    preset = "my_telescope_style",
+                    preset = function()
+                        return vim.o.columns >= 120 and "my_telescope_style" or "my_telescope_style_vertical"
+                    end,
                 },
 
                 -- 2. Define the structural design inside the proper picker layouts directory
@@ -30,6 +32,28 @@ return {
                                 title_pos = "center",
                                 border = "rounded",
                                 width = 0.60,
+                            },
+                        },
+                    },
+                    my_telescope_style_vertical = {
+                        layout = {
+                            box = "vertical",
+                            width = 0.90,
+                            height = 0.92,
+                            {
+                                win = "preview",
+                                title = " {preview} ",
+                                title_pos = "center",
+                                border = "rounded",
+                                height = 0.50,
+                            },
+                            {
+                                box = "vertical",
+                                border = "rounded",
+                                title = " {title} {live} {flags} ",
+                                title_pos = "center",
+                                { win = "list", border = "none" },
+                                { win = "input", height = 1, border = "top" },
                             },
                         },
                     },

@@ -1,7 +1,7 @@
 # =============================================================================
 # Visuals: Theme, Background, & Window Style
 # =============================================================================
-background = 090909
+background = 060606		
 background-opacity = 0.95
 background-blur = 100
 
@@ -13,7 +13,9 @@ window-padding-x = 5
 # =============================================================================
 # Font & Typography
 # ============================================================================
-font-thicken = true
+font-family = caskaydiacove nerd font
+# font-family = lilex nerd font
+# font-thicken = true
 font-size = 12
 
 # =============================================================================
