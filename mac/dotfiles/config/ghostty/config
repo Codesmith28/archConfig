@@ -13,10 +13,8 @@ window-padding-x = 5
 # =============================================================================
 # Font & Typography
 # ============================================================================
-# font-family = caskaydiacove nerd font
-font-family = lilex nerd font
-font-thicken = true
 font-size = 12
+font-family = caskaydiacove nerd font
 
 # =============================================================================
 # Cursor Management (Fixed Conflict)

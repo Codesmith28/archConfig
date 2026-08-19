@@ -1,12 +1,12 @@
 return {
     "L3MON4D3/LuaSnip",
+    lazy = false,
     dependencies = { "rafamadriz/friendly-snippets" },
     opts = {
         history = true,
-        delete_check_events = "TextChanged,InsertLeave",
+        delete_check_events = "TextChanged",
         updateevents = "TextChanged,TextChangedI",
         enable_autosnippets = true,
-        store_selection_keys = "<Tab>",
     },
     config = function(_, opts)
         local ls = require("luasnip")
@@ -15,9 +15,9 @@ return {
         -- 1. Load community friendly-snippets (lazily by filetype)
         require("luasnip.loaders.from_vscode").lazy_load()
 
-        -- 2. Load custom VSCode-style snippets eagerly so they are immediately available to blink.cmp
+        -- 2. Load custom VSCode-style snippets from lua/snippets
         local snippet_path = vim.fn.stdpath("config") .. "/lua/snippets"
-        require("luasnip.loaders.from_vscode").load({
+        require("luasnip.loaders.from_vscode").lazy_load({
             paths = { snippet_path },
         })
 
