@@ -14,7 +14,7 @@ window-padding-x = 5
 # Font & Typography
 # ============================================================================
 font-size = 12
-font-family = caskaydiacove nerd font
+font-family = meslolgs nerd font
 
 # =============================================================================
 # Cursor Management (Fixed Conflict)
