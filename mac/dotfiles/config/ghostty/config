@@ -1,8 +1,8 @@
 # =============================================================================
 # Visuals: Theme, Background, & Window Style
 # =============================================================================
-background = 080808		
-# background-opacity = 0.9
+background = 090909
+background-opacity = 0.95
 background-blur = 100
 
 # Places the tab bar directly inline with the macOS traffic light buttons
