@@ -27,6 +27,27 @@ local function get_gpp_compiler()
     return "g++"
 end
 
+-- Prevent LSP and auto-formatters from crashing assistant.nvim testcase buffers
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    pattern = "*",
+    callback = function(args)
+        local buf_name = vim.api.nvim_buf_get_name(args.buf)
+        local filetype = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
+        local is_modifiable = vim.api.nvim_get_option_value("modifiable", { buf = args.buf })
+        
+        -- Target assistant.nvim buffers or any non-modifiable UI buffers
+        if string.match(buf_name:lower(), "assistant") or filetype == "assistant" or not is_modifiable then
+            -- 1. Disable LazyVim autoformat for this specific buffer
+            vim.b[args.buf].autoformat = false
+            
+            -- 2. Forcibly detach any LSP trying to hook into the UI
+            for _, client in ipairs(vim.lsp.get_clients({ bufnr = args.buf })) do
+                vim.lsp.buf_detach_client(args.buf, client.id)
+            end
+        end
+    end,
+})
+
 return {
     "A7lavinraj/assistant.nvim",
     lazy = false,
