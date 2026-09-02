@@ -2,7 +2,7 @@
 # Visuals: Theme, Background, & Window Style
 # =============================================================================
 background = 090909
-background-opacity = 0.95
+background-opacity = 0.93
 background-blur = 100
 
 # Places the tab bar directly inline with the macOS traffic light buttons
@@ -14,7 +14,7 @@ window-padding-x = 5
 # Font & Typography
 # ============================================================================
 font-size = 12
-# font-family = hack nerd font
+font-thicken = true
 
 # =============================================================================
 # Cursor Management (Fixed Conflict)
