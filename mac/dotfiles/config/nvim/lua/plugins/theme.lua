@@ -57,22 +57,52 @@ return {
         "folke/tokyonight.nvim",
         lazy = true,
         opts = {
-            transparent = true, -- Enable transparent background
-
-            -- Optional: adjust specific highlight groups if you want even more transparency
+            style = "night",
+            transparent = true, -- Makes the main editor code buffer transparent
+            terminal_colors = true,
+            styles = {
+                comments = { italic = true },
+                keywords = { italic = true },
+                functions = {},
+                variables = {},
+                sidebars = "dark", -- Keep sidebars (neo-tree, etc.) solid/opaque
+                floats = "dark", -- Keep floating windows (telescope, popups, hover) solid/opaque
+            },
             on_highlights = function(hl, c)
-                hl.TelescopeNormal = {
-                    bg = c.none,
-                    fg = c.fg_dark,
-                }
-                hl.TelescopeBorder = {
-                    bg = c.none,
-                    fg = c.fg_dark,
-                }
+                -- 1. LSP Inlay Hints: Italic text styling with subtle muted color & transparent bg on buffer
                 hl.LspInlayHint = {
-                    -- bg = c.none, -- Removes the background entirely
-                    fg = c.dark5, -- Keeps the text muted
+                    fg = c.dark5,
+                    bg = c.none,
+                    italic = true,
                 }
+
+                -- 2. Native LSP diagnostic virtual text with italic styling
+                hl.DiagnosticVirtualTextError = {
+                    fg = c.error,
+                    bg = c.none,
+                    italic = true,
+                }
+                hl.DiagnosticVirtualTextWarn = {
+                    fg = c.warning,
+                    bg = c.none,
+                    italic = true,
+                }
+                hl.DiagnosticVirtualTextInfo = {
+                    fg = c.info,
+                    bg = c.none,
+                    italic = true,
+                }
+                hl.DiagnosticVirtualTextHint = {
+                    fg = c.hint,
+                    bg = c.none,
+                    italic = true,
+                }
+
+                -- 3. Native LSP diagnostic underlines
+                hl.DiagnosticUnderlineError = { undercurl = true, sp = c.error }
+                hl.DiagnosticUnderlineWarn = { undercurl = true, sp = c.warning }
+                hl.DiagnosticUnderlineInfo = { undercurl = true, sp = c.info }
+                hl.DiagnosticUnderlineHint = { undercurl = true, sp = c.hint }
             end,
         },
     },
@@ -80,7 +110,8 @@ return {
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "catppuccin-mocha",
+            colorscheme = "tokyonight-night",
+            -- colorscheme = "catppuccin-mocha",
             --colorscheme = "ghostty-default-style-dark",
             -- colorscheme = "vscode",
             -- colorscheme = "tokyonight-night",

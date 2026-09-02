@@ -1350,12 +1350,12 @@
   "combinatorics": {
     "prefix": "combo",
     "body": [
-      "class Comb {",
+      "class Combo {",
       "        int _n, mod;",
       "        vector<int> fac, invFac;",
       "",
       "      public:",
-      "        Comb(int n, int mod) : _n(n), mod(mod) {",
+      "        Combo(int n, int mod) : _n(n), mod(mod) {",
       "                fac.assign(_n + 1, 1);",
       "                invFac.assign(_n + 1, 1);",
       "                for (int i = 2; i <= _n; i++) fac[i] = (fac[i - 1] * i) % mod;",

@@ -71,6 +71,9 @@ return {
                 "yamllint",
                 "taplo",
 
+                -- Kubernetes / Helm
+                "helm-ls",
+
                 -- SQL / XML / Docker / Misc
                 "sql-formatter",
                 "xmlformatter",
