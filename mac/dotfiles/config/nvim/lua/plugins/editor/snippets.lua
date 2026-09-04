@@ -12,20 +12,19 @@ return {
         local ls = require("luasnip")
         ls.setup(opts)
 
-        -- 1. Load community friendly-snippets (lazily by filetype)
+        -- community friendly-snippets (lazily by filetype)
         require("luasnip.loaders.from_vscode").lazy_load()
 
-        -- 2. Load custom VSCode-style snippets from lua/snippets
+        -- custom VSCode-style snippets from lua/snippets
         local snippet_path = vim.fn.stdpath("config") .. "/lua/snippets"
         require("luasnip.loaders.from_vscode").lazy_load({
             paths = { snippet_path },
         })
 
-        -- 3. Load snipmate style snippets if any exist
+        -- snipmate style snippets, if any exist
         require("luasnip.loaders.from_snipmate").lazy_load()
 
-        -- 4. Cleanly unlink snippet session when leaving insert/select mode
-        -- Prevents LuaSnip from staying trapped in an old snippet state
+        -- unlink snippet session on leaving insert/select, so LuaSnip doesn't stay trapped in an old snippet state
         vim.api.nvim_create_autocmd("ModeChanged", {
             pattern = { "s:n", "i:n" },
             group = vim.api.nvim_create_augroup("LuaSnipUnlinkOnExit", { clear = true }),

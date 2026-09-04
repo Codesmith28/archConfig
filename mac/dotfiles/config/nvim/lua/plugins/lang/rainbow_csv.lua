@@ -13,7 +13,6 @@ return {
     },
     cmd = {
         "RainbowDelim",
-        -- "RainbowDelimSimple",
         "RainbowDelimQuoted",
         "RainbowMultiDelim",
     },

@@ -1,34 +1,46 @@
--- lua/plugins/java.lua
 return {
     {
         "mfussenegger/nvim-jdtls",
         -- Merges with LazyVim's official Java Extra
         opts = function(_, opts)
+            -- Performance: allocate sufficient heap and disable main class scanning on large projects
+            opts.dap_main = false
+            opts.cmd = opts.cmd or { vim.fn.exepath("jdtls") }
+            vim.list_extend(opts.cmd, {
+                "--jvm-arg=-Xmx4G",
+                "--jvm-arg=-XX:+UseG1GC",
+            })
+
             opts.settings = opts.settings or {}
             opts.settings.java = vim.tbl_deep_extend("force", opts.settings.java or {}, {
                 -- Performance optimizations: disable heavy background building and codelens
                 autobuild = { enabled = false },
-                -- Enable IntelliJ-Style Null Analysis & Redundancy Detection
-                nullAnalysis = {
-                    mode = "automatic",
-                    nonnull = {
-                        "org.jetbrains.annotations.NotNull",
-                        "javax.annotation.Nonnull",
-                        "org.springframework.lang.NonNull",
-                        "jakarta.annotation.Nonnull",
-                        "lombok.NonNull",
-                    },
-                    nullable = {
-                        "org.jetbrains.annotations.Nullable",
-                        "javax.annotation.Nullable",
-                        "org.springframework.lang.Nullable",
-                        "jakarta.annotation.Nullable",
+                maxConcurrentBuilds = 4,
+
+                -- CodeLens is a major performance bottleneck on large multi-module codebases
+                referencesCodeLens = { enabled = false },
+                implementationsCodeLens = { enabled = false },
+
+                -- Runtimes configuration matching installed JDKs
+                configuration = {
+                    runtimes = {
+                        {
+                            name = "JavaSE-11",
+                            path = "/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home",
+                        },
+                        {
+                            name = "JavaSE-17",
+                            path = "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+                        },
+                        {
+                            name = "JavaSE-21",
+                            path = "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
+                        },
                     },
                 },
 
-                -- CodeLens for references and implementations (IntelliJ navigation cues)
-                referencesCodeLens = { enabled = true },
-                implementationsCodeLens = { enabled = true },
+                -- Disable heavy whole-project nullness flow analysis
+                nullAnalysis = { mode = "disabled" },
 
                 -- Organize imports (match IntelliJ behavior: no wildcard imports)
                 sources = {

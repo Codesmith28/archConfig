@@ -16,14 +16,13 @@ return {
                 },
             },
             picker = {
-                -- 1. Tell the global pickers to adapt orientation depending on available space
+                -- adapt orientation depending on available window width
                 layout = {
                     preset = function()
                         return vim.o.columns >= 120 and "my_telescope_style" or "my_telescope_style_vertical"
                     end,
                 },
 
-                -- 2. Define the structural design inside the proper picker layouts directory
                 layouts = {
                     my_telescope_style = {
                         layout = {
@@ -71,12 +70,10 @@ return {
                         },
                     },
                 },
-                -- 3. Your explorer explicitly retains its separate inline layout block overrides
                 sources = {
                     explorer = {
                         layout = {
                             layout = {
-                                -- position = "right",
                                 width = 0.20,
                             },
                         },
@@ -120,9 +117,7 @@ return {
                     },
                 },
             },
-            -- ─── DEFINE THE ISOLATED TELESCOPE STYLE HERE ───
             styles = {
-                -- Your clean custom template layout style
                 my_telescope_style = {
                     layout = {
                         box = "horizontal",
@@ -146,7 +141,6 @@ return {
                     },
                 },
 
-                -- Keeps your floating terminal layout untouched
                 terminal = {
                     position = "float",
                     width = 0.8,
@@ -173,15 +167,4 @@ return {
             },
         },
     },
-    -- {
-    --     "folke/trouble.nvim",
-    --     opts = {
-    --         modes = {
-    --             diagnostics = {
-    --                 auto_open = true,
-    --                 auto_close = false,
-    --             },
-    --         },
-    --     },
-    -- },
 }

@@ -34,13 +34,12 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
         local buf_name = vim.api.nvim_buf_get_name(args.buf)
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = args.buf })
         local is_modifiable = vim.api.nvim_get_option_value("modifiable", { buf = args.buf })
-        
-        -- Target assistant.nvim buffers or any non-modifiable UI buffers
+
+        -- target assistant.nvim buffers or any non-modifiable UI buffers
         if string.match(buf_name:lower(), "assistant") or filetype == "assistant" or not is_modifiable then
-            -- 1. Disable LazyVim autoformat for this specific buffer
             vim.b[args.buf].autoformat = false
-            
-            -- 2. Forcibly detach any LSP trying to hook into the UI
+
+            -- forcibly detach any LSP trying to hook into the UI
             for _, client in ipairs(vim.lsp.get_clients({ bufnr = args.buf })) do
                 vim.lsp.buf_detach_client(args.buf, client.id)
             end
