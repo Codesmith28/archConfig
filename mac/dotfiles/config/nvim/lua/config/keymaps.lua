@@ -14,12 +14,10 @@ map("n", "<C-a>", "ggVG", { desc = "Select all" })
 -- Ctrl+C: Copy all to system clipboard, keep cursor position
 map("n", "<C-c>", 'mzggVG"+y`z', opts)
 
--- enable horizontal scrolling with mouse
+-- enable mouse support in all modes
 vim.opt.mouse = "a"
--- map("n", "<S-ScrollWheelUp>", "10zh", { noremap = true, silent = true })
--- map("n", "<S-ScrollWheelDown>", "10zl", { noremap = true, silent = true })
 
--- Harpoon 2 mappings are managed in lua/plugins/harpoon_nvim.lua (<leader>ha, <leader>hh, <leader>h1-h4)
+-- Harpoon 2 mappings are managed in lua/plugins/editor/harpoon.lua (<leader>ha, <leader>hh, <leader>h1-h4)
 
 -- Move lines
 map("v", "<C-j>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true, desc = "Move line down" })
@@ -32,10 +30,6 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- Add go tags:
 map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
 map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
-
--- Invert horizontal scroll for touchpad
--- vim.keymap.set("n", "<ScrollWheelRight>", "<ScrollWheelLeft>", { noremap = true, silent = true })
--- vim.keymap.set("n", "<ScrollWheelLeft>", "<ScrollWheelRight>", { noremap = true, silent = true })
 
 -- Format only git-modified lines (Works for both Conform formatters & LSP/JDTLS)
 local function format_modified_lines()
@@ -74,12 +68,10 @@ local function format_modified_lines()
     vim.notify("Formatted modified lines", vim.log.levels.INFO)
 end
 
--- Bind the function to a keymap (e.g., <leader>cm for "Code Modified")
 vim.keymap.set("n", "<leader>mf", format_modified_lines, { desc = "Format modified lines" })
 
--- Completely disable horizontal trackpad scrolling 
-vim.keymap.set({ 'n', 'v', 'i', 'c' }, '<ScrollWheelLeft>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set({ 'n', 'v', 'i', 'c' }, '<ScrollWheelRight>', '<Nop>', { noremap = true, silent = true })
--- Also disable the shift+scroll wheel if macOS translates that to horizontal
-vim.keymap.set({ 'n', 'v', 'i', 'c' }, '<S-ScrollWheelLeft>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set({ 'n', 'v', 'i', 'c' }, '<S-ScrollWheelRight>', '<Nop>', { noremap = true, silent = true })
+-- Disable horizontal trackpad scrolling (including shift+scroll, which macOS
+-- also translates to horizontal)
+for _, key in ipairs({ "<ScrollWheelLeft>", "<ScrollWheelRight>", "<S-ScrollWheelLeft>", "<S-ScrollWheelRight>" }) do
+    vim.keymap.set({ "n", "v", "i", "c" }, key, "<Nop>", opts)
+end

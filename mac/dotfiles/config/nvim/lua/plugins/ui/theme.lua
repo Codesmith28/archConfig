@@ -10,7 +10,7 @@ return {
                 term_colors = true,
 
                 integrations = {
-                    -- 1. Enable Native LSP integration so Catppuccin themes builtin LSP groups
+                    -- theme the builtin LSP highlight/underline groups
                     native_lsp = {
                         enabled = true,
                         virtual_text = {
@@ -39,13 +39,12 @@ return {
                     which_key = true,
                 },
 
-                -- 2. Explicitly override the LspInlayHint highlight group to make text italic
                 custom_highlights = function(colors)
                     return {
                         LspInlayHint = {
-                            fg = colors.overlay1, -- Standard subtle Catppuccin gray
-                            bg = colors.none, -- Subtle background pill (or colors.none for transparent)
-                            style = { "italic" }, -- Enables italic styling
+                            fg = colors.overlay1,
+                            bg = colors.none,
+                            style = { "italic" },
                         },
                     }
                 end,
@@ -69,14 +68,12 @@ return {
                 floats = "dark", -- Keep floating windows (telescope, popups, hover) solid/opaque
             },
             on_highlights = function(hl, c)
-                -- 1. LSP Inlay Hints: Italic text styling with subtle muted color & transparent bg on buffer
                 hl.LspInlayHint = {
                     fg = c.dark5,
                     bg = c.none,
                     italic = true,
                 }
 
-                -- 2. Native LSP diagnostic virtual text with italic styling
                 hl.DiagnosticVirtualTextError = {
                     fg = c.error,
                     bg = c.none,
@@ -98,7 +95,6 @@ return {
                     italic = true,
                 }
 
-                -- 3. Native LSP diagnostic underlines
                 hl.DiagnosticUnderlineError = { undercurl = true, sp = c.error }
                 hl.DiagnosticUnderlineWarn = { undercurl = true, sp = c.warning }
                 hl.DiagnosticUnderlineInfo = { undercurl = true, sp = c.info }
@@ -111,10 +107,6 @@ return {
         "LazyVim/LazyVim",
         opts = {
             colorscheme = "tokyonight-night",
-            -- colorscheme = "catppuccin-mocha",
-            --colorscheme = "ghostty-default-style-dark",
-            -- colorscheme = "vscode",
-            -- colorscheme = "tokyonight-night",
         },
     },
 }
