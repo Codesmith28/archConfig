@@ -5,7 +5,7 @@ export EDITOR='nvim'
 alias confb='$EDITOR ~/.bashrc'
 alias confp='$EDITOR ~/.profile'
 alias confn='$EDITOR ~/.config/nvim/'
-alias confg='$EDITOR ~/.config/ghostty/config'
+alias confg='$EDITOR ~/.config/ghostty/config.ghostty'
 
 # sourcing
 alias sourceb='source ~/.bash_profile'
