@@ -1,0 +1,1 @@
+/home/codesmith28/.local/state/omarchy/current/theme/neovim.lua

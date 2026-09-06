@@ -1,0 +1,10 @@
+[Unit]
+Description=Set Battery Charging Limit
+After=multi-user.target suspend.target hibernate.target hybrid-sleep.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set-battery-limit.sh
+
+[Install]
+WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target
