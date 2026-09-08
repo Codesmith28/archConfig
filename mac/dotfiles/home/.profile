@@ -23,6 +23,7 @@ alias res_idle='~/dotfiles/hypr/scripts/restart-hypridle.sh'
 # ALIASES
 # -----------------------------------------------------
 
+alias cd='z'
 alias c='clear'
 alias e='exit'
 alias nf='neofetch'
@@ -291,12 +292,11 @@ hdfs-tree() {
 ssh() {
     # Run the actual SSH command with all passed arguments
     command ssh "$@"
-
     # Automatically fire the scrollback-safe reset sequence when the process dies
     printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'
 }
 
-alias adc='adaptive connect'
+alias adl='adaptive login'
 
 # Added by Antigravity CLI installer
 export PATH="/Users/codesmith28/.local/bin:$PATH"
@@ -359,3 +359,5 @@ gradlep() {
     echo "🚀 Building module $gradle_path..."
     (cd "$root" && ./gradlew "${tasks[@]}" -x test --parallel)
 }
+
+alias agyd='agy --dangerously-skip-permissions'
