@@ -11,6 +11,7 @@ antidote load ~/.config/zsh/plugins.txt
 # ============ Basic config ============
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
 
 # ========== Deferred plugins ==========
 source ~/.zsh-defer/zsh-defer.plugin.zsh 2>/dev/null
