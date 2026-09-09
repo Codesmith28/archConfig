@@ -96,6 +96,12 @@ validate_optimization_dir() {
         return 1
     fi
 
+    # If module provides a standalone install.sh, validate that script
+    if [[ -f "$dir/install.sh" ]]; then
+        validate_script "$dir/install.sh"
+        return $?
+    fi
+
     local scripts=()
     local services=()
 
@@ -214,3 +220,35 @@ enable_and_start_service() {
         return 1
     fi
 }
+
+enable_service() {
+    local service_name="$1"
+    log_info "Reloading systemd daemon..."
+    run_as_root systemctl daemon-reload
+
+    log_info "Enabling service (without starting): $service_name"
+    if run_as_root systemctl enable "$service_name"; then
+        log_success "Service $service_name is enabled."
+    else
+        log_error "Failed to enable service $service_name"
+        return 1
+    fi
+}
+
+install_modprobe_config() {
+    local conf_file="$1"
+    local dest_dir="${2:-/etc/modprobe.d}"
+    local name
+    name="$(basename "$conf_file")"
+
+    if [[ ! -f "$conf_file" ]]; then
+        log_error "Modprobe configuration file not found: $conf_file"
+        return 1
+    fi
+
+    run_as_root mkdir -p "$dest_dir"
+    run_as_root cp "$conf_file" "$dest_dir/$name"
+    run_as_root chmod 644 "$dest_dir/$name"
+    log_success "Installed modprobe config: $dest_dir/$name"
+}
+
