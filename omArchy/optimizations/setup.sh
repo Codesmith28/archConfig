@@ -7,11 +7,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Source common library functions
-if [[ -f "$SCRIPT_DIR/lib/commons.sh" ]]; then
-    source "$SCRIPT_DIR/lib/commons.sh"
-else
-    source "$SCRIPT_DIR/lib/common.sh"
-fi
+source "$SCRIPT_DIR/lib/common.sh"
 
 BIN_DEST="${BIN_DEST:-/usr/local/bin}"
 SERVICE_DEST="${SERVICE_DEST:-/etc/systemd/system}"
@@ -33,7 +29,12 @@ for dir in "$SCRIPT_DIR"/*/; do
         continue
     fi
 
-    install_optimization "$dir" "$BIN_DEST" "$SERVICE_DEST"
+    if [[ -f "$dir/install.sh" ]]; then
+        log_info "Executing custom installer for module: ${BOLD}$dir_name${NC}"
+        bash "$dir/install.sh" "$BIN_DEST" "$SERVICE_DEST"
+    else
+        install_optimization "$dir" "$BIN_DEST" "$SERVICE_DEST"
+    fi
 done
 
 log_success "Optimization setup completed successfully!"
