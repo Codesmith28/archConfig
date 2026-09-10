@@ -18,6 +18,7 @@ require("default.hypr.omarchy")
 -- ~/.config/hypr files.
 require("hypr.monitors")
 require("hypr.input")
+require("hypr.animations")
 require("hypr.bindings")
 require("hypr.looknfeel")
 require("hypr.autostart")
