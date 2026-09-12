@@ -1,15 +1,15 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.ai.copilot",
-    "lazyvim.plugins.extras.ai.copilot-chat",
-    "lazyvim.plugins.extras.dap.core",
+    "lazyvim.plugins.extras.coding.luasnip",
+    "lazyvim.plugins.extras.coding.mini-surround",
     "lazyvim.plugins.extras.lang.clangd",
-    "lazyvim.plugins.extras.lang.docker",
     "lazyvim.plugins.extras.lang.java",
     "lazyvim.plugins.extras.lang.json",
-    "lazyvim.plugins.extras.lang.kotlin",
     "lazyvim.plugins.extras.lang.markdown",
-    "lazyvim.plugins.extras.lang.scala"
+    "lazyvim.plugins.extras.lang.python",
+    "lazyvim.plugins.extras.lang.rust",
+    "lazyvim.plugins.extras.lang.toml",
+    "lazyvim.plugins.extras.lang.typescript"
   ],
   "install_version": 8,
   "news": {

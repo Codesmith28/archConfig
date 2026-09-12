@@ -1,24 +1,19 @@
-local autoread_group = vim.api.nvim_create_augroup("AutoReadFiles", { clear = true })
+-- Autocmds are automatically loaded on the VeryLazy event
+-- (Helm filetype detection lives in lua/plugins/lang/helm.lua init() so it
+-- runs at startup before VeryLazy fires.)
 
--- Check whether files changed on disk
-vim.api.nvim_create_autocmd({
-  "FocusGained",
-  "BufEnter",
-  "CursorHold",
-  "CursorHoldI",
-}, {
-  group = autoread_group,
-  callback = function()
-    if vim.bo.buftype == "" then
-      vim.cmd("silent! checktime")
-    end
-  end,
+-- 1. Optimized Refresh
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
+    callback = function()
+        if vim.o.buftype ~= "nofile" and vim.fn.getcmdwintype() == "" then
+            vim.cmd("checktime")
+        end
+    end,
 })
 
--- Notify when a file was reloaded from disk
+-- Notification when a file changes on disk
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
-  group = autoread_group,
-  callback = function()
-    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.INFO)
-  end,
+    callback = function()
+        vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.INFO)
+    end,
 })
