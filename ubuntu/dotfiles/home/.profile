@@ -68,7 +68,6 @@ function y() {
 }
 
 # utils
-alias cd='z'
 alias agyd='agy --dangerously-skip-permissions'
 alias lg='lazygit'
 alias lzd='lazydocker'

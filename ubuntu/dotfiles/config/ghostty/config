@@ -1,9 +1,8 @@
 # Theme
-theme = "catppuccin-mocha"
-config-file = ?"~/.local/state/omarchy/current/theme/ghostty.conf"
+theme = "horizon"
 
 # Font
-font-family = "Hack Nerd Font"
+font-family = "UbuntuSansMono Nerd Font"
 font-style = Regular
 font-size = 12
 

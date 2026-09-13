@@ -1,11 +1,11 @@
 return {
     {
         "mason-org/mason.nvim",
-        opts = {
-            ui = {
-                border = "rounded",
-            },
-            ensure_installed = {
+        opts = function(_, opts)
+            opts.ui = opts.ui or {}
+            opts.ui.border = "rounded"
+            opts.ensure_installed = opts.ensure_installed or {}
+            vim.list_extend(opts.ensure_installed, {
                 -- C/C++
                 "clangd",
                 "clang-format",
@@ -79,7 +79,8 @@ return {
                 "dockerfile-language-server",
                 "docker-compose-language-service",
                 "tree-sitter-cli",
-            },
-        },
+            })
+            opts.ensure_installed = LazyVim.dedup(opts.ensure_installed)
+        end,
     },
 }
