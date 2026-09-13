@@ -69,12 +69,10 @@ fi
 
 # Font settings
 gsettings set org.gnome.desktop.interface font-name 'Ubuntu Nerd Font 11'
-gsettings set org.gnome.desktop.interface monospace-font-name 'Hack Nerd Font 11'
 gsettings set org.gnome.desktop.interface document-font-name 'Ubuntu Nerd Font 11'
 
 # ptyxis optimizations:
 gsettings set org.gnome.Ptyxis use-system-font true
-gsettings set org.gnome.Ptyxis font-name 'Hack Nerd Font 11'
 dconf write /org/gnome/Ptyxis/Shortcuts/move-next-tab "'<Control>Tab'"
 dconf write /org/gnome/Ptyxis/Shortcuts/move-previous-tab "'<Control><Shift>Tab'"
 
