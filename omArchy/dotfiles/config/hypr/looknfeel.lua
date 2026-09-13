@@ -1,6 +1,5 @@
 -- Change the default Omarchy look'n'feel.
 
-
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#decoration
 hl.config({
 	decoration = {
@@ -33,7 +32,7 @@ o.window({ tag = "chromium-based-browser" }, { opacity = "1.0 1.0" })
 o.window({ tag = "firefox-based-browser" }, { opacity = "1.0 1.0" })
 
 -- Window rules for specific applications
-local small_window_size = { 1300, 900 }
+local small_window_size = { 1500, 1000 }
 
 -- WhatsApp: open in small floating window
 o.window(".*[wW]hats[aA]pp.*", {
@@ -56,14 +55,11 @@ o.window(".*[tT]elegram.*", {
 	size = small_window_size,
 })
 
-
 -- btop: open as regular tiled window (overriding Omarchy's default floating rule)
 o.window(".*btop.*", {
 	tile = true,
 	tag = "-floating-window",
 })
-
-
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#layout
 -- hl.config({
