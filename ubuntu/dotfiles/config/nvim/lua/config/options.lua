@@ -6,6 +6,8 @@ local o = vim.opt
 
 o.expandtab = true
 o.smartindent = true
+o.tabstop = 4
+o.shiftwidth = 4
 
 o.encoding = "utf-8"
 o.fileencoding = "utf-8"
@@ -18,19 +20,18 @@ o.scrolloff = 8
 o.cursorlineopt = "both"
 
 -- other utilities
-vim.g.copilot_assume_mapped = true
+vim.opt.winblend = 0
+vim.opt.pumblend = 0
+vim.opt.autoread = true
 
 -- shell and search settings
-o.shell = "zsh"
 o.ignorecase = true
 o.smartcase = true
 
---  default to dark mode
+-- Global Behavior Flags
+vim.g.autoformat = true
+
+-- UI Rendering and View Scrolloffs
 o.termguicolors = true
 o.background = "dark"
-
-o.listchars = {
-    tab = "> ",
-    trail = "_",
-    nbsp = "+",
-}
+o.list = false

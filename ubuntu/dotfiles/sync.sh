@@ -7,7 +7,16 @@ link() {
   local src="$1"
   local dest="$2"
 
-  rm -rf "$dest"
+  if [ -e "$dest" ] || [ -L "$dest" ]; then
+    if [ -L "$dest" ] && [ "$(readlink -f "$dest")" = "$(readlink -f "$src")" ]; then
+      echo "Already linked: $dest -> $src"
+      return 0
+    fi
+    echo "Backing up existing $dest -> ${dest}.bak"
+    rm -rf "${dest}.bak"
+    mv "$dest" "${dest}.bak"
+  fi
+
   mkdir -p "$(dirname "$dest")"
   ln -s "$src" "$dest"
   echo "Linked $src -> $dest"
