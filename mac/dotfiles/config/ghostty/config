@@ -1,9 +1,9 @@
 # =============================================================================
 # Visuals: Theme, Background, & Window Style
 # =============================================================================
-background = 090909
-background-opacity = 0.95
-background-blur = 100
+background = 000000
+background-opacity = 0.80
+background-blur = 80
 
 # Places the tab bar directly inline with the macOS traffic light buttons
 macos-titlebar-style = tabs
@@ -13,10 +13,11 @@ window-padding-x = 5
 # =============================================================================
 # Font & Typography
 # ============================================================================
-font-size = 14
-font-family = caskaydiacove nerd font
-# font-thicken = true
-# font-family = meslolgs nerd font
+font-family = hack nerd font
+font-size = 12
+font-thicken = true
+bold-is-bright = true
+font-style-bold = bold
 
 # =============================================================================
 # Cursor Management (Fixed Conflict)
@@ -69,4 +70,7 @@ desktop-notifications = true
 notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
+
+auto-update-channel = tip
+
 

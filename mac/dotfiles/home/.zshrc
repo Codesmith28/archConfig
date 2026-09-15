@@ -8,22 +8,22 @@ compinit -C
 source ~/.antidote/antidote.zsh
 antidote load ~/.config/zsh/plugins.txt
 
-# ============ Basic config ============
+# ============ Basic setup and aliases ============
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+[[ -e ~/.config/work/work.sh ]] && emulate sh -c 'source ~/.config/work/work.sh'
+
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
 # ========== Deferred plugins ==========
 source ~/.zsh-defer/zsh-defer.plugin.zsh 2>/dev/null
 
-# These are heavy → defer them
+# fzf
 [ -f ~/.fzf.zsh ] && zsh-defer source ~/.fzf.zsh
 source <(fzf --zsh)
-# zsh-defer eval "$(tv init zsh)"
 
-# zsh-syntax-highlighting must load last → defer!
+# zsh zsh-syntax-highlighting
 zsh-defer source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
 
 # ========== PNPM ==========
 export PNPM_HOME="$HOME/.local/share/pnpm"
@@ -40,13 +40,14 @@ nvm() {
 [ -s "$NVM_DIR/bash_completion" ] && zsh-defer source "$NVM_DIR/bash_completion"
 
 
-# Default Node.js version in PATH (only run if variable set)
+# nodejs
 if [[ -n "$DEFAULT_NODE_VER" ]]; then
   DEFAULT_NODE_VER_PATH="$(find "$NVM_DIR/versions/node" -maxdepth 1 -name "v${DEFAULT_NODE_VER#v}*" | sort -rV | head -n 1)"
   [[ -n "$DEFAULT_NODE_VER_PATH" ]] && export PATH="$DEFAULT_NODE_VER_PATH/bin:$PATH"
 fi
 
 
+# bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 # bun autocomplete is slow → defer
@@ -56,10 +57,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # ========== Pyenv ==========
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-# VERY heavy init → defer! [don't use this if pyenv installed from AUR]
 zsh-defer eval "$(pyenv init --path)"
 zsh-defer eval "$(pyenv init -)"
-# zsh-defer eval "$(pyenv virtualenv-init -)"
 
 
 # ========== Go Path ==========
@@ -82,13 +81,7 @@ export JAVA_HOME="$JAVA_21_HOME"
 
 export PATH="$HOME/.local/bin:$PATH"
 
-# Added by Antigravity
-export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
-
 eval "$(/usr/libexec/path_helper)"
-
-# Added by Antigravity
-export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -97,8 +90,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # Added by Antigravity
 export PATH="/Users/codesmith28/.antigravity/antigravity/bin:$PATH"
 export PATH=~/.adaptive/bin/:$PATH
-
-# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # CP fixes
 export CC=gcc-15
