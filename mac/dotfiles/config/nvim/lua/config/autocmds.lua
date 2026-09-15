@@ -1,6 +1,6 @@
 -- Autocmds are automatically loaded on the VeryLazy event
--- (Helm filetype detection lives in ftdetect/helm.lua instead -- it needs to
--- run at startup, before VeryLazy fires.)
+-- (Helm filetype detection lives in lua/plugins/lang/helm.lua init() so it
+-- runs at startup before VeryLazy fires.)
 
 -- 1. Optimized Refresh
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {

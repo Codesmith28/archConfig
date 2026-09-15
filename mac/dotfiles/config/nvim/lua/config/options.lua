@@ -39,6 +39,9 @@ o.termguicolors = true
 o.background = "dark"
 o.list = false
 
+-- set the root of the project based on .git for consistency
+vim.g.root_spec = { { ".git" }, "cwd" }
+
 -- Cross-platform JAVA_HOME resolver (macOS & Linux)
 local function resolve_java_home()
     local env_java = os.getenv("JAVA_HOME")
