@@ -13,9 +13,8 @@ window-padding-x = 5
 # =============================================================================
 # Font & Typography
 # ============================================================================
-font-family = hack nerd font
 font-size = 12
-font-thicken = true
+font-thicken = true	
 bold-is-bright = true
 font-style-bold = bold
 
