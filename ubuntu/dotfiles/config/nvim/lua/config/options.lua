@@ -9,6 +9,9 @@ o.smartindent = true
 o.tabstop = 4
 o.shiftwidth = 4
 
+-- Clipboard
+o.clipboard = "unnamedplus"
+
 o.encoding = "utf-8"
 o.fileencoding = "utf-8"
 

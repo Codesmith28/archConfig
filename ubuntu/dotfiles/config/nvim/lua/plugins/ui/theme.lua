@@ -1,55 +1,103 @@
+-- Universal theme styling: applies italics, diagnostic undercurls,
+-- clean virtual text, inlay hints, and transparency across ALL themes.
+local function apply_theme_overrides()
+    -- 1. Italics for comments, keywords, and syntax tokens
+    local italic_groups = {
+        "Comment",
+        "@comment",
+        "@comment.documentation",
+        "Keyword",
+        "Statement",
+        "Conditional",
+        "Repeat",
+        "Label",
+        "Exception",
+        "Include",
+        "StorageClass",
+        "Structure",
+        "TypeDef",
+        "@keyword",
+        "@keyword.function",
+        "@keyword.return",
+        "@keyword.conditional",
+        "@keyword.repeat",
+        "@keyword.operator",
+        "@keyword.import",
+        "@keyword.coroutine",
+        "@keyword.storage",
+        "@keyword.modifier",
+        "@keyword.type",
+        "@type.qualifier",
+        "@lsp.type.keyword",
+        "@lsp.type.modifier",
+        "LspInlayHint",
+        "DiagnosticVirtualTextError",
+        "DiagnosticVirtualTextWarn",
+        "DiagnosticVirtualTextInfo",
+        "DiagnosticVirtualTextHint",
+    }
+
+    for _, name in ipairs(italic_groups) do
+        local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+        ---@cast hl any
+        if hl and not vim.tbl_isempty(hl) then
+            hl.italic = true
+            if name:match("^DiagnosticVirtualText") or name == "LspInlayHint" then
+                hl.bg = nil
+            end
+            vim.api.nvim_set_hl(0, name, hl)
+        else
+            vim.api.nvim_set_hl(0, name, { italic = true })
+        end
+    end
+
+    -- 2. Diagnostic undercurls (preserving theme's diagnostic colors for sp)
+    local diags = {
+        Error = vim.api.nvim_get_hl(0, { name = "DiagnosticError", link = false }).fg,
+        Warn = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false }).fg,
+        Info = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo", link = false }).fg,
+        Hint = vim.api.nvim_get_hl(0, { name = "DiagnosticHint", link = false }).fg,
+    }
+
+    for type, color in pairs(diags) do
+        local group = "DiagnosticUnderline" .. type
+        local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+        ---@cast hl any
+        hl.undercurl = true
+        hl.underline = false
+        if color then
+            hl.sp = color
+        end
+        vim.api.nvim_set_hl(0, group, hl)
+    end
+
+    -- 3. Transparency for editor buffer (keeps floating windows & sidebars solid)
+    local transparent_groups = { "Normal", "NormalNC", "SignColumn", "FoldColumn", "Folded" }
+    for _, name in ipairs(transparent_groups) do
+        local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+        ---@cast hl any
+        if hl then
+            hl.bg = nil
+            vim.api.nvim_set_hl(0, name, hl)
+        end
+    end
+end
+
+local theme_group = vim.api.nvim_create_augroup("ThemeCustomHighlights", { clear = true })
+vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+    group = theme_group,
+    callback = apply_theme_overrides,
+})
+
 local specs = {
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        config = function()
-            require("catppuccin").setup({
-                flavour = "mocha", -- or "latte", "frappe", "macchiato"
-                transparent_background = true,
-                show_end_of_buffer = true,
-                term_colors = true,
-
-                integrations = {
-                    -- theme the builtin LSP highlight/underline groups
-                    native_lsp = {
-                        enabled = true,
-                        virtual_text = {
-                            errors = { "italic" },
-                            hints = { "italic" },
-                            warnings = { "italic" },
-                            information = { "italic" },
-                        },
-                        underlines = {
-                            errors = { "underline" },
-                            hints = { "underline" },
-                            warnings = { "underline" },
-                            information = { "underline" },
-                        },
-                        inlay_hints = {
-                            background = true,
-                        },
-                    },
-                    cmp = true,
-                    blink_cmp = true,
-                    gitsigns = true,
-                    nvimtree = true,
-                    treesitter = true,
-                    telescope = { style = "transparent" },
-                    mason = true,
-                    which_key = true,
-                },
-
-                custom_highlights = function(colors)
-                    return {
-                        LspInlayHint = {
-                            fg = colors.overlay1,
-                            bg = colors.none,
-                            style = { "italic" },
-                        },
-                    }
-                end,
-            })
-        end,
+        lazy = true,
+        opts = {
+            flavour = "mocha",
+            term_colors = true,
+        },
     },
 
     {
@@ -57,49 +105,28 @@ local specs = {
         lazy = true,
         opts = {
             style = "night",
-            transparent = true, -- Makes the main editor code buffer transparent
             terminal_colors = true,
             styles = {
-                comments = { italic = true },
-                keywords = { italic = true },
-                functions = {},
-                variables = {},
-                sidebars = "dark", -- Keep sidebars (neo-tree, etc.) solid/opaque
-                floats = "dark", -- Keep floating windows (telescope, popups, hover) solid/opaque
+                sidebars = "dark",
+                floats = "dark",
             },
             on_highlights = function(hl, c)
                 hl.LspInlayHint = {
-                    fg = c.dark5,
+                    fg = c.dark3,
                     bg = c.none,
-                    italic = true,
                 }
-
-                hl.DiagnosticVirtualTextError = {
-                    fg = c.error,
-                    bg = c.none,
-                    italic = true,
-                }
-                hl.DiagnosticVirtualTextWarn = {
-                    fg = c.warning,
-                    bg = c.none,
-                    italic = true,
-                }
-                hl.DiagnosticVirtualTextInfo = {
-                    fg = c.info,
-                    bg = c.none,
-                    italic = true,
-                }
-                hl.DiagnosticVirtualTextHint = {
-                    fg = c.hint,
-                    bg = c.none,
-                    italic = true,
-                }
-
-                hl.DiagnosticUnderlineError = { undercurl = true, sp = c.error }
-                hl.DiagnosticUnderlineWarn = { undercurl = true, sp = c.warning }
-                hl.DiagnosticUnderlineInfo = { undercurl = true, sp = c.info }
-                hl.DiagnosticUnderlineHint = { undercurl = true, sp = c.hint }
             end,
+        },
+    },
+
+    {
+        "Shatur/neovim-ayu",
+        name = "ayu",
+        lazy = true,
+        priority = 1000,
+        opts = {
+            mirage = false,
+            terminal = true,
         },
     },
 }

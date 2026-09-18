@@ -22,6 +22,7 @@ M.all_themes = {
     { "OldJobobo/miasma.nvim", lazy = true, priority = 1000 },
     { "OldJobobo/retro-82.nvim", lazy = true, priority = 1000 },
     { "omacom-io/lumon.nvim", lazy = true, priority = 1000 },
+    { "Shatur/neovim-ayu", name = "ayu", lazy = true, priority = 1000 },
 }
 
 -- Theme hot-reloading plugin for Omarchy desktop theme switches
