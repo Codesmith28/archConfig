@@ -61,6 +61,10 @@ gsettings set org.gnome.desktop.wm.keybindings move-to-side-w '[]'
 gsettings set org.gnome.desktop.wm.keybindings move-to-side-e '[]'
 gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>c']"
 
+# File Explorer / Nautilus
+gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
+
+
 # Tiling Assistant (built-in Ubuntu window tiling) - Center window
 if gsettings list-schemas | grep -q "org.gnome.shell.extensions.tiling-assistant"; then
     gsettings set org.gnome.shell.extensions.tiling-assistant center-window "['<Super>c']"

@@ -21,6 +21,7 @@ REAL_HOME=$(getent passwd "$REAL_USER" 2>/dev/null | cut -d: -f6)
 REAL_HOME="${REAL_HOME:-$HOME}"
 USER_CONFIG_DIR="$REAL_HOME/.config/fontconfig"
 OVERRIDE_CONF="$SCRIPT_DIR/conf.d/10-override-monospace.conf"
+SANS_OVERRIDE_CONF="$SCRIPT_DIR/conf.d/10-override-sans-serif.conf"
 FONTS_CONF="$SCRIPT_DIR/fonts.conf"
 
 CLI_FONT=""
@@ -147,10 +148,10 @@ echo "  Source               : $FONT_SOURCE"
 echo "=================================================="
 
 # ------------------------------------------------------------------------------
-# 1. Monospace override rules (redirect explicit requests to 'monospace')
+# 1. Monospace & Sans-Serif override rules (redirect explicit requests)
 # ------------------------------------------------------------------------------
 echo ""
-echo "==> [1/4] Configuring monospace overrides..."
+echo "==> [1/4] Configuring monospace and sans-serif overrides..."
 mkdir -p "$SCRIPT_DIR/conf.d"
 
 declare -a override_families=(
@@ -190,6 +191,51 @@ done
 
 echo "</fontconfig>" >>"$OVERRIDE_CONF"
 echo "    ✓ Generated $(basename "$OVERRIDE_CONF") (redirecting to 'monospace')"
+
+declare -a override_sans_families=(
+    "Arial"
+    "Helvetica"
+    "Helvetica Neue"
+    "Liberation Sans"
+    "LiberationSans"
+    "Arimo"
+    "DejaVu Sans"
+    "Noto Sans"
+    "Roboto"
+    "Open Sans"
+    "Segoe UI"
+    "Cantarell"
+    "Ubuntu"
+    "TeX Gyre Heros"
+    "Nimbus Sans"
+    "Nimbus Sans L"
+)
+
+cat <<EOF >"$SANS_OVERRIDE_CONF"
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+<fontconfig>
+  <!-- ===================================================================== -->
+  <!-- Redirect explicit sans-serif font requests to generic 'sans-serif'.   -->
+  <!-- The preferred font is defined in conf.d/49-default-sans-serif.conf.   -->
+  <!-- ===================================================================== -->
+EOF
+
+for fam in "${override_sans_families[@]}"; do
+    cat <<EOF >>"$SANS_OVERRIDE_CONF"
+  <match target="pattern">
+    <test name="family" qual="any">
+      <string>$fam</string>
+    </test>
+    <edit name="family" mode="assign" binding="strong">
+      <string>sans-serif</string>
+    </edit>
+  </match>
+EOF
+done
+
+echo "</fontconfig>" >>"$SANS_OVERRIDE_CONF"
+echo "    ✓ Generated $(basename "$SANS_OVERRIDE_CONF") (redirecting to 'sans-serif')"
 
 # ------------------------------------------------------------------------------
 # 2. System-wide configuration (/etc/fonts/)
@@ -276,9 +322,25 @@ for t in "${test_mono_fonts[@]}"; do
 done
 
 echo ""
-echo "    --- Other Families ---"
-printf "    %-20s -> %s\n" "sans-serif" "$(fc-match sans-serif)"
-printf "    %-20s -> %s\n" "system-ui" "$(fc-match system-ui)"
+echo "    --- Sans-Serif Overrides ---"
+declare -a test_sans_fonts=(
+    "sans-serif"
+    "sans"
+    "system-ui"
+    "Arial"
+    "Helvetica"
+    "Roboto"
+    "Liberation Sans"
+    "Arimo"
+    "DejaVu Sans"
+    "Noto Sans"
+)
+
+for t in "${test_sans_fonts[@]}"; do
+    printf "    %-20s -> %s\n" "$t" "$(fc-match "$t")"
+done
 
 echo ""
-echo "✨ System-wide configuration complete! All monospace queries resolve to '$TARGET_MONO'."
+echo "✨ System-wide configuration complete!"
+echo "   All monospace queries resolve to '$TARGET_MONO'."
+echo "   All sans-serif queries resolve to '$(fc-match sans-serif -f "%{family}\n" | cut -d',' -f1)'."

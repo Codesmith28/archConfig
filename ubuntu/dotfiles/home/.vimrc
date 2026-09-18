@@ -1,4 +1,3 @@
-
 " Basic settings
 set nocompatible              " Use Vim defaults (not vi)
 set number                    " Show line numbers

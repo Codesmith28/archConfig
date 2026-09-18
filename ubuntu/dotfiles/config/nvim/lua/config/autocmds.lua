@@ -17,3 +17,16 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
         vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.INFO)
     end,
 })
+
+-- 2. Sync yanked text to system clipboard
+vim.api.nvim_create_autocmd("TextYankPost", {
+    desc = "Sync yanked text to system clipboard",
+    group = vim.api.nvim_create_augroup("SyncYankToClipboard", { clear = true }),
+    callback = function()
+        if vim.v.event.operator == "y" then
+            pcall(function()
+                vim.fn.setreg("+", vim.fn.getreg('"'))
+            end)
+        end
+    end,
+})

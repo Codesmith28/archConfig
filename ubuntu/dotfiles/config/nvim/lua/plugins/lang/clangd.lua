@@ -13,7 +13,7 @@ return {
                         "--clang-tidy",
                         "--header-insertion=iwyu",
                         "--completion-style=detailed",
-                        "--function-arg-placeholders",
+                        "--function-arg-placeholders=true",
                         "--fallback-style=llvm",
                         -- "--query-driver=/opt/homebrew/bin/g++*,/opt/homebrew/bin/**,/usr/local/bin/g++*,/usr/bin/clang++,/usr/bin/g++",
                     },
