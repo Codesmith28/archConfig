@@ -1,0 +1,12 @@
+[Unit]
+Description=Set Battery Charging Limit (85% Health Cap)
+After=multi-user.target asusd.service
+Wants=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set-battery-limit.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -23,6 +23,14 @@ vim.opt.mouse = "a"
 map("v", "<C-j>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true, desc = "Move line down" })
 map("v", "<C-k>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true, desc = "Move line up" })
 
+-- Duplicate lines
+map("n", "<A-S-Down>", "<cmd>t.<CR>", { desc = "Duplicate line down" })
+map("n", "<A-S-Up>", "<cmd>t.-1<CR>", { desc = "Duplicate line up" })
+map("i", "<A-S-Down>", "<cmd>t.<CR>", { desc = "Duplicate line down" })
+map("i", "<A-S-Up>", "<cmd>t.-1<CR>", { desc = "Duplicate line up" })
+map("v", "<A-S-Down>", ":t '> <CR>gv", { noremap = true, silent = true, desc = "Duplicate selection down" })
+map("v", "<A-S-Up>", ":t '<-1 <CR>gv", { noremap = true, silent = true, desc = "Duplicate selection up" })
+
 -- indenting
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })

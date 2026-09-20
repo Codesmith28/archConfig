@@ -19,7 +19,15 @@ require("lazy").setup({
         -- add LazyVim and import its plugins
         { "LazyVim/LazyVim", import = "lazyvim.plugins" },
         -- import/override with your plugins
-        { import = "plugins" },
+        -- NOTE: lazy.nvim's `import` only auto-discovers files directly inside
+        -- the given module, or a subfolder if IT has an init.lua -- it does not
+        -- recurse further. Our plugins are grouped into category subfolders, so
+        -- each one is imported explicitly instead of relying on one `plugins` import.
+        { import = "plugins.lsp" },
+        { import = "plugins.lang" },
+        { import = "plugins.ui" },
+        { import = "plugins.editor" },
+        { import = "plugins.tools" },
     },
     defaults = {
         -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
@@ -30,7 +38,10 @@ require("lazy").setup({
         version = false, -- always use the latest git commit
         -- version = "*", -- try installing the latest stable version for plugins that support semver
     },
-    install = { colorscheme = { "tokyonight", "habamax" } },
+    ui = {
+        border = "rounded",
+    },
+    install = { colorscheme = { "ayu", "tokyonight", "habamax" } },
     checker = {
         enabled = true, -- check for plugin updates periodically
         notify = false, -- notify on update

@@ -1,4 +1,3 @@
-
 " Basic settings
 set nocompatible              " Use Vim defaults (not vi)
 set number                    " Show line numbers
@@ -32,3 +31,11 @@ inoremap " ""<Left>
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-commentary'
 call plug#end()
+
+" Sync yank to system clipboard
+if exists('##TextYankPost')
+  augroup SyncYankToClipboard
+    autocmd!
+    autocmd TextYankPost * if v:event.operator ==# 'y' | call setreg('+', getreg('"')) | endif
+  augroup END
+endif

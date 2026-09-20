@@ -35,6 +35,9 @@ for dir in "$SCRIPT_DIR"/*/; do
     elif [[ -f "$dir/setup.sh" ]]; then
         log_info "Executing custom installer for module: ${BOLD}$dir_name${NC}"
         bash "$dir/setup.sh" "$BIN_DEST" "$SERVICE_DEST"
+    elif [[ -f "$dir/config.sh" ]]; then
+        log_info "Executing configuration script for module: ${BOLD}$dir_name${NC}"
+        bash "$dir/config.sh" "$BIN_DEST" "$SERVICE_DEST"
     else
         install_optimization "$dir" "$BIN_DEST" "$SERVICE_DEST"
     fi
