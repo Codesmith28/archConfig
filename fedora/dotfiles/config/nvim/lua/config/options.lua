@@ -9,8 +9,11 @@ o.smartindent = true
 o.tabstop = 4
 o.shiftwidth = 4
 
--- Clipboard
+-- Clipboard (use OSC 52 in terminal to prevent Wayland dock glitches)
 o.clipboard = "unnamedplus"
+if not vim.g.neovide then
+    vim.g.clipboard = "osc52"
+end
 
 o.encoding = "utf-8"
 o.fileencoding = "utf-8"

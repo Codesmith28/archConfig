@@ -49,4 +49,4 @@ else
     bash "$SCRIPT_DIR/config.sh"
 fi
 
-log_success "GNOME settings applied successfully (keyrate: 250ms delay, 25ms repeat, shortcuts & Ptyxis configured)!"
+log_success "GNOME settings applied successfully (keyrate: 250ms delay, 25ms repeat, touchpad, shortcuts & Ptyxis configured)!"

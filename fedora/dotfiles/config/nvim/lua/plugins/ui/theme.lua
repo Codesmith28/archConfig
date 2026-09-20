@@ -95,11 +95,9 @@ local specs = {
         name = "catppuccin",
         lazy = true,
         opts = {
-            flavour = "mocha",
             term_colors = true,
         },
     },
-
     {
         "folke/tokyonight.nvim",
         lazy = true,
@@ -107,8 +105,8 @@ local specs = {
             style = "night",
             terminal_colors = true,
             styles = {
-                sidebars = "dark",
-                floats = "dark",
+                -- sidebars = "dark",
+                -- floats = "dark",
             },
             on_highlights = function(hl, c)
                 hl.LspInlayHint = {
@@ -116,17 +114,6 @@ local specs = {
                     bg = c.none,
                 }
             end,
-        },
-    },
-
-    {
-        "Shatur/neovim-ayu",
-        name = "ayu",
-        lazy = true,
-        priority = 1000,
-        opts = {
-            mirage = false,
-            terminal = true,
         },
     },
 }
@@ -154,8 +141,9 @@ else
     table.insert(specs, {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "tokyonight-storm",
+            -- colorscheme = "tokyonight-storm",
             -- colorscheme = "catppuccin-macchiato",
+            colorscheme = "catppuccin-frappe",
         },
     })
 end

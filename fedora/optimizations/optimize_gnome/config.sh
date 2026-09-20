@@ -111,6 +111,18 @@ dconf write /org/gnome/desktop/peripherals/keyboard/repeat true
 dconf write /org/gnome/desktop/peripherals/keyboard/delay "uint32 250"
 dconf write /org/gnome/desktop/peripherals/keyboard/repeat-interval "uint32 25"
 
+# ==============================================================================
+# Touchpad Settings (Disable While Typing / Accidental Palm Rejection)
+# ==============================================================================
+gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing true
+gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
+gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
+
+# Direct dconf write for persistence and immediate application
+dconf write /org/gnome/desktop/peripherals/touchpad/disable-while-typing true
+dconf write /org/gnome/desktop/peripherals/touchpad/tap-to-click true
+dconf write /org/gnome/desktop/peripherals/touchpad/natural-scroll true
+
 # Default terminal execution preference & launcher
 gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty' 2>/dev/null || true
 

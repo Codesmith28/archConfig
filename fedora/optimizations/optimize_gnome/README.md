@@ -54,6 +54,9 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
   - `Super + V`: Toggle Clipboard Indicator history.
 - **Fonts**:
   - Set interface and document font to `Ubuntu Nerd Font 11`.
+- **Keyboard & Touchpad**:
+  - Repeat rate: 250ms delay, 25ms repeat interval (~40Hz).
+  - Touchpad: Disable While Typing (DWT) enabled, tap-to-click, and natural scrolling.
 - **Ptyxis Tab Switching**:
   - `Ctrl + Tab`: Next tab.
   - `Ctrl + Shift + Tab`: Previous tab.

@@ -15,9 +15,9 @@ gtk-titlebar-style = tabs
 confirm-close-surface=false
 resize-overlay = never
 
-
 # copy to clipboard:
 copy-on-select = clipboard
+clipboard-read = allow
 
 # Cursor styling
 cursor-style = "underline"

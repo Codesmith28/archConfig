@@ -77,6 +77,7 @@ fi
 if [ -f "$HOME/.bash_aliases" ]; then
     . "$HOME/.bash_aliases"
 fi
+
 # bun (if installed)
 export BUN_INSTALL="$HOME/.bun"
 if [ -d "$BUN_INSTALL/bin" ]; then
@@ -89,4 +90,7 @@ if [ -d "/usr/local/cuda" ]; then
     export PATH="$CUDA_HOME/bin:$PATH"
     export LD_LIBRARY_PATH="$CUDA_HOME/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
+
 . "$HOME/.cargo/env"
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
