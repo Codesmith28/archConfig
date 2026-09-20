@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="$SCRIPT_DIR/../optimizations/lib"
+LIB_DIR="$SCRIPT_DIR/../lib"
 
 if [[ -f "$LIB_DIR/common.sh" ]]; then
     source "$LIB_DIR/common.sh"
@@ -26,7 +26,7 @@ else
     }
 fi
 
-RESOLUTION="${1:-1920x1200,auto}"
+RESOLUTION="${1:-auto}"
 GRUB_FILE="/etc/default/grub"
 
 if [[ ! -f "$GRUB_FILE" ]]; then

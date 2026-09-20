@@ -80,6 +80,17 @@ gsettings set org.gnome.Ptyxis use-system-font true
 dconf write /org/gnome/Ptyxis/Shortcuts/move-next-tab "'<Control>Tab'"
 dconf write /org/gnome/Ptyxis/Shortcuts/move-previous-tab "'<Control><Shift>Tab'"
 
+# Prevent waking discrete NVIDIA GPU from D3cold suspend on terminal launch (drops startup from ~2.4s to ~0.3s)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/dbus-1/services"
+
+if [[ -d "$SCRIPT_DIR/ptyxis" ]]; then
+    install -m 755 "$SCRIPT_DIR/ptyxis/ptyxis" "$HOME/.local/bin/ptyxis"
+    sed "s|@HOME@|$HOME|g" "$SCRIPT_DIR/ptyxis/org.gnome.Ptyxis.service" > "$HOME/.local/share/dbus-1/services/org.gnome.Ptyxis.service"
+    install -m 644 "$SCRIPT_DIR/ptyxis/org.gnome.Ptyxis.desktop" "$HOME/.local/share/applications/org.gnome.Ptyxis.desktop"
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+fi
+
 # Clipboard Indicator (clipboard-indicator@tudmotu.com)
 # Free Super+V from GNOME's default notification tray (remapped to Super+N above)
 # and bind Super+V to toggle the clipboard history menu

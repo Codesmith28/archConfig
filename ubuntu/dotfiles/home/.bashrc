@@ -2,12 +2,15 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Unset terminal launcher GPU overrides so all CLI commands retain full GPU access
+unset VK_LOADER_DRIVERS_DISABLE
+
 # ------------------------------------------------------------------------------
 # 1. Early Return for Non-Interactive Shells
 # ------------------------------------------------------------------------------
 case $- in
-    *i*) ;;
-      *) return ;;
+*i*) ;;
+*) return ;;
 esac
 
 BASHRC_SOURCED=1
@@ -42,7 +45,7 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 case "$TERM" in
-    xterm-color | *-256color) color_prompt=yes ;;
+xterm-color | *-256color) color_prompt=yes ;;
 esac
 
 if [ "$color_prompt" = yes ]; then
@@ -53,11 +56,11 @@ fi
 unset color_prompt force_color_prompt
 
 case "$TERM" in
-    xterm* | rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-        ;;
-    *)
-        ;;
+xterm* | rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
 esac
 
 # ------------------------------------------------------------------------------
@@ -74,9 +77,15 @@ fi
 if [ -f "$HOME/.bash_aliases" ]; then
     . "$HOME/.bash_aliases"
 fi
-export PATH=/usr/local/cuda/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-
-# bun
+# bun (if installed)
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+if [ -d "$BUN_INSTALL/bin" ]; then
+    export PATH="$BUN_INSTALL/bin:$PATH"
+fi
+
+# NVIDIA CUDA Toolkit (if installed)
+if [ -d "/usr/local/cuda" ]; then
+    export CUDA_HOME=/usr/local/cuda
+    export PATH="$CUDA_HOME/bin:$PATH"
+    export LD_LIBRARY_PATH="$CUDA_HOME/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi

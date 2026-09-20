@@ -1,0 +1,4 @@
+#!/bin/sh
+# Prevent waking the discrete NVIDIA GPU from D3cold on terminal launch
+export VK_LOADER_DRIVERS_DISABLE="*nvidia*"
+exec /usr/bin/ptyxis "$@"

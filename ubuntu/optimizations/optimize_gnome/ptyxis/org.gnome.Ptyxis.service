@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.gnome.Ptyxis
+Exec=@HOME@/.local/bin/ptyxis --gapplication-service

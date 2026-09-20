@@ -112,11 +112,12 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 ### Ubuntu
 
-Ubuntu has a dedicated installer. After it completes, follow the printed “Next steps”.
+Ubuntu has a dedicated master setup script (`setup.sh`). It automatically detects architecture (x86_64 vs aarch64), bootstraps missing packages, installs modern Neovim and CLI tools, links dotfiles, and safely gates GNOME/hardware optimizations:
 
 ```bash
 cd ubuntu
-./install.sh
+chmod +x setup.sh
+./setup.sh
 ```
 
 ### Arch (shell installer)

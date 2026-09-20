@@ -4,6 +4,9 @@
 PROFILE_SOURCED=1
 _SOURCING_PROFILE=1
 
+# Unset terminal launcher GPU overrides so CLI commands retain full GPU access
+unset VK_LOADER_DRIVERS_DISABLE
+
 # ------------------------------------------------------------------------------
 # 1. Shell Environment & Default Programs
 # ------------------------------------------------------------------------------
@@ -16,8 +19,8 @@ export VISUAL='nvim'
 _path_prepend() {
     if [ -d "$1" ]; then
         case ":$PATH:" in
-            *":$1:"*) ;;
-            *) PATH="$1:$PATH" ;;
+        *":$1:"*) ;;
+        *) PATH="$1:$PATH" ;;
         esac
     fi
 }
@@ -25,8 +28,8 @@ _path_prepend() {
 _ldpath_prepend() {
     if [ -d "$1" ]; then
         case ":$LD_LIBRARY_PATH:" in
-            *":$1:"*) ;;
-            *) LD_LIBRARY_PATH="$1${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ;;
+        *":$1:"*) ;;
+        *) LD_LIBRARY_PATH="$1${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ;;
         esac
     fi
 }
@@ -35,21 +38,6 @@ _ldpath_prepend() {
 _path_prepend "$HOME/bin"
 _path_prepend "$HOME/.local/bin"
 _path_prepend "/opt/nvim-linux-x86_64/bin"
-
-# NVIDIA CUDA Toolkit
-_path_prepend "/usr/local/cuda-12.6/bin"
-_ldpath_prepend "/usr/local/cuda-12.6/lib64"
-case ":$PATH:" in
-    *":/usr/local/cuda-12.6/bin:"*) ;;
-    *) export PATH="/usr/local/cuda-12.6/bin${PATH:+:${PATH}}" ;;
-esac
-case ":$LD_LIBRARY_PATH:" in
-    *":/usr/local/cuda-12.6/lib64:"*) ;;
-    *) export LD_LIBRARY_PATH="/usr/local/cuda-12.6/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" ;;
-esac
-
-export PATH
-export LD_LIBRARY_PATH
 
 unset -f _path_prepend _ldpath_prepend
 
