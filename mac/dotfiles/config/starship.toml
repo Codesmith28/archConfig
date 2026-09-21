@@ -1,6 +1,6 @@
 add_newline = true
 command_timeout = 200
-format = "[$directory$git_branch$git_status$cmd_duration]($style)$character"
+format = "[$hostname$directory$git_branch$git_status$cmd_duration]($style)$character"
 
 [character]
 error_symbol = "[\n✗](bold red)"
@@ -36,3 +36,8 @@ stashed    = ""
 staged     = ""
 renamed    = ""
 deleted    = ""
+
+[hostname]
+ssh_only = false
+format = "[$hostname]($style) | "
+style = "cyan"
