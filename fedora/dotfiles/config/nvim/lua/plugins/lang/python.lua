@@ -83,6 +83,55 @@ return {
                 },
             }, opts.servers.pyrefly or {})
 
+            -- Configure Ruff as the linter to report unused vars, args, imports as errors
+            local function upgrade_unused_to_error(items)
+                if not items then
+                    return
+                end
+                for _, item in ipairs(items) do
+                    local code = tostring(item.code or "")
+                    if
+                        code == "F841" -- Local variable is assigned to but never used
+                        or code == "F401" -- Module imported but unused
+                        or code == "B007" -- Loop control variable not used within loop body
+                        or code:match("^ARG") -- Unused function/method/lambda arguments (ARG001-ARG005)
+                    then
+                        item.severity = vim.diagnostic.severity.ERROR
+                    end
+                end
+            end
+
+            opts.servers.ruff = vim.tbl_deep_extend("force", {
+                enabled = true,
+                cmd_env = { RUFF_TRACE = "messages" },
+                init_options = {
+                    settings = {
+                        logLevel = "error",
+                        lint = {
+                            extendSelect = {
+                                "F", -- Pyflakes (F841: unused variables, F401: unused imports)
+                                "ARG", -- flake8-unused-arguments (ARG001-ARG005: unused args)
+                                "B007", -- flake8-bugbear (B007: unused loop variables)
+                            },
+                        },
+                    },
+                },
+                handlers = {
+                    ["textDocument/diagnostic"] = function(err, result, ctx, config)
+                        if result and result.items then
+                            upgrade_unused_to_error(result.items)
+                        end
+                        return vim.lsp.diagnostic.on_diagnostic(err, result, ctx, config)
+                    end,
+                    ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+                        if result and result.diagnostics then
+                            upgrade_unused_to_error(result.diagnostics)
+                        end
+                        return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+                    end,
+                },
+            }, opts.servers.ruff or {})
+
             -- Explicitly disable other Python LSP servers to ensure Pyrefly is the default
             opts.servers.pyright = vim.tbl_deep_extend("force", opts.servers.pyright or {}, {
                 enabled = false,

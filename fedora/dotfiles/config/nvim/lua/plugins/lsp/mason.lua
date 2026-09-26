@@ -22,6 +22,7 @@ return {
 
                 -- Python
                 "pyrefly",
+                "ruff",
                 "black",
                 "isort",
                 "flake8",
