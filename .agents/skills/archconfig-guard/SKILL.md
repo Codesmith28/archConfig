@@ -28,7 +28,7 @@ This skill ensures that changes made to core tools remain 100% functional across
 - `core/home/.profile`: Universal POSIX login environment (PATH, default editor, JAVA_HOME).
 - `core/home/.bash_profile`: Universal login loader that sources `.profile` and `.bashrc`.
 - `core/home/.bashrc`: Modular loader reading `core/home/.bashrc.d/*.bash`.
-- Dynamic GCC/G++ Discovery (`04-compilers.bash`): Always dynamically search for the latest versioned compiler (`gcc-17` down to `gcc-10` and `g++-17` down to `g++-10`) rather than hardcoding compiler version numbers.
+- Dynamic GCC/G++ Discovery (`04-compilers.bash`): Always dynamically search for the latest versioned compiler across system binary paths (e.g. `gcc-[0-9]*` and `g++-[0-9]*`) and evaluate unversioned fallbacks rather than hardcoding compiler version lists.
 
 ### 3. Desktop Environment (DE) Modularity
 - GNOME extensions, dconf scripts, and GTK titlebars live in `desktop/gnome/`.

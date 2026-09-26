@@ -75,7 +75,7 @@ archConfig/
 ### A. Dynamic Compiler Resolution (macOS + Linux)
 - **Problem**: macOS Homebrew installs GCC as `gcc-14`, `gcc-15`, or `gcc-16` without an unversioned `gcc`/`g++` symlink in `$PATH`. Meanwhile, Linux distributions provide unversioned `gcc` and `g++`. Hardcoding versions breaks on newer OS upgrades or across platforms.
 - **Solution**:
-  - `core/home/.bashrc.d/04-compilers.bash` scans candidate versions (`gcc-17` down to `gcc-10`, then `gcc`) and sets `$CC` and `$CXX` automatically, aliasing `gcc` and `g++` on macOS if unversioned aliases are missing.
+  - `core/home/.bashrc.d/04-compilers.bash` dynamically inspects compiler directories (`PATH`, `/opt/homebrew/bin`, `/usr/bin`, etc.) for installed versions (`gcc-[0-9]*`, `g++-[0-9]*`) and unversioned binaries, selecting the newest version and exporting `$CC`/`$CXX` (aliasing `gcc` and `g++` on macOS or systems where default commands point to older compilers).
   - `run_cpp` helper compiles with `-std=c++26 -O2 -Wall` using the dynamically resolved `$CXX`.
   - `core/config/nvim/lua/plugins/lang/clangd.lua` dynamically detects all installed GCC include paths to pass to `clangd --query-driver`.
   - `core/config/nvim/lua/plugins/tools/assistant.lua` dynamically resolves `g++-15` -> `g++-14` -> `g++` for the competitive programming test runner.

@@ -76,7 +76,7 @@ You can explicitly override detection when setting up a specific environment:
 
 ### Dynamic Compiler Discovery (C++26)
 No more hardcoded compiler names or version mismatches between Homebrew and Linux package managers:
-- Dynamically discovers the newest installed GCC/G++ (`gcc-17` down to unversioned `gcc`/`g++`).
+- Dynamically discovers the newest installed GCC/G++ by scanning candidate system directories without hardcoded version ranges.
 - Automatically exports `$CC`, `$CXX`, and provides modern C++ runner helper:
   ```bash
   run_cpp solution.cpp    # Compiles with -std=c++26 -O2 -Wall using newest available g++
