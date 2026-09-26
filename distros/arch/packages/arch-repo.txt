@@ -72,7 +72,6 @@ starship
 telegram-desktop
 television
 texlive-meta
-tmux
 tree
 unzip
 vim

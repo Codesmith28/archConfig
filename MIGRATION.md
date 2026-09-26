@@ -25,8 +25,8 @@ archConfig/
 │   │   ├── ghostty/                     # Universal Ghostty configuration
 │   │   ├── kitty/                       # Kitty terminal config & themes
 │   │   ├── nvim/                        # Unified LazyVim + Pyrefly + Java + Clangd
+│   │   ├── herdr/                       # Herdr workspace & session manager config
 │   │   ├── starship.toml                # Universal Starship prompt config
-│   │   ├── tmux/                        # Tmux config
 │   │   └── yazi/                        # Yazi file manager & plugins
 │   └── home/                            # Targets ~/
 │       ├── .bashrc                      # Interactive Bash loader
@@ -35,7 +35,6 @@ archConfig/
 │       ├── .profile                     # Canonical POSIX environment & PATH deduplicator
 │       ├── .zshrc                       # Universal Zsh configuration
 │       ├── .inputrc                     # Readline completion settings
-│       ├── .tmux.conf                   # Tmux home config
 │       └── .vimrc                       # Classic fallback Vim configuration
 │
 ├── desktop/                             # 🖥️ Desktop Environment layers

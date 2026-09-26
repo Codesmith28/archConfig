@@ -1,0 +1,4 @@
+*.log
+*.sock
+session.json
+.plugins.lock

@@ -3,7 +3,7 @@
 [![Linux](https://img.shields.io/badge/Platform-Fedora%20|%20Arch%20|%20Ubuntu%20|%20macOS-blue?logo=linux&logoColor=white)](file:///home/codesmith28/archConfig)
 [![Desktop](https://img.shields.io/badge/Desktop-GNOME%20|%20KDE%20|%20Hyprland-purple)](file:///home/codesmith28/archConfig/desktop)
 [![Editor](https://img.shields.io/badge/Editor-Neovim%20(LazyVim)-green?logo=neovim&logoColor=white)](file:///home/codesmith28/archConfig/core/config/nvim)
-[![Terminal](https://img.shields.io/badge/Terminals-Ghostty%20|%20Kitty%20|%20Tmux-black)](file:///home/codesmith28/archConfig/core/config)
+[![Terminal](https://img.shields.io/badge/Terminals-Ghostty%20|%20Kitty%20|%20Herdr-black)](file:///home/codesmith28/archConfig/core/config)
 
 A unified, modular, cross-distribution dotfiles and bootstrap system. Designed to deliver an identical, high-performance developer workflow across **Fedora**, **Arch Linux**, **Ubuntu**, **macOS**, and **OmArchy** without configuration fragmentation.
 
@@ -16,10 +16,10 @@ The repository separates universal developer tooling from desktop environments, 
 ```mermaid
 graph TD
     Sync["🚀 sync.sh (Auto-Detector & Linker)"]
-    Core["🌐 core/<br/>(Universal Shell, Neovim, Ghostty, Kitty, Starship, Yazi)"]
+    Core["🌐 core/<br/>(Universal Shell, Neovim, Ghostty, Kitty, Herdr, Starship, Yazi)"]
     Desktop["🖥️ desktop/<br/>(GNOME, KDE Plasma, Hyprland Lua/Classic)"]
     Distros["📦 distros/<br/>(Fedora, Arch, Ubuntu, macOS, OmArchy)"]
-    Troubleshoot["🩺 troubleshoot/<br/>(GRUB, Dual-Boot, GPU Modes, Toolchain fixes)"]
+    Troubleshoot["🩺 troubleshoot/<br/>(GRUB, Dual-Boot, Toolchain fixes)"]
     
     Sync --> Core
     Sync --> Desktop
@@ -29,8 +29,8 @@ graph TD
 
 | Layer | Directory | Purpose |
 | :--- | :--- | :--- |
-| **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `kitty`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`, `tmux`). |
-| **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`, `.tmux.conf`). |
+| **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `kitty`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`, `herdr`). |
+| **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`). |
 | **Desktop Layer** | [`desktop/`](file:///home/codesmith28/archConfig/desktop) | Modular DE configs: GNOME extensions/dconf, KDE Plasma shortcuts, and Hyprland (Lua & classic). |
 | **Distro Layer** | [`distros/`](file:///home/codesmith28/archConfig/distros) | Package installation scripts, systemd unit files, and hardware optimizations per distribution. |
 | **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and compiler quirks. |

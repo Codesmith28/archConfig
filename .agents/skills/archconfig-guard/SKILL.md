@@ -17,7 +17,7 @@ This skill ensures that changes made to core tools remain 100% functional across
 ## Architecture Rules
 
 ### 1. The Core Principle: Edit Once, Active Everywhere
-- All cross-platform applications (**Neovim**, **Ghostty**, **Kitty**, **Tmux**, **Starship**, **Yazi**, **Fastfetch**, **Fontconfig**) live in `core/config/`.
+- All cross-platform applications (**Neovim**, **Ghostty**, **Kitty**, **Herdr**, **Starship**, **Yazi**, **Fastfetch**, **Fontconfig**) live in `core/config/`.
 - **NEVER** create a separate copy or fork of an application config for an individual distro unless it is an isolated DE shortcut or OS-level package script.
 - If an application requires different behavior on macOS vs Linux, handle it **dynamically within the configuration**:
   - In Lua/Neovim: `local is_mac = vim.fn.has("macunix") == 1`

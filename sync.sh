@@ -152,6 +152,14 @@ mkdir -p "$HOME/.config"
 for item in "$REPO_DIR/core/config"/*; do
     [ -e "$item" ] || continue
     name="$(basename "$item")"
+    if [ "$name" = "herdr" ]; then
+        # For herdr, manage config.toml inside ~/.config/herdr so runtime sockets/logs remain local
+        mkdir -p "$HOME/.config/herdr"
+        if [ -f "$item/config.toml" ]; then
+            link_item "$item/config.toml" "$HOME/.config/herdr/config.toml"
+        fi
+        continue
+    fi
     link_item "$item" "$HOME/.config/$name"
 done
 

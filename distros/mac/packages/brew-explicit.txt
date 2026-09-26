@@ -19,6 +19,5 @@ rust
 rust-analyzer
 starship
 television
-tmux
 yazi
 zoxide
