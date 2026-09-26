@@ -66,7 +66,7 @@ return {
                     compile = {
                         main = get_gpp_compiler(),
                         args = {
-                            "-std=c++2b",
+                            "-std=c++26",
                             "-Wall",
                             "-Wextra",
                             "-D_GLIBCXX_DEBUG",

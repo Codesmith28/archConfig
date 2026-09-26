@@ -35,7 +35,7 @@ function vsc() {
 }
 
 # ------------------------------------------------------------------------------
-# C++ Runner: Compile & Run with auto-detected modern compiler (-std=c++23)
+# C++ Runner: Compile & Run with auto-detected modern compiler (-std=c++26)
 # ------------------------------------------------------------------------------
 function run_cpp() {
     if [ -z "$1" ]; then
@@ -46,8 +46,19 @@ function run_cpp() {
     shift
     local compiler="${CXX:-g++}"
     local output="${src%.*}"
-    echo "==> Compiling $src with $compiler (-std=c++23)..."
-    if "$compiler" -std=c++23 -O2 -Wall "$src" -o "$output"; then
+    local std_flag="-std=c++26"
+
+    # Verify if compiler supports -std=c++26, falling back to -std=c++2c or -std=c++23 if needed
+    if ! "$compiler" "$std_flag" -E - < /dev/null >/dev/null 2>&1; then
+        if "$compiler" -std=c++2c -E - < /dev/null >/dev/null 2>&1; then
+            std_flag="-std=c++2c"
+        else
+            std_flag="-std=c++23"
+        fi
+    fi
+
+    echo "==> Compiling $src with $compiler ($std_flag)..."
+    if "$compiler" "$std_flag" -O2 -Wall "$src" -o "$output"; then
         "./$output" "$@"
     fi
 }
