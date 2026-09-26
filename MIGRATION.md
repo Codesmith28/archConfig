@@ -9,7 +9,7 @@ In September 2026, the repository underwent a major structural refactor:
 2. **Layered Architecture**: Decoupled core applications, desktop environments, distro packages, and troubleshooting runbooks.
 3. **Universal Sync Engine (`sync.sh`)**: Added single-command auto-detecting dotfile synchronization.
 4. **Dynamic Toolchain Resolution**: Eliminated hardcoded compiler versions (e.g. `g++-14`) in favor of dynamic fallback detection across macOS Homebrew and Linux distros.
-5. **Zero-Breakage Backward Compatibility**: Created forwarding symlinks in legacy distro paths (`fedora/dotfiles/... -> core/...`) ensuring existing symlinks, live shells, and older scripts remain 100% operational.
+5. **Clean Root Directory & Legacy Purge**: Completely removed the redundant legacy directories (`arch_kde/`, `fedora/`, `mac/`, `omArchy/`, `ubuntu/`, `ubuntu_neon/`, `ubuntu_server/`) after migrating all package scripts to `distros/`, DE configs to `desktop/`, and dotfiles to `core/`.
 6. **Agentic Guard Skill**: Added `.agents/skills/archconfig-guard` so AI assistants strictly adhere to cross-platform compatibility rules and keep `troubleshoot/` updated.
 
 ---

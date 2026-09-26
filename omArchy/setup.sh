@@ -1,1 +1,0 @@
-../distros/omarchy/setup.sh
