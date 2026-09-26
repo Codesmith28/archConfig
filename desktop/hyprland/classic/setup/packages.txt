@@ -19,7 +19,7 @@ brightnessctl
 playerctl
 pavucontrol
 blueman
-kitty
+ghostty
 dolphin
 xdg-desktop-portal-hyprland
 polkit-kde-agent

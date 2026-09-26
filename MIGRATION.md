@@ -23,7 +23,6 @@ archConfig/
 │   │   ├── fastfetch/                   # ROG fastfetch banner & spec config
 │   │   ├── fontconfig/                  # MesloLGS, JetBrains Mono font settings
 │   │   ├── ghostty/                     # Universal Ghostty configuration
-│   │   ├── kitty/                       # Kitty terminal config & themes
 │   │   ├── nvim/                        # Unified LazyVim + Pyrefly + Java + Clangd
 │   │   ├── herdr/                       # Herdr workspace & session manager config
 │   │   ├── starship.toml                # Universal Starship prompt config

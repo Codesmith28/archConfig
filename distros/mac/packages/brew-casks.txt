@@ -1,7 +1,7 @@
 font-fira-code-nerd-font
 font-jetbrains-mono-nerd-font
 intellij-idea
-kitty
+ghostty
 onedrive
 postman
 telegram

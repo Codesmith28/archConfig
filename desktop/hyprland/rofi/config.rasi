@@ -11,7 +11,7 @@ configuration {
     display-run: "Run";
     display-window: "Windows";
     display-emoji: "Emoji";
-    terminal: "kitty";
+    terminal: "ghostty";
     font: "JetBrainsMono Nerd Font 12";
 }
 

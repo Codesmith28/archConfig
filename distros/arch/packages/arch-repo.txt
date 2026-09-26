@@ -29,7 +29,6 @@ htop
 intel-ucode
 iwd
 kate
-kitty
 konsole
 lazygit
 lib32-nvidia-utils

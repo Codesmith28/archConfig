@@ -8,6 +8,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DRY_RUN=false
 TARGET_DISTRO=""
 TARGET_DE=""
+CUSTOM_BACKUP_DIR=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -24,6 +25,10 @@ while [[ $# -gt 0 ]]; do
             TARGET_DE="$2"
             shift 2
             ;;
+        --backup-dir)
+            CUSTOM_BACKUP_DIR="$2"
+            shift 2
+            ;;
         -h|--help)
             echo "Usage: ./sync.sh [OPTIONS]"
             echo ""
@@ -31,6 +36,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --dry-run            Show what symlinks would be created without making changes"
             echo "  --distro <name>      Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
             echo "  --de <name>          Override desktop environment (gnome, kde, hyprland, none)"
+            echo "  --backup-dir <path>  Custom directory for backing up existing host configs"
             echo "  -h, --help           Show this help message"
             exit 0
             ;;
@@ -96,18 +102,42 @@ detect_de() {
 DETECTED_OS="$(detect_os)"
 DETECTED_DE="$(detect_de)"
 
+BACKUP_ROOT="${CUSTOM_BACKUP_DIR:-${ARCHCONFIG_BACKUP_DIR:-$HOME/.config/archconfig-backups}}"
+TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
+BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
+HAS_BACKUPS=false
+
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  🚀 archConfig Cross-Distro Synchronizer"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  • Operating System   : $DETECTED_OS"
 echo "  • Desktop Environment: $DETECTED_DE"
 echo "  • Repository Root    : $REPO_DIR"
+echo "  • Backup Directory   : $BACKUP_DIR"
 [ "$DRY_RUN" = true ] && echo "  • Mode               : DRY RUN (no modifications)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # ------------------------------------------------------------------------------
-# 2. Safe Symlink Helper
+# 2. Safe Backup & Symlink Helpers
 # ------------------------------------------------------------------------------
+backup_target() {
+    local target="$1"
+    local rel_path
+    if [[ "$target" == "$HOME/"* ]]; then
+        rel_path="${target#$HOME/}"
+    else
+        rel_path="$(basename "$target")"
+    fi
+    local dest_backup="$BACKUP_DIR/$rel_path"
+
+    echo "  📦 Backing up: $target -> $dest_backup"
+    if [ "$DRY_RUN" = false ]; then
+        mkdir -p "$(dirname "$dest_backup")"
+        mv "$target" "$dest_backup"
+        HAS_BACKUPS=true
+    fi
+}
+
 link_item() {
     local src="$1"
     local dest="$2"
@@ -119,20 +149,9 @@ link_item() {
             echo "  ✓ Already linked: $dest"
             return 0
         fi
-        echo "  ↻ Updating symlink: $dest -> $src"
-        if [ "$DRY_RUN" = false ]; then
-            rm -f "$dest"
-            ln -snf "$src" "$dest"
-        fi
-        return 0
-    fi
-
-    if [ -e "$dest" ]; then
-        echo "  ⚠ Backing up existing $dest -> ${dest}.bak"
-        if [ "$DRY_RUN" = false ]; then
-            rm -rf "${dest}.bak"
-            mv "$dest" "${dest}.bak"
-        fi
+        backup_target "$dest"
+    elif [ -e "$dest" ]; then
+        backup_target "$dest"
     fi
 
     if [ "$DRY_RUN" = false ]; then
@@ -178,7 +197,20 @@ for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
 done
 
 # ------------------------------------------------------------------------------
-# 5. Apply Desktop Environment Layer (if applicable)
+# 5. Yazi Plugin Provisioning
+# ------------------------------------------------------------------------------
+if command -v ya >/dev/null 2>&1; then
+    echo ""
+    echo "==> Ensuring Yazi packages are installed (git, full-border, etc.)..."
+    if [ "$DRY_RUN" = false ]; then
+        (cd "$REPO_DIR/core/config/yazi" && ya pkg install --discard 2>/dev/null || true)
+    else
+        echo "  (dry-run) Would execute 'ya pkg install --discard' in core/config/yazi"
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 6. Apply Desktop Environment Layer (if applicable)
 # ------------------------------------------------------------------------------
 if [ "$DETECTED_DE" = "gnome" ]; then
     echo ""
@@ -209,4 +241,9 @@ fi
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  ✅ All configurations synchronized successfully!"
+if [ "$HAS_BACKUPS" = true ]; then
+    echo ""
+    echo "  📦 Previous host configurations safely backed up to:"
+    echo "     $BACKUP_DIR"
+fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
