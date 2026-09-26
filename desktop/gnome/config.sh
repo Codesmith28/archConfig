@@ -94,8 +94,9 @@ fi
 # ==============================================================================
 # Font Settings
 # ==============================================================================
-gsettings set org.gnome.desktop.interface font-name 'Ubuntu Nerd Font 11'
-gsettings set org.gnome.desktop.interface document-font-name 'Ubuntu Nerd Font 11'
+gsettings set org.gnome.desktop.interface font-name 'Adwaita Sans 11'
+gsettings set org.gnome.desktop.interface document-font-name 'Adwaita Sans 11'
+gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10'
 
 # ==============================================================================
 # Ptyxis Optimizations

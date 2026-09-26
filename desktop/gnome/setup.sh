@@ -133,10 +133,11 @@ if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.tili
 fi
 
 # ==============================================================================
-# Font Settings
+# Font Settings: Adwaita Sans for UI, JetBrainsMono for monospace
 # ==============================================================================
-gsettings set org.gnome.desktop.interface font-name 'Ubuntu Nerd Font 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface document-font-name 'Ubuntu Nerd Font 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface font-name 'Adwaita Sans 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface document-font-name 'Adwaita Sans 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
 
 # ==============================================================================
 # Keyboard Keyrate & Repeat (250ms delay, 25ms repeat-interval ~40Hz)
