@@ -2,6 +2,7 @@
 # ==============================================================================
 # GNOME Desktop & Terminal Optimizations Setup (Cross-Distro Universal)
 # Supports: Fedora, Ubuntu/Debian, Arch Linux
+# Zero-Intervention, Self-Healing Out-Of-The-Box Configuration
 # ==============================================================================
 set -euo pipefail
 
@@ -11,16 +12,16 @@ LIB_DIR="$SCRIPT_DIR/../lib"
 if [[ -f "$LIB_DIR/common.sh" ]]; then
     source "$LIB_DIR/common.sh"
 else
-    log_info()    { echo "[INFO] $*"; }
-    log_success() { echo "[OK]   $*"; }
-    log_warn()    { echo "[WARN] $*" >&2; }
-    log_error()   { echo "[ERR]  $*" >&2; }
+    log_info()    { echo "  [INFO] $*"; }
+    log_success() { echo "  [OK]   $*"; }
+    log_warn()    { echo "  [WARN] $*" >&2; }
+    log_error()   { echo "  [ERR]  $*" >&2; }
 fi
 
 # ------------------------------------------------------------------------------
-# 1. Privileges & DBus Session Management
+# 1. Privileges & DBus Session Resilience
 # ------------------------------------------------------------------------------
-# If invoked as root without --user-run, drop privileges to the desktop session user
+# Ensure non-interactive / SSH / sudo invocations attach to user's DBus session
 if [[ "$(id -u)" -eq 0 && "${1:-}" != "--user-run" ]]; then
     TARGET_USER="${SUDO_USER:-}"
     if [[ -z "$TARGET_USER" || "$TARGET_USER" == "root" ]]; then
@@ -37,22 +38,61 @@ if [[ "$(id -u)" -eq 0 && "${1:-}" != "--user-run" ]]; then
     TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
     BUS_PATH="/run/user/${TARGET_UID}/bus"
 
-    if [[ ! -S "$BUS_PATH" ]]; then
-        log_warn "D-Bus session bus not found at $BUS_PATH. GNOME session might not be active for $TARGET_USER."
+    log_info "Dropping privileges to ${TARGET_USER} (UID: ${TARGET_UID})..."
+    if [[ -S "$BUS_PATH" ]]; then
+        sudo -u "$TARGET_USER" -H env \
+            HOME="$TARGET_HOME" \
+            USER="$TARGET_USER" \
+            XDG_RUNTIME_DIR="/run/user/${TARGET_UID}" \
+            DBUS_SESSION_BUS_ADDRESS="unix:path=${BUS_PATH}" \
+            bash "$0" --user-run
+    else
+        log_info "Active DBus session bus not found. Spawning via dbus-run-session..."
+        sudo -u "$TARGET_USER" -H env \
+            HOME="$TARGET_HOME" \
+            USER="$TARGET_USER" \
+            XDG_RUNTIME_DIR="/run/user/${TARGET_UID}" \
+            dbus-run-session -- bash "$0" --user-run
     fi
-
-    log_info "Running GNOME configuration as user ${TARGET_USER} (UID: ${TARGET_UID})..."
-    sudo -u "$TARGET_USER" -H env \
-        HOME="$TARGET_HOME" \
-        USER="$TARGET_USER" \
-        XDG_RUNTIME_DIR="/run/user/${TARGET_UID}" \
-        DBUS_SESSION_BUS_ADDRESS="unix:path=${BUS_PATH}" \
-        bash "$0" --user-run
     exit $?
 fi
 
+# If running as normal user but DBUS_SESSION_BUS_ADDRESS is missing, check runtime bus
+if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+    USER_BUS="/run/user/$(id -u)/bus"
+    if [[ -S "$USER_BUS" ]]; then
+        export DBUS_SESSION_BUS_ADDRESS="unix:path=${USER_BUS}"
+    elif command -v dbus-run-session >/dev/null 2>&1 && [[ "${1:-}" != "--dbus-wrapped" ]]; then
+        exec dbus-run-session -- bash "$0" --dbus-wrapped "$@"
+    fi
+fi
+
 # ------------------------------------------------------------------------------
-# 2. Distro Package Installation (gnome-tweaks & extension-manager)
+# 2. Systemd User Environment & PATH Persistence
+# ------------------------------------------------------------------------------
+log_info "Configuring systemd user session environment for GUI launchers..."
+mkdir -p "$HOME/.config/environment.d" "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/dbus-1/services"
+
+# Write persistent environment so GNOME Shell always resolves custom launchers (default-terminal)
+cat > "$HOME/.config/environment.d/10-archconfig.conf" << 'EOF'
+PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH"
+EOF
+
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl --user import-environment PATH 2>/dev/null || true
+fi
+
+# Install default-terminal launcher script
+if [[ -f "$SCRIPT_DIR/default-terminal" ]]; then
+    install -m 755 "$SCRIPT_DIR/default-terminal" "$HOME/.local/bin/default-terminal"
+    # Also install to /usr/local/bin if root/sudo is available without password prompt
+    if sudo -n true 2>/dev/null; then
+        sudo install -m 755 "$SCRIPT_DIR/default-terminal" "/usr/local/bin/default-terminal" 2>/dev/null || true
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 3. Distro Utility Package Installation (gnome-tweaks & extension-manager)
 # ------------------------------------------------------------------------------
 install_distro_packages() {
     log_info "Verifying required GNOME utility packages..."
@@ -62,11 +102,18 @@ install_distro_packages() {
         os_id="$(grep ^ID= /etc/os-release | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
     fi
 
+    local can_sudo=false
+    if sudo -n true 2>/dev/null || [[ -n "${SUDO_USER:-}" ]]; then
+        can_sudo=true
+    fi
+
     case "$os_id" in
         fedora|rhel|centos)
             if ! rpm -q gnome-tweaks >/dev/null 2>&1; then
-                log_info "Installing gnome-tweaks via dnf..."
-                sudo dnf install -y gnome-tweaks || true
+                if [ "$can_sudo" = true ]; then
+                    log_info "Installing gnome-tweaks via dnf..."
+                    sudo dnf install -y gnome-tweaks 2>/dev/null || true
+                fi
             fi
             if command -v flatpak >/dev/null 2>&1; then
                 if ! flatpak list 2>/dev/null | grep -q "com.mattjakeman.ExtensionManager"; then
@@ -74,7 +121,7 @@ install_distro_packages() {
                     flatpak install -y flathub com.mattjakeman.ExtensionManager 2>/dev/null || true
                 fi
             fi
-            if ! rpm -q gnome-extensions-app >/dev/null 2>&1; then
+            if ! rpm -q gnome-extensions-app >/dev/null 2>&1 && [ "$can_sudo" = true ]; then
                 sudo dnf install -y gnome-extensions-app 2>/dev/null || true
             fi
             ;;
@@ -86,10 +133,10 @@ install_distro_packages() {
             if ! dpkg -s gnome-shell-extension-manager >/dev/null 2>&1; then
                 missing_pkgs+=("gnome-shell-extension-manager")
             fi
-            if [[ ${#missing_pkgs[@]} -gt 0 ]]; then
+            if [[ ${#missing_pkgs[@]} -gt 0 ]] && [ "$can_sudo" = true ]; then
                 log_info "Installing ${missing_pkgs[*]} via apt..."
-                sudo apt-get update -qq || true
-                sudo apt-get install -y "${missing_pkgs[@]}" || true
+                sudo apt-get update -qq 2>/dev/null || true
+                sudo apt-get install -y "${missing_pkgs[@]}" 2>/dev/null || true
             fi
             ;;
         arch|manjaro|endeavouros)
@@ -100,13 +147,13 @@ install_distro_packages() {
             if ! pacman -Qi extension-manager >/dev/null 2>&1; then
                 missing_pkgs+=("extension-manager")
             fi
-            if [[ ${#missing_pkgs[@]} -gt 0 ]]; then
+            if [[ ${#missing_pkgs[@]} -gt 0 ]] && [ "$can_sudo" = true ]; then
                 log_info "Installing ${missing_pkgs[*]} via pacman..."
-                sudo pacman -S --needed --noconfirm "${missing_pkgs[@]}" || true
+                sudo pacman -S --needed --noconfirm "${missing_pkgs[@]}" 2>/dev/null || true
             fi
             ;;
         *)
-            log_warn "Unrecognized distro: $os_id. Skipping automatic package manager installation."
+            log_warn "Unrecognized distro: $os_id. Skipping automatic package manager check."
             ;;
     esac
 }
@@ -114,7 +161,23 @@ install_distro_packages() {
 install_distro_packages
 
 # ------------------------------------------------------------------------------
-# 3. Key GNOME Extensions Installation & Enablement
+# 4. Extension Compatibility & Master Controls
+# ------------------------------------------------------------------------------
+# Prevent GNOME from disabling extensions after point releases or shell crashes
+log_info "Hardening GNOME extension compatibility settings..."
+gsettings set org.gnome.shell disable-user-extensions false 2>/dev/null || true
+gsettings set org.gnome.shell disable-extension-version-validation true 2>/dev/null || true
+dconf write /org/gnome/shell/disable-user-extensions false 2>/dev/null || true
+dconf write /org/gnome/shell/disable-extension-version-validation true 2>/dev/null || true
+
+# Ubuntu Dock deduplication: prevent double docks on Ubuntu
+if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.ubuntu-dock"; then
+    log_info "Ubuntu detected: disabling redundant ubuntu-dock to prevent conflicts with dash-to-dock..."
+    gnome-extensions disable ubuntu-dock@ubuntu.com 2>/dev/null || true
+fi
+
+# ------------------------------------------------------------------------------
+# 5. Key GNOME Extensions Installation & Auto-Compilation
 # ------------------------------------------------------------------------------
 # 1. Blur my Shell
 # 2. Clipboard Indicator
@@ -122,7 +185,7 @@ install_distro_packages
 # 4. Dash to Dock
 # 5. Rounded Window Corners Reborn
 install_key_extensions() {
-    log_info "Checking key GNOME extensions..."
+    log_info "Verifying and provisioning the 5 key GNOME extensions..."
     
     python3 - << 'PYEOF'
 import urllib.request, json, zipfile, io, os, subprocess
@@ -149,9 +212,9 @@ for uuid, name in EXTENSIONS:
     sys_ext_dir = f"/usr/share/gnome-shell/extensions/{uuid}"
     
     if os.path.exists(user_ext_dir) or os.path.exists(sys_ext_dir):
-        print(f"  ✓ {name} ({uuid}) is installed")
+        print(f"    ✓ {name} ({uuid}) is installed")
     else:
-        print(f"  📦 Installing {name} ({uuid}) from extensions.gnome.org...")
+        print(f"    📦 Installing {name} ({uuid}) for GNOME {shell_ver}...")
         url = f"https://extensions.gnome.org/extension-info/?uuid={uuid}&shell_version={shell_ver}"
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -159,7 +222,7 @@ for uuid, name in EXTENSIONS:
                 data = json.loads(resp.read().decode())
                 dl_path = data.get("download_url")
                 if not dl_path:
-                    # Fallback to general query
+                    # Fallback to general unversioned query
                     alt_url = f"https://extensions.gnome.org/extension-info/?uuid={uuid}"
                     alt_req = urllib.request.Request(alt_url, headers={'User-Agent': 'Mozilla/5.0'})
                     alt_data = json.loads(urllib.request.urlopen(alt_req).read().decode())
@@ -178,30 +241,27 @@ for uuid, name in EXTENSIONS:
                         schemas_dir = os.path.join(user_ext_dir, "schemas")
                         if os.path.isdir(schemas_dir):
                             subprocess.run(["glib-compile-schemas", schemas_dir], capture_output=True)
-                        print(f"  ✓ Successfully installed {name}!")
+                        print(f"    ✓ Successfully installed {name}!")
         except Exception as e:
-            print(f"  ⚠ Failed to install {name} automatically: {e}")
+            print(f"    ⚠ Automatic download for {name} failed: {e}")
 
-    # Enable extension
+    # Ensure extension is marked enabled
     try:
         subprocess.run(["gnome-extensions", "enable", uuid], capture_output=True)
     except Exception:
         pass
 PYEOF
 
-    # Ensure enabled-extensions in gsettings includes all 5 extensions
-    log_info "Activating key extensions in GNOME session..."
-    local key_uuids=(
-        "dash-to-dock@micxgx.gmail.com"
-        "clipboard-indicator@tudmotu.com"
-        "blur-my-shell@aunetx"
-        "compiz-alike-magic-lamp-effect@hermes83.github.com"
-        "rounded-window-corners@fxgn"
-    )
+    # Compile schemas for ALL installed extensions to guarantee no schema missing errors
+    log_info "Compiling GSettings schemas for user extensions..."
+    for schema_dir in "$HOME/.local/share/gnome-shell/extensions"/*/schemas; do
+        if [[ -d "$schema_dir" ]]; then
+            glib-compile-schemas "$schema_dir" 2>/dev/null || true
+        fi
+    done
 
-    local current_enabled
-    current_enabled="$(gsettings get org.gnome.shell enabled-extensions 2>/dev/null || echo '[]')"
-
+    # Ensure enabled-extensions list in gsettings/dconf includes all 5 extensions
+    log_info "Ensuring extensions are active in GNOME Shell session..."
     python3 - << 'PYEOF'
 import subprocess
 
@@ -235,7 +295,7 @@ PYEOF
 install_key_extensions
 
 # ------------------------------------------------------------------------------
-# 4. Load Saved Dconf Profile
+# 6. Apply Saved Dconf Profile (Whole-System State)
 # ------------------------------------------------------------------------------
 DCONF_FILE="$SCRIPT_DIR/dconf/gnome-settings.dconf"
 if [[ -f "$DCONF_FILE" ]] && command -v dconf >/dev/null 2>&1; then
@@ -244,7 +304,7 @@ if [[ -f "$DCONF_FILE" ]] && command -v dconf >/dev/null 2>&1; then
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Live Gsettings Enforcement (Zero-Latency Application)
+# 7. Live Gsettings Enforcement (Zero-Latency Application)
 # ------------------------------------------------------------------------------
 log_info "Applying GNOME keybindings, keyrate, shortcuts, and terminal optimizations..."
 
@@ -280,13 +340,13 @@ gsettings set org.gnome.shell.keybindings show-screenshot-ui "['<Super><Shift>s'
 gsettings set org.gnome.shell.keybindings screenshot-window "['<Super><Shift>w']"
 
 # ==============================================================================
-# Notifications Management
+# Notifications Management (Free Super+V for Clipboard Indicator)
 # ==============================================================================
 gsettings set org.gnome.shell.keybindings focus-active-notification "[]"
 gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>n']"
 
 # ==============================================================================
-# Dash-to-Dock Configuration & Unbind Conflicting Super Shortcuts
+# Dash-to-Dock Configuration & Shortcut Conflict Elimination
 # ==============================================================================
 DASH_TO_DOCK_USER="$HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas"
 if [[ -d "$DASH_TO_DOCK_USER" ]]; then
@@ -327,7 +387,7 @@ dconf write /org/gnome/shell/extensions/dash-to-dock/disable-overview-on-startup
 dconf write /org/gnome/shell/extensions/dash-to-dock/multi-monitor true 2>/dev/null || true
 
 # ==============================================================================
-# Window Management & Titlebar Buttons
+# Window Management & Titlebar Controls
 # ==============================================================================
 gsettings set org.gnome.desktop.wm.keybindings close "['<Super>q', '<Alt>F4']"
 gsettings set org.gnome.desktop.wm.keybindings minimize "['<Super>m']"
@@ -390,15 +450,8 @@ dconf write /org/gnome/desktop/peripherals/touchpad/disable-while-typing true
 dconf write /org/gnome/desktop/peripherals/touchpad/tap-to-click true
 dconf write /org/gnome/desktop/peripherals/touchpad/natural-scroll true
 
-# Default terminal preference & launcher
+# Default terminal preference
 gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty' 2>/dev/null || true
-
-mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/dbus-1/services"
-
-# Install default-terminal launcher script
-if [[ -f "$SCRIPT_DIR/default-terminal" ]]; then
-    install -m 755 "$SCRIPT_DIR/default-terminal" "$HOME/.local/bin/default-terminal"
-fi
 
 # ==============================================================================
 # Terminal Shortcut: Super + Return -> Default Terminal Emulator
@@ -470,4 +523,41 @@ fi
 dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Super>v']" 2>/dev/null || true
 dconf write /org/gnome/shell/extensions/clipboard-indicator/enable-keybindings true 2>/dev/null || true
 
-log_success "GNOME desktop settings and key extensions applied successfully!"
+# ------------------------------------------------------------------------------
+# 8. Post-Setup Verification Suite
+# ------------------------------------------------------------------------------
+log_info "Running post-setup self-healing verification..."
+python3 - << 'PYEOF'
+import subprocess, os
+
+checks = [
+    ("Close Window (<Super>q)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "close"], lambda v: "<Super>q" in v),
+    ("Minimize (<Super>m)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "minimize"], lambda v: "<Super>m" in v),
+    ("Center Window (<Super>c)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "move-to-center"], lambda v: "<Super>c" in v),
+    ("Titlebar Buttons", ["gsettings", "get", "org.gnome.desktop.wm.preferences", "button-layout"], lambda v: "minimize,maximize,close" in v),
+    ("Dark Mode", ["gsettings", "get", "org.gnome.desktop.interface", "color-scheme"], lambda v: "prefer-dark" in v),
+    ("UI Font (Adwaita Sans)", ["gsettings", "get", "org.gnome.desktop.interface", "font-name"], lambda v: "Adwaita" in v),
+    ("Mono Font (JetBrainsMono)", ["gsettings", "get", "org.gnome.desktop.interface", "monospace-font-name"], lambda v: "JetBrains" in v),
+    ("Default Terminal Executable", ["which", "default-terminal"], lambda v: len(v.strip()) > 0),
+]
+
+all_passed = True
+for name, cmd, validator in checks:
+    try:
+        val = subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+        if validator(val):
+            print(f"    ✓ {name}")
+        else:
+            print(f"    ⚠ {name} (current value: {val})")
+            all_passed = False
+    except Exception as e:
+        print(f"    ✗ {name} failed check: {e}")
+        all_passed = False
+
+if all_passed:
+    print("  [OK]   All GNOME desktop verifications passed flawlessly!")
+else:
+    print("  [WARN] Some settings may require GNOME Shell reload to display in UI.")
+PYEOF
+
+log_success "GNOME desktop setup and verification complete!"

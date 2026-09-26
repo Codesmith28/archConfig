@@ -14,7 +14,7 @@ if [[ -n "$TERM_EXEC" ]] && command -v "$TERM_EXEC" >/dev/null 2>&1; then
 fi
 
 # 2. Fallbacks in priority order
-for t in ghostty ptyxis gnome-terminal kitty alacritty foot wezterm xterm; do
+for t in ghostty ptyxis gnome-terminal alacritty foot wezterm xterm kitty; do
     if command -v "$t" >/dev/null 2>&1; then
         exec "$t" "$@"
     fi
