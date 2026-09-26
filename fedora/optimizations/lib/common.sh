@@ -96,12 +96,12 @@ validate_optimization_dir() {
         return 1
     fi
 
-    # If module provides a standalone install.sh, setup.sh, or config.sh, validate that script
-    if [[ -f "$dir/install.sh" ]]; then
-        validate_script "$dir/install.sh"
-        return $?
-    elif [[ -f "$dir/setup.sh" ]]; then
+    # If module provides a standalone setup.sh or install.sh, validate that script
+    if [[ -f "$dir/setup.sh" ]]; then
         validate_script "$dir/setup.sh"
+        return $?
+    elif [[ -f "$dir/install.sh" ]]; then
+        validate_script "$dir/install.sh"
         return $?
     elif [[ -f "$dir/config.sh" ]]; then
         validate_script "$dir/config.sh"

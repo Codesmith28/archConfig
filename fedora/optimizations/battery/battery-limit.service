@@ -1,5 +1,5 @@
 [Unit]
-Description=Set Battery Charging Limit (85% Health Cap)
+Description=Set Battery Charging Limit & Deep Sleep Management
 After=multi-user.target asusd.service
 Wants=multi-user.target
 

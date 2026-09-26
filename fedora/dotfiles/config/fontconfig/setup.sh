@@ -21,6 +21,7 @@ FONTS_CONF="$SCRIPT_DIR/fonts.conf"
 
 CLI_MONO=""
 CLI_SANS=""
+CLI_SERIF=""
 
 # ------------------------------------------------------------------------------
 # Helpers: Read / update font preferences in fonts.conf
@@ -54,6 +55,9 @@ with open('$FONTS_CONF', 'r') as f:
     content = f.read()
 pattern = rf'(<alias>\s*<family>{re.escape(\"$family\")}</family>\s*<prefer>\s*<family>)[^<]*(</family>)'
 content = re.sub(pattern, rf'\g<1>{new_font}\2', content)
+if '$family' == 'monospace':
+    courier_pattern = r'(<match target=\"pattern\"><test name=\"family\" qual=\"any\"><string>(?:Courier|TeX Gyre Cursor)<\/string><\/test><edit name=\"family\" mode=\"prepend_first\" binding=\"strong\"><string>)[^<]*(<\/string><\/edit><\/match>)'
+    content = re.sub(courier_pattern, rf'\g<1>{new_font}\2', content)
 with open('$FONTS_CONF', 'w') as f:
     f.write(content)
 "
@@ -73,13 +77,18 @@ while [[ $# -gt 0 ]]; do
         CLI_SANS="$2"
         shift 2
         ;;
+    --serif | -r)
+        CLI_SERIF="$2"
+        shift 2
+        ;;
     --help | -h)
         echo "Usage: $0 [OPTIONS]"
         echo ""
         echo "Options:"
-        echo "  -f, --font FONT  Set monospace font in fonts.conf"
-        echo "  -s, --sans FONT  Set sans-serif/serif font in fonts.conf"
-        echo "  -h, --help       Show this help message"
+        echo "  -f, --font FONT   Set monospace font in fonts.conf"
+        echo "  -s, --sans FONT   Set sans-serif font in fonts.conf"
+        echo "  -r, --serif FONT  Set serif font in fonts.conf"
+        echo "  -h, --help        Show this help message"
         exit 0
         ;;
     *)
@@ -98,7 +107,9 @@ if [[ -n "$CLI_SANS" ]]; then
     update_font_pref "sans-serif" "$CLI_SANS"
     update_font_pref "sans" "$CLI_SANS"
     update_font_pref "system-ui" "$CLI_SANS"
-    update_font_pref "serif" "$CLI_SANS"
+fi
+if [[ -n "$CLI_SERIF" ]]; then
+    update_font_pref "serif" "$CLI_SERIF"
 fi
 
 TARGET_MONO="$(get_font_pref 'monospace')"
@@ -194,7 +205,7 @@ for t in "${test_mono_fonts[@]}"; do
 done
 
 echo ""
-echo "    --- Sans-Serif Overrides ---"
+echo "    --- Sans-Serif Resolutions ---"
 declare -a test_sans_fonts=(
     "sans-serif"
     "sans"
@@ -210,7 +221,7 @@ for t in "${test_sans_fonts[@]}"; do
 done
 
 echo ""
-echo "    --- Serif Overrides ---"
+echo "    --- Serif Resolutions ---"
 declare -a test_serif_fonts=(
     "serif"
     "Times New Roman"
@@ -225,7 +236,7 @@ for t in "${test_serif_fonts[@]}"; do
 done
 
 echo ""
-echo "✨ System-wide configuration complete!"
-echo "   All monospace queries resolve to '$TARGET_MONO'."
-echo "   All sans-serif queries resolve to '$TARGET_SANS'."
-echo "   All serif queries resolve to '$TARGET_SERIF'."
+echo "✨ Configuration complete!"
+echo "   Monospace queries (including legacy overrides) resolve to '$TARGET_MONO'."
+echo "   Default sans-serif queries resolve to '$TARGET_SANS'."
+echo "   Default serif queries resolve to '$TARGET_SERIF'."

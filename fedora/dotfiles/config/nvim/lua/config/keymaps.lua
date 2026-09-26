@@ -11,6 +11,9 @@ map("i", "kj", "<Esc>", { noremap = false })
 -- editing
 map("n", "<C-a>", "ggVG", { desc = "Select all" })
 
+-- Save file with Ctrl+S (triggers notification in bottom right across all modes)
+vim.keymap.set({ "n", "x", "s", "i" }, "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
+
 -- Ctrl+C: Copy all to system clipboard, keep cursor position
 map("n", "<C-c>", 'mzggVG"+y`z', opts)
 

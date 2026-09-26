@@ -1,24 +1,67 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# ==============================================================================
+# GNOME Desktop & Terminal Optimizations Setup
+# ==============================================================================
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIB_DIR="$SCRIPT_DIR/../lib"
+
+if [[ -f "$LIB_DIR/common.sh" ]]; then
+    source "$LIB_DIR/common.sh"
+else
+    log_info()    { echo "[INFO] $*"; }
+    log_success() { echo "[OK]   $*"; }
+    log_warn()    { echo "[WARN] $*" >&2; }
+    log_error()   { echo "[ERR]  $*" >&2; }
+fi
+
+# If invoked as root without --user-run, drop privileges to the desktop session user
+if [[ "$(id -u)" -eq 0 && "${1:-}" != "--user-run" ]]; then
+    TARGET_USER="${SUDO_USER:-}"
+    if [[ -z "$TARGET_USER" || "$TARGET_USER" == "root" ]]; then
+        TARGET_USER="$(loginctl list-sessions --no-legend 2>/dev/null | awk '{print $3}' | grep -v 'root' | head -n 1 || true)"
+        if [[ -z "$TARGET_USER" ]]; then
+            TARGET_USER="$(who | awk '$1 != "root" {print $1; exit}' || true)"
+        fi
+        if [[ -z "$TARGET_USER" ]]; then
+            TARGET_USER="codesmith28"
+        fi
+    fi
+
+    TARGET_UID=$(id -u "$TARGET_USER")
+    TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
+    BUS_PATH="/run/user/${TARGET_UID}/bus"
+
+    if [[ ! -S "$BUS_PATH" ]]; then
+        log_warn "D-Bus session bus not found at $BUS_PATH. GNOME session might not be active for $TARGET_USER."
+    fi
+
+    log_info "Running GNOME configuration as user ${TARGET_USER} (UID: ${TARGET_UID})..."
+    sudo -u "$TARGET_USER" -H env \
+        HOME="$TARGET_HOME" \
+        USER="$TARGET_USER" \
+        XDG_RUNTIME_DIR="/run/user/${TARGET_UID}" \
+        DBUS_SESSION_BUS_ADDRESS="unix:path=${BUS_PATH}" \
+        bash "$0" --user-run
+    exit $?
+fi
+
+log_info "Applying GNOME keybindings, keyrate, shortcuts, and terminal optimizations..."
 
 # ==============================================================================
 # Workspace Navigation & Management Shortcuts
 # ==============================================================================
-
-# Workspace navigation shortcuts (Horizontal layout in GNOME 40+ as well as vertical compatibility)
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Super>Page_Up']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Super>Page_Down']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "['<Super>Page_Up']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "['<Super>Page_Down']"
 
-# Move windows to adjacent workspace (Horizontal layout in GNOME 40+ as well as vertical compatibility)
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Super><Shift>Page_Up']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Super><Shift>Page_Down']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "['<Super><Shift>Page_Up']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "['<Super><Shift>Page_Down']"
 
-# Move window / switch to last workspace
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-last "['<Super>End']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-last "['<Super><Shift>End']"
 
@@ -48,27 +91,27 @@ gsettings set org.gnome.shell.keybindings toggle-message-tray "['<Super>n']"
 # ==============================================================================
 DASH_TO_DOCK_USER="$HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas"
 if [[ -d "$DASH_TO_DOCK_USER" ]]; then
-    gsettings --schemadir "$DASH_TO_DOCK_USER" set org.gnome.shell.extensions.dash-to-dock shortcut "[]"
-    gsettings --schemadir "$DASH_TO_DOCK_USER" set org.gnome.shell.extensions.dash-to-dock shortcut-text "''"
-    gsettings --schemadir "$DASH_TO_DOCK_USER" set org.gnome.shell.extensions.dash-to-dock hot-keys false
+    gsettings --schemadir "$DASH_TO_DOCK_USER" set org.gnome.shell.extensions.dash-to-dock shortcut "[]" 2>/dev/null || true
+    gsettings --schemadir "$DASH_TO_DOCK_USER" set org.gnome.shell.extensions.dash-to-dock shortcut-text "''" 2>/dev/null || true
+    gsettings --schemadir "$DASH_TO_DOCK_USER" set org.gnome.shell.extensions.dash-to-dock hot-keys false 2>/dev/null || true
 fi
 
 if gsettings list-schemas 2>/dev/null | grep -q "^org\.gnome\.shell\.extensions\.dash-to-dock$"; then
-    gsettings set org.gnome.shell.extensions.dash-to-dock shortcut "[]"
-    gsettings set org.gnome.shell.extensions.dash-to-dock shortcut-text "''"
-    gsettings set org.gnome.shell.extensions.dash-to-dock hot-keys false
+    gsettings set org.gnome.shell.extensions.dash-to-dock shortcut "[]" 2>/dev/null || true
+    gsettings set org.gnome.shell.extensions.dash-to-dock shortcut-text "''" 2>/dev/null || true
+    gsettings set org.gnome.shell.extensions.dash-to-dock hot-keys false 2>/dev/null || true
 fi
 
 # Ensure direct dconf write disables hot-keys and all app hotkeys that conflict with Super / Super+Shift
-dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys false
-dconf write /org/gnome/shell/extensions/dash-to-dock/shortcut "@as []"
-dconf write /org/gnome/shell/extensions/dash-to-dock/shortcut-text "''"
+dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys false 2>/dev/null || true
+dconf write /org/gnome/shell/extensions/dash-to-dock/shortcut "@as []" 2>/dev/null || true
+dconf write /org/gnome/shell/extensions/dash-to-dock/shortcut-text "''" 2>/dev/null || true
 for i in {1..9}; do
-    dconf write /org/gnome/shell/extensions/dash-to-dock/app-shift-hotkey-$i "@as []"
-    dconf write /org/gnome/shell/extensions/dash-to-dock/app-hotkey-$i "@as []"
+    dconf write /org/gnome/shell/extensions/dash-to-dock/app-shift-hotkey-$i "@as []" 2>/dev/null || true
+    dconf write /org/gnome/shell/extensions/dash-to-dock/app-hotkey-$i "@as []" 2>/dev/null || true
 done
-dconf write /org/gnome/shell/extensions/dash-to-dock/app-shift-hotkey-10 "@as []"
-dconf write /org/gnome/shell/extensions/dash-to-dock/app-hotkey-10 "@as []"
+dconf write /org/gnome/shell/extensions/dash-to-dock/app-shift-hotkey-10 "@as []" 2>/dev/null || true
+dconf write /org/gnome/shell/extensions/dash-to-dock/app-hotkey-10 "@as []" 2>/dev/null || true
 
 # ==============================================================================
 # Window Management
@@ -81,49 +124,43 @@ gsettings set org.gnome.desktop.wm.keybindings move-to-center "['<Super>c']"
 # ==============================================================================
 # Application Launchers & Media Keys
 # ==============================================================================
-# File Explorer / Nautilus: Super + E
 gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
-
-# Default Web Browser: Super + Shift + B
 gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super><Shift>b']"
 
-# Tiling Assistant (built-in Ubuntu window tiling) - Center window
 if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.tiling-assistant"; then
-    gsettings set org.gnome.shell.extensions.tiling-assistant center-window "['<Super>c']"
-    dconf write /org/gnome/shell/extensions/tiling-assistant/center-window "['<Super>c']"
+    gsettings set org.gnome.shell.extensions.tiling-assistant center-window "['<Super>c']" 2>/dev/null || true
+    dconf write /org/gnome/shell/extensions/tiling-assistant/center-window "['<Super>c']" 2>/dev/null || true
 fi
 
 # ==============================================================================
 # Font Settings
 # ==============================================================================
-gsettings set org.gnome.desktop.interface font-name 'Ubuntu Nerd Font 11'
-gsettings set org.gnome.desktop.interface document-font-name 'Ubuntu Nerd Font 11'
+gsettings set org.gnome.desktop.interface font-name 'Ubuntu Nerd Font 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface document-font-name 'Ubuntu Nerd Font 11' 2>/dev/null || true
 
 # ==============================================================================
-# Keyboard Keyrate & Repeat (Balanced fast key repeat: 250ms delay, 25ms repeat-interval ~40Hz)
+# Keyboard Keyrate & Repeat (250ms delay, 25ms repeat-interval ~40Hz)
 # ==============================================================================
 gsettings set org.gnome.desktop.peripherals.keyboard repeat true
 gsettings set org.gnome.desktop.peripherals.keyboard delay 250
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 25
 
-# Direct dconf write for persistence and immediate application
 dconf write /org/gnome/desktop/peripherals/keyboard/repeat true
 dconf write /org/gnome/desktop/peripherals/keyboard/delay "uint32 250"
 dconf write /org/gnome/desktop/peripherals/keyboard/repeat-interval "uint32 25"
 
 # ==============================================================================
-# Touchpad Settings (Disable While Typing / Accidental Palm Rejection)
+# Touchpad Settings (Disable While Typing / Tap-to-click)
 # ==============================================================================
 gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing true
 gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
 gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
 
-# Direct dconf write for persistence and immediate application
 dconf write /org/gnome/desktop/peripherals/touchpad/disable-while-typing true
 dconf write /org/gnome/desktop/peripherals/touchpad/tap-to-click true
 dconf write /org/gnome/desktop/peripherals/touchpad/natural-scroll true
 
-# Default terminal execution preference & launcher
+# Default terminal preference & launcher
 gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty' 2>/dev/null || true
 
 mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/dbus-1/services"
@@ -179,12 +216,12 @@ PYEOF
 # Ptyxis Optimizations
 # ==============================================================================
 if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.Ptyxis"; then
-    gsettings set org.gnome.Ptyxis use-system-font true
-    dconf write /org/gnome/Ptyxis/Shortcuts/move-next-tab "'<Control>Tab'"
-    dconf write /org/gnome/Ptyxis/Shortcuts/move-previous-tab "'<Control><Shift>Tab'"
+    gsettings set org.gnome.Ptyxis use-system-font true 2>/dev/null || true
+    dconf write /org/gnome/Ptyxis/Shortcuts/move-next-tab "'<Control>Tab'" 2>/dev/null || true
+    dconf write /org/gnome/Ptyxis/Shortcuts/move-previous-tab "'<Control><Shift>Tab'" 2>/dev/null || true
 fi
 
-# Prevent waking discrete NVIDIA GPU from D3cold suspend on terminal launch (drops startup from ~2.4s to ~0.3s)
+# Prevent waking discrete NVIDIA GPU from D3cold suspend on terminal launch
 if [[ -d "$SCRIPT_DIR/ptyxis" ]]; then
     install -m 755 "$SCRIPT_DIR/ptyxis/ptyxis" "$HOME/.local/bin/ptyxis"
     sed "s|@HOME@|$HOME|g" "$SCRIPT_DIR/ptyxis/org.gnome.Ptyxis.service" > "$HOME/.local/share/dbus-1/services/org.gnome.Ptyxis.service"
@@ -193,13 +230,13 @@ if [[ -d "$SCRIPT_DIR/ptyxis" ]]; then
 fi
 
 # ==============================================================================
-# Clipboard Indicator Extension (clipboard-indicator@tudmotu.com)
+# Clipboard Indicator Extension
 # ==============================================================================
-# Free Super+V from GNOME's default notification tray (remapped to Super+N above)
-# and bind Super+V to toggle the clipboard history menu
 CLIPBOARD_SCHEMAS="$HOME/.local/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com/schemas"
 if [[ -d "$CLIPBOARD_SCHEMAS" ]]; then
-    gsettings --schemadir "$CLIPBOARD_SCHEMAS" set org.gnome.shell.extensions.clipboard-indicator toggle-menu "['<Super>v']"
-    gsettings --schemadir "$CLIPBOARD_SCHEMAS" set org.gnome.shell.extensions.clipboard-indicator enable-keybindings true
+    gsettings --schemadir "$CLIPBOARD_SCHEMAS" set org.gnome.shell.extensions.clipboard-indicator toggle-menu "['<Super>v']" 2>/dev/null || true
+    gsettings --schemadir "$CLIPBOARD_SCHEMAS" set org.gnome.shell.extensions.clipboard-indicator enable-keybindings true 2>/dev/null || true
 fi
-dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Super>v']"
+dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Super>v']" 2>/dev/null || true
+
+log_success "GNOME desktop settings applied successfully!"

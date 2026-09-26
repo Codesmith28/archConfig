@@ -32,7 +32,7 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 
 ## 2. GNOME Desktop & Window Management
 
-`config.sh` applies the following workflow customizations:
+`setup.sh` applies the following workflow customizations:
 
 - **Workspace Navigation**:
   - `Super + Page_Up` / `Page_Down`: Switch workspaces.
@@ -68,11 +68,5 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 To apply all configurations:
 
 ```bash
-bash ./install.sh
-```
-
-Or run directly:
-
-```bash
-bash ./config.sh
+./setup.sh
 ```

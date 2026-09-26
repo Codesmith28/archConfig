@@ -141,9 +141,7 @@ else
     table.insert(specs, {
         "LazyVim/LazyVim",
         opts = {
-            -- colorscheme = "tokyonight-storm",
-            -- colorscheme = "catppuccin-macchiato",
-            colorscheme = "catppuccin-frappe",
+            colorscheme = "tokyonight-night",
         },
     })
 end

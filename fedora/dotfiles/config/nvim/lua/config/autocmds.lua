@@ -17,3 +17,17 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
         vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.INFO)
     end,
 })
+
+-- Optimize format-on-save: skip formatting if buffer is unmodified
+-- (prevents UI freeze and slowdowns when repeatedly saving or spamming save commands)
+if LazyVim and LazyVim.format then
+    local orig_format = LazyVim.format.format
+    LazyVim.format.format = function(opts)
+        opts = opts or {}
+        local buf = opts.buf or vim.api.nvim_get_current_buf()
+        if not opts.force and not vim.bo[buf].modified then
+            return
+        end
+        return orig_format(opts)
+    end
+end

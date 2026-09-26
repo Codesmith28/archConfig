@@ -44,10 +44,9 @@ cd ~/archConfig/omArchy/optimizations
 ```
 
 ### Module-Specific Setup
-Run the installer directly from this directory:
+Run setup directly from this directory:
 ```bash
-cd ~/archConfig/omArchy/optimizations/nvidia-power
-./install.sh
+./setup.sh
 ```
 
 ---
@@ -56,6 +55,5 @@ cd ~/archConfig/omArchy/optimizations/nvidia-power
 
 Check the active status of the modprobe options and systemd services:
 ```bash
-cd ~/archConfig/omArchy/optimizations/nvidia-power
-./verify.sh
+./setup.sh --verify
 ```

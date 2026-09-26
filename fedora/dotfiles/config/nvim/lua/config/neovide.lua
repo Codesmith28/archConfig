@@ -6,5 +6,5 @@ if vim.g.neovide then
     vim.g.neovide_floating_shadow = false
 
     -- Save file directly using Cmd+S across Normal, Insert, and Visual modes
-    vim.keymap.set({ "n", "i", "v" }, "<D-s>", "<cmd>write<cr>", { desc = "Save file" })
+    vim.keymap.set({ "n", "i", "v" }, "<D-s>", "<cmd>w<cr>", { desc = "Save file" })
 end

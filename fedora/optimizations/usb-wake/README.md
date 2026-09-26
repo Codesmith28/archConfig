@@ -28,7 +28,7 @@ Many laptops suffer from "hot backpack syndrome":
 
 Run the installer with sudo:
 ```bash
-sudo ./install.sh
+sudo ./setup.sh
 ```
 Or run via the main optimizations setup:
 ```bash

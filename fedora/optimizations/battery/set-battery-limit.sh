@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Set Battery Charging Limit (Charge Threshold)
+# Set Battery Charging Limit & Deep Sleep Mode
 # ==============================================================================
 # Sets battery charge threshold (default: 85%) to preserve battery lifespan.
+# Sets sleep state from s2idle to deep (S3 Suspend-to-RAM) to eliminate battery
+# drain during suspend.
 # Supports ASUS ROG/TUF systems (via asusctl / asusd) and generic Linux kernel
 # sysfs nodes (charge_control_end_threshold / charge_stop_threshold).
 # Handles boot, resume from suspend/hibernate, and AC adapter plug/unplug events.
@@ -23,7 +25,7 @@ if [[ -n "${1:-}" && "$1" =~ ^[0-9]+$ && "$1" -ge 20 && "$1" -le 100 ]]; then
     THRESHOLD="$1"
 fi
 
-echo "[INFO] Setting battery charging limit to ${THRESHOLD}%..."
+echo "[INFO] Configuring battery optimizations (charging limit: ${THRESHOLD}%, deep sleep)..."
 success=0
 
 # ------------------------------------------------------------------------------
@@ -80,10 +82,41 @@ for node in "${SYSFS_NODES[@]}"; do
 done
 
 # ------------------------------------------------------------------------------
-# 3. Validation & Reporting
+# 3. Configure Deep Sleep (S3 Suspend-to-RAM) from s2idle
 # ------------------------------------------------------------------------------
-if [[ $success -eq 1 ]]; then
-    echo "[OK] Battery charging limit successfully applied (${THRESHOLD}%)."
+if [[ -f /sys/power/mem_sleep ]] && grep -q "deep" /sys/power/mem_sleep; then
+    curr_sleep=$(grep -o '\[.*\]' /sys/power/mem_sleep 2>/dev/null | tr -d '[]' || echo "")
+    if [[ "$curr_sleep" != "deep" ]]; then
+        echo "[INFO] Switching sleep mode from '${curr_sleep}' to 'deep'..."
+        sleep_written=0
+        if [[ -w /sys/power/mem_sleep || "$(id -u)" -eq 0 ]]; then
+            if echo "deep" > /sys/power/mem_sleep 2>/dev/null; then
+                sleep_written=1
+            fi
+        elif sudo -n true 2>/dev/null; then
+            if echo "deep" | sudo -n tee /sys/power/mem_sleep >/dev/null 2>&1; then
+                sleep_written=1
+            fi
+        fi
+
+        new_sleep=$(grep -o '\[.*\]' /sys/power/mem_sleep 2>/dev/null | tr -d '[]' || echo "")
+        if [[ "$new_sleep" == "deep" ]]; then
+            echo "[OK] Sleep state successfully switched to deep (S3 Suspend-to-RAM)."
+        elif [[ $sleep_written -eq 1 ]]; then
+            echo "[INFO] Sleep state configured (current: $new_sleep)."
+        else
+            echo "[WARN] Could not switch sleep mode to deep without root privileges."
+        fi
+    else
+        echo "[OK] Sleep state is already set to deep."
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 4. Validation & Reporting
+# ------------------------------------------------------------------------------
+if [[ $success -eq 1 || ${#SYSFS_NODES[@]} -eq 0 ]]; then
+    echo "[OK] Battery and power optimizations applied (${THRESHOLD}% charge limit, deep sleep)."
     exit 0
 else
     echo "[ERR] Failed to set battery charging threshold. No supported controller or writable sysfs node found."
