@@ -5,4 +5,20 @@ delivery = "herdr"
 
 [theme]
 name = "tokyo-night"
-auto_switch = false
+auto_switch = true
+
+[theme.custom]
+panel_bg = "black"
+
+[terminal]
+new_cwd = "follow"
+
+[ui]
+accent = "blue"
+pane_outer_borders = true
+pane_scrollbars = true
+confirm_close = false
+prompt_new_tab_name = false
+mouse_capture = true
+tab_bar_right = [{ type = "zoom" }, { type = "hostname" }]
+window_title = "{hostname}: {workspace}"

@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --dry-run            Show what symlinks would be created without making changes"
             echo "  --distro <name>      Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
             echo "  --de <name>          Override desktop environment (gnome, kde, hyprland, none)"
-            echo "  --backup-dir <path>  Custom directory for backing up existing host configs"
+            echo "  --backup-dir <path>  Custom directory for backing up existing host configs (default: ~/.config/old_config_backups)"
             echo "  -h, --help           Show this help message"
             exit 0
             ;;
@@ -102,7 +102,7 @@ detect_de() {
 DETECTED_OS="$(detect_os)"
 DETECTED_DE="$(detect_de)"
 
-BACKUP_ROOT="${CUSTOM_BACKUP_DIR:-${ARCHCONFIG_BACKUP_DIR:-$HOME/.config/archconfig-backups}}"
+BACKUP_ROOT="${CUSTOM_BACKUP_DIR:-${ARCHCONFIG_BACKUP_DIR:-$HOME/.config/old_config_backups}}"
 TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
 BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 HAS_BACKUPS=false
