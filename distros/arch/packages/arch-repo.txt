@@ -12,6 +12,7 @@ dolphin
 dosfstools
 efibootmgr
 eza
+extension-manager
 fastfetch
 fd
 filelight
@@ -22,6 +23,7 @@ git
 github-cli
 glow
 gnome-calculator
+gnome-tweaks
 grub
 gst-plugin-pipewire
 gwenview

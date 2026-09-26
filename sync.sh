@@ -216,7 +216,11 @@ if [ "$DETECTED_DE" = "gnome" ]; then
     echo ""
     echo "==> Applying GNOME Desktop Layer..."
     if [ -f "$REPO_DIR/desktop/gnome/setup.sh" ]; then
-        echo "  Tip: Run '$REPO_DIR/desktop/gnome/setup.sh' to install GNOME extensions & dconf keybindings."
+        if [ "$DRY_RUN" = false ]; then
+            bash "$REPO_DIR/desktop/gnome/setup.sh"
+        else
+            echo "  (dry-run) Would execute $REPO_DIR/desktop/gnome/setup.sh"
+        fi
     fi
 elif [ "$DETECTED_DE" = "kde" ]; then
     echo ""

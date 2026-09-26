@@ -5,7 +5,7 @@ delivery = "herdr"
 
 [theme]
 name = "tokyo-night"
-auto_switch = true
+auto_switch = false
 
 [theme.custom]
 panel_bg = "black"

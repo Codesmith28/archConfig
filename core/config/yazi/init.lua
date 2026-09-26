@@ -4,8 +4,6 @@ require("starship"):setup({
 	hide_flags = false,
 	-- Whether to place flags after the starship prompt. False means the flags will be placed before the prompt.
 	flags_after_prompt = true,
-	-- Custom starship configuration file to use
-	config_file = "~/archConfig/mac/dotfiles/config/starship/starship.toml", -- Default: nil
 	-- Whether to enable support for starship's right prompt (i.e. `starship prompt --right`).
 	show_right_prompt = false,
 	-- Whether to hide the count widget, in case you want only your right prompt to show up. Only has

@@ -30,7 +30,18 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 
 ---
 
-## 2. GNOME Desktop & Window Management
+## 2. Key GNOME Extensions & Multi-Distro Packages
+
+`setup.sh` automatically installs `gnome-tweaks` and `extension-manager` across Fedora, Ubuntu, and Arch, and provisions the 5 canonical GNOME extensions:
+1. **Blur my Shell** (`blur-my-shell@aunetx`): Blur effect for top panel, dash, overview, and app folders.
+2. **Clipboard Indicator** (`clipboard-indicator@tudmotu.com`): Clipboard history manager mapped to `Super + V`.
+3. **Compiz Alike Magic Lamp Effect** (`compiz-alike-magic-lamp-effect@hermes83.github.com`): Fluid window minimize animation.
+4. **Dash to Dock** (`dash-to-dock@micxgx.gmail.com`): Centered bottom dock with autohide, running dots, and conflicting shortcuts disabled.
+5. **Rounded Window Corners Reborn** (`rounded-window-corners@fxgn`): Consistent rounded window borders for all applications.
+
+---
+
+## 3. GNOME Desktop & Window Management
 
 `setup.sh` applies the following workflow customizations:
 
@@ -38,13 +49,16 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
   - `Super + Page_Up` / `Page_Down`: Switch workspaces.
   - `Super + 1..9`: Jump directly to workspace 1–9.
   - `Super + Shift + 1..9`: Move window to workspace 1–9.
+  - `Super + End` / `Super + Shift + End`: Switch / move window to last workspace.
 - **Application Launchers & Shortcuts**:
   - `Super + Return`: Open default terminal emulator (Ghostty / configured GNOME default terminal).
   - `Super + E`: Open Nautilus file manager.
   - `Super + Shift + B`: Open default web browser.
 - **Window Management**:
   - `Super + Q`: Close active window (replaces `Alt + F4`).
-  - `Super + C`: Center active window (integrated with Ubuntu Tiling Assistant).
+  - `Super + M`: Minimize active window.
+  - `Super + C`: Center active window.
+  - Titlebar Buttons: `appmenu:minimize,maximize,close`.
 - **Screenshots**:
   - `Super + Shift + S` / `Print`: Interactive screenshot UI.
   - `Super + Shift + A`: Screenshot area.
@@ -52,8 +66,10 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 - **Notifications & Clipboard**:
   - `Super + N`: Toggle notification tray.
   - `Super + V`: Toggle Clipboard Indicator history.
-- **Fonts**:
-  - Set interface and document font to `Ubuntu Nerd Font 11`.
+- **Fonts & Interface**:
+  - System UI font: `Adwaita Sans 11`.
+  - Monospace font: `JetBrainsMono Nerd Font 10`.
+  - Dark mode (`prefer-dark`), blue accent, 24h clock, and battery percentage display enabled.
 - **Keyboard & Touchpad**:
   - Repeat rate: 250ms delay, 25ms repeat interval (~40Hz).
   - Touchpad: Disable While Typing (DWT) enabled, tap-to-click, and natural scrolling.
