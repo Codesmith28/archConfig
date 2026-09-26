@@ -100,27 +100,28 @@ When setting up a fresh machine, run the setup scripts inside [`distros/`](file:
 ```bash
 cd distros/fedora
 # Install core packages, RPM Fusion, and developer tools
-bash setup_scripts/setup.sh
+bash setup.sh
 ```
 
-### Arch Linux (KDE or Hyprland)
+### Arch Linux (KDE, GNOME, or Hyprland)
 ```bash
-# Black box automated setup
-cd distros/arch/black_box
-bash main.sh
+cd distros/arch
+# Install official repos, AUR packages, and hardware services
+bash setup.sh
 ```
 
 ### Ubuntu (Desktop or Server)
 ```bash
 cd distros/ubuntu
+# Install system packages and optimizations
 bash setup.sh
 ```
 
 ### macOS (Darwin)
 ```bash
 cd distros/mac
-# Install Homebrew formulas and casks
-brew bundle --file=Brewfile
+# Install Homebrew formulas, casks, and tooling
+bash setup.sh
 ```
 
 ---
@@ -129,6 +130,7 @@ brew bundle --file=Brewfile
 
 Common hardware and dual-boot solutions are documented in [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot):
 
+- **[GNOME Cross-Distro Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/gnome_cross_distro_setup.md)**: Resolving DBus session attachment, GSettings schema compilation, Ubuntu dock conflicts, and shortcut collision elimination across distros.
 - **[Restoring GRUB Bootloader](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)**: Reinstalling EFI entries after Windows updates or BIOS resets; fixing missing Windows dual-boot entries with `os-prober`.
 - **[Automated GRUB Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Single-command script to reinstall GRUB on UEFI systems.
 - **[Fixing `<bits/stdc++.h>` on macOS](file:///home/codesmith28/archConfig/troubleshoot/fix_bits_stdcxx_macos.md)**: Resolving missing C++ bits headers on Darwin systems.

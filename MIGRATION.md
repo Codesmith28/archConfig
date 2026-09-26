@@ -48,13 +48,14 @@ archConfig/
 │
 ├── distros/                             # 📦 Distro-specific package lists & systemd services
 │   ├── fedora/                          # DNF packages, NVIDIA setup, systemd services
-│   ├── arch/                            # Pacman/AUR package lists & black_box installer
+│   ├── arch/                            # Pacman/AUR package lists & hardware bootstrap
 │   ├── ubuntu/                          # Ubuntu desktop bootstrap & PPA setup
 │   ├── ubuntu_server/                   # Headless Ubuntu server setup & SSH hardening
 │   ├── mac/                             # Homebrew bundle & macOS system defaults
 │   └── omarchy/                         # OmArchy specific tweaks & helpers
 │
 ├── troubleshoot/                        # 🩺 Diagnostic guides and runbooks
+│   ├── gnome_cross_distro_setup.md      # Resolving GNOME cross-distro session & extension quirks
 │   ├── restore_grub.md                  # Restoring GRUB & recovering Windows dual-boot
 │   ├── restoreGrub.sh                   # Automated Arch EFI bootloader repair script
 │   └── fix_bits_stdcxx_macos.md         # Fix macOS missing <bits/stdc++.h> header
