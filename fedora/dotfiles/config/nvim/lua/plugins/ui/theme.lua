@@ -14,6 +14,13 @@ return {
                         bg = colors.none,
                         style = { "italic" },
                     },
+                    DiagnosticUnnecessary = {
+                        fg = colors.overlay0,
+                        style = { "italic" },
+                    },
+                    DiagnosticUnderlineHint = {
+                        style = {},
+                    },
                 }
             end,
         },
@@ -30,6 +37,13 @@ return {
                     fg = c.dark3,
                     bg = c.none,
                     italic = true,
+                }
+                hl.DiagnosticUnnecessary = {
+                    fg = c.dark3,
+                    italic = true,
+                }
+                hl.DiagnosticUnderlineHint = {
+                    undercurl = false,
                 }
             end,
         },

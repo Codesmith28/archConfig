@@ -35,3 +35,15 @@ if LazyVim and LazyVim.format then
         return orig_format(opts)
     end
 end
+
+-- Ensure unused code/variables (DiagnosticUnnecessary) remain dimmed and italic across any colorscheme
+local user_unnecessary_group = vim.api.nvim_create_augroup("user_diagnostic_unnecessary", { clear = true })
+vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+    group = user_unnecessary_group,
+    callback = function()
+        local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticUnnecessary" })
+        if hl and not hl.italic then
+            vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", vim.tbl_extend("force", hl, { italic = true }))
+        end
+    end,
+})

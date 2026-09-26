@@ -83,8 +83,8 @@ return {
                 },
             }, opts.servers.pyrefly or {})
 
-            -- Configure Ruff as the linter to report unused vars, args, imports as errors
-            local function upgrade_unused_to_error(items)
+            -- Configure Ruff to report unused vars, args, imports as hints (dimmed & italic like VS Code)
+            local function mark_unused_as_hint(items)
                 if not items then
                     return
                 end
@@ -96,7 +96,11 @@ return {
                         or code == "B007" -- Loop control variable not used within loop body
                         or code:match("^ARG") -- Unused function/method/lambda arguments (ARG001-ARG005)
                     then
-                        item.severity = vim.diagnostic.severity.ERROR
+                        item.severity = vim.diagnostic.severity.HINT
+                        item.tags = item.tags or {}
+                        if not vim.tbl_contains(item.tags, 1) then
+                            table.insert(item.tags, 1) -- DiagnosticTag.Unnecessary
+                        end
                     end
                 end
             end
@@ -119,13 +123,13 @@ return {
                 handlers = {
                     ["textDocument/diagnostic"] = function(err, result, ctx, config)
                         if result and result.items then
-                            upgrade_unused_to_error(result.items)
+                            mark_unused_as_hint(result.items)
                         end
                         return vim.lsp.diagnostic.on_diagnostic(err, result, ctx, config)
                     end,
                     ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
                         if result and result.diagnostics then
-                            upgrade_unused_to_error(result.diagnostics)
+                            mark_unused_as_hint(result.diagnostics)
                         end
                         return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
                     end,
