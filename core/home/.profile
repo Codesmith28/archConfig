@@ -49,6 +49,8 @@ unset -f _path_prepend _ldpath_prepend
 # ------------------------------------------------------------------------------
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ] && . "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # ------------------------------------------------------------------------------
 # 4. Source ~/.bashrc for interactive Bash login shells
