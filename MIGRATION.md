@@ -59,7 +59,6 @@ archConfig/
 ├── troubleshoot/                        # 🩺 Diagnostic guides and runbooks
 │   ├── restore_grub.md                  # Restoring GRUB & recovering Windows dual-boot
 │   ├── restoreGrub.sh                   # Automated Arch EFI bootloader repair script
-│   ├── supergfxctl_gpu_modes.md         # ASUS ROG hybrid/dedicated GPU switching
 │   └── fix_bits_stdcxx_macos.md         # Fix macOS missing <bits/stdc++.h> header
 │
 ├── .agents/skills/                      # 🤖 AI Agent Skills

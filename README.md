@@ -131,7 +131,6 @@ Common hardware and dual-boot solutions are documented in [`troubleshoot/`](file
 
 - **[Restoring GRUB Bootloader](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)**: Reinstalling EFI entries after Windows updates or BIOS resets; fixing missing Windows dual-boot entries with `os-prober`.
 - **[Automated GRUB Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Single-command script to reinstall GRUB on UEFI systems.
-- **[ASUS ROG GPU Modes (`supergfxctl`)](file:///home/codesmith28/archConfig/troubleshoot/supergfxctl_gpu_modes.md)**: Switching between Integrated, Hybrid, and Dedicated GPU modes and power profiles.
 - **[Fixing `<bits/stdc++.h>` on macOS](file:///home/codesmith28/archConfig/troubleshoot/fix_bits_stdcxx_macos.md)**: Resolving missing C++ bits headers on Darwin systems.
 
 ---
