@@ -2,8 +2,11 @@
 -- (Helm filetype detection lives in ftdetect/helm.lua instead -- it needs to
 -- run at startup, before VeryLazy fires.)
 
+local user_checktime_group = vim.api.nvim_create_augroup("user_checktime", { clear = true })
+
 -- 1. Optimized Refresh
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
+    group = user_checktime_group,
     callback = function()
         if vim.o.buftype ~= "nofile" and vim.fn.getcmdwintype() == "" then
             vim.cmd("checktime")
@@ -13,6 +16,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
 
 -- Notification when a file changes on disk
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
+    group = user_checktime_group,
     callback = function()
         vim.notify("File changed on disk. Buffer reloaded!", vim.log.levels.INFO)
     end,

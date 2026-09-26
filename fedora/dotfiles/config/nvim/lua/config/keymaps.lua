@@ -2,45 +2,32 @@
 -- Default keymaps: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local map = vim.api.nvim_set_keymap
-local opts = { noremap = true, silent = true }
+local map = vim.keymap.set
 
 -- Escape in insert mode
-map("i", "kj", "<Esc>", { noremap = false })
+map("i", "kj", "<Esc>", { desc = "Escape insert mode" })
 
--- editing
+-- Select all / Copy all
 map("n", "<C-a>", "ggVG", { desc = "Select all" })
-
--- Save file with Ctrl+S (triggers notification in bottom right across all modes)
-vim.keymap.set({ "n", "x", "s", "i" }, "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
-
--- Ctrl+C: Copy all to system clipboard, keep cursor position
-map("n", "<C-c>", 'mzggVG"+y`z', opts)
-
--- enable mouse support in all modes
-vim.opt.mouse = "a"
+map("n", "<C-c>", 'mzggVG"+y`z', { desc = "Copy all to clipboard" })
 
 -- Harpoon 2 mappings are managed in lua/plugins/editor/harpoon.lua (<leader>ha, <leader>hh, <leader>h1-h4)
 
--- Move lines
-map("v", "<C-j>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true, desc = "Move line down" })
-map("v", "<C-k>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true, desc = "Move line up" })
+-- Move lines in visual mode
+map("v", "<C-j>", ":m '>+1<CR>gv=gv", { silent = true, desc = "Move line down" })
+map("v", "<C-k>", ":m '<-2<CR>gv=gv", { silent = true, desc = "Move line up" })
 
 -- Duplicate lines
 map("n", "<A-S-Down>", "<cmd>t.<CR>", { desc = "Duplicate line down" })
 map("n", "<A-S-Up>", "<cmd>t.-1<CR>", { desc = "Duplicate line up" })
 map("i", "<A-S-Down>", "<cmd>t.<CR>", { desc = "Duplicate line down" })
 map("i", "<A-S-Up>", "<cmd>t.-1<CR>", { desc = "Duplicate line up" })
-map("v", "<A-S-Down>", ":t '> <CR>gv", { noremap = true, silent = true, desc = "Duplicate selection down" })
-map("v", "<A-S-Up>", ":t '<-1 <CR>gv", { noremap = true, silent = true, desc = "Duplicate selection up" })
-
--- indenting
-map("v", "<", "<gv", { desc = "Indent left" })
-map("v", ">", ">gv", { desc = "Indent right" })
+map("v", "<A-S-Down>", ":t '> <CR>gv", { silent = true, desc = "Duplicate selection down" })
+map("v", "<A-S-Up>", ":t '<-1 <CR>gv", { silent = true, desc = "Duplicate selection up" })
 
 -- Add go tags:
-map("n", "<leader>gsj", "<cmd> GoTagAdd json <CR>", { desc = "Add json struct tags" })
-map("n", "<leader>gsy", "<cmd> GoTagAdd yaml <CR>", { desc = "Add yaml struct tags" })
+map("n", "<leader>gsj", "<cmd>GoTagAdd json<CR>", { desc = "Add json struct tags" })
+map("n", "<leader>gsy", "<cmd>GoTagAdd yaml<CR>", { desc = "Add yaml struct tags" })
 
 -- Format only git-modified lines (Works for both Conform formatters & LSP/JDTLS)
 local function format_modified_lines()

@@ -15,7 +15,6 @@ o.clipboard = "unnamedplus"
 --     vim.g.clipboard = "osc52"
 -- end
 
-o.encoding = "utf-8"
 o.fileencoding = "utf-8"
 
 -- disable word wrap:

@@ -28,7 +28,9 @@ local function get_gpp_compiler()
 end
 
 -- Prevent LSP and auto-formatters from crashing assistant.nvim testcase buffers
+local assistant_group = vim.api.nvim_create_augroup("assistant_buffers", { clear = true })
 vim.api.nvim_create_autocmd("BufWinEnter", {
+    group = assistant_group,
     pattern = "*",
     callback = function(args)
         local buf_name = vim.api.nvim_buf_get_name(args.buf)
@@ -49,7 +51,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 return {
     "A7lavinraj/assistant.nvim",
-    lazy = false,
+    cmd = { "Assistant" },
     keys = {
         { "<leader>a", "<cmd>Assistant<cr>", desc = "Assistant.nvim" },
     },

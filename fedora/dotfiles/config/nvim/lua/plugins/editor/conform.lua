@@ -1,6 +1,5 @@
 return {
     "stevearc/conform.nvim",
-    event = "VeryLazy",
     opts = {
         notify_on_error = false,
         default_format_opts = {
