@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Default Terminal Launcher
+# ==============================================================================
+# Resolves and launches the user's preferred terminal emulator configured in
+# GNOME settings (org.gnome.desktop.default-applications.terminal), falling back
+# gracefully to available terminal emulators on the system.
+# ==============================================================================
+
+# 1. Check GNOME desktop preference
+TERM_EXEC="$(gsettings get org.gnome.desktop.default-applications.terminal exec 2>/dev/null | tr -d "'\"" || true)"
+if [[ -n "$TERM_EXEC" ]] && command -v "$TERM_EXEC" >/dev/null 2>&1; then
+    exec "$TERM_EXEC" "$@"
+fi
+
+# 2. Fallbacks in priority order
+for t in ghostty ptyxis gnome-terminal kitty alacritty foot wezterm xterm; do
+    if command -v "$t" >/dev/null 2>&1; then
+        exec "$t" "$@"
+    fi
+done
+
+echo "Error: No supported terminal emulator found." >&2
+exit 1

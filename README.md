@@ -1,143 +1,146 @@
-# archConfig
+# 🚀 archConfig
 
-Personal Linux bootstrap + dotfiles repo.
+[![Linux](https://img.shields.io/badge/Platform-Fedora%20|%20Arch%20|%20Ubuntu%20|%20macOS-blue?logo=linux&logoColor=white)](file:///home/codesmith28/archConfig)
+[![Desktop](https://img.shields.io/badge/Desktop-GNOME%20|%20KDE%20|%20Hyprland-purple)](file:///home/codesmith28/archConfig/desktop)
+[![Editor](https://img.shields.io/badge/Editor-Neovim%20(LazyVim)-green?logo=neovim&logoColor=white)](file:///home/codesmith28/archConfig/core/config/nvim)
+[![Terminal](https://img.shields.io/badge/Terminals-Ghostty%20|%20Kitty%20|%20Tmux-black)](file:///home/codesmith28/archConfig/core/config)
 
-This repo primarily targets:
+A unified, modular, cross-distribution dotfiles and bootstrap system. Designed to deliver an identical, high-performance developer workflow across **Fedora**, **Arch Linux**, **Ubuntu**, **macOS**, and **OmArchy** without configuration fragmentation.
 
-- **Arch Linux (KDE)** via a separate set of scripts and package lists.
-- **Ubuntu** via a dedicated installer + dotfile sync.
-- **Arch Linux (Hyprland/GNOME)** via a shell “black box” installer. ( Inspired by the Arch Linux dotfiles from `mylinuxforwork/dotfiles` (v2.9.1) and extended with additional configuration. )
+---
 
-## Table of contents
+## 🏗️ Layered Architecture
 
-- [Quick start](#quick-start)
-- [Arch KDE](#arch-kde)
-- [GRUB / Windows dual-boot notes (Arch KDE)](#grub--windows-dual-boot-notes-arch-kde)
-- [Ubuntu](#ubuntu)
-- [Arch (shell installer)](#arch-shell-installer)
-- [Repo layout](#repo-layout)
+The repository separates universal developer tooling from desktop environments, distro-specific package installers, and troubleshooting runbooks:
 
-## Quick start
+```mermaid
+graph TD
+    Sync["🚀 sync.sh (Auto-Detector & Linker)"]
+    Core["🌐 core/<br/>(Universal Shell, Neovim, Ghostty, Kitty, Starship, Yazi)"]
+    Desktop["🖥️ desktop/<br/>(GNOME, KDE Plasma, Hyprland Lua/Classic)"]
+    Distros["📦 distros/<br/>(Fedora, Arch, Ubuntu, macOS, OmArchy)"]
+    Troubleshoot["🩺 troubleshoot/<br/>(GRUB, Dual-Boot, GPU Modes, Toolchain fixes)"]
+    
+    Sync --> Core
+    Sync --> Desktop
+    Sync --> Distros
+    Sync --> Troubleshoot
+```
 
-Clone the repo:
+| Layer | Directory | Purpose |
+| :--- | :--- | :--- |
+| **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `kitty`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`, `tmux`). |
+| **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`, `.tmux.conf`). |
+| **Desktop Layer** | [`desktop/`](file:///home/codesmith28/archConfig/desktop) | Modular DE configs: GNOME extensions/dconf, KDE Plasma shortcuts, and Hyprland (Lua & classic). |
+| **Distro Layer** | [`distros/`](file:///home/codesmith28/archConfig/distros) | Package installation scripts, systemd unit files, and hardware optimizations per distribution. |
+| **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and compiler quirks. |
+| **AI Skills** | [`.agents/skills/`](file:///home/codesmith28/archConfig/.agents/skills) | Rules for AI agents (`archconfig-guard`) to guarantee zero cross-distro breakage and maintain docs. |
 
+---
+
+## ⚡ Quick Start
+
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Codesmith28/archConfig.git ~/archConfig
 cd ~/archConfig
 ```
 
-### Arch KDE
-
-Typical flow:
-
-1. Install packages (official repos + AUR):
-
-	```bash
-	cd arch_kde/packages
-	chmod +x installPackages.sh
-	./installPackages.sh
-	```
-
-2. Link dotfiles into your home directory:
-
-	```bash
-	cd arch_kde/dotfiles
-	chmod +x sync.sh
-	./sync.sh
-	```
-
-3. (Optional) Install systemd services + helper executables:
-
-	```bash
-	cd arch_kde/setup_scripts
-	chmod +x setup.sh
-	./setup.sh
-	```
-
-    These include:
-    - battery-limit service
-    - disable acpi and pci wakeup service (so that only power button can wake the laptop)
-    - nvidia persistence mode service
-    - `/usr/local/bin/configure-supergfxctl-exclusive.sh` (installed from `arch_kde/setup_scripts/executables/` by `arch_kde/setup_scripts/setup.sh`)
-
-4. (Optional) One-off helpers:
-
-- Git + GitHub CLI: [arch_kde/basics/setGit.sh](arch_kde/basics/setGit.sh) ; configures user name, email, and SSH keys
-- Docker: [arch_kde/basics/setDocker.sh](arch_kde/basics/setDocker.sh) ; installs Docker, adds user to `docker` group, and enables the Docker service
-- Restore GRUB: [arch_kde/basics/restoreGrub.sh](arch_kde/basics/restoreGrub.sh) ; reinstalls GRUB bootloader and fixes it if not working
-
-GPU + power workflow notes:
-
-- Use `sudo /usr/local/bin/configure-supergfxctl-exclusive.sh --gpu-mode <mode>` (or positional mode) to switch `supergfxctl` mode (`Integrated`, `Hybrid`, `Vfio`, `AsusEgpu`, `AsusMuxDgpu`).
-- In `Integrated` mode, `nvidia-smi` showing no NVIDIA device is expected; in non-`Integrated` modes, `nvidia-smi` should detect NVIDIA hardware (after reboot/logout if needed).
-- `~/.config/scripts/cycle-power-mode.sh` cycles `powerprofilesctl` modes (`power-saver -> balanced -> performance`), is bound in Hyprland to `XF86Launch4`, and KDE keeps the Launch4 power-profile shortcut in `arch_kde/basics/config_kde/keyboardscs.kksrc`.
-
-### GRUB / Windows dual-boot notes (Arch KDE)
-
-#### GRUB not showing up
-
-If GRUB is missing after a minimal install (or after something overwrote your EFI entry), you can run:
+### 2. Synchronize dotfiles
+The root synchronizer automatically detects your operating system and desktop environment:
 
 ```bash
-sudo bash arch_kde/basics/restoreGrub.sh
+# Preview symlink actions (safe dry-run)
+./sync.sh --dry-run
+
+# Apply symlinks
+./sync.sh
 ```
 
-That script runs:
-
+#### Manual Overrides
+You can explicitly override detection when setting up a specific environment:
 ```bash
-sudo pacman -Sy grub efibootmgr dosfstools mtools
-sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+# Fedora with GNOME
+./sync.sh --distro fedora --de gnome
+
+# Arch with Hyprland
+./sync.sh --distro arch --de hyprland
+
+# macOS Workstation
+./sync.sh --distro mac --de none
 ```
 
-#### Windows not visible in GRUB
+---
 
-1. Install `os-prober`:
+## 🛠️ Toolchains & Developer Features
 
-	```bash
-	sudo pacman -S os-prober
-	```
+### Dynamic Compiler Discovery (C++23)
+No more hardcoded compiler names or version mismatches between Homebrew and Linux package managers:
+- Dynamically discovers the newest installed GCC/G++ (`gcc-17` down to unversioned `gcc`/`g++`).
+- Automatically exports `$CC`, `$CXX`, and provides modern C++ runner helper:
+  ```bash
+  run_cpp solution.cpp    # Compiles with -std=c++23 -O2 -Wall using newest available g++
+  ```
+- Neovim's `clangd` LSP and `assistant.lua` (competitive programming runner) dynamically detect compiler versions and system include paths across platforms.
 
-2. Edit `/etc/default/grub` and ensure this is set:
+### Neovim Setup (`core/config/nvim`)
+- **Base**: Modern LazyVim distribution.
+- **Python**: Integrated with `pyrefly` fast type-checker and language server.
+- **Java**: Automatic `resolve_java_home()` supporting macOS Homebrew, Fedora, Arch, and Ubuntu JDK installations.
+- **C/C++**: Clangd configured with universal query-driver for complete standard library intellisense.
+- **Competitive Programming**: Integrated test-case assistant with hotkeys for fast problem verification.
 
-	```bash
-	GRUB_DISABLE_OS_PROBER=false
-	```
+---
 
-3. Regenerate the GRUB config:
+## 📦 Distribution Bootstrapping
 
-	```bash
-	sudo grub-mkconfig -o /boot/grub/grub.cfg
-	```
+When setting up a fresh machine, run the setup scripts inside [`distros/`](file:///home/codesmith28/archConfig/distros):
 
-### Ubuntu
-
-Ubuntu has a dedicated master setup script (`setup.sh`). It automatically detects architecture (x86_64 vs aarch64), bootstraps missing packages, installs modern Neovim and CLI tools, links dotfiles, and safely gates GNOME/hardware optimizations:
-
+### Fedora Workstation
 ```bash
-cd ubuntu
-chmod +x setup.sh
-./setup.sh
+cd distros/fedora
+# Install core packages, RPM Fusion, and developer tools
+bash setup_scripts/setup.sh
 ```
 
-### Arch (shell installer)
-
-Runs an ordered setup pipeline (pacman, packages, git, dotfiles, dev env, docker, etc.).
-
+### Arch Linux (KDE or Hyprland)
 ```bash
-cd arch/black_box
-chmod +x main.sh
-./main.sh
+# Black box automated setup
+cd distros/arch/black_box
+bash main.sh
 ```
 
-Notes:
+### Ubuntu (Desktop or Server)
+```bash
+cd distros/ubuntu
+bash setup.sh
+```
 
-- Some steps require sudo.
-- Docker group changes require a logout/login (or reboot).
-- Wi‑Fi setup uses `nm-connection-editor` and expects a GUI.
+### macOS (Darwin)
+```bash
+cd distros/mac
+# Install Homebrew formulas and casks
+brew bundle --file=Brewfile
+```
 
-## Repo layout
+---
 
-- `arch/` — Arch Linux setup (shell + Ansible) and dotfiles
-- `arch_kde/` — Arch KDE setup scripts + package lists
-- `ubuntu/` — Ubuntu installer, setup scripts, and dotfiles
+## 🩺 Troubleshooting Runbooks
+
+Common hardware and dual-boot solutions are documented in [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot):
+
+- **[Restoring GRUB Bootloader](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)**: Reinstalling EFI entries after Windows updates or BIOS resets; fixing missing Windows dual-boot entries with `os-prober`.
+- **[Automated GRUB Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Single-command script to reinstall GRUB on UEFI systems.
+- **[ASUS ROG GPU Modes (`supergfxctl`)](file:///home/codesmith28/archConfig/troubleshoot/supergfxctl_gpu_modes.md)**: Switching between Integrated, Hybrid, and Dedicated GPU modes and power profiles.
+- **[Fixing `<bits/stdc++.h>` on macOS](file:///home/codesmith28/archConfig/troubleshoot/fix_bits_stdcxx_macos.md)**: Resolving missing C++ bits headers on Darwin systems.
+
+---
+
+## 🤖 AI Assistant Guidelines
+
+This repository includes an Antigravity Agent Skill in [`.agents/skills/archconfig-guard`](file:///home/codesmith28/archConfig/.agents/skills/archconfig-guard). When using AI coding assistants in this repo:
+1. **Never hardcode compiler versions or platform-exclusive commands** in `core/`.
+2. **Never break existing symlinks** on live systems; use backward-compatible shims when refactoring paths.
+3. **Always document new solutions** in [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) whenever resolving a platform-specific bug.
+
+For detailed migration history and architectural rationale, consult [MIGRATION.md](file:///home/codesmith28/archConfig/MIGRATION.md).

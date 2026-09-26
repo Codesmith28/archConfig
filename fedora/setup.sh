@@ -1,0 +1,1 @@
+../distros/fedora/setup.sh

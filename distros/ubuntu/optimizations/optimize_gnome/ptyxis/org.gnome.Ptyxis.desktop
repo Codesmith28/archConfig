@@ -1,0 +1,31 @@
+[Desktop Entry]
+Name=Terminal
+Comment=A container-oriented terminal for GNOME
+Exec=ptyxis
+Icon=org.gnome.Ptyxis
+DBusActivatable=true
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;System;TerminalEmulator;
+GenericName=Terminal
+Keywords=terminal;prompt;ptyxis;shell;command;commandline;cmd;cli;console;container;podman;toolbox;distrobox;
+Actions=new-window;new-tab;preferences;
+X-ExecArg=--
+X-TerminalArgTitle=--title
+X-TerminalArgDir=--working-directory
+X-TerminalArgAppId=--gapplication-app-id
+X-KDE-AuthorizeAction=shell_access
+X-Ubuntu-Gettext-Domain=ptyxis
+
+[Desktop Action new-window]
+Name=New Window
+Exec=ptyxis --new-window
+
+[Desktop Action new-tab]
+Name=New Tab
+Exec=ptyxis --tab
+
+[Desktop Action preferences]
+Name=Preferences
+Exec=ptyxis --preferences
