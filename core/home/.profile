@@ -8,13 +8,7 @@ _SOURCING_PROFILE=1
 unset VK_LOADER_DRIVERS_DISABLE
 
 # ------------------------------------------------------------------------------
-# 1. Shell Environment & Default Programs
-# ------------------------------------------------------------------------------
-export EDITOR='nvim'
-export VISUAL='nvim'
-
-# ------------------------------------------------------------------------------
-# 2. PATH & Library Path Configuration (deduplicated)
+# 1. PATH & Library Path Configuration (deduplicated)
 # ------------------------------------------------------------------------------
 _path_prepend() {
     if [ -d "$1" ]; then
@@ -42,6 +36,16 @@ _path_prepend "/opt/homebrew/bin"
 _path_prepend "/opt/homebrew/sbin"
 
 unset -f _path_prepend _ldpath_prepend
+
+# ------------------------------------------------------------------------------
+# 2. Shell Environment & Default Programs
+# ------------------------------------------------------------------------------
+export EDITOR='nvim'
+if command -v code >/dev/null 2>&1; then
+    export VISUAL='code --wait'
+else
+    export VISUAL='nvim'
+fi
 
 
 # ------------------------------------------------------------------------------
