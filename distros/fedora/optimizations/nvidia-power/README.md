@@ -21,8 +21,8 @@ The official NVIDIA Linux solution consists of two coordinated parts:
 In `/etc/modprobe.d/nvidia-power-management.conf`:
 - `options nvidia NVreg_PreserveVideoMemoryAllocations=1`
   Enables the NVIDIA kernel driver to save and restore video memory allocations across suspend, hibernate, and resume.
-- `options nvidia NVreg_TemporaryFilePath=/var/tmp`
-  Directs temporary allocation backup files to `/var/tmp` on disk rather than `/tmp` (which is a RAM-backed `tmpfs` with limited space that can easily run out of space when preserving 8GB of VRAM).
+- `options nvidia NVreg_TemporaryFilePath=/var/lib/systemd/sleep`
+  Directs temporary allocation backup files to `/var/lib/systemd/sleep` on disk. This avoids RAM-backed `tmpfs` (`/tmp`) and complies with Fedora's SELinux policy (where `systemd-sleep` is blocked from writing to generic `/var/tmp` `tmp_t` files).
 
 ### 2. NVIDIA Systemd Sleep Services
 The `nvidia-utils` package includes three systemd hook units that orchestrate VRAM preservation with `systemd-suspend` and `systemd-hibernate`:
@@ -39,7 +39,7 @@ The `nvidia-utils` package includes three systemd hook units that orchestrate VR
 ### Automated (All Optimizations)
 Run the root setup script from the `optimizations` directory:
 ```bash
-cd ~/archConfig/omArchy/optimizations
+cd ~/archConfig/distros/fedora/optimizations
 ./setup.sh
 ```
 
