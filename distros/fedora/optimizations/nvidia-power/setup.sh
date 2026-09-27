@@ -70,36 +70,17 @@ verify_nvidia() {
     log_info "Detected GPU: ${BOLD}${gpu_name}${NC} (${full_pci:-unknown})"
     log_info "Active kernel driver: ${BOLD}${active_driver}${NC}"
 
-    # 2. Check modprobe config & temporary sleep path
+    # 2. Check modprobe config
     CONF_FILE="/etc/modprobe.d/nvidia-power-management.conf"
     if [[ -f "$CONF_FILE" ]]; then
         log_success "Modprobe config file exists: $CONF_FILE"
-        if grep -q "NVreg_TemporaryFilePath=/var/tmp" "$CONF_FILE"; then
-            if command -v getenforce >/dev/null 2>&1 && [[ "$(getenforce 2>/dev/null)" == "Enforcing" ]]; then
-                log_error "Config specifies /var/tmp! SELinux blocks systemd-sleep on /var/tmp (error -13 EACCES)."
-                log_warn "Update to NVreg_TemporaryFilePath=/var/lib/systemd/sleep to allow clean suspend."
-            fi
-        elif grep -q "NVreg_TemporaryFilePath=/var/lib/systemd/sleep" "$CONF_FILE"; then
-            log_success "Temporary sleep path configured to /var/lib/systemd/sleep (SELinux compatible)"
+        if grep -q "NVreg_TemporaryFilePath=/var/lib/systemd/sleep" "$CONF_FILE"; then
+            log_success "Temporary sleep path: /var/lib/systemd/sleep (SELinux standard)"
+        elif grep -q "NVreg_TemporaryFilePath=/var/tmp" "$CONF_FILE"; then
+            log_warn "Config specifies /var/tmp (blocked by SELinux on Fedora). Update to /var/lib/systemd/sleep."
         fi
     else
         log_warn "Modprobe config NOT found at $CONF_FILE"
-    fi
-
-    # Check directory existence and permissions
-    if [[ -d "/var/lib/systemd/sleep" ]]; then
-        log_success "Directory /var/lib/systemd/sleep exists."
-    else
-        log_warn "Directory /var/lib/systemd/sleep does not exist yet."
-    fi
-
-    # Check for recent SELinux denials on systemd-sleep
-    if command -v journalctl >/dev/null 2>&1; then
-        recent_denials=$(journalctl -b 0 -g "denied.*systemd-sleep" -n 5 --no-pager 2>/dev/null | grep -c "denied" || true)
-        if [[ "$recent_denials" -gt 0 ]]; then
-            log_error "Detected $recent_denials SELinux denial(s) for systemd-sleep during this boot session!"
-            log_warn "System suspend was likely aborted. See troubleshoot/nvidia_selinux_suspend_battery_drain.md"
-        fi
     fi
 
     # 3. Check driver-specific parameters and services
