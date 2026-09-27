@@ -37,11 +37,16 @@ unset -f _path_prepend _ldpath_prepend
 # ------------------------------------------------------------------------------
 # 2. Shell Environment & Default Programs
 # ------------------------------------------------------------------------------
-export EDITOR='nvim'
+if command -v nvim >/dev/null 2>&1; then
+    export EDITOR='nvim'
+else
+    export EDITOR='vi'
+fi
+
 if command -v code >/dev/null 2>&1; then
     export VISUAL='code --wait'
 else
-    export VISUAL='nvim'
+    export VISUAL="$EDITOR"
 fi
 
 
