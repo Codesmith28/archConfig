@@ -29,7 +29,10 @@ for dir in "$SCRIPT_DIR"/*/; do
         continue
     fi
 
-    if [[ -f "$dir/install.sh" ]]; then
+    if [[ -f "$dir/setup.sh" ]]; then
+        log_info "Executing custom setup for module: ${BOLD}$dir_name${NC}"
+        bash "$dir/setup.sh" "$BIN_DEST" "$SERVICE_DEST"
+    elif [[ -f "$dir/install.sh" ]]; then
         log_info "Executing custom installer for module: ${BOLD}$dir_name${NC}"
         bash "$dir/install.sh" "$BIN_DEST" "$SERVICE_DEST"
     else

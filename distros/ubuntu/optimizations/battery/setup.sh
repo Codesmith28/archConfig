@@ -8,12 +8,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BIN_DEST="${1:-/usr/local/bin}"
 SERVICE_DEST="${2:-/etc/systemd/system}"
 
-# Clean up legacy / over-engineered files if present
-sudo rm -f /etc/udev/rules.d/90-battery-limit.rules
-sudo rm -f /usr/lib/systemd/system-sleep/set-battery-limit.sh
-sudo rm -f /etc/tmpfiles.d/deep-sleep.conf
-sudo rm -f /etc/systemd/sleep.conf.d/deep-sleep.conf
-
 # 1. Install executable
 echo "Installing set-battery-limit.sh to $BIN_DEST..."
 sudo cp "$SCRIPT_DIR/set-battery-limit.sh" "$BIN_DEST/set-battery-limit.sh"

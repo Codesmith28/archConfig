@@ -1,5 +1,5 @@
 [Unit]
-Description=Isolate USB ACPI Wake Triggers (Allow Keyboards, Block Mice / Hot Backpack)
+Description=Disable USB Wake (Hot Backpack Fix)
 After=multi-user.target
 
 [Service]

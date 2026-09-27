@@ -1,12 +1,10 @@
 [Unit]
-Description=Set Battery Charging Limit & Deep Sleep Management
-After=multi-user.target asusd.service
-Wants=multi-user.target
+Description=Set Battery Charging Limit
+After=multi-user.target suspend.target hibernate.target hybrid-sleep.target
 
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/set-battery-limit.sh
-RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target

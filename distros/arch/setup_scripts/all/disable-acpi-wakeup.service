@@ -1,13 +1,10 @@
 [Unit]
-Description=Disable ACPI wake sources except power button
+Description=Disable USB ACPI wake triggers
 After=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c '\
-for dev in PEG1 RP09 RP13 RP06 RP25 XHCI AWAC; do \
-  echo $dev > /proc/acpi/wakeup 2>/dev/null; \
-done'
+ExecStart=/bin/sh -c 'if grep -q "XHCI.*\*enabled" /proc/acpi/wakeup 2>/dev/null; then echo XHCI > /proc/acpi/wakeup; fi'
 
 [Install]
 WantedBy=multi-user.target

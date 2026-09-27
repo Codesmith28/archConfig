@@ -109,7 +109,7 @@ echo -e "${BOLD}Summary of configured optimizations:${NC}"
 for mod in "${executed_modules[@]}"; do
     case "$mod" in
         battery)
-            echo -e "  ${GREEN}✔${NC} ${BOLD}battery${NC}        : 85% charging cap & deep sleep (S3) (persistent across reboot, sleep, and AC connect)"
+            echo -e "  ${GREEN}✔${NC} ${BOLD}battery${NC}        : 85% charging cap & deep sleep (S3)"
             ;;
         config_grub)
             echo -e "  ${GREEN}✔${NC} ${BOLD}config_grub${NC}    : gfxterm graphical mode, native resolution, font in /boot, smooth handoff"

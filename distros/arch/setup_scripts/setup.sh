@@ -33,10 +33,18 @@ for service_file in "$SERVICE_DIR"/*.service; do
     sudo systemctl enable --now "$service_name"
 done
 
+# Configure Deep Sleep (S3) via grubby iff GRUB is available
+if command -v grubby >/dev/null 2>&1 && { [ -d /boot/grub ] || [ -d /boot/grub2 ] || command -v grub-mkconfig >/dev/null 2>&1 || command -v grub2-mkconfig >/dev/null 2>&1; }; then
+    echo ""
+    echo "Configuring kernel for Deep Sleep (S3)..."
+    echo "→ Injecting mem_sleep_default=deep into GRUB..."
+    sudo grubby --update-kernel=ALL --args="mem_sleep_default=deep"
+fi
+
 # Reload systemd in case any new units were added
 echo ""
 echo "Reloading systemd..."
-sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
 
 echo ""
 echo "All executables from $EXEC_DIR have been copied to $BIN_DEST."
