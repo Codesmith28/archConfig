@@ -4,17 +4,17 @@ onboarding = false
 delivery = "herdr"
 
 [theme]
-name = "tokyo-night"
+name = "catppuccin"
 auto_switch = false
 
-[theme.custom]
-panel_bg = "black"
+# [theme.custom]
+# panel_bg = "black"
 
 [terminal]
 new_cwd = "follow"
 
 [ui]
-accent = "blue"
+# accent = "blue"
 pane_outer_borders = true
 pane_scrollbars = true
 confirm_close = false

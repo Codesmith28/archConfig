@@ -1,4 +1,4 @@
-theme = TokyoNight
+theme = Catppuccin Mocha
 
 font-family = monospace
 font-style = Regular
@@ -12,6 +12,7 @@ window-height = 60
 window-theme = ghostty
 window-padding-x = 5
 window-padding-y = 5
+window-decoration = client
 gtk-titlebar-style = tabs
 
 confirm-close-surface=false

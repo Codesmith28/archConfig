@@ -10,7 +10,7 @@ return {
             custom_highlights = function(colors)
                 return {
                     LspInlayHint = {
-                        fg = colors.overlay1,
+                        fg = colors.surface2,
                         bg = colors.none,
                         style = { "italic" },
                     },
@@ -51,8 +51,8 @@ return {
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "tokyonight-night",
-            -- colorscheme = "catppuccin-macchiato",
+            -- colorscheme = "tokyonight-night",
+            colorscheme = "catppuccin-mocha",
         },
     },
 }
