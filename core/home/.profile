@@ -4,9 +4,6 @@
 PROFILE_SOURCED=1
 _SOURCING_PROFILE=1
 
-# Unset terminal launcher GPU overrides so CLI commands retain full GPU access
-unset VK_LOADER_DRIVERS_DISABLE
-
 # ------------------------------------------------------------------------------
 # 1. PATH & Library Path Configuration (deduplicated)
 # ------------------------------------------------------------------------------

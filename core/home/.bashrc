@@ -2,9 +2,6 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# Unset terminal launcher GPU overrides so all CLI commands retain full GPU access
-unset VK_LOADER_DRIVERS_DISABLE
-
 # ------------------------------------------------------------------------------
 # 1. Early Return for Non-Interactive Shells
 # ------------------------------------------------------------------------------

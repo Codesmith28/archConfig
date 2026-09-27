@@ -21,8 +21,6 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 3. **Desktop Entry (`ptyxis/org.gnome.Ptyxis.desktop`)**:
    Ensures shortcuts (`Ctrl+Alt+T` via `xdg-terminal-exec`) and application launcher icons invoke the wrapper.
    - Installed to: `~/.local/share/applications/org.gnome.Ptyxis.desktop`
-4. **Shell GPU Preservation (`.bashrc` & `.profile`)**:
-   Both `~/.bashrc` and `~/.profile` automatically unset `VK_LOADER_DRIVERS_DISABLE` so that all shell sessions retain full, unrestricted access to CUDA, PyTorch, Vulkan, and the NVIDIA GPU.
 
 ### Results
 - **Cold start latency**: Reduced from **~2.40s** to **~0.31s** (~8x faster).
