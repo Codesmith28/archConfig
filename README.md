@@ -30,10 +30,11 @@ graph TD
 | Layer | Directory | Purpose |
 | :--- | :--- | :--- |
 | **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `herdr`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`). |
-| **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`). |
+| **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell & Git dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`, `.gitconfig`). |
+| **Core Scripts** | [`core/scripts/`](file:///home/codesmith28/archConfig/core/scripts) | Universal developer tooling (`setup_git.sh` for Git identity, RSA 4096 SSH keys, and directory profiles). |
 | **Desktop Layer** | [`desktop/`](file:///home/codesmith28/archConfig/desktop) | Modular DE configs: GNOME extensions/dconf, KDE Plasma shortcuts, and Hyprland (Lua & classic). |
 | **Distro Layer** | [`distros/`](file:///home/codesmith28/archConfig/distros) | Package installation scripts, systemd unit files, and hardware optimizations per distribution. |
-| **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and compiler quirks. |
+| **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and Git credential/SSH fixes. |
 | **AI Skills** | [`.agents/skills/`](file:///home/codesmith28/archConfig/.agents/skills) | Rules for AI agents (`archconfig-guard`) to guarantee zero cross-distro breakage and maintain docs. |
 
 ---
@@ -89,6 +90,20 @@ No more hardcoded compiler names or version mismatches between Homebrew and Linu
 - **Java**: Automatic `resolve_java_home()` supporting macOS Homebrew, Fedora, Arch, and Ubuntu JDK installations.
 - **C/C++**: Clangd configured with universal query-driver for complete standard library intellisense.
 - **Competitive Programming**: Integrated test-case assistant with hotkeys for fast problem verification.
+
+### Universal Git & Directory-Scoped SSH Setup (`core/scripts/setup_git.sh`)
+Cross-distro vanilla Git configuration with automated SSH routing and profile isolation:
+- **Base Config**: High-efficiency defaults (`pull.rebase = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `rerere.enabled = true`, intuitive aliases).
+- **Push Interception**: Automatically rewrites GitHub HTTPS pushes to SSH via `pushInsteadOf` to prevent credential prompts.
+- **Multi-Profile Isolation**: Configure directory-scoped identities (e.g. `~/work`, `~/uni`) with dedicated 4096-bit RSA keys in `~/.ssh/profiles/<name>/id_rsa` and `includeIf`, while retaining default `~/.ssh/id_rsa` everywhere else.
+- **Run Setup**:
+  ```bash
+  # Interactive setup:
+  ./core/scripts/setup_git.sh
+
+  # Create a directory-scoped profile:
+  ./core/scripts/setup_git.sh --profile work --profile-name "Work Name" --profile-email "user@work.com"
+  ```
 
 ---
 

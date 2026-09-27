@@ -187,6 +187,21 @@ done
 # ------------------------------------------------------------------------------
 echo ""
 echo "==> Synchronizing Home Dotfiles (~/)..."
+
+# Ensure local git identity is preserved before ~/.gitconfig symlink
+if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ] && [ ! -f "$HOME/.gitconfig.local" ]; then
+    if command -v git >/dev/null 2>&1; then
+        _ex_name="$(git config --file "$HOME/.gitconfig" user.name 2>/dev/null || true)"
+        _ex_email="$(git config --file "$HOME/.gitconfig" user.email 2>/dev/null || true)"
+        if [ -n "$_ex_name" ] || [ -n "$_ex_email" ]; then
+            touch "$HOME/.gitconfig.local"
+            [ -n "$_ex_name" ] && git config --file "$HOME/.gitconfig.local" user.name "$_ex_name"
+            [ -n "$_ex_email" ] && git config --file "$HOME/.gitconfig.local" user.email "$_ex_email"
+            echo "  📦 Preserved existing Git identity in ~/.gitconfig.local"
+        fi
+    fi
+fi
+
 for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
     [ -e "$item" ] || continue
     name="$(basename "$item")"
@@ -249,5 +264,9 @@ if [ "$HAS_BACKUPS" = true ]; then
     echo ""
     echo "  📦 Previous host configurations safely backed up to:"
     echo "     $BACKUP_DIR"
+fi
+if [ ! -f "$HOME/.ssh/id_rsa" ] || [ ! -f "$HOME/.gitconfig.local" ]; then
+    echo ""
+    echo "  💡 Tip: Run ./core/scripts/setup_git.sh to configure Git identity and SSH keys."
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
