@@ -46,6 +46,30 @@ Across different Linux distributions (**Fedora, Ubuntu, Arch Linux**), GNOME des
   ```
   and imports it into the live systemd session via `systemctl --user import-environment PATH`.
 
+### 7. Package Manager & Sudo Interactivity (`gnome-tweaks`)
+- **The Issue**: `desktop/gnome/setup.sh` checked `can_sudo` using `sudo -n true` (passwordless check) and redirected errors to `2>/dev/null`. On fresh installations where sudo credentials were not already cached, `sudo -n true` failed, causing package installation (`gnome-tweaks`, `gnome-extensions-app`) to be silently skipped. In addition, stderr redirection suppressed the interactive password prompt.
+- **The Fix**: Unified under `run_root()`. If run under `sudo`, packages are installed before dropping privileges. If run as a normal user, `sudo` is called directly without `sudo -n` or suppressing stderr, cleanly prompting the user.
+
+### 8. Rounded Window Blur Support (`gnome-rounded-blur`)
+- **The Issue**: `blur-my-shell` and `dash-to-dock` require mutter rounded blur libraries on Fedora for hardware-accelerated rounded blur effects.
+- **The Fix**: Automatically enabled the COPR repository and installed the package:
+  ```bash
+  sudo dnf copr enable -y aneagle/gnome-rounded-blur
+  sudo dnf install -y gnome-rounded-blur
+  ```
+
+### 9. Preserving Native Theme & Color Scheme
+- **The Issue**: The setup script previously forced `color-scheme='prefer-dark'` and failed verification if the user was using a light or system-default appearance.
+- **The Fix**: Removed forced dark mode override from `desktop/gnome/setup.sh`, `desktop/gnome/config.sh`, and `desktop/gnome/dconf/gnome-settings.dconf`. The user's active theme and color-scheme preference are preserved intact.
+
+### 10. Extension Discovery & Session Lifecycle
+- **The Issue**: When extensions are downloaded and extracted directly into `~/.local/share/gnome-shell/extensions/<uuid>`, GNOME Shell's running process does not discover newly created extension directories until the session is reloaded.
+- **The Fix**: Documented and flagged that on a fresh VM or initial dotfile setup, a single session logout and log back in (or Wayland/X11 session restart) is required for GNOME Shell to index and enable the extensions.
+
+### 11. User Fonts Directory Provisioning (`~/.local/share/fonts`)
+- **The Issue**: Fresh Linux installations do not provide `~/.local/share/fonts` by default, leaving users with nowhere to drop downloaded Nerd Fonts (`.ttf`/`.otf`).
+- **The Fix**: Added automatic creation of `~/.local/share/fonts` to `sync.sh`, `desktop/gnome/setup.sh`, and `core/config/fontconfig/setup.sh`.
+
 ---
 
 ## Verification & Diagnostic Commands

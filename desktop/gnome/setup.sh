@@ -18,11 +18,94 @@ else
     log_error()   { echo "  [ERR]  $*" >&2; }
 fi
 
+run_root() {
+    if [[ "$(id -u)" -eq 0 ]]; then
+        "$@"
+    elif command -v sudo >/dev/null 2>&1; then
+        sudo "$@"
+    else
+        log_error "Root privileges or sudo required to run: $*"
+        return 1
+    fi
+}
+
 # ------------------------------------------------------------------------------
-# 1. Privileges & DBus Session Resilience
+# 1. Distro Utility Package Installation & Privilege Handling
 # ------------------------------------------------------------------------------
+install_distro_packages() {
+    log_info "Verifying required GNOME utility packages..."
+    
+    local os_id=""
+    if [[ -f /etc/os-release ]]; then
+        os_id="$(grep ^ID= /etc/os-release | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
+    fi
+
+    case "$os_id" in
+        fedora|rhel|centos)
+            local fedora_pkgs=()
+            if ! rpm -q gnome-tweaks >/dev/null 2>&1; then
+                fedora_pkgs+=("gnome-tweaks")
+            fi
+            if ! rpm -q gnome-extensions-app >/dev/null 2>&1; then
+                fedora_pkgs+=("gnome-extensions-app")
+            fi
+            if [[ ${#fedora_pkgs[@]} -gt 0 ]]; then
+                log_info "Installing ${fedora_pkgs[*]} via dnf..."
+                run_root dnf install -y "${fedora_pkgs[@]}"
+            fi
+
+            # COPR package required by blur-my-shell + dash-to-dock for rounded window blur
+            if ! rpm -q gnome-rounded-blur >/dev/null 2>&1; then
+                log_info "Enabling COPR repo aneagle/gnome-rounded-blur and installing gnome-rounded-blur..."
+                run_root dnf copr enable -y aneagle/gnome-rounded-blur
+                run_root dnf install -y gnome-rounded-blur
+            fi
+
+            if command -v flatpak >/dev/null 2>&1; then
+                if ! flatpak list 2>/dev/null | grep -q "com.mattjakeman.ExtensionManager"; then
+                    log_info "Installing Extension Manager via flatpak..."
+                    flatpak install -y flathub com.mattjakeman.ExtensionManager 2>/dev/null || true
+                fi
+            fi
+            ;;
+        ubuntu|debian|pop|linuxmint)
+            local missing_pkgs=()
+            if ! dpkg -s gnome-tweaks >/dev/null 2>&1; then
+                missing_pkgs+=("gnome-tweaks")
+            fi
+            if ! dpkg -s gnome-shell-extension-manager >/dev/null 2>&1; then
+                missing_pkgs+=("gnome-shell-extension-manager")
+            fi
+            if [[ ${#missing_pkgs[@]} -gt 0 ]]; then
+                log_info "Installing ${missing_pkgs[*]} via apt..."
+                run_root apt-get update -qq
+                run_root apt-get install -y "${missing_pkgs[@]}"
+            fi
+            ;;
+        arch|manjaro|endeavouros)
+            local missing_pkgs=()
+            if ! pacman -Qi gnome-tweaks >/dev/null 2>&1; then
+                missing_pkgs+=("gnome-tweaks")
+            fi
+            if ! pacman -Qi extension-manager >/dev/null 2>&1; then
+                missing_pkgs+=("extension-manager")
+            fi
+            if [[ ${#missing_pkgs[@]} -gt 0 ]]; then
+                log_info "Installing ${missing_pkgs[*]} via pacman..."
+                run_root pacman -S --needed --noconfirm "${missing_pkgs[@]}"
+            fi
+            ;;
+        *)
+            log_warn "Unrecognized distro: $os_id. Skipping automatic package manager check."
+            ;;
+    esac
+}
+
 # Ensure non-interactive / SSH / sudo invocations attach to user's DBus session
 if [[ "$(id -u)" -eq 0 && "${1:-}" != "--user-run" ]]; then
+    # If running as root, install packages first before dropping privileges
+    install_distro_packages
+
     TARGET_USER="${SUDO_USER:-}"
     if [[ -z "$TARGET_USER" || "$TARGET_USER" == "root" ]]; then
         TARGET_USER="$(loginctl list-sessions --no-legend 2>/dev/null | awk '{print $3}' | grep -v 'root' | head -n 1 || true)"
@@ -57,6 +140,9 @@ if [[ "$(id -u)" -eq 0 && "${1:-}" != "--user-run" ]]; then
     exit $?
 fi
 
+# If running as normal user, install distro packages now
+install_distro_packages
+
 # If running as normal user but DBUS_SESSION_BUS_ADDRESS is missing, check runtime bus
 if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
     USER_BUS="/run/user/$(id -u)/bus"
@@ -71,7 +157,7 @@ fi
 # 2. Systemd User Environment & PATH Persistence
 # ------------------------------------------------------------------------------
 log_info "Configuring systemd user session environment for GUI launchers..."
-mkdir -p "$HOME/.config/environment.d" "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/dbus-1/services"
+mkdir -p "$HOME/.config/environment.d" "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.local/share/dbus-1/services" "$HOME/.local/share/fonts"
 
 # Write persistent environment so GNOME Shell always resolves custom launchers (default-terminal)
 cat > "$HOME/.config/environment.d/10-archconfig.conf" << 'EOF'
@@ -90,75 +176,6 @@ if [[ -f "$SCRIPT_DIR/default-terminal" ]]; then
         sudo install -m 755 "$SCRIPT_DIR/default-terminal" "/usr/local/bin/default-terminal" 2>/dev/null || true
     fi
 fi
-
-# ------------------------------------------------------------------------------
-# 3. Distro Utility Package Installation (gnome-tweaks & extension-manager)
-# ------------------------------------------------------------------------------
-install_distro_packages() {
-    log_info "Verifying required GNOME utility packages..."
-    
-    local os_id=""
-    if [[ -f /etc/os-release ]]; then
-        os_id="$(grep ^ID= /etc/os-release | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
-    fi
-
-    local can_sudo=false
-    if sudo -n true 2>/dev/null || [[ -n "${SUDO_USER:-}" ]]; then
-        can_sudo=true
-    fi
-
-    case "$os_id" in
-        fedora|rhel|centos)
-            if ! rpm -q gnome-tweaks >/dev/null 2>&1; then
-                if [ "$can_sudo" = true ]; then
-                    log_info "Installing gnome-tweaks via dnf..."
-                    sudo dnf install -y gnome-tweaks 2>/dev/null || true
-                fi
-            fi
-            if command -v flatpak >/dev/null 2>&1; then
-                if ! flatpak list 2>/dev/null | grep -q "com.mattjakeman.ExtensionManager"; then
-                    log_info "Installing Extension Manager via flatpak..."
-                    flatpak install -y flathub com.mattjakeman.ExtensionManager 2>/dev/null || true
-                fi
-            fi
-            if ! rpm -q gnome-extensions-app >/dev/null 2>&1 && [ "$can_sudo" = true ]; then
-                sudo dnf install -y gnome-extensions-app 2>/dev/null || true
-            fi
-            ;;
-        ubuntu|debian|pop|linuxmint)
-            local missing_pkgs=()
-            if ! dpkg -s gnome-tweaks >/dev/null 2>&1; then
-                missing_pkgs+=("gnome-tweaks")
-            fi
-            if ! dpkg -s gnome-shell-extension-manager >/dev/null 2>&1; then
-                missing_pkgs+=("gnome-shell-extension-manager")
-            fi
-            if [[ ${#missing_pkgs[@]} -gt 0 ]] && [ "$can_sudo" = true ]; then
-                log_info "Installing ${missing_pkgs[*]} via apt..."
-                sudo apt-get update -qq 2>/dev/null || true
-                sudo apt-get install -y "${missing_pkgs[@]}" 2>/dev/null || true
-            fi
-            ;;
-        arch|manjaro|endeavouros)
-            local missing_pkgs=()
-            if ! pacman -Qi gnome-tweaks >/dev/null 2>&1; then
-                missing_pkgs+=("gnome-tweaks")
-            fi
-            if ! pacman -Qi extension-manager >/dev/null 2>&1; then
-                missing_pkgs+=("extension-manager")
-            fi
-            if [[ ${#missing_pkgs[@]} -gt 0 ]] && [ "$can_sudo" = true ]; then
-                log_info "Installing ${missing_pkgs[*]} via pacman..."
-                sudo pacman -S --needed --noconfirm "${missing_pkgs[@]}" 2>/dev/null || true
-            fi
-            ;;
-        *)
-            log_warn "Unrecognized distro: $os_id. Skipping automatic package manager check."
-            ;;
-    esac
-}
-
-install_distro_packages
 
 # ------------------------------------------------------------------------------
 # 4. Extension Compatibility & Master Controls
@@ -420,7 +437,6 @@ gsettings set org.gnome.desktop.interface font-hinting 'slight' 2>/dev/null || t
 # ==============================================================================
 # Appearance & Interface Settings
 # ==============================================================================
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface accent-color 'blue' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-format '24h' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-show-seconds false 2>/dev/null || true
@@ -535,7 +551,6 @@ checks = [
     ("Minimize (<Super>m)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "minimize"], lambda v: "<Super>m" in v),
     ("Center Window (<Super>c)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "move-to-center"], lambda v: "<Super>c" in v),
     ("Titlebar Buttons", ["gsettings", "get", "org.gnome.desktop.wm.preferences", "button-layout"], lambda v: "minimize,maximize,close" in v),
-    ("Dark Mode", ["gsettings", "get", "org.gnome.desktop.interface", "color-scheme"], lambda v: "prefer-dark" in v),
     ("UI Font (Adwaita Sans)", ["gsettings", "get", "org.gnome.desktop.interface", "font-name"], lambda v: "Adwaita" in v),
     ("Mono Font (JetBrainsMono)", ["gsettings", "get", "org.gnome.desktop.interface", "monospace-font-name"], lambda v: "JetBrains" in v),
     ("Default Terminal Executable", ["which", "default-terminal"], lambda v: len(v.strip()) > 0),
@@ -560,4 +575,5 @@ else:
     print("  [WARN] Some settings may require GNOME Shell reload to display in UI.")
 PYEOF
 
+log_info "NOTE: If GNOME extensions were newly downloaded, a session logout/login is required for GNOME Shell to initialize them."
 log_success "GNOME desktop setup and verification complete!"

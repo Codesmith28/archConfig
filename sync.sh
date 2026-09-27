@@ -166,7 +166,7 @@ link_item() {
 # ------------------------------------------------------------------------------
 echo ""
 echo "==> Synchronizing Core Application Configs (~/.config/)..."
-mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.config" "$HOME/.local/share/fonts"
 
 for item in "$REPO_DIR/core/config"/*; do
     [ -e "$item" ] || continue

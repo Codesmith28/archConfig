@@ -105,7 +105,6 @@ gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Ner
 # ------------------------------------------------------------------------------
 # 8. Appearance & Peripherals
 # ------------------------------------------------------------------------------
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface accent-color 'blue' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-format '24h' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-show-seconds false 2>/dev/null || true

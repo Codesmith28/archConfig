@@ -153,7 +153,7 @@ echo "    ✓ System-level configuration installed to /etc/fonts/local.conf"
 # ------------------------------------------------------------------------------
 echo ""
 echo "==> [2/3] Ensuring user-level fontconfig symlink..."
-mkdir -p "$REAL_HOME/.config"
+mkdir -p "$REAL_HOME/.config" "$REAL_HOME/.local/share/fonts"
 
 if [ -L "$USER_CONFIG_DIR" ]; then
     CURRENT_TARGET="$(readlink -f "$USER_CONFIG_DIR")"

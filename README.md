@@ -43,9 +43,12 @@ graph TD
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Codesmith28/archConfig.git ~/archConfig
+git clone --depth 1 https://github.com/Codesmith28/archConfig.git ~/archConfig
 cd ~/archConfig
 ```
+> [!TIP]
+> Using `--depth 1` creates a shallow clone (~2 MB) for instant bootstrapping on fresh installs.
+
 
 ### 2. Synchronize dotfiles
 The root synchronizer automatically detects your operating system and desktop environment:

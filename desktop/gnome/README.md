@@ -32,7 +32,7 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 
 ## 2. Key GNOME Extensions & Multi-Distro Packages
 
-`setup.sh` automatically installs `gnome-tweaks` and `extension-manager` across Fedora, Ubuntu, and Arch, and provisions the 5 canonical GNOME extensions:
+`setup.sh` automatically installs `gnome-tweaks` and `extension-manager` across Fedora, Ubuntu, and Arch. On Fedora, it also enables the `aneagle/gnome-rounded-blur` COPR repository and installs `gnome-rounded-blur` to support blur-my-shell and dash-to-dock rounded blur rendering. It provisions the 5 canonical GNOME extensions:
 1. **Blur my Shell** (`blur-my-shell@aunetx`): Blur effect for top panel, dash, overview, and app folders.
 2. **Clipboard Indicator** (`clipboard-indicator@tudmotu.com`): Clipboard history manager mapped to `Super + V`.
 3. **Compiz Alike Magic Lamp Effect** (`compiz-alike-magic-lamp-effect@hermes83.github.com`): Fluid window minimize animation.
@@ -69,7 +69,7 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 - **Fonts & Interface**:
   - System UI font: `Adwaita Sans 11`.
   - Monospace font: `JetBrainsMono Nerd Font 10`.
-  - Dark mode (`prefer-dark`), blue accent, 24h clock, and battery percentage display enabled.
+  - Blue accent, 24h clock, and battery percentage display enabled (preserves user color-scheme preference without forcing dark mode).
 - **Keyboard & Touchpad**:
   - Repeat rate: 250ms delay, 25ms repeat interval (~40Hz).
   - Touchpad: Disable While Typing (DWT) enabled, tap-to-click, and natural scrolling.

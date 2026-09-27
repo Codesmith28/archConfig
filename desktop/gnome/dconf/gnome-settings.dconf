@@ -3,7 +3,6 @@ accent-color='blue'
 clock-format='24h'
 clock-show-seconds=false
 clock-show-weekday=false
-color-scheme='prefer-dark'
 cursor-theme='Notwaita-Black'
 document-font-name='Adwaita Sans 11'
 font-antialiasing='rgba'
