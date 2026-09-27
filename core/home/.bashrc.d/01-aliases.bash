@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------
 # Navigation & Listing
 # ------------------------------------------------------------------------------
-if [ -x /usr/bin/dircolors ]; then
+if command -v dircolors >/dev/null 2>&1; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
