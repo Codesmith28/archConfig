@@ -43,13 +43,6 @@ else
     export EDITOR='vi'
 fi
 
-if command -v code >/dev/null 2>&1; then
-    export VISUAL='code --wait'
-else
-    export VISUAL="$EDITOR"
-fi
-
-
 # ------------------------------------------------------------------------------
 # 3. Language & Tool Environments
 # ------------------------------------------------------------------------------
