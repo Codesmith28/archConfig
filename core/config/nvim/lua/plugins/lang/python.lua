@@ -33,6 +33,7 @@ return {
                         single_file_support = true,
                         init_options = {
                             pyrefly = {
+                                typeCheckingMode = "default",
                                 analysis = {
                                     inlayHints = inlay_hints_config,
                                 },
@@ -40,11 +41,15 @@ return {
                         },
                         settings = {
                             python = {
+                                pyrefly = {
+                                    typeCheckingMode = "default",
+                                },
                                 analysis = {
                                     inlayHints = inlay_hints_config,
                                 },
                             },
                             pyrefly = {
+                                typeCheckingMode = "default",
                                 analysis = {
                                     inlayHints = inlay_hints_config,
                                 },
@@ -59,31 +64,7 @@ return {
 
             opts.servers = opts.servers or {}
 
-            -- Configure Pyrefly as the active Python LSP
-            opts.servers.pyrefly = vim.tbl_deep_extend("force", {
-                enabled = true,
-                init_options = {
-                    pyrefly = {
-                        analysis = {
-                            inlayHints = inlay_hints_config,
-                        },
-                    },
-                },
-                settings = {
-                    python = {
-                        analysis = {
-                            inlayHints = inlay_hints_config,
-                        },
-                    },
-                    pyrefly = {
-                        analysis = {
-                            inlayHints = inlay_hints_config,
-                        },
-                    },
-                },
-            }, opts.servers.pyrefly or {})
-
-            -- Configure Ruff to report unused vars, args, imports as hints (dimmed & italic like VS Code)
+            -- Configure Ruff and Pyrefly to report unused and unreachable code as hints (dimmed & italic like VS Code)
             local function mark_unused_as_hint(items)
                 if not items then
                     return
@@ -91,10 +72,18 @@ return {
                 for _, item in ipairs(items) do
                     local code = tostring(item.code or "")
                     if
-                        code == "F841" -- Local variable is assigned to but never used
+                        (item.tags and vim.tbl_contains(item.tags, 1))
+                        or code == "F841" -- Local variable is assigned to but never used
                         or code == "F401" -- Module imported but unused
                         or code == "B007" -- Loop control variable not used within loop body
+                        or code == "B014" -- Duplicate exception handler (unreachable)
+                        or code == "B025" -- Duplicate try block exception (unreachable)
+                        or code == "UP036" -- Outdated/unreachable version block
+                        or code == "unreachable" -- Unreachable statement (Pyrefly / Pyright)
+                        or code == "unreachable-match-case" -- Unreachable match case
                         or code:match("^ARG") -- Unused function/method/lambda arguments (ARG001-ARG005)
+                        or code:match("^unused") -- Unused diagnostics
+                        or code:match("^unreachable") -- Unreachable diagnostics
                     then
                         item.severity = vim.diagnostic.severity.HINT
                         item.tags = item.tags or {}
@@ -104,6 +93,49 @@ return {
                     end
                 end
             end
+
+            -- Configure Pyrefly as the active Python LSP
+            opts.servers.pyrefly = vim.tbl_deep_extend("force", {
+                enabled = true,
+                init_options = {
+                    pyrefly = {
+                        typeCheckingMode = "default",
+                        analysis = {
+                            inlayHints = inlay_hints_config,
+                        },
+                    },
+                },
+                settings = {
+                    python = {
+                        pyrefly = {
+                            typeCheckingMode = "default",
+                        },
+                        analysis = {
+                            inlayHints = inlay_hints_config,
+                        },
+                    },
+                    pyrefly = {
+                        typeCheckingMode = "default",
+                        analysis = {
+                            inlayHints = inlay_hints_config,
+                        },
+                    },
+                },
+                handlers = {
+                    ["textDocument/diagnostic"] = function(err, result, ctx, config)
+                        if result and result.items then
+                            mark_unused_as_hint(result.items)
+                        end
+                        return vim.lsp.diagnostic.on_diagnostic(err, result, ctx, config)
+                    end,
+                    ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+                        if result and result.diagnostics then
+                            mark_unused_as_hint(result.diagnostics)
+                        end
+                        return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+                    end,
+                },
+            }, opts.servers.pyrefly or {})
 
             opts.servers.ruff = vim.tbl_deep_extend("force", {
                 enabled = true,
@@ -116,6 +148,9 @@ return {
                                 "F", -- Pyflakes (F841: unused variables, F401: unused imports)
                                 "ARG", -- flake8-unused-arguments (ARG001-ARG005: unused args)
                                 "B007", -- flake8-bugbear (B007: unused loop variables)
+                                "B014", -- flake8-bugbear (B014: duplicate handler exception)
+                                "B025", -- flake8-bugbear (B025: duplicate try block exception)
+                                "UP036", -- pyupgrade (UP036: unreachable version block)
                             },
                         },
                     },
