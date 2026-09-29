@@ -426,11 +426,12 @@ if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.tili
 fi
 
 # ==============================================================================
-# Font Settings: Adwaita Sans for UI, JetBrainsMono for monospace
+# Font Settings: Sans for UI & Document, Monospace for Terminal/Code
+# Uses system default fontconfig aliases so fonts stay in sync automatically
 # ==============================================================================
-gsettings set org.gnome.desktop.interface font-name 'Adwaita Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface document-font-name 'Adwaita Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface font-name 'Sans 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface document-font-name 'Sans 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace 10' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface font-antialiasing 'rgba' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface font-hinting 'slight' 2>/dev/null || true
 
@@ -551,8 +552,8 @@ checks = [
     ("Minimize (<Super>m)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "minimize"], lambda v: "<Super>m" in v),
     ("Center Window (<Super>c)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "move-to-center"], lambda v: "<Super>c" in v),
     ("Titlebar Buttons", ["gsettings", "get", "org.gnome.desktop.wm.preferences", "button-layout"], lambda v: "minimize,maximize,close" in v),
-    ("UI Font (Adwaita Sans)", ["gsettings", "get", "org.gnome.desktop.interface", "font-name"], lambda v: "Adwaita" in v),
-    ("Mono Font (JetBrainsMono)", ["gsettings", "get", "org.gnome.desktop.interface", "monospace-font-name"], lambda v: "JetBrains" in v),
+    ("Interface Font (Sans)", ["gsettings", "get", "org.gnome.desktop.interface", "font-name"], lambda v: "sans" in v.lower()),
+    ("Mono Font (Monospace)", ["gsettings", "get", "org.gnome.desktop.interface", "monospace-font-name"], lambda v: "monospace" in v.lower()),
     ("Default Terminal Executable", ["which", "default-terminal"], lambda v: len(v.strip()) > 0),
 ]
 

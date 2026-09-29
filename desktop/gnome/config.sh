@@ -98,9 +98,9 @@ fi
 # ------------------------------------------------------------------------------
 # 7. Font Settings
 # ------------------------------------------------------------------------------
-gsettings set org.gnome.desktop.interface font-name 'Adwaita Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface document-font-name 'Adwaita Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface font-name 'Sans 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface document-font-name 'Sans 11' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace 10' 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 8. Appearance & Peripherals

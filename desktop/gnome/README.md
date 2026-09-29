@@ -65,8 +65,8 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
   - `Super + N`: Toggle notification tray.
   - `Super + V`: Toggle Clipboard Indicator history.
 - **Fonts & Interface**:
-  - System UI font: `Adwaita Sans 11`.
-  - Monospace font: `JetBrainsMono Nerd Font 10`.
+  - Interface & Document font: `Sans 11` (delegates directly to fontconfig system defaults).
+  - Monospace font: `Monospace 10` (delegates directly to fontconfig system defaults).
   - Blue accent, 24h clock, and battery percentage display enabled (preserves user color-scheme preference without forcing dark mode).
 - **Keyboard & Touchpad**:
   - Repeat rate: 250ms delay, 25ms repeat interval (~40Hz).

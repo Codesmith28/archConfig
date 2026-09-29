@@ -4,13 +4,13 @@ clock-format='24h'
 clock-show-seconds=false
 clock-show-weekday=false
 cursor-theme='Notwaita-Black'
-document-font-name='Adwaita Sans 11'
+document-font-name='Sans 11'
 font-antialiasing='rgba'
 font-hinting='slight'
-font-name='Adwaita Sans 11'
+font-name='Sans 11'
 gtk-enable-primary-paste=true
 icon-theme='Adwaita'
-monospace-font-name='JetBrainsMono Nerd Font 10'
+monospace-font-name='Monospace 10'
 show-battery-percentage=true
 toolkit-accessibility=false
 
