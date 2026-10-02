@@ -74,7 +74,8 @@ return {
                     explorer = {
                         layout = {
                             layout = {
-                                width = 0.20,
+                                position = "right",
+                                width = 0.23,
                             },
                         },
                         hidden = true,

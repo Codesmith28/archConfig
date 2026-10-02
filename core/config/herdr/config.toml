@@ -7,9 +7,6 @@ delivery = "herdr"
 name = "catppuccin"
 auto_switch = false
 
-# [theme.custom]
-# panel_bg = "black"
-
 [terminal]
 new_cwd = "follow"
 

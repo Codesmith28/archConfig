@@ -47,3 +47,32 @@ vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
         end
     end,
 })
+
+local group = vim.api.nvim_create_augroup("TroubleDynamicDiagnostics", { clear = true })
+
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+    group = group,
+    callback = function()
+        -- Count errors and warnings in the current buffer
+        local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+        local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+        local has_problems = (errors > 0 or warnings > 0)
+
+        vim.schedule(function()
+            local has_trouble, trouble = pcall(require, "trouble")
+            if not has_trouble then
+                return
+            end
+
+            local is_open = trouble.is_open("diagnostics")
+
+            if has_problems and not is_open then
+                -- Open if errors appear and it's currently closed
+                trouble.open({ mode = "diagnostics", focus = false })
+            elseif not has_problems and is_open then
+                -- Close automatically when all errors/warnings are cleared
+                trouble.close("diagnostics")
+            end
+        end)
+    end,
+})

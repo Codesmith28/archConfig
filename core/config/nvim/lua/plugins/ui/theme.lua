@@ -30,6 +30,7 @@ return {
         "folke/tokyonight.nvim",
         lazy = true,
         opts = {
+            transparent = true,
             styles = {
                 comments = { italic = true },
             },
@@ -49,6 +50,7 @@ return {
             end,
         },
     },
+
     {
         "LazyVim/LazyVim",
         opts = {
