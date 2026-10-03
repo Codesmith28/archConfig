@@ -52,6 +52,17 @@ return {
     },
 
     {
+        "Shatur/neovim-ayu",
+        config = function()
+            require("ayu").setup({
+                mirage = false, -- Set to true for the softer mirage variant, false for dark
+                terminal = true, -- Set terminal colors
+                overrides = {}, -- Add custom color overrides here if needed
+            })
+        end,
+    },
+
+    {
         "LazyVim/LazyVim",
         opts = {
             -- colorscheme = "tokyonight-night",
