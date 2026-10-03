@@ -212,7 +212,20 @@ for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
 done
 
 # ------------------------------------------------------------------------------
-# 5. Yazi Plugin Provisioning
+# 5. Core Shell Dependencies (zoxide & fzf)
+# ------------------------------------------------------------------------------
+echo ""
+echo "==> Ensuring Universal Core Dependencies (zoxide & fzf) are installed..."
+if [ -f "$REPO_DIR/core/setup.sh" ]; then
+    if [ "$DRY_RUN" = false ]; then
+        bash "$REPO_DIR/core/setup.sh"
+    else
+        echo "  (dry-run) Would execute $REPO_DIR/core/setup.sh"
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 6. Yazi Plugin Provisioning
 # ------------------------------------------------------------------------------
 if command -v ya >/dev/null 2>&1; then
     echo ""
@@ -225,7 +238,7 @@ if command -v ya >/dev/null 2>&1; then
 fi
 
 # ------------------------------------------------------------------------------
-# 6. Apply Desktop Environment Layer (if applicable)
+# 7. Apply Desktop Environment Layer (if applicable)
 # ------------------------------------------------------------------------------
 if [ "$DETECTED_DE" = "gnome" ]; then
     echo ""
@@ -268,5 +281,9 @@ fi
 if [ ! -f "$HOME/.ssh/id_rsa" ] || [ ! -f "$HOME/.gitconfig.local" ]; then
     echo ""
     echo "  💡 Tip: Run ./core/scripts/setup_git.sh to configure Git identity and SSH keys."
+fi
+if ! command -v zoxide >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1; then
+    echo ""
+    echo "  💡 Tip: Run ./core/scripts/setup_shell_dependencies.sh to install zoxide and fzf."
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

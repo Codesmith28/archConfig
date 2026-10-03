@@ -31,7 +31,7 @@ graph TD
 | :--- | :--- | :--- |
 | **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `herdr`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`). |
 | **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell & Git dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`, `.gitconfig`). |
-| **Core Scripts** | [`core/scripts/`](file:///home/codesmith28/archConfig/core/scripts) | Universal developer tooling (`setup_git.sh` for Git identity, RSA 4096 SSH keys, and directory profiles). |
+| **Core Scripts & Setup** | [`core/scripts/`](file:///home/codesmith28/archConfig/core/scripts) | Universal cross-platform setup (`core/setup.sh`), developer tooling (`setup_git.sh` for Git/SSH profiles, `setup_shell_dependencies.sh` for unattended zoxide/fzf installation). |
 | **Desktop Layer** | [`desktop/`](file:///home/codesmith28/archConfig/desktop) | Modular DE configs: GNOME extensions/dconf, KDE Plasma shortcuts, and Hyprland (Lua & classic). |
 | **Distro Layer** | [`distros/`](file:///home/codesmith28/archConfig/distros) | Package installation scripts, systemd unit files, and hardware optimizations per distribution. |
 | **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and Git credential/SSH fixes. |
@@ -106,6 +106,19 @@ Cross-distro vanilla Git configuration with automated SSH routing and profile is
 
   # Create a directory-scoped profile:
   ./core/scripts/setup_git.sh --profile work --profile-name "Work Name" --profile-email "user@work.com"
+  ```
+
+### Universal Shell Productivity (`core/setup.sh`)
+Automated, unattended bootstrap for essential shell navigation and fuzzy-search tools (automatically executed during `./sync.sh` across all Mac and Linux environments):
+- **`zoxide`**: Installs via the official script into `~/.local/bin` (already exported in `~/.profile`). Replaces standard `cd` with smart scoring (`z`, `zi`).
+- **`fzf`**: Clones `junegunn/fzf` into `~/.fzf` and runs with `--key-bindings --completion --no-update-rc` to generate completion scripts without dirtying tracked dotfiles (`.bashrc` / `.zshrc`).
+- **Run Setup Standalone**:
+  ```bash
+  # Standalone core setup:
+  ./core/setup.sh
+
+  # Force update:
+  ./core/setup.sh --update
   ```
 
 ---

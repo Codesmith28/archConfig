@@ -28,6 +28,7 @@ _ldpath_prepend() {
 # Standard user binary directories
 _path_prepend "$HOME/bin"
 _path_prepend "$HOME/.local/bin"
+_path_prepend "$HOME/.fzf/bin"
 _path_prepend "/opt/nvim-linux-x86_64/bin"
 _path_prepend "/opt/homebrew/bin"
 _path_prepend "/opt/homebrew/sbin"
