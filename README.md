@@ -98,7 +98,7 @@ No more hardcoded compiler names or version mismatches between Homebrew and Linu
 Cross-distro vanilla Git configuration with automated SSH routing and profile isolation:
 - **Base Config**: High-efficiency defaults (`pull.rebase = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `rerere.enabled = true`, intuitive aliases).
 - **Push Interception**: Automatically rewrites GitHub HTTPS pushes to SSH via `pushInsteadOf` to prevent credential prompts.
-- **Multi-Profile Isolation**: Configure directory-scoped identities (e.g. `~/work`, `~/uni`) with dedicated 4096-bit RSA keys in `~/.ssh/profiles/<name>/id_rsa` and `includeIf`, while retaining default `~/.ssh/id_rsa` everywhere else.
+- **Multi-Profile Isolation**: Configure directory-scoped identities (e.g. `~/work`, `~/uni`) with dedicated SSH keys stored directly in `~/.ssh/` (e.g. `id_ed25519_work`, `id_ed25519_uni`) and isolated via `includeIf` and `sshCommand`, while retaining the default key (`id_ed25519` / `id_rsa`) everywhere else.
 - **Run Setup**:
   ```bash
   # Interactive setup:

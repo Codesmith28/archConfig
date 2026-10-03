@@ -278,7 +278,7 @@ if [ "$HAS_BACKUPS" = true ]; then
     echo "  📦 Previous host configurations safely backed up to:"
     echo "     $BACKUP_DIR"
 fi
-if [ ! -f "$HOME/.ssh/id_rsa" ] || [ ! -f "$HOME/.gitconfig.local" ]; then
+if { [ ! -f "$HOME/.ssh/id_rsa" ] && [ ! -f "$HOME/.ssh/id_ed25519" ]; } || [ ! -f "$HOME/.gitconfig.local" ]; then
     echo ""
     echo "  💡 Tip: Run ./core/scripts/setup_git.sh to configure Git identity and SSH keys."
 fi
