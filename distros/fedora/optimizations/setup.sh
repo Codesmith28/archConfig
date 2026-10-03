@@ -43,7 +43,7 @@ executed_modules=()
 # 1. config_grub runs first to configure the bootloader and graphical terminal.
 # 2. battery runs second to apply grubby kernel args (mem_sleep_default=deep) and power settings.
 # 3. Remaining hardware, USB, and desktop optimizations run on top.
-ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "optimize_gnome")
+ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "bluetooth-sleep" "optimize_gnome")
 
 # Build prioritized list of modules
 MODULES_TO_RUN=()
@@ -122,6 +122,9 @@ for mod in "${executed_modules[@]}"; do
             ;;
         usb-wake)
             echo -e "  ${GREEN}✔${NC} ${BOLD}usb-wake${NC}       : Working keyboard wake (internal + external), mouse/backpack wake blocked"
+            ;;
+        bluetooth-sleep)
+            echo -e "  ${GREEN}✔${NC} ${BOLD}bluetooth-sleep${NC}: Clean pre-suspend disconnect & post-resume A2DP AAC resync hook"
             ;;
         *)
             echo -e "  ${GREEN}✔${NC} ${BOLD}$mod${NC}"
