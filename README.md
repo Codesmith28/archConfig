@@ -29,9 +29,9 @@ graph TD
 
 | Layer | Directory | Purpose |
 | :--- | :--- | :--- |
-| **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `herdr`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`). |
+| **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `herdr`, `leaf`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`). |
 | **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell & Git dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`, `.gitconfig`). |
-| **Core Scripts & Setup** | [`core/scripts/`](file:///home/codesmith28/archConfig/core/scripts) | Universal cross-platform setup (`core/setup.sh`), developer tooling (`setup_git.sh` for Git/SSH profiles, `setup_shell_dependencies.sh` for unattended zoxide/fzf installation). |
+| **Core Scripts & Setup** | [`core/scripts/`](file:///home/codesmith28/archConfig/core/scripts) | Universal cross-platform setup (`core/setup.sh`), developer tooling (`setup_git.sh` for Git/SSH profiles, `setup_shell_dependencies.sh` for unattended curl installation of starship, leaf, zoxide, fzf, lazydocker, herdr, etc.). |
 | **Desktop Layer** | [`desktop/`](file:///home/codesmith28/archConfig/desktop) | Modular DE configs: GNOME extensions/dconf, KDE Plasma shortcuts, and Hyprland (Lua & classic). |
 | **Distro Layer** | [`distros/`](file:///home/codesmith28/archConfig/distros) | Package installation scripts, systemd unit files, and hardware optimizations per distribution. |
 | **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and Git credential/SSH fixes. |

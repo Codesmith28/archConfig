@@ -3,8 +3,7 @@
 # archConfig Core Layer Bootstrap Master Runner (macOS & Linux)
 #
 # Sets up cross-platform core developer dependencies:
-# 1. zoxide (smart directory jumping)
-# 2. fzf (fuzzy finder)
+# (starship, leaf, zoxide, fzf, herdr, lazydocker, lazygit, uv, yazi, eza, fastfetch)
 # ==============================================================================
 set -euo pipefail
 

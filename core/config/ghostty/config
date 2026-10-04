@@ -1,8 +1,8 @@
-background = 1b1f23
+background = 1f2329
 
 font-family = monospace
 font-style = Regular
-font-size = 10
+font-size = 11
 bold-color = bright
 
 # Window
@@ -55,4 +55,9 @@ macos-option-as-alt = true
 keybind = cmd+c=copy_to_clipboard
 keybind = cmd+v=paste_from_clipboard
 keybind = cmd+s=text:\x13
+
+# Disable ligatures
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig
 

@@ -212,10 +212,10 @@ for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
 done
 
 # ------------------------------------------------------------------------------
-# 5. Core Shell Dependencies (zoxide & fzf)
+# 5. Universal Core Dependencies (curl / user-space)
 # ------------------------------------------------------------------------------
 echo ""
-echo "==> Ensuring Universal Core Dependencies (zoxide & fzf) are installed..."
+echo "==> Ensuring Universal Core Dependencies are installed..."
 if [ -f "$REPO_DIR/core/setup.sh" ]; then
     if [ "$DRY_RUN" = false ]; then
         bash "$REPO_DIR/core/setup.sh"
@@ -282,8 +282,8 @@ if { [ ! -f "$HOME/.ssh/id_rsa" ] && [ ! -f "$HOME/.ssh/id_ed25519" ]; } || [ ! 
     echo ""
     echo "  💡 Tip: Run ./core/scripts/setup_git.sh to configure Git identity and SSH keys."
 fi
-if ! command -v zoxide >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1; then
+if ! command -v zoxide >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1 || ! command -v starship >/dev/null 2>&1 || ! command -v leaf >/dev/null 2>&1; then
     echo ""
-    echo "  💡 Tip: Run ./core/scripts/setup_shell_dependencies.sh to install zoxide and fzf."
+    echo "  💡 Tip: Run ./core/scripts/setup_shell_dependencies.sh to install core CLI dependencies."
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
