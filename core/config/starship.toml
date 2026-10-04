@@ -14,8 +14,8 @@ style = "italic green"
 [directory]
 truncation_length = 2
 truncation_symbol = "…/"
-style = "purple"
-repo_root_style = "bold purple"
+style = "blue"
+repo_root_style = "bold blue"
 repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
@@ -40,4 +40,4 @@ deleted    = ""
 [hostname]
 ssh_only = false
 format = "[$hostname]($style) | "
-style = "yellow"
+style = "bold yellow"
