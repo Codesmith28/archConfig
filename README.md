@@ -161,6 +161,7 @@ bash setup.sh
 
 Common hardware and dual-boot solutions are documented in [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot):
 
+- **[KDE Plasma Cross-Distro Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/kde_plasma_cross_distro_setup.md)**: Resolving active shortcut persistence (`kglobalshortcutsrc`), Plasma 6 migration, VM/SSH session detection, default terminal routing, and window management across distros.
 - **[GNOME Cross-Distro Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/gnome_cross_distro_setup.md)**: Resolving DBus session attachment, GSettings schema compilation, Ubuntu dock conflicts, and shortcut collision elimination across distros.
 - **[Restoring GRUB Bootloader](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)**: Reinstalling EFI entries after Windows updates or BIOS resets; fixing missing Windows dual-boot entries with `os-prober`.
 - **[Automated GRUB Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Single-command script to reinstall GRUB on UEFI systems.

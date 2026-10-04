@@ -83,20 +83,46 @@ detect_de() {
         return
     fi
 
-    local current_de="${XDG_CURRENT_DESKTOP:-$DESKTOP_SESSION}"
+    local current_de="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}"
     current_de=$(echo "$current_de" | tr '[:upper:]' '[:lower:]')
 
     if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] || echo "$current_de" | grep -q "hyprland"; then
         echo "hyprland"
+        return
     elif echo "$current_de" | grep -q "gnome"; then
         echo "gnome"
+        return
     elif echo "$current_de" | grep -qE "kde|plasma"; then
         echo "kde"
+        return
     elif [ "$(uname -s)" = "Darwin" ]; then
         echo "mac_desktop"
-    else
-        echo "none"
+        return
     fi
+
+    # Fallbacks for VM / SSH / headless environments where XDG_CURRENT_DESKTOP is unset
+    if [ -n "${KDE_FULL_SESSION:-}" ] || [ -n "${KDE_SESSION_VERSION:-}" ] || \
+       pgrep -x "plasmashell" >/dev/null 2>&1 || pgrep -x "kwin_wayland" >/dev/null 2>&1 || pgrep -x "kwin_x11" >/dev/null 2>&1 || \
+       { command -v systemctl >/dev/null 2>&1 && systemctl --user is-active plasma-plasmashell >/dev/null 2>&1; }; then
+        echo "kde"
+        return
+    elif pgrep -x "gnome-shell" >/dev/null 2>&1 || { command -v systemctl >/dev/null 2>&1 && systemctl --user is-active gnome-shell >/dev/null 2>&1; }; then
+        echo "gnome"
+        return
+    elif pgrep -x "Hyprland" >/dev/null 2>&1; then
+        echo "hyprland"
+        return
+    fi
+
+    # Session file fallback (default installed desktop on system)
+    if [ -f /usr/share/wayland-sessions/plasmawayland.desktop ] || [ -f /usr/share/wayland-sessions/plasma.desktop ] || [ -f /usr/share/xsessions/plasma.desktop ]; then
+        if [ ! -f /usr/share/wayland-sessions/gnome.desktop ] && [ ! -f /usr/share/xsessions/gnome.desktop ]; then
+            echo "kde"
+            return
+        fi
+    fi
+
+    echo "none"
 }
 
 DETECTED_OS="$(detect_os)"
@@ -254,7 +280,11 @@ elif [ "$DETECTED_DE" = "kde" ]; then
     echo ""
     echo "==> Applying KDE Plasma Layer..."
     if [ -f "$REPO_DIR/desktop/kde/setup.sh" ]; then
-        bash "$REPO_DIR/desktop/kde/setup.sh"
+        if [ "$DRY_RUN" = false ]; then
+            bash "$REPO_DIR/desktop/kde/setup.sh"
+        else
+            echo "  (dry-run) Would execute $REPO_DIR/desktop/kde/setup.sh"
+        fi
     fi
 elif [ "$DETECTED_DE" = "hyprland" ]; then
     echo ""

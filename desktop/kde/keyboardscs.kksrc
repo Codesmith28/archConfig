@@ -121,6 +121,9 @@ EC1FE20EB2CA978589B08941FB614314-toggle_pause=
 [kaccess][Global Shortcuts]
 Toggle Screen Reader On and Off=Meta+Alt+S
 
+[default-terminal.desktop][Global Shortcuts]
+_launch=Meta+Return
+
 [kitty.desktop][Global Shortcuts]
 _launch=Meta+Return
 
@@ -183,7 +186,7 @@ Switch Window Down=Meta+Alt+Down
 Switch Window Left=Meta+Alt+Left
 Switch Window Right=Meta+Alt+Right
 Switch Window Up=Meta+Alt+Up
-Switch to Desktop 1=Ctrl+F1; Meta+1
+Switch to Desktop 1=Meta+1; Ctrl+F1
 Switch to Desktop 10=
 Switch to Desktop 11=
 Switch to Desktop 12=
@@ -196,7 +199,7 @@ Switch to Desktop 18=
 Switch to Desktop 19=
 Switch to Desktop 2=Meta+2; Ctrl+F2
 Switch to Desktop 20=
-Switch to Desktop 3=Ctrl+F3; Meta+3
+Switch to Desktop 3=Meta+3; Ctrl+F3
 Switch to Desktop 4=Meta+4; Ctrl+F4
 Switch to Desktop 5=Meta+5
 Switch to Desktop 6=Meta+6
@@ -275,7 +278,7 @@ Window Resize=
 Window Shade=
 Window Shrink Horizontal=
 Window Shrink Vertical=
-Window to Desktop 1=Meta+!
+Window to Desktop 1=Meta+Shift+1
 Window to Desktop 10=
 Window to Desktop 11=
 Window to Desktop 12=
@@ -286,13 +289,13 @@ Window to Desktop 16=
 Window to Desktop 17=
 Window to Desktop 18=
 Window to Desktop 19=
-Window to Desktop 2=Meta+@
+Window to Desktop 2=Meta+Shift+2
 Window to Desktop 20=
-Window to Desktop 3=Meta+#
-Window to Desktop 4=Meta+$
-Window to Desktop 5=Meta+%
-Window to Desktop 6=Meta+^
-Window to Desktop 7=Meta+&
+Window to Desktop 3=Meta+Shift+3
+Window to Desktop 4=Meta+Shift+4
+Window to Desktop 5=Meta+Shift+5
+Window to Desktop 6=Meta+Shift+6
+Window to Desktop 7=Meta+Shift+7
 Window to Desktop 8=
 Window to Desktop 9=
 Window to Next Desktop=
@@ -377,7 +380,7 @@ powerProfile=Battery; Launch (4)
 
 [plasmashell][Global Shortcuts]
 Slideshow Wallpaper Next Image=
-activate application launcher=Alt+F1; Meta
+activate application launcher=Alt+F1
 activate task manager entry 1=Meta+Ctrl+1
 activate task manager entry 10=Meta+Ctrl+0
 activate task manager entry 2=Meta+Ctrl+2

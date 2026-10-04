@@ -43,7 +43,39 @@ executed_modules=()
 # 1. config_grub runs first to configure the bootloader and graphical terminal.
 # 2. battery runs second to apply grubby kernel args (mem_sleep_default=deep) and power settings.
 # 3. Remaining hardware, USB, and desktop optimizations run on top.
-ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "bluetooth-sleep" "appstream" "optimize_gnome")
+ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "bluetooth-sleep" "appstream")
+
+detect_desktop() {
+    local de="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}"
+    de=$(echo "$de" | tr '[:upper:]' '[:lower:]')
+    if echo "$de" | grep -qE "kde|plasma" || [ -n "${KDE_FULL_SESSION:-}" ] || [ -n "${KDE_SESSION_VERSION:-}" ] || pgrep -x "plasmashell" >/dev/null 2>&1 || pgrep -x "kwin_wayland" >/dev/null 2>&1; then
+        echo "kde"
+    elif echo "$de" | grep -q "gnome" || pgrep -x "gnome-shell" >/dev/null 2>&1; then
+        echo "gnome"
+    elif [ -f /usr/share/wayland-sessions/plasmawayland.desktop ] || [ -f /usr/share/wayland-sessions/plasma.desktop ]; then
+        echo "kde"
+    elif [ -f /usr/share/wayland-sessions/gnome.desktop ]; then
+        echo "gnome"
+    else
+        echo "none"
+    fi
+}
+
+# Select desktop environment optimization module
+if [[ ${#REQUESTED_MODULES[@]} -eq 0 ]]; then
+    ACTIVE_DE="$(detect_desktop)"
+    if [ "$ACTIVE_DE" = "kde" ] && [ -d "$SCRIPT_DIR/optimize_kde" ]; then
+        ORDERED_MODULES+=("optimize_kde")
+    elif [ "$ACTIVE_DE" = "gnome" ] && [ -d "$SCRIPT_DIR/optimize_gnome" ]; then
+        ORDERED_MODULES+=("optimize_gnome")
+    fi
+else
+    for m in "optimize_gnome" "optimize_kde"; do
+        if should_run_module "$m" && [ -d "$SCRIPT_DIR/$m" ]; then
+            ORDERED_MODULES+=("$m")
+        fi
+    done
+fi
 
 # Build prioritized list of modules
 MODULES_TO_RUN=()
@@ -57,7 +89,7 @@ done
 for dir in "$SCRIPT_DIR"/*/; do
     [ -d "$dir" ] || continue
     dir_name="$(basename "$dir")"
-    [[ "$dir_name" == "lib" || "$dir_name" =~ ^\. ]] && continue
+    [[ "$dir_name" == "lib" || "$dir_name" =~ ^\. || "$dir_name" == "optimize_gnome" || "$dir_name" == "optimize_kde" ]] && continue
     already_listed=0
     for m in "${MODULES_TO_RUN[@]}"; do
         if [[ "$m" == "$dir_name" ]]; then
@@ -119,6 +151,9 @@ for mod in "${executed_modules[@]}"; do
             ;;
         optimize_gnome)
             echo -e "  ${GREEN}✔${NC} ${BOLD}optimize_gnome${NC} : Fast keyrate (250ms/25ms), Super+Return terminal shortcut, keybindings, Ptyxis launcher"
+            ;;
+        optimize_kde)
+            echo -e "  ${GREEN}✔${NC} ${BOLD}optimize_kde${NC}   : KDE Plasma shortcuts, Meta+Return terminal, keyrate (250ms/40Hz), titlebars"
             ;;
         usb-wake)
             echo -e "  ${GREEN}✔${NC} ${BOLD}usb-wake${NC}       : Working keyboard wake (internal + external), mouse/backpack wake blocked"
