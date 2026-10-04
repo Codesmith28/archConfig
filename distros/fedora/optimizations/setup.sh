@@ -43,7 +43,7 @@ executed_modules=()
 # 1. config_grub runs first to configure the bootloader and graphical terminal.
 # 2. battery runs second to apply grubby kernel args (mem_sleep_default=deep) and power settings.
 # 3. Remaining hardware, USB, and desktop optimizations run on top.
-ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "bluetooth-sleep" "optimize_gnome")
+ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "bluetooth-sleep" "appstream" "optimize_gnome")
 
 # Build prioritized list of modules
 MODULES_TO_RUN=()
@@ -125,6 +125,9 @@ for mod in "${executed_modules[@]}"; do
             ;;
         bluetooth-sleep)
             echo -e "  ${GREEN}✔${NC} ${BOLD}bluetooth-sleep${NC}: Clean pre-suspend disconnect & post-resume A2DP AAC resync hook"
+            ;;
+        appstream)
+            echo -e "  ${GREEN}✔${NC} ${BOLD}appstream${NC}      : RPM Fusion AppStream metadata & PackageKit refresh (RPMs in App Store)"
             ;;
         *)
             echo -e "  ${GREEN}✔${NC} ${BOLD}$mod${NC}"

@@ -67,6 +67,12 @@ install_distro_packages() {
                     flatpak install -y flathub com.mattjakeman.ExtensionManager 2>/dev/null || true
                 fi
             fi
+
+            # Ensure RPM Fusion AppStream metadata & PackageKit are active for GNOME Software
+            local fedora_appstream="$SCRIPT_DIR/../../distros/fedora/optimizations/appstream/setup.sh"
+            if [[ -f "$fedora_appstream" ]]; then
+                bash "$fedora_appstream"
+            fi
             ;;
         ubuntu|debian|pop|linuxmint)
             local missing_pkgs=()
