@@ -23,6 +23,7 @@ Depending on the manufacturer driver, you will typically find:
 | `charge_control_end_threshold` | Stops charging at this percentage (e.g., 85 or 80) | ThinkPad (`thinkpad_acpi`), ASUS (`asus_wmi`), Framework, Huawei |
 | `charge_control_start_threshold` | Starts charging only if battery drops below this percentage (e.g., 75) | ThinkPad, System76 |
 | `charge_stop_threshold` / `charge_start_threshold` | Older naming convention for the above | Older ThinkPads |
+| `conservation_mode` | Capping charge at ~80% (1 = enabled, 0 = disabled) | Lenovo IdeaPad / LOQ / Legion (`ideapad_laptop`) |
 
 ---
 
@@ -57,24 +58,25 @@ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
 Files in `/sys` reset on every system reboot. To make the threshold persistent across reboots, use a systemd one-shot service:
 
 ### Option A: The archConfig Standard Setup (Recommended)
-This repository installs a dedicated script at `/usr/local/bin/set-battery-limit.sh`:
+This repository installs a dedicated script at `/usr/local/bin/set-battery-limit.sh` with auto-detection for standard sysfs thresholds (`charge_control_end_threshold`), legacy ThinkPad nodes, and Lenovo IdeaPad `conservation_mode`:
 ```bash
-#!/bin/bash
-echo 85 | sudo tee /sys/class/power_supply/BAT0/charge_control_end_threshold
+# Configurable via BATTERY_LIMIT env var, /etc/default/battery-limit, or CLI argument:
+BATTERY_LIMIT="${1:-${BATTERY_LIMIT:-80}}"
 ```
 
 And installs `/etc/systemd/system/battery-limit.service`:
 ```ini
 [Unit]
 Description=Set Battery Charging Limit
-After=multi-user.target suspend.target hibernate.target hybrid-sleep.target
+After=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 
 [Service]
 Type=oneshot
+EnvironmentFile=-/etc/default/battery-limit
 ExecStart=/usr/local/bin/set-battery-limit.sh
 
 [Install]
-WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target
+WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 ```
 
 Enable and start:
@@ -133,7 +135,9 @@ cat /sys/power/mem_sleep
 
 - **Permission Denied / No such file:**
   If no `*threshold*` files exist under `/sys/class/power_supply/BAT*`, your laptop hardware, embedded controller, or kernel ACPI driver does not expose charge control through the standard sysfs interface.
+- **Lenovo IdeaPad / LOQ / Legion Models:**
+  Unlike ThinkPads, Lenovo IdeaPad laptops (running the `ideapad_laptop` driver) do not expose charge thresholds under `/sys/class/power_supply/BAT*/`. Instead, they expose a binary toggle at `/sys/bus/platform/drivers/ideapad_*/{*,*/*}/conservation_mode` or `/sys/devices/platform/VPC*/conservation_mode`. Writing `1` enables conservation mode (capping charge at ~80%).
 - **Different Battery Identifier:**
-  Some laptops use `BAT1` or `BATT` instead of `BAT0`. Check `ls /sys/class/power_supply/` and adjust the path accordingly.
+  Some laptops use `BAT1` or `BATT` instead of `BAT0`. The auto-detecting script checks `/sys/class/power_supply/*/charge_control_end_threshold`.
 - **Kernel Sleep States:**
   If `/sys/power/mem_sleep` only shows `[s2idle]`, your BIOS/firmware might have S3 sleep disabled or omitted from ACPI DSDT tables. Check BIOS settings for an "OS Type" or "Sleep State" toggle (e.g., "Linux" vs "Windows 10/11").
