@@ -4,7 +4,7 @@ onboarding = false
 delivery = "herdr"
 
 [theme]
-name = "nord"
+name = "catppuccin"
 auto_switch = false
 
 [terminal]

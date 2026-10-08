@@ -34,14 +34,4 @@ return {
             },
         },
     },
-    init = function()
-        -- Auto-format C/C++ buffers on open using the nearest .clang-format via conform
-        vim.api.nvim_create_autocmd("BufReadPost", {
-            desc = "Format C/C++ buffers on open with nearest .clang-format",
-            pattern = { "*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp", "*.cu" },
-            callback = function(args)
-                require("conform").format({ bufnr = args.buf })
-            end,
-        })
-    end,
 }
