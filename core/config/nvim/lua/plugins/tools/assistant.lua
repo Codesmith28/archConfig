@@ -54,12 +54,16 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 return {
     "A7lavinraj/assistant.nvim",
-    cmd = { "Assistant" },
+    lazy = false,
     keys = {
         { "<leader>a", "<cmd>Assistant<cr>", desc = "Assistant.nvim" },
     },
     opts = function()
         return {
+            core = {
+                port = 10043,
+                default_source = "cpp",
+            },
             commands = {
                 cpp = {
                     extension = "cpp",
@@ -82,5 +86,19 @@ return {
                 },
             },
         }
+    end,
+    config = function(_, opts)
+        -- Ensure tcp module cleanly terminates on exit
+        vim.api.nvim_create_autocmd("VimLeavePre", {
+            group = vim.api.nvim_create_augroup("assistant_cleanup", { clear = true }),
+            callback = function()
+                local ok, tcp = pcall(require, "assistant.core.tcp")
+                if ok and tcp.stop_server then
+                    tcp.stop_server()
+                end
+            end,
+        })
+
+        require("assistant").setup(opts)
     end,
 }

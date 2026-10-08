@@ -1,4 +1,4 @@
-background = 000000
+background = 090909
 # background = #202429
 # background-opacity = 0.95
 # background-blur = 80
@@ -10,7 +10,7 @@ bold-color = bright
 
 # Window
 window-width = 210
-window-height = 70
+window-height = 60
 
 window-theme = ghostty
 window-padding-x = 5
@@ -60,7 +60,7 @@ keybind = cmd+v=paste_from_clipboard
 keybind = cmd+s=text:\x13
 
 # Disable ligatures
-font-feature = -calt
-font-feature = -liga
-font-feature = -dlig
+# font-feature = -calt
+# font-feature = -liga
+# font-feature = -dlig
 
