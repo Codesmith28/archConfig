@@ -67,7 +67,8 @@ detect_os() {
             echo "arch"
         fi
     elif grep -qi "ubuntu" /etc/os-release 2>/dev/null; then
-        if [ -n "$SSH_CONNECTION" ] && ! command -v Xorg >/dev/null 2>&1 && ! command -v wayland-scanner >/dev/null 2>&1; then
+        if grep -qiE 'VARIANT="?Server"?|VARIANT_ID="?server"?' /etc/os-release 2>/dev/null || \
+           { ! command -v Xorg >/dev/null 2>&1 && ! command -v wayland-scanner >/dev/null 2>&1 && ! command -v gnome-shell >/dev/null 2>&1; }; then
             echo "ubuntu_server"
         else
             echo "ubuntu"
