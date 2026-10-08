@@ -11,10 +11,6 @@ if [ -f "$DIR/packages/installPackages.sh" ]; then
     bash "$DIR/packages/installPackages.sh"
 fi
 
-echo "==> Setting up systemd services and hardware optimizations..."
-if [ -f "$DIR/setup_scripts/setup.sh" ]; then
-    (cd "$DIR/setup_scripts" && bash setup.sh)
-fi
 
 # Run universal Linux hardware optimizations (battery, usb-wake, bluetooth-sleep, rog-nvidia)
 if [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
