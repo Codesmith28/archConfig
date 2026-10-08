@@ -208,6 +208,15 @@ for item in "$REPO_DIR/core/config"/*; do
     link_item "$item" "$HOME/.config/$name"
 done
 
+# WirePlumber 0.5 loads device Lua scripts from XDG_DATA_HOME (~/.local/share/wireplumber/scripts/)
+if [ -d "$REPO_DIR/core/config/wireplumber/scripts/device" ]; then
+    mkdir -p "$HOME/.local/share/wireplumber/scripts/device"
+    for wp_script in "$REPO_DIR/core/config/wireplumber/scripts/device"/*; do
+        [ -f "$wp_script" ] || continue
+        link_item "$wp_script" "$HOME/.local/share/wireplumber/scripts/device/$(basename "$wp_script")"
+    done
+fi
+
 # ------------------------------------------------------------------------------
 # 4. Synchronize Core Home Dotfiles (~/.*)
 # ------------------------------------------------------------------------------

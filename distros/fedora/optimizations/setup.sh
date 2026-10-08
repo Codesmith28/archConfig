@@ -40,10 +40,9 @@ fi
 executed_modules=()
 
 # Explicit module execution order:
-# 1. config_grub runs first to configure the bootloader and graphical terminal.
-# 2. battery runs second to apply grubby kernel args (mem_sleep_default=deep) and power settings.
-# 3. Remaining hardware, USB, and desktop optimizations run on top.
-ORDERED_MODULES=("config_grub" "battery" "nvidia-power" "usb-wake" "bluetooth-sleep" "appstream")
+# 1. config_grub runs to configure the bootloader and graphical terminal.
+# 2. appstream refreshes RPM Fusion appstream metadata.
+ORDERED_MODULES=("config_grub" "appstream")
 
 detect_desktop() {
     local de="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}"
@@ -140,26 +139,14 @@ log_info "=================================================================="
 echo -e "${BOLD}Summary of configured optimizations:${NC}"
 for mod in "${executed_modules[@]}"; do
     case "$mod" in
-        battery)
-            echo -e "  ${GREEN}✔${NC} ${BOLD}battery${NC}        : 85% charging cap & deep sleep (S3)"
-            ;;
         config_grub)
             echo -e "  ${GREEN}✔${NC} ${BOLD}config_grub${NC}    : gfxterm graphical mode, native resolution, font in /boot, smooth handoff"
-            ;;
-        nvidia-power)
-            echo -e "  ${GREEN}✔${NC} ${BOLD}nvidia-power${NC}   : VRAM preservation & power management configuration"
             ;;
         optimize_gnome)
             echo -e "  ${GREEN}✔${NC} ${BOLD}optimize_gnome${NC} : Fast keyrate (250ms/25ms), Super+Return terminal shortcut, keybindings, Ptyxis launcher"
             ;;
         optimize_kde)
             echo -e "  ${GREEN}✔${NC} ${BOLD}optimize_kde${NC}   : KDE Plasma shortcuts, Meta+Return terminal, keyrate (250ms/40Hz), titlebars"
-            ;;
-        usb-wake)
-            echo -e "  ${GREEN}✔${NC} ${BOLD}usb-wake${NC}       : Working keyboard wake (internal + external), mouse/backpack wake blocked"
-            ;;
-        bluetooth-sleep)
-            echo -e "  ${GREEN}✔${NC} ${BOLD}bluetooth-sleep${NC}: Clean pre-suspend disconnect & post-resume A2DP AAC resync hook"
             ;;
         appstream)
             echo -e "  ${GREEN}✔${NC} ${BOLD}appstream${NC}      : RPM Fusion AppStream metadata & PackageKit refresh (RPMs in App Store)"

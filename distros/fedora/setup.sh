@@ -11,6 +11,12 @@ if [ -f "$DIR/optimizations/setup.sh" ]; then
     bash "$DIR/optimizations/setup.sh" "$@"
 fi
 
+# Run universal Linux hardware optimizations (battery, usb-wake, bluetooth-sleep, rog-nvidia)
+if [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
+    echo "==> Setting up Linux hardware optimizations..."
+    bash "$REPO_DIR/hardware-linux/setup.sh" "$@"
+fi
+
 # Detect desktop environment and dispatch to desktop layer (SKILL.md Rule 3)
 detect_de() {
     local current_de="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}"
