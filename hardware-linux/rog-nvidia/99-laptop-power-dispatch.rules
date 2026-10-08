@@ -1,0 +1,7 @@
+# ==============================================================================
+# Dynamic Laptop Power Dispatch Rules
+# Profile: ASUS ROG + NVIDIA RTX Laptop
+# Dispatches power profile and GPU posture switcher on AC connect/disconnect
+# ==============================================================================
+SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="/usr/local/bin/power-profile-switch.sh"
+SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="/usr/local/bin/power-profile-switch.sh"

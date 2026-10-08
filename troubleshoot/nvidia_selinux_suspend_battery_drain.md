@@ -74,7 +74,7 @@ sudo restorecon -v /var/lib/systemd/sleep
 ```
 
 ### Step 2: Configure Modprobe for the Official Path
-Update `/etc/modprobe.d/nvidia-power-management.conf` (or run `sudo ./setup.sh` in `distros/fedora/optimizations/nvidia-power/`):
+Update `/etc/modprobe.d/nvidia-power-management.conf` (or run `sudo ./setup.sh` in `hardware-linux/rog-nvidia/`):
 ```ini
 # Preserve video memory allocations across suspend and hibernate
 options nvidia NVreg_PreserveVideoMemoryAllocations=1

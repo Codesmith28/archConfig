@@ -1,0 +1,6 @@
+# ==============================================================================
+# Runtime Power Management for NVIDIA HD Audio Controller
+# Profile: ASUS ROG + NVIDIA RTX Laptop
+# Ensures the discrete audio controller (0x040300) does not prevent D3cold
+# ==============================================================================
+ACTION=="bind|add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", TEST=="power/control", ATTR{power/control}="auto"
