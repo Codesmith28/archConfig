@@ -1,12 +1,15 @@
-background = 1f2329
+background = 000000
+# background = #202429
+# background-opacity = 0.95
+# background-blur = 80
 
 font-family = monospace
 font-style = Regular
-font-size = 11
+font-size = 10
 bold-color = bright
 
 # Window
-window-width = 170
+window-width = 180
 window-height = 60
 
 window-theme = ghostty

@@ -17,6 +17,18 @@ return {
                         "--fallback-style=llvm",
                         "--query-driver=/opt/homebrew/bin/g++*,/opt/homebrew/bin/clang++*,/usr/bin/g++*,/usr/bin/clang++*,/usr/local/bin/g++*,/usr/local/bin/clang++*",
                     },
+                    root_markers = {
+                        ".clang-format",
+                        ".clangd",
+                        ".clang-tidy",
+                        "compile_commands.json",
+                        "compile_flags.txt",
+                        "configure.ac",
+                        "Makefile",
+                        "meson.build",
+                        "build.ninja",
+                        ".git",
+                    },
                     capabilities = {
                         offsetEncoding = { "utf-16" },
                     },

@@ -41,8 +41,8 @@ o.termguicolors = true
 o.background = "dark"
 o.list = false
 
--- Set project root based on .git for consistency across tools
-vim.g.root_spec = { { ".git" }, "cwd" }
+-- Set project root based on .git, .clang-format, .clangd for consistency across tools
+vim.g.root_spec = { { ".git", ".clang-format", ".clangd" }, "cwd" }
 
 -- Cross-platform JAVA_HOME resolver (macOS Homebrew & Linux paths)
 local function resolve_java_home()

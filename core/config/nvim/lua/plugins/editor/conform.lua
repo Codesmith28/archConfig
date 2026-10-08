@@ -17,12 +17,31 @@ return {
             go = { "goimports-reviser", "gofumpt" },
             sh = { "shfmt" },
             bash = { "shfmt" },
-            ["_"] = { "trim_whitespace" }, 
+            ["_"] = { "trim_whitespace" },
         },
         formatters = {
             ["google-java-format"] = {
                 prepend_args = { "--aosp" },
             },
+            ["clang-format"] = {
+                cwd = require("conform.util").root_file({
+                    ".clang-format",
+                    ".clangd",
+                    "compile_commands.json",
+                    ".git",
+                }),
+                prepend_args = { "-style=file", "-fallback-style=none" },
+            },
         },
     },
+    init = function()
+        -- Auto-format C/C++ buffers on open using the nearest .clang-format via conform
+        vim.api.nvim_create_autocmd("BufReadPost", {
+            desc = "Format C/C++ buffers on open with nearest .clang-format",
+            pattern = { "*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp", "*.cu" },
+            callback = function(args)
+                require("conform").format({ bufnr = args.buf })
+            end,
+        })
+    end,
 }
