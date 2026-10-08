@@ -4,13 +4,14 @@ onboarding = false
 delivery = "herdr"
 
 [theme]
-name = "catppuccin"
+name = "gruvbox"
 auto_switch = false
 
 [terminal]
 new_cwd = "follow"
 
 [ui]
+# accent = "blue"
 pane_outer_borders = true
 pane_scrollbars = true
 confirm_close = false

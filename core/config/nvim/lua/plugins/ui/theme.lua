@@ -1,3 +1,5 @@
+local gruvbox = require("gruvbox_v2")
+
 return {
     {
         "catppuccin/nvim",
@@ -52,21 +54,34 @@ return {
     },
 
     {
-        "Shatur/neovim-ayu",
-        config = function()
-            require("ayu").setup({
-                mirage = false, -- Set to true for the softer mirage variant, false for dark
-                terminal = true, -- Set terminal colors
-                overrides = {}, -- Add custom color overrides here if needed
-            })
+        "ellisonleao/gruvbox.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = gruvbox.opts,
+    },
+
+    {
+        "folke/snacks.nvim",
+        opts = gruvbox.snacks_opts,
+    },
+
+    {
+        "nvim-lualine/lualine.nvim",
+        opts = function(_, opts)
+            opts.options = opts.options or {}
+            opts.options.theme = function()
+                if vim.g.colors_name == "gruvbox" or vim.g.colors_name == "gruvbox_v2" then
+                    return gruvbox.lualine_theme
+                end
+                return "auto"
+            end
         end,
     },
 
     {
         "LazyVim/LazyVim",
         opts = {
-            -- colorscheme = "tokyonight-night",
-            colorscheme = "catppuccin-mocha",
+            colorscheme = "gruvbox_v2",
         },
     },
 }
