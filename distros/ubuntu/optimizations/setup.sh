@@ -22,6 +22,16 @@ for dir in "$SCRIPT_DIR"/*/; do
     # Skip library and hidden directories
     [[ "$dir_name" == "lib" || "$dir_name" =~ ^\. ]] && continue
 
+    # Skip optimize_gnome if running in a headless / server environment without GNOME
+    if [[ "$dir_name" == "optimize_gnome" ]]; then
+        local current_de="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}"
+        current_de=$(echo "$current_de" | tr '[:upper:]' '[:lower:]')
+        if ! echo "$current_de" | grep -q "gnome" && ! pgrep -x "gnome-shell" >/dev/null 2>&1 && [ ! -f /usr/share/wayland-sessions/gnome.desktop ] && [ ! -f /usr/share/xsessions/gnome.desktop ]; then
+            log_info "No GNOME desktop environment detected; skipping $dir_name."
+            continue
+        fi
+    fi
+
     log_info "Checking module: ${BOLD}$dir_name${NC}"
 
     if ! validate_optimization_dir "$dir"; then

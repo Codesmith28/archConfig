@@ -49,8 +49,7 @@ archConfig/
 ├── distros/                             # 📦 Distro-specific package lists & systemd services
 │   ├── fedora/                          # DNF packages, NVIDIA setup, systemd services
 │   ├── arch/                            # Pacman/AUR package lists & hardware bootstrap
-│   ├── ubuntu/                          # Ubuntu desktop bootstrap & PPA setup
-│   ├── ubuntu_server/                   # Headless Ubuntu server setup & SSH hardening
+│   ├── ubuntu/                          # Ubuntu desktop & server bootstrap (basics: Docker, Git)
 │   ├── mac/                             # Homebrew bundle & macOS system defaults
 │   └── omarchy/                         # OmArchy specific tweaks & helpers
 │

@@ -15,7 +15,3 @@ if [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
     bash "$REPO_DIR/hardware-linux/setup.sh" "$@"
 fi
 
-echo "==> Setting up systemd services..."
-if [ -f "$DIR/setup_scripts/setup.sh" ]; then
-    (cd "$DIR/setup_scripts" && bash setup.sh)
-fi
