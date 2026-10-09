@@ -1,5 +1,3 @@
-local gruvbox = require("gruvbox_v2")
-
 return {
     {
         "catppuccin/nvim",
@@ -54,28 +52,12 @@ return {
     },
 
     {
-        "ellisonleao/gruvbox.nvim",
+        "Codesmith28/gruvbox_v2.nvim",
         lazy = false,
         priority = 1000,
-        opts = gruvbox.opts,
-    },
-
-    {
-        "folke/snacks.nvim",
-        opts = gruvbox.snacks_opts,
-    },
-
-    {
-        "nvim-lualine/lualine.nvim",
-        opts = function(_, opts)
-            opts.options = opts.options or {}
-            opts.options.theme = function()
-                if vim.g.colors_name == "gruvbox" or vim.g.colors_name == "gruvbox_v2" then
-                    return gruvbox.lualine_theme
-                end
-                return "auto"
-            end
-        end,
+        opts = {
+            contrast = "hard",
+        },
     },
 
     {

@@ -30,7 +30,7 @@ clipboard-read = allow
 # Cursor styling
 cursor-style = "underline"
 cursor-style-blink = true
-# adjust-cursor-thickness = 1
+adjust-cursor-thickness = 0
 
 # Cursor styling + SSH session terminfo
 # (all shell integration options must be passed together)

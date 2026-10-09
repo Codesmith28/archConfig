@@ -11,7 +11,7 @@ M.all_themes = {
     { "catppuccin/nvim", name = "catppuccin", lazy = true, priority = 1000 },
     { "neanias/everforest-nvim", lazy = true, priority = 1000 },
     { "kepano/flexoki-neovim", lazy = true, priority = 1000 },
-    { "ellisonleao/gruvbox.nvim", lazy = true, priority = 1000 },
+    { "Codesmith28/gruvbox_v2.nvim", lazy = true, priority = 1000 },
     { "rebelot/kanagawa.nvim", lazy = true, priority = 1000 },
     { "tahayvr/matteblack.nvim", lazy = true, priority = 1000 },
     { "gthelding/monokai-pro.nvim", lazy = true, priority = 1000 },
