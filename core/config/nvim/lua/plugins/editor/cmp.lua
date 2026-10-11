@@ -31,5 +31,15 @@ return {
                 },
             },
         },
+        sources = {
+            providers = {
+                lsp = {
+                    score_offset = 100, -- Boost LSP / IntelliSense suggestions
+                },
+                buffer = {
+                    score_offset = -5, -- Deprioritize buffer text suggestions
+                },
+            },
+        },
     },
 }
