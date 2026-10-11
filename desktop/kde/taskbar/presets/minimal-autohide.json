@@ -1,0 +1,15 @@
+{
+  "id": "minimal-autohide",
+  "name": "Minimalist Autohide Panel",
+  "description": "Slim 42px floating panel with adaptive opacity that automatically hides for terminals/code",
+  "layoutType": "single",
+  "location": "bottom",
+  "height": 42,
+  "floating": true,
+  "lengthMode": "fill",
+  "hiding": "autohide",
+  "opacity": "adaptive",
+  "alignment": "center",
+  "showOnlyCurrentDesktop": false,
+  "showOnlyCurrentActivity": true
+}

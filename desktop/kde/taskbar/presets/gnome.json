@@ -1,0 +1,34 @@
+{
+  "id": "gnome",
+  "name": "GNOME Two-Bar Layout",
+  "description": "GNOME-style split: slim 30px top status bar (workspaces, clock, tray) + 42px bottom dock with only app launcher and tasks",
+  "layoutType": "gnome-split",
+  "location": "bottom",
+  "height": 42,
+  "topHeight": 30,
+  "floating": true,
+  "lengthMode": "fit",
+  "hiding": "dodgewindows",
+  "opacity": "adaptive",
+  "alignment": "center",
+  "showOnlyCurrentDesktop": false,
+  "showOnlyCurrentActivity": true,
+  "topBar": {
+    "location": "top",
+    "height": 30,
+    "floating": false,
+    "lengthMode": "fill",
+    "hiding": "none",
+    "opacity": "adaptive",
+    "alignment": "center"
+  },
+  "bottomBar": {
+    "location": "bottom",
+    "height": 42,
+    "floating": true,
+    "lengthMode": "fit",
+    "hiding": "dodgewindows",
+    "opacity": "adaptive",
+    "alignment": "center"
+  }
+}

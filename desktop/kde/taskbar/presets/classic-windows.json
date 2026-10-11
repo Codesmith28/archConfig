@@ -1,0 +1,15 @@
+{
+  "id": "classic-windows",
+  "name": "Classic Windows Taskbar",
+  "description": "Non-floating edge-to-edge taskbar, 42px height, adaptive opacity, active workspace apps",
+  "layoutType": "single",
+  "location": "bottom",
+  "height": 42,
+  "floating": false,
+  "lengthMode": "fill",
+  "hiding": "none",
+  "opacity": "adaptive",
+  "alignment": "left",
+  "showOnlyCurrentDesktop": true,
+  "showOnlyCurrentActivity": true
+}

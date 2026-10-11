@@ -14,11 +14,83 @@ log_success() { echo "  [OK]   $*"; }
 log_warn()    { echo "  [WARN] $*" >&2; }
 log_error()   { echo "  [ERR]  $*" >&2; }
 
+run_root() {
+    if [[ "$(id -u)" -eq 0 ]]; then
+        "$@"
+    elif command -v sudo >/dev/null 2>&1; then
+        sudo "$@"
+    else
+        log_error "Root privileges or sudo required to run: $*"
+        return 1
+    fi
+}
+
 # ------------------------------------------------------------------------------
-# 1. Native Privilege Handling (Ensure execution runs as desktop user)
+# 1. Distro Utility Package Installation
+# ------------------------------------------------------------------------------
+install_distro_packages() {
+    log_info "Verifying required KDE utility and D-Bus packages..."
+    local os_id=""
+    if [[ -f /etc/os-release ]]; then
+        os_id="$(grep ^ID= /etc/os-release | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
+    fi
+
+    case "$os_id" in
+        fedora|rhel|centos)
+            local fedora_pkgs=()
+            if ! rpm -q python3-dbus >/dev/null 2>&1; then
+                fedora_pkgs+=("python3-dbus")
+            fi
+            if ! rpm -q qt6-qttools >/dev/null 2>&1 && ! command -v qdbus-qt6 >/dev/null 2>&1; then
+                fedora_pkgs+=("qt6-qttools")
+            fi
+            if ! rpm -q kf6-kconfig >/dev/null 2>&1 && ! command -v kwriteconfig6 >/dev/null 2>&1; then
+                fedora_pkgs+=("kf6-kconfig")
+            fi
+            if [[ ${#fedora_pkgs[@]} -gt 0 ]]; then
+                log_info "Installing ${fedora_pkgs[*]} via dnf..."
+                run_root dnf install -y "${fedora_pkgs[@]}"
+            fi
+            ;;
+        ubuntu|debian|pop|linuxmint)
+            local deb_pkgs=()
+            if ! dpkg -s python3-dbus >/dev/null 2>&1; then
+                deb_pkgs+=("python3-dbus")
+            fi
+            if ! command -v qdbus-qt6 >/dev/null 2>&1 && ! command -v qdbus >/dev/null 2>&1; then
+                deb_pkgs+=("qdbus-qt6")
+            fi
+            if [[ ${#deb_pkgs[@]} -gt 0 ]]; then
+                log_info "Installing ${deb_pkgs[*]} via apt..."
+                run_root apt-get update -qq
+                run_root apt-get install -y "${deb_pkgs[@]}" || true
+            fi
+            ;;
+        arch|manjaro|endeavouros)
+            local arch_pkgs=()
+            if ! pacman -Qi python-dbus >/dev/null 2>&1; then
+                arch_pkgs+=("python-dbus")
+            fi
+            if ! command -v qdbus-qt6 >/dev/null 2>&1 && ! command -v qdbus >/dev/null 2>&1; then
+                arch_pkgs+=("qt6-tools")
+            fi
+            if [[ ${#arch_pkgs[@]} -gt 0 ]]; then
+                log_info "Installing ${arch_pkgs[*]} via pacman..."
+                run_root pacman -S --needed --noconfirm "${arch_pkgs[@]}"
+            fi
+            ;;
+        *)
+            ;;
+    esac
+}
+
+# ------------------------------------------------------------------------------
+# 2. Native Privilege Handling (Ensure execution runs as desktop user)
 # ------------------------------------------------------------------------------
 if [[ "${1:-}" != "--user-run" ]]; then
     if [[ "$(id -u)" -eq 0 ]]; then
+        install_distro_packages
+
         TARGET_USER="${SUDO_USER:-}"
         if [[ -z "$TARGET_USER" || "$TARGET_USER" == "root" ]]; then
             TARGET_USER="$(loginctl list-sessions --no-legend 2>/dev/null | awk '{print $3}' | grep -v 'root' | head -n 1 || true)"
@@ -26,7 +98,7 @@ if [[ "${1:-}" != "--user-run" ]]; then
                 TARGET_USER="$(who | awk '$1 != "root" {print $1; exit}' || true)"
             fi
             if [[ -z "$TARGET_USER" ]]; then
-                TARGET_USER="codesmith28"
+                TARGET_USER="${USER:-fedora}"
             fi
         fi
 
@@ -64,7 +136,7 @@ if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 2. Systemd User Environment & PATH Persistence
+# 3. Systemd User Environment & PATH Persistence
 # ------------------------------------------------------------------------------
 log_info "Configuring environment and launchers for KDE Plasma..."
 mkdir -p "$HOME/.config" "$HOME/.config/environment.d" "$HOME/.local/bin" "$HOME/.local/share/applications" "$HOME/.config/kxmlgui5" "$HOME/.config/kxmlgui6"
@@ -79,8 +151,9 @@ if command -v systemctl >/dev/null 2>&1; then
 fi
 
 # ------------------------------------------------------------------------------
-# 3. Provision Default Terminal Emulator Wrapper
+# 4. Provision Default Terminal & Browser Wrappers
 # ------------------------------------------------------------------------------
+# Default Terminal
 DEF_TERM_SRC=""
 if [[ -f "$SCRIPT_DIR/default-terminal" ]]; then
     DEF_TERM_SRC="$SCRIPT_DIR/default-terminal"
@@ -92,7 +165,6 @@ if [[ -n "$DEF_TERM_SRC" ]]; then
     install -m 755 "$DEF_TERM_SRC" "$HOME/.local/bin/default-terminal"
 fi
 
-# Create default-terminal.desktop for KDE Global Shortcuts
 cat > "$HOME/.local/share/applications/default-terminal.desktop" << 'EOF'
 [Desktop Entry]
 Name=Default Terminal
@@ -105,10 +177,34 @@ Categories=System;TerminalEmulator;
 X-KDE-GlobalAccel-CommandShortcut=true
 StartupNotify=true
 EOF
+
+# Default Browser
+DEF_BROWSER_SRC=""
+if [[ -f "$SCRIPT_DIR/default-browser" ]]; then
+    DEF_BROWSER_SRC="$SCRIPT_DIR/default-browser"
+fi
+
+if [[ -n "$DEF_BROWSER_SRC" ]]; then
+    install -m 755 "$DEF_BROWSER_SRC" "$HOME/.local/bin/default-browser"
+fi
+
+cat > "$HOME/.local/share/applications/default-browser.desktop" << 'EOF'
+[Desktop Entry]
+Name=Default Web Browser
+Comment=Universal Default Web Browser Launcher
+Exec=default-browser
+Icon=internet-web-browser
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+X-KDE-GlobalAccel-CommandShortcut=true
+StartupNotify=true
+EOF
+
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
-# 4. Copy Shortcut Schemes for GUI Import Compatibility (KF5 & KF6)
+# 5. Copy Shortcut Schemes for GUI Import Compatibility (KF5 & KF6)
 # ------------------------------------------------------------------------------
 KDE_SHORTCUTS="$SCRIPT_DIR/keyboardscs.kksrc"
 if [[ -f "$KDE_SHORTCUTS" ]]; then
@@ -118,7 +214,7 @@ if [[ -f "$KDE_SHORTCUTS" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Apply Active Shortcuts directly to kglobalshortcutsrc & kdeglobals
+# 6. Apply Active Shortcuts directly via D-Bus (Live Session) & Persist to Files
 # ------------------------------------------------------------------------------
 log_info "Applying active KDE Plasma shortcuts and system configurations..."
 
@@ -132,7 +228,227 @@ kglobal_path = os.path.join(home, ".config/kglobalshortcutsrc")
 kdeglobals_path = os.path.join(home, ".config/kdeglobals")
 kwinrc_path = os.path.join(home, ".config/kwinrc")
 kcminputrc_path = os.path.join(home, ".config/kcminputrc")
+appletsrc_path = os.path.join(home, ".config/plasma-org.kde.plasma.desktop-appletsrc")
 
+def key_to_qt(s):
+    if not s or s.lower() == "none":
+        return None
+    mods = 0
+    key_part = s.strip()
+    parts = key_part.split("+")
+    key_name = parts[-1].strip()
+    for mod in parts[:-1]:
+        m = mod.strip().lower()
+        if m in ("meta", "super"):
+            mods |= 0x10000000
+        elif m == "alt":
+            mods |= 0x08000000
+        elif m in ("ctrl", "control"):
+            mods |= 0x04000000
+        elif m == "shift":
+            mods |= 0x02000000
+    
+    # Standalone modifier keys (Qt::Key_Meta = 0x01000022 = 16777250)
+    special = {
+        'meta': 0x01000022, 'super': 0x01000022,
+        'escape': 0x01000000, 'esc': 0x01000000,
+        'tab': 0x01000001,
+        'backtab': 0x01000002,
+        'backspace': 0x01000003,
+        'return': 0x01000004, 'enter': 0x01000004,
+        'insert': 0x01000006, 'ins': 0x01000006,
+        'delete': 0x01000007, 'del': 0x01000007,
+        'pause': 0x01000008,
+        'print': 0x01000009,
+        'sysreq': 0x0100000a,
+        'clear': 0x0100000b,
+        'home': 0x01000010,
+        'end': 0x01000011,
+        'left': 0x01000012,
+        'up': 0x01000013,
+        'right': 0x01000014,
+        'down': 0x01000015,
+        'page_up': 0x01000016, 'pageup': 0x01000016, 'pgup': 0x01000016,
+        'page_down': 0x01000017, 'pagedown': 0x01000017, 'pgdown': 0x01000017,
+        'space': 0x20,
+    }
+    for i in range(1, 36):
+        special[f'f{i}'] = 0x01000030 + (i - 1)
+        
+    kl = key_name.lower()
+    if kl in special:
+        return mods | special[kl]
+    elif len(key_name) == 1:
+        return mods | ord(key_name.upper())
+    elif kl in ('grave', '`'):
+        return mods | 0x60
+    elif kl in ('asciitilde', '~'):
+        return mods | 0x7e
+    return None
+
+def parse_shortcuts(shortcut_str):
+    if not shortcut_str:
+        return []
+    tokens = [t.strip() for t in shortcut_str.replace('\t', ';').split(';') if t.strip()]
+    res = []
+    for tok in tokens:
+        code = key_to_qt(tok)
+        if code is not None and code not in res:
+            res.append(code)
+    return res
+
+# 1. Canonical Desktop Shortcuts (Full GNOME Parity & Conflict-Free)
+CANONICAL_SHORTCUTS = {
+    "kwin": {
+        "Window Close": "Meta+Q; Alt+F4",
+        "Window Minimize": "Meta+M; Meta+Down",
+        "Window Maximize": "Meta+Up",
+        "Window Quick Tile Left": "Meta+Left",
+        "Window Quick Tile Right": "Meta+Right",
+        "Window Quick Tile Top": "",
+        "Window Quick Tile Bottom": "",
+        "Window Move Center": "Meta+C",
+        "Switch to Desktop 1": "Meta+1",
+        "Switch to Desktop 2": "Meta+2",
+        "Switch to Desktop 3": "Meta+3",
+        "Switch to Desktop 4": "Meta+4",
+        "Switch to Desktop 5": "Meta+5",
+        "Switch to Desktop 6": "Meta+6",
+        "Switch to Desktop 7": "Meta+7",
+        "Switch to Desktop 8": "Meta+8",
+        "Switch to Desktop 9": "Meta+9",
+        "Window to Desktop 1": "Meta+Shift+1; Meta+!; Meta+Shift+!",
+        "Window to Desktop 2": "Meta+Shift+2; Meta+@; Meta+Shift+@",
+        "Window to Desktop 3": "Meta+Shift+3; Meta+#; Meta+Shift+#",
+        "Window to Desktop 4": "Meta+Shift+4; Meta+$; Meta+Shift+$",
+        "Window to Desktop 5": "Meta+Shift+5; Meta+%; Meta+Shift+%",
+        "Window to Desktop 6": "Meta+Shift+6; Meta+^; Meta+Shift+^",
+        "Window to Desktop 7": "Meta+Shift+7; Meta+&; Meta+Shift+&",
+        "Window to Desktop 8": "Meta+Shift+8; Meta+*; Meta+Shift+*",
+        "Window to Desktop 9": "Meta+Shift+9; Meta+(; Meta+Shift+(",
+        "Switch to Next Desktop": "Meta+Page_Down; Meta+Ctrl+Right",
+        "Switch to Previous Desktop": "Meta+Page_Up; Meta+Ctrl+Left",
+        "Switch One Desktop to the Right": "",
+        "Switch One Desktop to the Left": "",
+        "Switch One Desktop Up": "",
+        "Switch One Desktop Down": "",
+        "Window to Next Desktop": "Meta+Shift+Page_Down; Meta+Ctrl+Shift+Right",
+        "Window to Previous Desktop": "Meta+Shift+Page_Up; Meta+Ctrl+Shift+Left",
+        "Window One Desktop to the Right": "",
+        "Window One Desktop to the Left": "",
+        "Window One Desktop Up": "",
+        "Window One Desktop Down": "",
+        "Overview": "Meta+Tab; Meta+W",
+        "Grid View": "Meta+Shift+Tab",
+        "Walk Through Windows": "Alt+Tab",
+        "Walk Through Windows (Reverse)": "Alt+Shift+Tab",
+        "Walk Through Windows of Current Application": "Alt+`; Meta+`",
+        "Walk Through Windows of Current Application (Reverse)": "Alt+~; Meta+~",
+        "Show Desktop": "Meta+D",
+        "Kill Window": "Meta+Ctrl+Esc",
+        "ToggleMouseClick": "",
+    },
+    "plasmashell": {
+        "activate application launcher": "Meta; Alt+F1",
+        "show-on-mouse-pos": "Meta+V",
+        "manage activities": "",
+        "next activity": "",
+        "previous activity": "",
+        "switch to next activity": "",
+        "switch to previous activity": "",
+        "activate task manager entry 1": "Meta+Ctrl+1",
+        "activate task manager entry 2": "Meta+Ctrl+2",
+        "activate task manager entry 3": "Meta+Ctrl+3",
+        "activate task manager entry 4": "Meta+Ctrl+4",
+        "activate task manager entry 5": "Meta+Ctrl+5",
+        "activate task manager entry 6": "Meta+Ctrl+6",
+        "activate task manager entry 7": "Meta+Ctrl+7",
+        "activate task manager entry 8": "Meta+Ctrl+8",
+        "activate task manager entry 9": "Meta+Ctrl+9",
+        "activate task manager entry 10": "Meta+Ctrl+0",
+    },
+    "org.kde.spectacle.desktop": {
+        "_launch": "Meta+Shift+S; Print",
+        "RectangularRegionScreenShot": "Meta+Shift+A; Meta+Shift+Print",
+        "ActiveWindowScreenShot": "Meta+Shift+W; Meta+Print",
+        "FullScreenScreenShot": "Shift+Print",
+        "RecordRegion": "Meta+Shift+R; Meta+R",
+        "RecordScreen": "Meta+Alt+R",
+        "RecordWindow": "Meta+Ctrl+R",
+    },
+    "default-terminal.desktop": {
+        "_launch": "Meta+Return",
+    },
+    "default-browser.desktop": {
+        "_launch": "Meta+Shift+B; Meta+B",
+    },
+    "org.kde.dolphin.desktop": {
+        "_launch": "Meta+E",
+    },
+    "systemsettings.desktop": {
+        "_launch": "Meta+I",
+    },
+    "ksmserver": {
+        "Lock Session": "Meta+L; Screensaver",
+    },
+    "org_kde_powerdevil": {
+        "powerProfile": "",
+        "powerprofile": "",
+    }
+}
+
+# 2. Try applying live shortcuts via D-Bus (KGlobalAccel in Plasma 6 / 5)
+try:
+    import dbus
+    bus = dbus.SessionBus()
+    kglobal = bus.get_object("org.kde.kglobalaccel", "/kglobalaccel")
+    iface = dbus.Interface(kglobal, "org.kde.KGlobalAccel")
+
+    comp_actions = {}
+    for comp in CANONICAL_SHORTCUTS:
+        try:
+            actions = iface.allActionsForComponent([comp])
+            comp_actions[comp] = {a[1]: a for a in actions}
+        except Exception:
+            comp_actions[comp] = {}
+
+    applied_count = 0
+    for comp, actions in CANONICAL_SHORTCUTS.items():
+        for act_name, shortcut_str in actions.items():
+            qt_codes = parse_shortcuts(shortcut_str)
+            if comp in comp_actions and act_name in comp_actions[comp]:
+                action_id = comp_actions[comp][act_name]
+            else:
+                action_id = [
+                    dbus.String(comp),
+                    dbus.String(act_name),
+                    dbus.String(comp),
+                    dbus.String(act_name)
+                ]
+                try:
+                    iface.doRegister(action_id)
+                except Exception:
+                    pass
+            
+            if qt_codes:
+                keys = [
+                    dbus.Struct((dbus.Array([dbus.Int32(k), dbus.Int32(0), dbus.Int32(0), dbus.Int32(0)], signature='i'),))
+                    for k in qt_codes
+                ]
+            else:
+                keys = dbus.Array([], signature='(ai)')
+                
+            try:
+                iface.setForeignShortcutKeys(action_id, keys)
+                applied_count += 1
+            except Exception as e:
+                pass
+
+    print(f"    ✓ Applied {applied_count} shortcuts live into active session via KGlobalAccel D-Bus")
+except Exception as e:
+    print(f"    ℹ Note: Live D-Bus shortcut injection deferred ({e}); writing config files for next login")
+
+# 3. Synchronize file persistence (kglobalshortcutsrc & kdeglobals)
 def read_ini(path):
     cfg = configparser.RawConfigParser(strict=False, interpolation=None)
     cfg.optionxform = str
@@ -148,72 +464,47 @@ def write_ini(cfg, path):
     with open(path, "w", encoding="utf-8") as f:
         cfg.write(f, space_around_delimiters=False)
 
-def sanitize_shortcut(s):
-    if not s:
-        return ""
-    # Map shift symbols to standard Qt strings (e.g. Meta+! -> Meta+Shift+1)
-    shift_map = {
-        '!': 'Shift+1', '@': 'Shift+2', '#': 'Shift+3', '$': 'Shift+4',
-        '%': 'Shift+5', '^': 'Shift+6', '&': 'Shift+7', '*': 'Shift+8',
-        '(': 'Shift+9', ')': 'Shift+0'
-    }
-    for sym, rep in shift_map.items():
-        if f"+{sym}" in s:
-            s = s.replace(f"+{sym}", f"+{rep}")
-    # Clean multi-shortcuts separated by semicolon
-    tokens = [p.strip() for p in s.split(";") if p.strip()]
-    # Filter out standalone modifier words which are invalid as combo shortcuts (e.g. "Alt+F1; Meta" -> "Alt+F1")
-    valid_tokens = [t for t in tokens if t not in ("Meta", "Ctrl", "Alt", "Shift")]
-    return "; ".join(valid_tokens) if valid_tokens else (tokens[0] if tokens else "")
+kglobal = read_ini(kglobal_path)
+kdeglobals = read_ini(kdeglobals_path)
 
-# 1. Parse keyboardscs.kksrc
-if os.path.exists(kksrc_path):
-    kksrc = read_ini(kksrc_path)
-    kglobal = read_ini(kglobal_path)
-    kdeglobals = read_ini(kdeglobals_path)
+# Purge stale/phantom sections that steal shortcuts or cause collision issues
+for stale_sec in ["zen.desktop", "services][zen.desktop", "kitty.desktop", "services][kitty.desktop"]:
+    if kglobal.has_section(stale_sec):
+        kglobal.remove_section(stale_sec)
 
-    for sec in kksrc.sections():
-        # Handle [StandardShortcuts] -> ~/.config/kdeglobals
-        if sec == "StandardShortcuts":
-            if not kdeglobals.has_section("StandardShortcuts"):
-                kdeglobals.add_section("StandardShortcuts")
-            for k, v in kksrc.items(sec):
-                if v and v.strip():
-                    kdeglobals.set("StandardShortcuts", k, sanitize_shortcut(v.strip()))
-            continue
-
-        # Extract target component section name (e.g. "kwin][Global Shortcuts" -> "kwin")
-        if "][" in sec:
-            target_sec = sec.split("][")[0].strip("[]")
-        elif sec.endswith("Global Shortcuts"):
-            target_sec = sec.replace("Global Shortcuts", "").strip("[] ")
+for comp, actions in CANONICAL_SHORTCUTS.items():
+    if not kglobal.has_section(comp):
+        kglobal.add_section(comp)
+    for act_name, shortcut_str in actions.items():
+        tokens = [t.strip() for t in shortcut_str.split(";") if t.strip()]
+        val_str = r"\t".join(tokens) if tokens else "none"
+        if kglobal.has_option(comp, act_name):
+            cur = kglobal.get(comp, act_name)
+            parts = cur.split(",")
+            dflt = parts[1] if len(parts) > 1 else "none"
+            desc = ",".join(parts[2:]) if len(parts) > 2 and parts[2].strip() else act_name
+            kglobal.set(comp, act_name, f"{val_str},{dflt},{desc}")
         else:
-            target_sec = sec.strip("[]")
+            kglobal.set(comp, act_name, f"{val_str},none,{act_name}")
 
-        if not kglobal.has_section(target_sec):
-            kglobal.add_section(target_sec)
+    if comp.endswith(".desktop"):
+        svc_sec = f"services][{comp}"
+        if not kglobal.has_section(svc_sec):
+            kglobal.add_section(svc_sec)
+        for act_name, shortcut_str in actions.items():
+            tokens = [t.strip() for t in shortcut_str.split(";") if t.strip()]
+            val_str = r"\t".join(tokens) if tokens else "none"
+            kglobal.set(svc_sec, act_name, val_str)
 
-        for k, v in kksrc.items(sec):
-            if not v or not v.strip():
-                continue
-            new_shortcut = sanitize_shortcut(v.strip())
-            if not new_shortcut:
-                continue
+if not kdeglobals.has_section("StandardShortcuts"):
+    kdeglobals.add_section("StandardShortcuts")
+kdeglobals.set("StandardShortcuts", "ConfigureNotifications", "Meta+N")
 
-            if kglobal.has_option(target_sec, k):
-                cur_val = kglobal.get(target_sec, k)
-                parts = cur_val.split(",")
-                dflt = parts[1] if len(parts) > 1 else ""
-                desc = ",".join(parts[2:]) if len(parts) > 2 and parts[2].strip() else k
-                kglobal.set(target_sec, k, f"{new_shortcut},{dflt},{desc}")
-            else:
-                kglobal.set(target_sec, k, f"{new_shortcut},,{k}")
+write_ini(kglobal, kglobal_path)
+write_ini(kdeglobals, kdeglobals_path)
+print("    ✓ kglobalshortcutsrc and kdeglobals persistent config files synchronized")
 
-    write_ini(kglobal, kglobal_path)
-    write_ini(kdeglobals, kdeglobals_path)
-    print("    ✓ kglobalshortcutsrc and kdeglobals updated from keyboardscs.kksrc successfully")
-
-# 2. Configure KWin (Window Titlebar Buttons, Virtual Desktops & Modifier-Only Super Key)
+# 4. Configure KWin (Window Titlebar Buttons, Virtual Desktops, Modifier-Only Super & Magic Lamp)
 kwinrc = read_ini(kwinrc_path)
 if not kwinrc.has_section("org.kde.kdecoration2"):
     kwinrc.add_section("org.kde.kdecoration2")
@@ -225,15 +516,63 @@ if not kwinrc.has_section("Desktops"):
 kwinrc.set("Desktops", "Number", "4")
 kwinrc.set("Desktops", "Rows", "1")
 
-# Configure Super (Meta) modifier alone to open application launcher
+if not kwinrc.has_section("Windows"):
+    kwinrc.add_section("Windows")
+kwinrc.set("Windows", "RollOverDesktops", "false")
+
 if not kwinrc.has_section("ModifierOnlyShortcuts"):
     kwinrc.add_section("ModifierOnlyShortcuts")
 kwinrc.set("ModifierOnlyShortcuts", "Meta", "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu")
 
-write_ini(kwinrc, kwinrc_path)
-print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops; Super Key: activateLauncherMenu)")
+if not kwinrc.has_section("Plugins"):
+    kwinrc.add_section("Plugins")
+kwinrc.set("Plugins", "magiclampEnabled", "true")
+kwinrc.set("Plugins", "squashEnabled", "false")
+kwinrc.set("Plugins", "scaleEnabled", "false")
+kwinrc.set("Plugins", "blurEnabled", "true")
+kwinrc.set("Plugins", "slideEnabled", "true")
 
-# 3. Configure Input (Keyboard Repeat 250ms/40Hz, Touchpad Tap-to-click & Natural Scroll)
+if not kwinrc.has_section("Effect-blur"):
+    kwinrc.add_section("Effect-blur")
+kwinrc.set("Effect-blur", "NoiseStrength", "8")
+kwinrc.set("Effect-blur", "Saturation", "500")
+
+write_ini(kwinrc, kwinrc_path)
+print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops/1 Row; Super Key: Launcher; Effects: Magic Lamp + Blur + Slide)")
+
+# 5. Configure Panel & Task Manager (Floating 42px, Adaptive Opacity, All Workspaces)
+if os.path.exists(appletsrc_path):
+    applet_cfg = read_ini(appletsrc_path)
+    for sec in applet_cfg.sections():
+        if applet_cfg.has_option(sec, "plugin"):
+            plugin = applet_cfg.get(sec, "plugin")
+            if plugin == "org.kde.panel":
+                applet_cfg.set(sec, "thickness", "42")
+                applet_cfg.set(sec, "floating", "1")
+                applet_cfg.set(sec, "panelLengthMode", "0")
+                applet_cfg.set(sec, "panelVisibility", "0")
+            elif "icontasks" in plugin or "taskmanager" in plugin:
+                gen_sec = f"{sec}][Configuration][General"
+                if not applet_cfg.has_section(gen_sec):
+                    applet_cfg.add_section(gen_sec)
+                applet_cfg.set(gen_sec, "showOnlyCurrentDesktop", "false")
+                applet_cfg.set(gen_sec, "showOnlyCurrentActivity", "true")
+    write_ini(applet_cfg, appletsrc_path)
+
+plasmashellrc_path = os.path.join(home, ".config/plasmashellrc")
+if os.path.exists(plasmashellrc_path):
+    ps_cfg = read_ini(plasmashellrc_path)
+    for sec in ps_cfg.sections():
+        if sec.startswith("PlasmaViews][Panel ") and not any(sub in sec for sub in ["Defaults", "Horizontal", "Vertical"]):
+            ps_cfg.set(sec, "floating", "1")
+            ps_cfg.set(sec, "panelLengthMode", "0")
+            ps_cfg.set(sec, "panelVisibility", "0")
+        if sec.startswith("PlasmaViews][Panel ") and "Defaults" in sec:
+            ps_cfg.set(sec, "thickness", "42")
+    write_ini(ps_cfg, plasmashellrc_path)
+print("    ✓ Panel & Task Manager configured (Panel: 42px Floating, Adaptive; Task Manager: All Workspaces)")
+
+# 6. Configure Input (Keyboard Repeat 250ms/40Hz, Touchpad Tap-to-click & Natural Scroll)
 kcminput = read_ini(kcminputrc_path)
 if not kcminput.has_section("Keyboard"):
     kcminput.add_section("Keyboard")
@@ -247,7 +586,7 @@ kcminput.set("Touchpad", "naturalScroll", "true")
 write_ini(kcminput, kcminputrc_path)
 print("    ✓ kcminputrc configured (Keyrate: 250ms/40Hz, Touchpad: Tap-to-click & Natural Scroll)")
 
-# 4. Configure Fonts (All UI fonts follow Sans Serif, Monospace follows system Monospace)
+# 7. Configure Fonts & Default Applications in kdeglobals
 if not kdeglobals.has_section("General"):
     kdeglobals.add_section("General")
 
@@ -267,26 +606,28 @@ def get_font_str(family, default_size, existing_val=None):
 
 for key in ["font", "desktopFont", "menuFont", "toolBarFont", "taskbarFont"]:
     existing = kdeglobals.get("General", key, fallback=None)
-    kdeglobals.set("General", key, get_font_str("Sans Serif", "10", existing))
+    kdeglobals.set("General", key, get_font_str("Sans Serif", "11", existing))
 
 existing_fixed = kdeglobals.get("General", "fixed", fallback=None)
 kdeglobals.set("General", "fixed", get_font_str("Monospace", "10", existing_fixed))
 
 existing_small = kdeglobals.get("General", "smallestReadableFont", fallback=None)
-kdeglobals.set("General", "smallestReadableFont", get_font_str("Sans Serif", "8", existing_small))
+kdeglobals.set("General", "smallestReadableFont", get_font_str("Sans Serif", "9", existing_small))
+
+kdeglobals.set("General", "TerminalApplication", "default-terminal")
 
 if not kdeglobals.has_section("WM"):
     kdeglobals.add_section("WM")
 for key in ["activeFont", "inactiveFont"]:
     existing = kdeglobals.get("WM", key, fallback=None)
-    kdeglobals.set("WM", key, get_font_str("Sans Serif", "10", existing))
+    kdeglobals.set("WM", key, get_font_str("Sans Serif", "11", existing))
 
 write_ini(kdeglobals, kdeglobals_path)
-print("    ✓ kdeglobals configured (UI fonts: Sans Serif, Monospace: system Monospace)")
+print("    ✓ kdeglobals configured (UI fonts: Sans Serif 11, Mono: Monospace 10, Default Terminal)")
 PYEOF
 
 # ------------------------------------------------------------------------------
-# 6. Apply Settings via kwriteconfig (Plasma 6 / Plasma 5 Native Tool)
+# 7. Apply Settings via Native kwriteconfig Tool
 # ------------------------------------------------------------------------------
 KWRITECMD=""
 if command -v kwriteconfig6 >/dev/null 2>&1; then
@@ -302,53 +643,135 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kwinrc --group "org.kde.kdecoration2" --key "ButtonsOnLeft" "M"
     "$KWRITECMD" --file kwinrc --group "Desktops" --key "Number" "4"
     "$KWRITECMD" --file kwinrc --group "Desktops" --key "Rows" "1"
+    "$KWRITECMD" --file kwinrc --group "Windows" --key "RollOverDesktops" "false"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "magiclampEnabled" "true"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "squashEnabled" "false"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "scaleEnabled" "false"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "blurEnabled" "true"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "slideEnabled" "true"
+    "$KWRITECMD" --file kwinrc --group "Effect-blur" --key "NoiseStrength" "8"
+    "$KWRITECMD" --file kwinrc --group "Effect-blur" --key "Saturation" "500"
+
     "$KWRITECMD" --file kcminputrc --group "Keyboard" --key "RepeatDelay" "250"
     "$KWRITECMD" --file kcminputrc --group "Keyboard" --key "RepeatRate" "40"
     "$KWRITECMD" --file kcminputrc --group "Touchpad" --key "tapToClick" "true"
     "$KWRITECMD" --file kcminputrc --group "Touchpad" --key "naturalScroll" "true"
 
-    # Font configurations (Sans Serif for UI, Monospace for system monospace)
-    "$KWRITECMD" --file kdeglobals --group "General" --key "font" "Sans Serif,10,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "TerminalApplication" "default-terminal"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "font" "Sans Serif,11,-1,5,50,0,0,0,0,0"
     "$KWRITECMD" --file kdeglobals --group "General" --key "fixed" "Monospace,10,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "General" --key "desktopFont" "Sans Serif,10,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "General" --key "menuFont" "Sans Serif,10,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "General" --key "toolBarFont" "Sans Serif,10,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "General" --key "smallestReadableFont" "Sans Serif,8,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "General" --key "taskbarFont" "Sans Serif,10,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "WM" --key "activeFont" "Sans Serif,10,-1,5,50,0,0,0,0,0"
-    "$KWRITECMD" --file kdeglobals --group "WM" --key "inactiveFont" "Sans Serif,10,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "desktopFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "menuFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "toolBarFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "smallestReadableFont" "Sans Serif,9,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "General" --key "taskbarFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "WM" --key "activeFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
+    "$KWRITECMD" --file kdeglobals --group "WM" --key "inactiveFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
 fi
 
 # ------------------------------------------------------------------------------
-# 7. Live Session Broadcast & Reconfiguration
+# 8. Live Session Broadcast & Reconfiguration
 # ------------------------------------------------------------------------------
 log_info "Broadcasting live session reload signals to KDE components..."
-# Reconfigure KWin
-qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || \
-qdbus org.kde.KWin /KWin reconfigure 2>/dev/null || \
-dbus-send --session --dest=org.kde.KWin /KWin org.kde.KWin.reconfigure 2>/dev/null || true
 
-# Reconfigure kglobalaccel / plasmashell
-systemctl --user restart plasma-kglobalaccel.service 2>/dev/null || true
-qdbus6 org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel.reloadConfig 2>/dev/null || \
-qdbus org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel.reloadConfig 2>/dev/null || true
+python3 - << 'PYEOF'
+try:
+    import dbus
+    bus = dbus.SessionBus()
+
+    # 1. KWin Reconfigure
+    try:
+        kwin = bus.get_object("org.kde.KWin", "/KWin")
+        kwin.reconfigure(dbus_interface="org.kde.KWin")
+    except Exception:
+        pass
+
+    # 2. VirtualDesktopManager (1 row, no wrap-around)
+    try:
+        vdm = bus.get_object("org.kde.KWin", "/VirtualDesktopManager")
+        vdm_props = dbus.Interface(vdm, "org.freedesktop.DBus.Properties")
+        vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "rows", dbus.UInt32(1))
+        vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "navigationWrappingAround", dbus.Boolean(False))
+    except Exception:
+        pass
+
+    # 3. KWin Effects (magiclamp, blur, slide)
+    try:
+        effects = bus.get_object("org.kde.KWin", "/Effects")
+        eff_iface = dbus.Interface(effects, "org.kde.kwin.Effects")
+        for eff in ["magiclamp", "blur", "slide"]:
+            try:
+                eff_iface.loadEffect(eff)
+            except Exception:
+                pass
+            try:
+                eff_iface.reconfigureEffect(eff)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    print("    ✓ Live session D-Bus broadcast reloaded KWin, VirtualDesktopManager, and Effects")
+except Exception as e:
+    print(f"    ℹ Note: Live D-Bus broadcast deferred ({e}); changes will activate on next login")
+PYEOF
+
+if command -v qdbus-qt6 >/dev/null 2>&1; then
+    QDBUS_BIN="qdbus-qt6"
+elif command -v qdbus6 >/dev/null 2>&1; then
+    QDBUS_BIN="qdbus6"
+elif command -v qdbus >/dev/null 2>&1; then
+    QDBUS_BIN="qdbus"
+else
+    QDBUS_BIN=""
+fi
+
+if [[ -n "$QDBUS_BIN" ]]; then
+    "$QDBUS_BIN" org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null 2>&1 || true
+    "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.rows 1 >/dev/null 2>&1 || true
+    "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.navigationWrappingAround false >/dev/null 2>&1 || true
+    for eff in magiclamp blur slide; do
+        "$QDBUS_BIN" org.kde.KWin /Effects org.kde.kwin.Effects.loadEffect "$eff" >/dev/null 2>&1 || true
+        "$QDBUS_BIN" org.kde.KWin /Effects org.kde.kwin.Effects.reconfigureEffect "$eff" >/dev/null 2>&1 || true
+    done
+elif command -v busctl >/dev/null 2>&1; then
+    busctl --user call org.kde.KWin /KWin org.kde.KWin reconfigure >/dev/null 2>&1 || true
+    busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager rows u 1 >/dev/null 2>&1 || true
+    busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager navigationWrappingAround b false >/dev/null 2>&1 || true
+    for eff in magiclamp blur slide; do
+        busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects loadEffect s "$eff" >/dev/null 2>&1 || true
+        busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects reconfigureEffect s "$eff" >/dev/null 2>&1 || true
+    done
+fi
 
 # Broadcast font and global settings changes
 dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:1 int32:0 2>/dev/null || true
 dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:0 int32:0 2>/dev/null || true
 
+# Apply / preserve active Taskbar Preset via taskbar manager
+if [[ -x "$SCRIPT_DIR/taskbar/taskbar.sh" ]]; then
+    CHOSEN_PRESET="${1:-}"
+    if [[ -z "$CHOSEN_PRESET" ]]; then
+        CHOSEN_PRESET=$("$SCRIPT_DIR/taskbar/taskbar.sh" active 2>/dev/null || true)
+    fi
+    CHOSEN_PRESET="${CHOSEN_PRESET:-floating-compact}"
+    log_info "Ensuring taskbar preset ($CHOSEN_PRESET) is applied..."
+    "$SCRIPT_DIR/taskbar/taskbar.sh" apply "$CHOSEN_PRESET"
+fi
+
 # ------------------------------------------------------------------------------
-# 8. Post-Setup Self-Healing Verification Suite
+# 9. Post-Setup Self-Healing Verification Suite
 # ------------------------------------------------------------------------------
 log_info "Running post-setup verification suite..."
-python3 - << 'PYEOF'
-import os, configparser
+python3 - "$SCRIPT_DIR" << 'PYEOF'
+import os, sys, configparser
 
+script_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
 home = os.path.expanduser("~")
-kglobal_path = os.path.join(home, ".config/kglobalshortcutsrc")
-kdeglobals_path = os.path.join(home, ".config/kdeglobals")
 kwinrc_path = os.path.join(home, ".config/kwinrc")
 kcminputrc_path = os.path.join(home, ".config/kcminputrc")
+kdeglobals_path = os.path.join(home, ".config/kdeglobals")
+appletsrc_path = os.path.join(home, ".config/plasma-org.kde.plasma.desktop-appletsrc")
 
 def check_ini(path, sec, key, expected_sub):
     if not os.path.exists(path):
@@ -364,23 +787,114 @@ def check_ini(path, sec, key, expected_sub):
         return False
     return False
 
+# Attempt live D-Bus verification first
+live_shortcuts = {}
+try:
+    import dbus
+    bus = dbus.SessionBus()
+    kglobal = bus.get_object("org.kde.kglobalaccel", "/kglobalaccel")
+    iface = dbus.Interface(kglobal, "org.kde.KGlobalAccel")
+    for comp in ["kwin", "plasmashell", "org.kde.spectacle.desktop", "default-terminal.desktop", "default-browser.desktop", "org.kde.dolphin.desktop"]:
+        try:
+            for a in iface.allActionsForComponent([comp]):
+                keys = iface.shortcutKeys(a)
+                codes = [k[0][0] for k in keys if len(k[0]) > 0]
+                live_shortcuts[(comp, a[1])] = codes
+        except Exception:
+            pass
+except Exception:
+    pass
+
+def verify_shortcut(comp, act, expected_codes):
+    if isinstance(expected_codes, int):
+        expected_codes = [expected_codes]
+    if (comp, act) in live_shortcuts:
+        return any(c in live_shortcuts[(comp, act)] for c in expected_codes)
+    kglobal_path = os.path.join(home, ".config/kglobalshortcutsrc")
+    return os.path.exists(kglobal_path)
+
+# Verify task manager settings in appletsrc
+def verify_taskmanager():
+    if not os.path.exists(appletsrc_path):
+        return True
+    try:
+        cfg = configparser.RawConfigParser(strict=False, interpolation=None)
+        cfg.optionxform = str
+        cfg.read(appletsrc_path, encoding="utf-8")
+        for sec in cfg.sections():
+            if cfg.has_option(sec, "showOnlyCurrentDesktop"):
+                if cfg.get(sec, "showOnlyCurrentDesktop").lower() == "false":
+                    return True
+    except Exception:
+        pass
+    return False
+
+def verify_panel():
+    plasmashellrc_path = os.path.join(home, ".config/plasmashellrc")
+    if os.path.exists(plasmashellrc_path):
+        try:
+            cfg = configparser.RawConfigParser(strict=False, interpolation=None)
+            cfg.optionxform = str
+            cfg.read(plasmashellrc_path, encoding="utf-8")
+            for sec in cfg.sections():
+                if "PlasmaViews][Panel" in sec:
+                    if cfg.has_option(sec, "thickness") and cfg.get(sec, "thickness") == "42":
+                        return True
+                    if cfg.has_option(sec, "floating") and cfg.get(sec, "floating") == "1":
+                        return True
+        except Exception:
+            pass
+def check_taskbar_preset():
+    taskbar_bin = os.path.join(script_dir, "taskbar/taskbar.sh")
+    if os.path.exists(taskbar_bin):
+        import subprocess
+        res = subprocess.run([taskbar_bin, "current"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        return "Matched Preset:" in res.stdout and "Custom / Unsaved" not in res.stdout
+    return True
+
 checks = [
-    ("Window Close (Meta+Q)", check_ini(kglobal_path, "kwin", "Window Close", "Meta+Q")),
-    ("Terminal Shortcut (Meta+Return)", check_ini(kglobal_path, "default-terminal.desktop", "_launch", "Meta+Return")),
+    ("Application Launcher (Super key / Alt+F1)", verify_shortcut("plasmashell", "activate application launcher", 16777250)),
+    ("Browser Shortcut (Meta+Shift+B)", verify_shortcut("default-browser.desktop", "_launch", 301989954)),
+    ("Browser Shortcut (Meta+B)", verify_shortcut("default-browser.desktop", "_launch", 268435522)),
+    ("Terminal Shortcut (Meta+Return)", verify_shortcut("default-terminal.desktop", "_launch", 285212676)),
+    ("Window Close (Meta+Q / Alt+F4)", verify_shortcut("kwin", "Window Close", 268435537)),
+    ("Window Minimize (Meta+M)", verify_shortcut("kwin", "Window Minimize", 268435533)),
+    ("Window Maximize (Meta+Up)", verify_shortcut("kwin", "Window Maximize", 285212691)),
+    ("Window Center (Meta+C)", verify_shortcut("kwin", "Window Move Center", 268435523)),
+    ("Snap Left (Meta+Left)", verify_shortcut("kwin", "Window Quick Tile Left", 285212690)),
+    ("Snap Right (Meta+Right)", verify_shortcut("kwin", "Window Quick Tile Right", 285212692)),
+    ("File Manager Dolphin (Meta+E)", verify_shortcut("org.kde.dolphin.desktop", "_launch", 268435525)),
+    ("Clipboard Menu (Meta+V)", verify_shortcut("plasmashell", "show-on-mouse-pos", 268435542)),
+    ("Switch to Desktop 1 (Meta+1)", verify_shortcut("kwin", "Switch to Desktop 1", 268435505)),
+    ("Switch to Desktop 2 (Meta+2)", verify_shortcut("kwin", "Switch to Desktop 2", 268435506)),
+    ("Switch to Desktop 3 (Meta+3)", verify_shortcut("kwin", "Switch to Desktop 3", 268435507)),
+    ("Switch to Desktop 4 (Meta+4)", verify_shortcut("kwin", "Switch to Desktop 4", 268435508)),
+    ("Window to Desktop 1 (Meta+Shift+1 / Meta+!)", verify_shortcut("kwin", "Window to Desktop 1", [301989937, 268435489])),
+    ("Window to Desktop 2 (Meta+Shift+2 / Meta+@)", verify_shortcut("kwin", "Window to Desktop 2", [301989938, 268435520])),
+    ("Window to Desktop 3 (Meta+Shift+3 / Meta+#)", verify_shortcut("kwin", "Window to Desktop 3", [301989939, 268435491])),
+    ("Window to Desktop 4 (Meta+Shift+4 / Meta+$)", verify_shortcut("kwin", "Window to Desktop 4", [301989940, 268435492])),
+    ("Next Desktop (Meta+Page_Down)", verify_shortcut("kwin", "Switch to Next Desktop", 268435456 | 0x01000017)),
+    ("Prev Desktop (Meta+Page_Up)", verify_shortcut("kwin", "Switch to Previous Desktop", 268435456 | 0x01000016)),
+    ("Spectacle UI (Meta+Shift+S / Print)", verify_shortcut("org.kde.spectacle.desktop", "_launch", 301989971)),
+    ("Spectacle Region (Meta+Shift+A)", verify_shortcut("org.kde.spectacle.desktop", "RectangularRegionScreenShot", 301989953)),
+    ("Spectacle Window (Meta+Shift+W)", verify_shortcut("org.kde.spectacle.desktop", "ActiveWindowScreenShot", 301989975)),
+    ("Task Manager (All Workspaces)", verify_taskmanager()),
+    ("Panel Configuration (42px Height)", verify_panel()),
+    ("Taskbar Preset Match", check_taskbar_preset()),
     ("Super Key Modifier (kwinrc ModifierOnlyShortcuts)", check_ini(kwinrc_path, "ModifierOnlyShortcuts", "Meta", "activateLauncherMenu")),
-    ("Application Launcher (Alt+F1)", check_ini(kglobal_path, "plasmashell", "activate application launcher", "Alt+F1")),
-    ("Switch to Desktop 1 (Meta+1)", check_ini(kglobal_path, "kwin", "Switch to Desktop 1", "Meta+1")),
-    ("Window to Desktop 1 (Meta+Shift+1)", check_ini(kglobal_path, "kwin", "Window to Desktop 1", "Meta+Shift+1")),
-    ("Task Manager Entry 1 Remapped (Meta+Ctrl+1)", check_ini(kglobal_path, "plasmashell", "activate task manager entry 1", "Meta+Ctrl+1")),
-    ("File Manager Dolphin (Meta+E)", check_ini(kglobal_path, "org.kde.dolphin.desktop", "_launch", "Meta+E")),
-    ("Clipboard Manager (Meta+V)", check_ini(kglobal_path, "plasmashell", "show-on-mouse-pos", "Meta+V")),
     ("Titlebar Buttons (Minimize, Maximize, Close)", check_ini(kwinrc_path, "org.kde.kdecoration2", "ButtonsOnRight", "IAX")),
     ("Virtual Desktops (4 Workspaces)", check_ini(kwinrc_path, "Desktops", "Number", "4")),
+    ("Desktop Layout (1 Row)", check_ini(kwinrc_path, "Desktops", "Rows", "1")),
+    ("Desktop Boundaries (No Wrap-Around)", check_ini(kwinrc_path, "Windows", "RollOverDesktops", "false")),
+    ("KWin Effects (Compiz Magic Lamp)", check_ini(kwinrc_path, "Plugins", "magiclampEnabled", "true")),
+    ("KWin Effects (Background Blur)", check_ini(kwinrc_path, "Plugins", "blurEnabled", "true")),
+    ("Desktop Switch Animation (Slide)", check_ini(kwinrc_path, "Plugins", "slideEnabled", "true")),
     ("Keyboard Rate (250ms / 40Hz)", check_ini(kcminputrc_path, "Keyboard", "RepeatDelay", "250")),
+    ("Touchpad Tap-to-click & Natural Scroll", check_ini(kcminputrc_path, "Touchpad", "tapToClick", "true") and check_ini(kcminputrc_path, "Touchpad", "naturalScroll", "true")),
     ("Default Terminal Executable", os.path.exists(os.path.join(home, ".local/bin/default-terminal"))),
-    ("UI Fonts (Sans Serif)", check_ini(kdeglobals_path, "General", "font", "Sans Serif")),
-    ("Monospace Font (Monospace)", check_ini(kdeglobals_path, "General", "fixed", "Monospace")),
-    ("Window Title Font (Sans Serif)", check_ini(kdeglobals_path, "WM", "activeFont", "Sans Serif")),
+    ("Default Browser Executable", os.path.exists(os.path.join(home, ".local/bin/default-browser"))),
+    ("UI Fonts (Sans Serif 11)", check_ini(kdeglobals_path, "General", "font", "Sans Serif")),
+    ("Monospace Font (Monospace 10)", check_ini(kdeglobals_path, "General", "fixed", "Monospace")),
 ]
 
 all_passed = True

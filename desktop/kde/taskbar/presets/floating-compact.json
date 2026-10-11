@@ -1,0 +1,15 @@
+{
+  "id": "floating-compact",
+  "name": "Floating Compact (Default)",
+  "description": "Modern floating dock panel, 42px height, adaptive opacity, multi-workspace tasks",
+  "layoutType": "single",
+  "location": "bottom",
+  "height": 42,
+  "floating": true,
+  "lengthMode": "fill",
+  "hiding": "none",
+  "opacity": "adaptive",
+  "alignment": "center",
+  "showOnlyCurrentDesktop": false,
+  "showOnlyCurrentActivity": true
+}

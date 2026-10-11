@@ -1,0 +1,15 @@
+{
+  "id": "top-bar",
+  "name": "Top Status Bar",
+  "description": "Clean slim top-edge status bar, 30px height, adaptive opacity, edge-to-edge, multi-workspace tasks",
+  "layoutType": "single",
+  "location": "top",
+  "height": 30,
+  "floating": false,
+  "lengthMode": "fill",
+  "hiding": "none",
+  "opacity": "adaptive",
+  "alignment": "center",
+  "showOnlyCurrentDesktop": false,
+  "showOnlyCurrentActivity": true
+}

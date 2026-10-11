@@ -1,0 +1,15 @@
+{
+  "id": "dock-mac",
+  "name": "macOS Centered Dock",
+  "description": "Centered floating dock sized to contents, 42px height, adaptive opacity, dodges maximized windows",
+  "layoutType": "single",
+  "location": "bottom",
+  "height": 42,
+  "floating": true,
+  "lengthMode": "fit",
+  "hiding": "dodgewindows",
+  "opacity": "adaptive",
+  "alignment": "center",
+  "showOnlyCurrentDesktop": false,
+  "showOnlyCurrentActivity": true
+}
