@@ -7,8 +7,8 @@
 # includeIf and sshCommand, while keeping all keys directly in ~/.ssh without nesting.
 #
 # Key naming convention:
-#   • default : ~/.ssh/id_ed25519 (or id_rsa) - no suffix
-#   • work    : ~/.ssh/id_ed25519_work (or id_rsa_work) - _work suffix
+#   • default : ~/.ssh/id_ed25519 (or id_rsa, id_personal) - no suffix
+#   • work    : ~/.ssh/id_ed25519_work (or id_rsa_work, id_work) - _work suffix
 #   • uni     : ~/.ssh/id_ed25519_uni (or id_rsa_uni) - _uni suffix
 #   • <custom>: ~/.ssh/id_ed25519_<custom> - _<custom> suffix
 # ==============================================================================
@@ -44,6 +44,8 @@ CLI_PROFILE=""
 CLI_NAME=""
 CLI_EMAIL=""
 CLI_DIR=""
+CLI_KEY=""
+CLI_SCAN_KEYS=false
 KEY_TYPE="ed25519"
 KEY_TYPE_EXPLICIT=false
 
@@ -62,8 +64,11 @@ Options:
   --profile-email <email>  Alias for --email
   --dir <path>             Workspace directory for profile (default: ~/<type>)
   --profile-dir <path>     Alias for --dir
+  --key <path>             Explicit SSH private key to associate with profile
+  --profile-key <path>     Alias for --key
   --key-type <ed25519|rsa> SSH key algorithm to generate (default: ed25519)
   -t <ed25519|rsa>         Alias for --key-type
+  --scan-keys              Scan ~/.ssh/ for keys and show profile assignments
   --non-interactive        Run without interactive prompts
   -h, --help               Show this help message
 
@@ -71,11 +76,14 @@ Examples:
   # Interactive setup (prompts for profile type, name/email, and generates keys):
   ./core/scripts/setup_git.sh
 
+  # Scan ~/.ssh/ and list/assign discovered SSH keys:
+  ./core/scripts/setup_git.sh --scan-keys
+
   # Non-interactive default profile setup:
   ./core/scripts/setup_git.sh --non-interactive --profile default --name "Codesmith" --email "user@example.com"
 
-  # Non-interactive work profile setup:
-  ./core/scripts/setup_git.sh --non-interactive --profile work --name "Real Name" --email "name@work.com"
+  # Non-interactive work profile setup with explicit key:
+  ./core/scripts/setup_git.sh --non-interactive --profile work --key ~/.ssh/id_work --name "Real Name" --email "name@work.com"
 
   # Non-interactive university profile setup:
   ./core/scripts/setup_git.sh --non-interactive --profile uni --name "Real Name" --email "student@uni.edu"
@@ -100,6 +108,14 @@ while [[ $# -gt 0 ]]; do
         --dir|--profile-dir)
             CLI_DIR="$2"
             shift 2
+            ;;
+        --key|--profile-key)
+            CLI_KEY="$2"
+            shift 2
+            ;;
+        --scan-keys)
+            CLI_SCAN_KEYS=true
+            shift
             ;;
         --key-type|-t)
             KEY_TYPE="$2"
@@ -167,6 +183,285 @@ else
     echo "  → Linked: $HOST_GITCONFIG -> $CORE_GITCONFIG"
 fi
 
+# Re-orders ~/.gitconfig.local so all [includeIf] directives remain at the end,
+# guaranteeing directory-scoped profile overrides take precedence over global defaults.
+reorder_local_gitconfig() {
+    [ ! -f "$LOCAL_GITCONFIG" ] && return 0
+    local tmp_file="$LOCAL_GITCONFIG.tmp.$$"
+    awk '
+        /^\[/ {
+            if (/^\[includeIf/) { in_include=1 } else { in_include=0 }
+        }
+        {
+            if (in_include) { include_buf = include_buf $0 "\n" }
+            else { base_buf = base_buf $0 "\n" }
+        }
+        END {
+            sub(/\n+$/, "", base_buf);
+            sub(/\n+$/, "", include_buf);
+            if (base_buf != "") print base_buf;
+            if (base_buf != "" && include_buf != "") print "";
+            if (include_buf != "") print include_buf;
+        }
+    ' "$LOCAL_GITCONFIG" > "$tmp_file" && mv "$tmp_file" "$LOCAL_GITCONFIG"
+}
+
+# ------------------------------------------------------------------------------
+# SSH Key Discovery & Profile Mapping Helpers
+# ------------------------------------------------------------------------------
+resolve_symlink() {
+    local target="$1"
+    while [ -L "$target" ]; do
+        local link
+        link="$(readlink "$target")"
+        if [[ "$link" = /* ]]; then
+            target="$link"
+        else
+            target="$(dirname "$target")/$link"
+        fi
+    done
+    echo "$target"
+}
+
+get_key_profile() {
+    local key_path="$1"
+    local real_key
+    real_key="$(resolve_symlink "$key_path")"
+    local base_name
+    base_name="$(basename "$real_key")"
+    local ssh_config="$HOME/.ssh/config"
+
+    # 1. Check ~/.ssh/config directory Match rules
+    if [ -f "$ssh_config" ]; then
+        local cur_match=""
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^Match\ host\ github\.com\ exec\ .*grep\ -q\ \'\^([^\']+)\' ]]; then
+                cur_match="${BASH_REMATCH[1]}"
+            elif [[ "$line" =~ ^Host\  ]]; then
+                cur_match=""
+            elif [[ "$line" =~ IdentityFile\ (.*) ]]; then
+                local id_path="${BASH_REMATCH[1]}"
+                id_path="${id_path/#\~/$HOME}"
+                id_path="$(resolve_symlink "$id_path")"
+                if [ "$id_path" = "$real_key" ] || [ "$(basename "$id_path")" = "$base_name" ]; then
+                    if [ -n "$cur_match" ]; then
+                        echo "$(basename "$cur_match") [scoped to $cur_match]"
+                        return 0
+                    fi
+                fi
+            fi
+        done < "$ssh_config"
+
+        # 2. Check Host github.com block in ~/.ssh/config
+        local in_gh=false
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^Host\ github\.com$ ]]; then
+                in_gh=true
+            elif [[ "$line" =~ ^Host\  ]]; then
+                in_gh=false
+            elif [ "$in_gh" = true ] && [[ "$line" =~ IdentityFile\ (.*) ]]; then
+                local id_path="${BASH_REMATCH[1]}"
+                id_path="${id_path/#\~/$HOME}"
+                id_path="$(resolve_symlink "$id_path")"
+                if [ "$id_path" = "$real_key" ] || [ "$(basename "$id_path")" = "$base_name" ]; then
+                    echo "default [global identity]"
+                    return 0
+                fi
+            fi
+        done < "$ssh_config"
+    fi
+
+    # 3. Check includeIf in ~/.gitconfig.local
+    if [ -f "$LOCAL_GITCONFIG" ]; then
+        local inc_paths
+        inc_paths="$(git config --file "$LOCAL_GITCONFIG" --get-regexp '^includeif\.gitdir:' 2>/dev/null || true)"
+        if [ -n "$inc_paths" ]; then
+            while read -r _ prof_cfg; do
+                prof_cfg="${prof_cfg/#\~/$HOME}"
+                if [ -f "$prof_cfg" ]; then
+                    local prof_ssh
+                    prof_ssh="$(git config --file "$prof_cfg" core.sshCommand 2>/dev/null || true)"
+                    if [[ "$prof_ssh" == *"$base_name"* ]]; then
+                        local prof_dir
+                        prof_dir="$(dirname "$prof_cfg")"
+                        echo "$(basename "$prof_dir") [scoped to $prof_dir]"
+                        return 0
+                    fi
+                fi
+            done <<< "$inc_paths"
+        fi
+    fi
+
+    # 4. Check if standard id_ed25519, id_rsa, or id_personal when default identity configured
+    if [ -f "$LOCAL_GITCONFIG" ] && [ -n "$(git config --file "$LOCAL_GITCONFIG" user.name 2>/dev/null || true)" ]; then
+        if [ "$real_key" = "$(resolve_symlink "$HOME/.ssh/id_ed25519" 2>/dev/null || true)" ] || \
+           [ "$real_key" = "$(resolve_symlink "$HOME/.ssh/id_rsa" 2>/dev/null || true)" ] || \
+           [ "$real_key" = "$HOME/.ssh/id_personal" ]; then
+            echo "default [global identity]"
+            return 0
+        fi
+    fi
+
+    echo "unassigned"
+}
+
+DISCOVERED_KEYS=()
+DISCOVERED_REAL_KEYS=()
+DISCOVERED_ALGOS=()
+DISCOVERED_COMMENTS=()
+DISCOVERED_PROFILES=()
+
+scan_ssh_keys() {
+    DISCOVERED_KEYS=()
+    DISCOVERED_REAL_KEYS=()
+    DISCOVERED_ALGOS=()
+    DISCOVERED_COMMENTS=()
+    DISCOVERED_PROFILES=()
+
+    local seen_real=" "
+    for pub_file in "$HOME/.ssh"/*.pub; do
+        [ ! -f "$pub_file" ] && continue
+        local priv_file="${pub_file%.pub}"
+        [ ! -f "$priv_file" ] && continue
+
+        local real_priv
+        real_priv="$(resolve_symlink "$priv_file")"
+
+        if [[ "$seen_real" == *" $real_priv "* ]]; then
+            continue
+        fi
+        seen_real="$seen_real$real_priv "
+
+        local algo="ed25519"
+        if ssh-keygen -l -f "$pub_file" 2>/dev/null | grep -qi "RSA"; then
+            algo="rsa"
+        elif ssh-keygen -l -f "$pub_file" 2>/dev/null | grep -qi "ECDSA"; then
+            algo="ecdsa"
+        fi
+
+        local comment
+        comment="$(awk 'NF>2{$1=$2=""; sub(/^  */,""); print}' "$pub_file" 2>/dev/null || true)"
+
+        local assigned_prof
+        assigned_prof="$(get_key_profile "$priv_file")"
+
+        DISCOVERED_KEYS+=("$priv_file")
+        DISCOVERED_REAL_KEYS+=("$real_priv")
+        DISCOVERED_ALGOS+=("$algo")
+        DISCOVERED_COMMENTS+=("$comment")
+        DISCOVERED_PROFILES+=("$assigned_prof")
+    done
+}
+
+display_discovered_keys() {
+    scan_ssh_keys
+    local count=${#DISCOVERED_KEYS[@]}
+    if [ "$count" -eq 0 ]; then
+        echo "  ℹ️  No existing SSH keys found in ~/.ssh/."
+        return 0
+    fi
+
+    echo ""
+    echo "────────────────────────────────────────────────────────────"
+    echo "  🔍 Discovered Existing SSH Keys (~/.ssh/):"
+    echo "────────────────────────────────────────────────────────────"
+    for ((i=0; i<count; i++)); do
+        local key="${DISCOVERED_KEYS[$i]}"
+        local algo="${DISCOVERED_ALGOS[$i]}"
+        local comment="${DISCOVERED_COMMENTS[$i]}"
+        local prof="${DISCOVERED_PROFILES[$i]}"
+        local status_icon="✓"
+        [ "$prof" = "unassigned" ] && status_icon="⚠️"
+
+        echo "  [$((i+1))] $status_icon $(basename "$key") ($algo) [${comment:-no comment}]"
+        echo "      Path     : $key"
+        if [ "$prof" = "unassigned" ]; then
+            echo "      Profile  : ⚠️  UNASSIGNED (not linked to any Git profile)"
+        else
+            echo "      Profile  : Assigned to $prof"
+        fi
+    done
+    echo "────────────────────────────────────────────────────────────"
+}
+
+assign_unassigned_keys_interactive() {
+    scan_ssh_keys
+    local count=${#DISCOVERED_KEYS[@]}
+    local unassigned_indices=()
+
+    for ((i=0; i<count; i++)); do
+        if [ "${DISCOVERED_PROFILES[$i]}" = "unassigned" ]; then
+            unassigned_indices+=("$i")
+        fi
+    done
+
+    if [ ${#unassigned_indices[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    echo ""
+    echo "Found ${#unassigned_indices[@]} unassigned SSH key(s)."
+    read -rp "Would you like to assign them to Git profiles now? [Y/n]: " DO_ASSIGN || true
+    case "$DO_ASSIGN" in
+        [nN]|[nN][oO])
+            return 0
+            ;;
+    esac
+
+    for idx in "${unassigned_indices[@]}"; do
+        local key="${DISCOVERED_KEYS[$idx]}"
+        local algo="${DISCOVERED_ALGOS[$idx]}"
+        local comment="${DISCOVERED_COMMENTS[$idx]}"
+
+        echo ""
+        echo "────────────────────────────────────────────────────────────"
+        echo "  Assign Key: $(basename "$key") ($algo)"
+        echo "  Comment   : ${comment:-None}"
+        echo "────────────────────────────────────────────────────────────"
+        echo "Choose Git profile to assign to this key:"
+        echo "  1) default  [Global identity, active everywhere by default]"
+        echo "  2) work     [Work identity, scoped to ~/work]"
+        echo "  3) uni      [University identity, scoped to ~/uni]"
+        echo "  4) custom   [Custom directory-scoped identity]"
+        echo "  5) skip     [Leave unassigned]"
+        echo ""
+        read -rp "Select profile [1-5, default: skip]: " PROF_CHOICE || continue
+
+        local chosen_prof=""
+        case "$PROF_CHOICE" in
+            1|default)
+                chosen_prof="default"
+                ;;
+            2|work)
+                chosen_prof="work"
+                ;;
+            3|uni)
+                chosen_prof="uni"
+                ;;
+            4|custom)
+                read -rp "Enter custom profile name: " CUST_NAME || continue
+                chosen_prof="$(echo "$CUST_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_-')"
+                while [ -z "$chosen_prof" ]; do
+                    echo "  ⚠️ Profile name cannot be empty."
+                    read -rp "Enter custom profile name: " CUST_NAME || break
+                    chosen_prof="$(echo "$CUST_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_-')"
+                done
+                ;;
+            *)
+                echo "  → Skipping key: $(basename "$key")"
+                continue
+                ;;
+        esac
+
+        local email_hint=""
+        if [[ "$comment" == *"@"* ]]; then
+            email_hint="$comment"
+        fi
+
+        configure_profile "$chosen_prof" "" "$email_hint" "" "$key"
+    done
+}
+
 # ------------------------------------------------------------------------------
 # 4. Profile Configuration Function
 # ------------------------------------------------------------------------------
@@ -175,6 +470,7 @@ configure_profile() {
     local input_name="$2"
     local input_email="$3"
     local input_dir="$4"
+    local explicit_key="$5"
 
     # Normalize profile label: lowercase alphanumeric + underscores/hyphens
     target_profile="$(echo "$target_profile" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_-')"
@@ -302,12 +598,41 @@ configure_profile() {
         echo "  ✓ Migrated key to flat structure: $HOME/.ssh/id_rsa${key_suffix}"
     fi
 
-    # Check if an existing key already exists for this profile
+    # Check if an explicit key was provided or if an existing key already exists for this profile
     local key_path=""
-    if [ -f "$HOME/.ssh/id_ed25519${key_suffix}" ]; then
+    if [ -n "$explicit_key" ] && [ -f "${explicit_key/#\~/$HOME}" ]; then
+        key_path="${explicit_key/#\~/$HOME}"
+    elif [ -f "$HOME/.ssh/id_ed25519${key_suffix}" ]; then
         key_path="$HOME/.ssh/id_ed25519${key_suffix}"
     elif [ -f "$HOME/.ssh/id_rsa${key_suffix}" ]; then
         key_path="$HOME/.ssh/id_rsa${key_suffix}"
+    elif [ "$is_default" = true ] && [ -f "$HOME/.ssh/id_personal" ]; then
+        key_path="$HOME/.ssh/id_personal"
+    elif [ "$is_default" = true ] && [ -f "$HOME/.ssh/id_ed25519_personal" ]; then
+        key_path="$HOME/.ssh/id_ed25519_personal"
+    elif [ "$is_default" = true ] && [ -f "$HOME/.ssh/id_rsa_personal" ]; then
+        key_path="$HOME/.ssh/id_rsa_personal"
+    elif [ -f "$HOME/.ssh/id_${target_profile}" ]; then
+        key_path="$HOME/.ssh/id_${target_profile}"
+    fi
+
+    # If key still not found and interactive, prompt user to pick from existing keys in ~/.ssh/
+    if [ -z "$key_path" ] && [ "$NON_INTERACTIVE" = false ]; then
+        scan_ssh_keys
+        local count=${#DISCOVERED_KEYS[@]}
+        if [ "$count" -gt 0 ]; then
+            echo ""
+            echo "Select an SSH key to use for profile '$target_profile':"
+            for ((k=0; k<count; k++)); do
+                echo "  $((k+1))) ${DISCOVERED_KEYS[$k]} (${DISCOVERED_ALGOS[$k]}) [${DISCOVERED_COMMENTS[$k]:-no comment}] - ${DISCOVERED_PROFILES[$k]}"
+            done
+            echo "  $((count+1))) Generate a new SSH key"
+            echo ""
+            read -rp "Select key [1-$((count+1)), default: $((count+1))]: " KEY_CHOICE || true
+            if [[ "$KEY_CHOICE" =~ ^[0-9]+$ ]] && [ "$KEY_CHOICE" -ge 1 ] && [ "$KEY_CHOICE" -le "$count" ]; then
+                key_path="${DISCOVERED_KEYS[$((KEY_CHOICE-1))]}"
+            fi
+        fi
     fi
 
     # Generate key if not found
@@ -337,6 +662,25 @@ configure_profile() {
         echo "  ✓ Generated SSH key at: $key_path"
     fi
 
+    # Create canonical compatibility symlinks if needed (e.g. id_personal -> id_ed25519)
+    if [ "$is_default" = true ]; then
+        if [ ! -e "$HOME/.ssh/id_ed25519" ]; then
+            ln -snf "$key_path" "$HOME/.ssh/id_ed25519"
+            [ -f "$key_path.pub" ] && ln -snf "$key_path.pub" "$HOME/.ssh/id_ed25519.pub"
+            echo "  ✓ Linked standard key: ~/.ssh/id_ed25519 -> $key_path"
+        fi
+    else
+        local canonical_link="$HOME/.ssh/id_ed25519_${target_profile}"
+        if ssh-keygen -l -f "$key_path" 2>/dev/null | grep -q "RSA"; then
+            canonical_link="$HOME/.ssh/id_rsa_${target_profile}"
+        fi
+        if [ ! -e "$canonical_link" ]; then
+            ln -snf "$key_path" "$canonical_link"
+            [ -f "$key_path.pub" ] && ln -snf "$key_path.pub" "$canonical_link.pub"
+            echo "  ✓ Linked standard key: $canonical_link -> $key_path"
+        fi
+    fi
+
     # Add default key to ssh-agent if running
     if [ "$is_default" = true ] && [ -n "$SSH_AUTH_SOCK" ]; then
         ssh-add "$key_path" 2>/dev/null || true
@@ -346,6 +690,20 @@ configure_profile() {
     if [ "$is_default" = true ]; then
         git config --file "$LOCAL_GITCONFIG" user.name "$final_name"
         git config --file "$LOCAL_GITCONFIG" user.email "$final_email"
+
+        # Ensure ~/.ssh/config routes github.com to default personal key with IdentitiesOnly yes
+        local ssh_config="$HOME/.ssh/config"
+        touch "$ssh_config"
+        chmod 600 "$ssh_config"
+        if ! grep -q "Host github.com" "$ssh_config" 2>/dev/null; then
+            cat >> "$ssh_config" <<EOF
+
+Host github.com
+        IdentityFile $key_path
+        IdentitiesOnly yes
+EOF
+            echo "  ✓ Added Host github.com block in $ssh_config -> $key_path"
+        fi
     else
         cat > "$profile_config" <<EOF
 # Profile-specific Git configuration for: $target_profile
@@ -362,7 +720,38 @@ EOF
         local gitdir_pattern="${target_dir%/}/"
         git config --file "$LOCAL_GITCONFIG" --unset-all "includeIf.gitdir:$gitdir_pattern.path" 2>/dev/null || true
         git config --file "$LOCAL_GITCONFIG" --add "includeIf.gitdir:$gitdir_pattern.path" "$profile_config"
+
+        # Configure ~/.ssh/config directory match rule so git clone and SSH in the entire directory use this key
+        local ssh_config="$HOME/.ssh/config"
+        touch "$ssh_config"
+        chmod 600 "$ssh_config"
+        local match_rule="Match host github.com exec \"pwd | grep -q '^$target_dir'\""
+        if ! grep -Fq "$match_rule" "$ssh_config" 2>/dev/null; then
+            if grep -q "Host github.com" "$ssh_config" 2>/dev/null; then
+                awk -v rule="$match_rule" -v key="$key_path" '
+                    /^Host github\.com$/ && !inserted {
+                        print rule;
+                        print "        IdentityFile " key;
+                        print "        IdentitiesOnly yes\n";
+                        inserted = 1;
+                    }
+                    { print }
+                ' "$ssh_config" > "$ssh_config.tmp" && mv "$ssh_config.tmp" "$ssh_config"
+            else
+                cat >> "$ssh_config" <<EOF
+
+$match_rule
+        IdentityFile $key_path
+        IdentitiesOnly yes
+EOF
+            fi
+            echo "  ✓ Added directory-scoped SSH rule for $target_dir -> $key_path"
+        fi
     fi
+
+    # Reorder ~/.gitconfig.local so includeIf directives are always at the bottom,
+    # ensuring directory-scoped profile overrides take precedence over global defaults
+    reorder_local_gitconfig
 
     # Summary
     echo ""
@@ -395,21 +784,33 @@ EOF
 # ------------------------------------------------------------------------------
 # 5. Main Execution Flow
 # ------------------------------------------------------------------------------
+if [ "$CLI_SCAN_KEYS" = true ]; then
+    display_discovered_keys
+    if [ "$NON_INTERACTIVE" = false ]; then
+        assign_unassigned_keys_interactive
+    fi
+    exit 0
+fi
+
 if [ -n "$CLI_PROFILE" ] || [ "$NON_INTERACTIVE" = true ]; then
     # Non-interactive or direct CLI invocation
     target_prof="${CLI_PROFILE:-default}"
-    configure_profile "$target_prof" "$CLI_NAME" "$CLI_EMAIL" "$CLI_DIR"
+    configure_profile "$target_prof" "$CLI_NAME" "$CLI_EMAIL" "$CLI_DIR" "$CLI_KEY"
 else
-    # Interactive mode: prompt for profile type upfront on every run
+    # Interactive mode: scan and display existing keys upfront, offer to assign unassigned keys
+    display_discovered_keys
+    assign_unassigned_keys_interactive
+
     while true; do
         echo ""
         echo "Choose Git & SSH profile type to configure:"
-        echo "  1) default  [Global identity, default SSH key (no suffix)]"
-        echo "  2) uni      [University identity, scoped to ~/uni, key suffix: _uni]"
-        echo "  3) work     [Work identity, scoped to ~/work, key suffix: _work]"
+        echo "  1) default  [Global identity, active everywhere by default]"
+        echo "  2) uni      [University identity, scoped to ~/uni]"
+        echo "  3) work     [Work identity, scoped to ~/work]"
         echo "  4) custom   [Custom directory-scoped identity]"
+        echo "  5) scan     [Scan ~/.ssh/ and assign existing SSH keys to profiles]"
         echo ""
-        read -rp "Select profile type [1-4, or type default/uni/work/custom] (default: default): " USER_CHOICE || break
+        read -rp "Select option [1-5, or type default/uni/work/custom/scan] (default: default): " USER_CHOICE || break
 
         SELECTED_PROFILE=""
         case "$USER_CHOICE" in
@@ -431,13 +832,18 @@ else
                     SELECTED_PROFILE="$(echo "$CUSTOM_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_-')"
                 done
                 ;;
+            5|scan)
+                display_discovered_keys
+                assign_unassigned_keys_interactive
+                continue
+                ;;
             *)
                 # Direct entry of a profile name like 'work', 'uni', 'client', etc.
                 SELECTED_PROFILE="$(echo "$USER_CHOICE" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_-')"
                 ;;
         esac
 
-        configure_profile "$SELECTED_PROFILE" "$CLI_NAME" "$CLI_EMAIL" "$CLI_DIR"
+        configure_profile "$SELECTED_PROFILE" "$CLI_NAME" "$CLI_EMAIL" "$CLI_DIR" "$CLI_KEY"
 
         echo ""
         read -rp "Would you like to configure another profile? [y/N]: " ANOTHER_CHOICE || break
@@ -446,6 +852,7 @@ else
                 CLI_NAME=""
                 CLI_EMAIL=""
                 CLI_DIR=""
+                CLI_KEY=""
                 ;;
             *)
                 break
