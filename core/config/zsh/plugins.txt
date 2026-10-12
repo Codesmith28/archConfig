@@ -1,0 +1,16 @@
+# ==============================================================================
+# archConfig Universal Zsh Plugins (Managed by Antidote)
+# ==============================================================================
+# See: https://getantidote.github.io/
+
+# Additional completions
+zsh-users/zsh-completions
+
+# Fish-like autosuggestions as you type
+zsh-users/zsh-autosuggestions
+
+# History substring search via Up/Down arrow keys
+zsh-users/zsh-history-substring-search
+
+# Syntax highlighting (must be loaded last)
+zsh-users/zsh-syntax-highlighting

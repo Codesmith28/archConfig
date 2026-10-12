@@ -1,0 +1,3 @@
+# Ignore Antidote dynamically compiled static bundle
+plugins.zsh
+*.bundle.zsh

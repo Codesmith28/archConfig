@@ -13,3 +13,8 @@ echo "==> Setting up archConfig universal core dependencies..."
 if [ -f "$DIR/scripts/setup_shell_dependencies.sh" ]; then
     bash "$DIR/scripts/setup_shell_dependencies.sh" "$@"
 fi
+
+echo "==> Setting up archConfig universal Zsh environment..."
+if [ -f "$DIR/scripts/setup_zsh.sh" ]; then
+    bash "$DIR/scripts/setup_zsh.sh" "$@"
+fi

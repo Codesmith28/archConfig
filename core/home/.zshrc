@@ -1,23 +1,32 @@
-# ========== Oh My Zsh config ==========
-# export ZSH="$HOME/.oh-my-zsh"
-# DISABLE_AUTO_UPDATE="true"
-# DISABLE_UPDATE_PROMPT="true"
-# ZSH_DISABLE_COMPFIX=true
-#
-# plugins=(git zsh-autosuggestions) # remove zsh-syntax-highlighting here; load it last
-# source $ZSH/oh-my-zsh.sh
-# Use cached compinit for fast startup
+# ==============================================================================
+# archConfig Universal Zsh Configuration
+# ==============================================================================
 
+# Completion caching & initialization
 autoload -Uz compinit
-ZSH_COMPDUMP="$HOME/.cache/zsh/.zcompdump"
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.zcompdump"
+mkdir -p "$(dirname "$ZSH_COMPDUMP")"
 zstyle ':completion:*' rehash true
-compinit -C
+compinit -d "$ZSH_COMPDUMP" -C
 
-# ---------- Antidote ----------
+# ---------- Antidote Plugin Manager ----------
 if [ -f "$HOME/.antidote/antidote.zsh" ]; then
     source "$HOME/.antidote/antidote.zsh"
-    [ -f "$HOME/.config/zsh/plugins.txt" ] && antidote load "$HOME/.config/zsh/plugins.txt"
+    if [ -f "$HOME/.config/zsh/plugins.txt" ]; then
+        antidote load "$HOME/.config/zsh/plugins.txt"
+    fi
 fi
+
+# ---------- Plugin Settings & Keybindings ----------
+# Fish-like autosuggestions settings
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+bindkey '^f' autosuggest-accept 2>/dev/null || true
+
+# History substring search keybindings (Up / Down arrow keys)
+bindkey '^[[A' history-substring-search-up 2>/dev/null || true
+bindkey '^[[B' history-substring-search-down 2>/dev/null || true
 
 # ============ Basic config ============
 [[ -e ~/.profile ]] && source ~/.profile
@@ -29,11 +38,6 @@ command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 # These are heavy → defer them
 if [ -f ~/.fzf.zsh ]; then
     command -v zsh-defer >/dev/null 2>&1 && zsh-defer source ~/.fzf.zsh || source ~/.fzf.zsh
-fi
-
-# zsh-syntax-highlighting must load last → defer!
-if [ -n "${ZSH:-}" ] && [ -f "$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-    command -v zsh-defer >/dev/null 2>&1 && zsh-defer source "$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" || source "$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 
