@@ -20,7 +20,7 @@ if [ -f "$HOME/.antidote/antidote.zsh" ]; then
 fi
 
 # ============ Basic config ============
-[[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+[[ -e ~/.profile ]] && source ~/.profile
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 # ========== Deferred plugins ==========
@@ -83,11 +83,15 @@ if [ -d "$HOME/.pyenv" ] || command -v pyenv >/dev/null 2>&1; then
         if command -v zsh-defer >/dev/null 2>&1; then
             zsh-defer eval "$(pyenv init --path)"
             zsh-defer eval "$(pyenv init -)"
-            zsh-defer eval "$(pyenv virtualenv-init -)"
+            if command -v pyenv-virtualenv-init >/dev/null 2>&1 || [ -d "${PYENV_ROOT:-$HOME/.pyenv}/plugins/pyenv-virtualenv" ]; then
+                zsh-defer eval "$(pyenv virtualenv-init -)"
+            fi
         else
             eval "$(pyenv init --path)"
             eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
+            if command -v pyenv-virtualenv-init >/dev/null 2>&1 || [ -d "${PYENV_ROOT:-$HOME/.pyenv}/plugins/pyenv-virtualenv" ]; then
+                eval "$(pyenv virtualenv-init -)"
+            fi
         fi
     fi
 fi
@@ -107,7 +111,7 @@ fi
 # ========== Modular Aliases, Functions, & Compiler Detection ==========
 if [ -d "$HOME/.bashrc.d" ]; then
     for rc in "$HOME/.bashrc.d"/*.bash; do
-        [ -r "$rc" ] && source "$rc"
+        [ -r "$rc" ] && source "$rc" >/dev/null
     done
     unset rc
 fi
