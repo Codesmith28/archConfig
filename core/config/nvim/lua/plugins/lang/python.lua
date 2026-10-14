@@ -64,36 +64,6 @@ return {
 
             opts.servers = opts.servers or {}
 
-            -- Configure Ruff and Pyrefly to report unused and unreachable code as hints (dimmed & italic like VS Code)
-            local function mark_unused_as_hint(items)
-                if not items then
-                    return
-                end
-                for _, item in ipairs(items) do
-                    local code = tostring(item.code or "")
-                    if
-                        (item.tags and vim.tbl_contains(item.tags, 1))
-                        or code == "F841" -- Local variable is assigned to but never used
-                        or code == "F401" -- Module imported but unused
-                        or code == "B007" -- Loop control variable not used within loop body
-                        or code == "B014" -- Duplicate exception handler (unreachable)
-                        or code == "B025" -- Duplicate try block exception (unreachable)
-                        or code == "UP036" -- Outdated/unreachable version block
-                        or code == "unreachable" -- Unreachable statement (Pyrefly / Pyright)
-                        or code == "unreachable-match-case" -- Unreachable match case
-                        or code:match("^ARG") -- Unused function/method/lambda arguments (ARG001-ARG005)
-                        or code:match("^unused") -- Unused diagnostics
-                        or code:match("^unreachable") -- Unreachable diagnostics
-                    then
-                        item.severity = vim.diagnostic.severity.HINT
-                        item.tags = item.tags or {}
-                        if not vim.tbl_contains(item.tags, 1) then
-                            table.insert(item.tags, 1) -- DiagnosticTag.Unnecessary
-                        end
-                    end
-                end
-            end
-
             -- Configure Pyrefly as the active Python LSP
             opts.servers.pyrefly = vim.tbl_deep_extend("force", {
                 enabled = true,
@@ -121,20 +91,6 @@ return {
                         },
                     },
                 },
-                handlers = {
-                    ["textDocument/diagnostic"] = function(err, result, ctx, config)
-                        if result and result.items then
-                            mark_unused_as_hint(result.items)
-                        end
-                        return vim.lsp.diagnostic.on_diagnostic(err, result, ctx, config)
-                    end,
-                    ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
-                        if result and result.diagnostics then
-                            mark_unused_as_hint(result.diagnostics)
-                        end
-                        return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
-                    end,
-                },
             }, opts.servers.pyrefly or {})
 
             opts.servers.ruff = vim.tbl_deep_extend("force", {
@@ -154,20 +110,6 @@ return {
                             },
                         },
                     },
-                },
-                handlers = {
-                    ["textDocument/diagnostic"] = function(err, result, ctx, config)
-                        if result and result.items then
-                            mark_unused_as_hint(result.items)
-                        end
-                        return vim.lsp.diagnostic.on_diagnostic(err, result, ctx, config)
-                    end,
-                    ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
-                        if result and result.diagnostics then
-                            mark_unused_as_hint(result.diagnostics)
-                        end
-                        return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
-                    end,
                 },
             }, opts.servers.ruff or {})
 

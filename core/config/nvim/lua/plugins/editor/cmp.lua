@@ -1,22 +1,43 @@
+local function get_snippet_paths()
+    local paths = {}
+    local seen = {}
+
+    local function add_if_exists(dir)
+        if not dir or dir == "" then
+            return
+        end
+        local real = vim.uv.fs_realpath(vim.fn.expand(dir))
+        if real and vim.fn.isdirectory(real) == 1 and not seen[real] then
+            seen[real] = true
+            table.insert(paths, real)
+        end
+    end
+
+    -- 1. Neovim config snippets (~/.config/nvim/snippets) if present
+    add_if_exists(vim.fn.stdpath("config") .. "/snippets")
+
+    -- 2. Current Git repo root snippets (<repo_root>/snippets) if present
+    local root = vim.fs.root(0, { ".git" }) or vim.uv.cwd()
+    if root then
+        add_if_exists(root .. "/snippets")
+    end
+
+    return paths
+end
+
 return {
     "saghen/blink.cmp",
-    opts = {
-        cmdline = {
-            enabled = true, -- Fuzzy complete Neovim commands
-        },
-        signature = {
-            enabled = true, -- Shows function parameters context as you type
-        },
-        completion = {
-            accept = {
-                auto_brackets = {
-                    enabled = true, -- Auto-inject () when completing a function
-                },
-            },
+    opts = function(_, opts)
+        opts = opts or {}
+        opts.snippets = vim.tbl_deep_extend("force", opts.snippets or {}, {
+            preset = "default",
+        })
+        opts.signature = vim.tbl_deep_extend("force", opts.signature or {}, {
+            enabled = true,
+        })
+        opts.completion = vim.tbl_deep_extend("force", opts.completion or {}, {
             menu = {
-                -- Add borders to the completion menu
                 border = "rounded",
-                -- Change what is drawn inside the menu (e.g., icons, labels, source names)
                 draw = {
                     columns = {
                         { "label", "label_description", gap = 1 },
@@ -26,20 +47,17 @@ return {
             },
             documentation = {
                 window = {
-                    -- Add borders to the documentation hover window
                     border = "rounded",
                 },
             },
-        },
-        sources = {
-            providers = {
-                lsp = {
-                    score_offset = 100, -- Boost LSP / IntelliSense suggestions
-                },
-                buffer = {
-                    score_offset = -5, -- Deprioritize buffer text suggestions
-                },
+        })
+        opts.sources = opts.sources or {}
+        opts.sources.providers = opts.sources.providers or {}
+        opts.sources.providers.snippets = vim.tbl_deep_extend("force", opts.sources.providers.snippets or {}, {
+            opts = {
+                search_paths = get_snippet_paths(),
             },
-        },
-    },
+        })
+        return opts
+    end,
 }

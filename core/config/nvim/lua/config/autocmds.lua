@@ -22,20 +22,6 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
     end,
 })
 
--- Optimize format-on-save: skip formatting if buffer is unmodified
--- (prevents UI freeze and slowdowns when repeatedly saving or spamming save commands)
-if LazyVim and LazyVim.format then
-    local orig_format = LazyVim.format.format
-    LazyVim.format.format = function(opts)
-        opts = opts or {}
-        local buf = opts.buf or vim.api.nvim_get_current_buf()
-        if not opts.force and not vim.bo[buf].modified then
-            return
-        end
-        return orig_format(opts)
-    end
-end
-
 -- Ensure unused code/variables (DiagnosticUnnecessary) remain dimmed and italic across any colorscheme
 local user_unnecessary_group = vim.api.nvim_create_augroup("user_diagnostic_unnecessary", { clear = true })
 vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
@@ -45,34 +31,5 @@ vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
         if hl and not hl.italic then
             vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", vim.tbl_extend("force", hl, { italic = true }))
         end
-    end,
-})
-
-local group = vim.api.nvim_create_augroup("TroubleDynamicDiagnostics", { clear = true })
-
-vim.api.nvim_create_autocmd("DiagnosticChanged", {
-    group = group,
-    callback = function()
-        -- Count errors and warnings in the current buffer
-        local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-        local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-        local has_problems = (errors > 0 or warnings > 0)
-
-        vim.schedule(function()
-            local has_trouble, trouble = pcall(require, "trouble")
-            if not has_trouble then
-                return
-            end
-
-            local is_open = trouble.is_open("diagnostics")
-
-            if has_problems and not is_open then
-                -- Open if errors appear and it's currently closed
-                trouble.open({ mode = "diagnostics", focus = false })
-            elseif not has_problems and is_open then
-                -- Close automatically when all errors/warnings are cleared
-                trouble.close("diagnostics")
-            end
-        end)
     end,
 })
