@@ -55,7 +55,7 @@ detect_compilers() {
         setopt local_options null_glob 2>/dev/null
     fi
 
-    local d bin name ver
+    local d bin name ver raw_ver
     local orig_ifs="$IFS"
     IFS=:
     for d in $search_dirs; do
@@ -99,7 +99,6 @@ detect_compilers() {
 
     # Check unversioned gcc if present
     if command -v gcc >/dev/null 2>&1; then
-        local raw_ver
         raw_ver=$(gcc -dumpversion 2>/dev/null)
         case "$raw_ver" in *[!0-9.]* | "") raw_ver="" ;; esac
         # If unversioned gcc is newer than any found versioned gcc (or if none was found)
@@ -116,7 +115,6 @@ detect_compilers() {
 
     # Check unversioned g++ if present
     if command -v g++ >/dev/null 2>&1; then
-        local raw_ver
         raw_ver=$(g++ -dumpversion 2>/dev/null)
         case "$raw_ver" in *[!0-9.]* | "") raw_ver="" ;; esac
         if [ -n "$raw_ver" ]; then

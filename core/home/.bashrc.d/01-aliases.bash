@@ -35,17 +35,33 @@ alias cf='clear && fastfetch'
 # Sourcing & Environment Management
 # ------------------------------------------------------------------------------
 alias sourceb='source ~/.bashrc'
-alias sourcep='source ~/.profile'
+alias sourcez='source ~/.zshrc'
 alias source_venv='source ./venv/bin/activate'
+
+# Universal Shell Reload Helper (Shell-agnostic)
+unalias source_p 2>/dev/null || true
+source_p() {
+    if [ -n "$ZSH_VERSION" ]; then
+        source "$HOME/.zshrc"
+    elif [ -n "$BASH_VERSION" ]; then
+        source "$HOME/.bashrc"
+    else
+        . "$HOME/.profile"
+    fi
+}
+alias sourcep='source_p'
+alias src='source_p'
 
 # ------------------------------------------------------------------------------
 # Quick Configuration Editing
 # ------------------------------------------------------------------------------
 alias confb='${EDITOR:-nvim} ~/.bashrc'
+alias confz='${EDITOR:-nvim} ~/.zshrc'
 alias confp='${EDITOR:-nvim} ~/.profile'
 alias confa='${EDITOR:-nvim} ~/.bashrc.d/01-aliases.bash'
 alias confn='${EDITOR:-nvim} ~/.config/nvim/'
 alias confg='${EDITOR:-nvim} ~/.config/ghostty/config'
+alias confw='${EDITOR:-nvim} ~/.config/work/work.sh'
 
 # ------------------------------------------------------------------------------
 # Developer Tools & Cross-Platform Utilities

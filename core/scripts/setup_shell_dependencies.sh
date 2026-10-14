@@ -424,5 +424,5 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  ✅ archConfig universal core dependencies check completed!"
 echo "  • Binaries located in: $BIN_DIR and ~/.fzf/bin"
 echo "  • Both paths are configured in ~/.profile"
-echo "  • In existing shells, run: source ~/.bashrc (or source ~/.zshrc)"
+echo "  • In existing shells, run: sourcep"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

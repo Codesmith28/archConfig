@@ -51,14 +51,46 @@ fi
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ] && . "$HOME/.sdkman/bin/sdkman-init.sh"
+[ -f "$HOME/.profile.local" ] && . "$HOME/.profile.local"
 
 # ------------------------------------------------------------------------------
-# 4. Source ~/.bashrc for interactive Bash login shells
+# 4. Work & Private Environment / Shortcuts (Import if present)
 # ------------------------------------------------------------------------------
+if [ -f "$HOME/.config/work/work.sh" ]; then
+    . "$HOME/.config/work/work.sh"
+fi
+
+# ------------------------------------------------------------------------------
+# 5. Centralized Shell Reload Helper & Interactive Shell Handoff
+# ------------------------------------------------------------------------------
+unalias source_p 2>/dev/null || true
+source_p() {
+    if [ -n "$ZSH_VERSION" ]; then
+        source "$HOME/.zshrc"
+    elif [ -n "$BASH_VERSION" ]; then
+        . "$HOME/.bashrc"
+    else
+        . "$HOME/.profile"
+    fi
+}
+alias sourcep='source_p' 2>/dev/null || true
+alias src='source_p' 2>/dev/null || true
+
+# If ~/.profile is sourced directly in an interactive shell (e.g. manual reload),
+# hand off to the active shell's interactive runtime while preventing circular recursion.
 if [ -n "$BASH_VERSION" ] && [ -z "$_SOURCING_BASHRC" ]; then
     if [ -f "$HOME/.bashrc" ]; then
+        _SOURCING_PROFILE=1
         . "$HOME/.bashrc"
+        unset _SOURCING_PROFILE
+    fi
+elif [ -n "$ZSH_VERSION" ] && [ -z "$_SOURCING_ZSHRC" ]; then
+    if [ -f "$HOME/.zshrc" ]; then
+        _SOURCING_PROFILE=1
+        source "$HOME/.zshrc"
+        unset _SOURCING_PROFILE
     fi
 fi
 
 unset _SOURCING_PROFILE
+

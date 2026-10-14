@@ -75,6 +75,14 @@ if [ -f "$HOME/.bash_aliases" ]; then
     . "$HOME/.bash_aliases"
 fi
 
+# Work & Private Configurations (Import if present)
+if [ -f "$HOME/.config/work/work.sh" ]; then
+    . "$HOME/.config/work/work.sh"
+fi
+if [ -f "$HOME/.bashrc.local" ]; then
+    . "$HOME/.bashrc.local"
+fi
+
 # bun (if installed)
 if [ -d "$HOME/.bun" ]; then
     export BUN_INSTALL="$HOME/.bun"
