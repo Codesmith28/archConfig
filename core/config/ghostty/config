@@ -1,9 +1,4 @@
 theme = Gruvbox Dark Hard
-# background = 090909
-
-# background = #202429
-# background-opacity = 0.95
-# background-blur = 80
 
 font-family = monospace
 font-style = Regular
@@ -11,8 +6,8 @@ font-size = 10
 bold-color = bright
 
 # Window
-window-width = 200
-window-height = 70
+window-width = 210
+window-height = 62
 
 window-theme = ghostty
 window-padding-x = 5
