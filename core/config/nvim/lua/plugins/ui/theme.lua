@@ -60,6 +60,16 @@ return {
         },
     },
 
+    -- {
+    --     "Codesmith28/gruvbox_v2.nvim",
+    --     dir = "~/personal/Projects/gruvbox_v2.nvim", -- <--- test local repo
+    --     lazy = false,
+    --     priority = 1000,
+    --     opts = {
+    --         contrast = "hard",
+    --     },
+    -- },
+
     {
         "LazyVim/LazyVim",
         opts = {

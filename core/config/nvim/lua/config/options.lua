@@ -33,7 +33,7 @@ o.ignorecase = true
 o.smartcase = true
 
 -- Global Behavior Flags
-vim.g.autoformat = true
+vim.g.autoformat = false
 
 -- UI Rendering and View Scrolloffs
 o.termguicolors = true
