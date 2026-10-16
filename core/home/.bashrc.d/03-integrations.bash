@@ -31,10 +31,24 @@ fi
 if command -v zoxide >/dev/null 2>&1; then
     export _ZO_DOCTOR=0
     if [ -n "$ZSH_VERSION" ]; then
-        eval "$(zoxide init zsh --cmd cd)"
+        eval "$(zoxide init zsh)"
     else
-        eval "$(zoxide init bash --cmd cd)"
+        eval "$(zoxide init bash)"
     fi
-    alias z='cd'
-    alias zi='cdi'
+
+    # Transparently integrate zoxide into cd across all machines and zoxide versions:
+    # 1. Existing paths (e.g. cd .., cd /tmp, cd relative/dir) use fast builtin cd directly
+    # 2. Non-path keywords (e.g. cd myrepo) jump via zoxide
+    cd() {
+        if [ "$#" -eq 0 ]; then
+            builtin cd
+        elif [ "$#" -eq 1 ] && [ "$1" = '-' ]; then
+            builtin cd -
+        elif [ "$#" -eq 1 ] && [ -d "$1" ]; then
+            builtin cd -- "$1"
+        else
+            z "$@" || builtin cd "$@"
+        fi
+    }
+    alias cdi='zi'
 fi

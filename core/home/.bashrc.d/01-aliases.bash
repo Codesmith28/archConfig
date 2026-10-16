@@ -50,7 +50,6 @@ source_p() {
     fi
 }
 alias sourcep='source_p'
-alias src='source_p'
 
 # ------------------------------------------------------------------------------
 # Quick Configuration Editing
@@ -67,26 +66,25 @@ alias confw='${EDITOR:-nvim} ~/.config/work/work.sh'
 # Developer Tools & Cross-Platform Utilities
 # ------------------------------------------------------------------------------
 case "$(uname -s)" in
-    Darwin)
-        # macOS
-        alias open='open'
-        alias copy='pbcopy'
-        alias paste='pbpaste'
-        ;;
-    Linux)
-        # Linux
-        alias open='xdg-open'
-        if command -v wl-copy >/dev/null 2>&1; then
-            alias copy='wl-copy'
-            alias paste='wl-paste'
-        elif command -v xclip >/dev/null 2>&1; then
-            alias copy='xclip -selection clipboard'
-            alias paste='xclip -selection clipboard -o'
-        fi
-        ;;
+Darwin)
+    # macOS
+    alias open='open'
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+    ;;
+Linux)
+    # Linux
+    alias open='xdg-open'
+    if command -v wl-copy >/dev/null 2>&1; then
+        alias copy='wl-copy'
+        alias paste='wl-paste'
+    elif command -v xclip >/dev/null 2>&1; then
+        alias copy='xclip -selection clipboard'
+        alias paste='xclip -selection clipboard -o'
+    fi
+    ;;
 esac
 
 alias agyd='agy --dangerously-skip-permissions'
 alias lg='lazygit'
 alias lzd='lazydocker'
-

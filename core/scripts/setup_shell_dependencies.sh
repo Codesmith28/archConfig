@@ -173,7 +173,9 @@ fi
 if should_process "zoxide"; then
     echo ""
     echo "==> Checking zoxide..."
-    if command -v zoxide >/dev/null 2>&1 && [ "$UPDATE" = false ]; then
+    if [ -x "$BIN_DIR/zoxide" ] && [ "$UPDATE" = false ]; then
+        echo "  ✓ zoxide is already installed at $BIN_DIR/zoxide ($("$BIN_DIR/zoxide" --version 2>/dev/null || echo 'unknown version'))"
+    elif command -v zoxide >/dev/null 2>&1 && [ "$UPDATE" = false ] && ! zoxide --version 2>/dev/null | grep -qE "v0\.[0-4]\."; then
         echo "  ✓ zoxide is already installed at $(command -v zoxide) ($(zoxide --version 2>/dev/null || echo 'unknown version'))"
     else
         echo "  → Installing / updating zoxide via official installer..."
@@ -182,7 +184,7 @@ if should_process "zoxide"; then
         elif command -v wget >/dev/null 2>&1; then
             wget -qO- https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
         fi
-        echo "  ✓ zoxide ready: $(zoxide --version 2>/dev/null || echo 'installed')"
+        echo "  ✓ zoxide ready: $("$BIN_DIR/zoxide" --version 2>/dev/null || zoxide --version 2>/dev/null || echo 'installed')"
     fi
 fi
 
