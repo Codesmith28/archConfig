@@ -56,6 +56,7 @@ return {
         lazy = false,
         priority = 1000,
         opts = {
+            transparent = "true",
             contrast = "hard",
         },
     },
@@ -67,6 +68,7 @@ return {
     --     priority = 1000,
     --     opts = {
     --         contrast = "hard",
+    --         transparent = "true"
     --     },
     -- },
 
