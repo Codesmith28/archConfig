@@ -10,9 +10,23 @@ o.shiftwidth = 4
 
 -- Clipboard (use OSC 52 in terminal to prevent Wayland dock glitches)
 o.clipboard = "unnamedplus"
--- if not vim.g.neovide then
---     vim.g.clipboard = "osc52"
--- end
+
+-- Over SSH there is no local clipboard provider, so yank via OSC 52 escape sequences
+-- that the terminal forwards to the host's clipboard (needs clipboard-write allowed in terminal)
+if vim.env.SSH_TTY or vim.env.SSH_CONNECTION then
+    local osc52 = require("vim.ui.clipboard.osc52")
+    vim.g.clipboard = {
+        name = "OSC 52",
+        copy = {
+            ["+"] = osc52.copy("+"),
+            ["*"] = osc52.copy("*"),
+        },
+        paste = {
+            ["+"] = osc52.paste("+"),
+            ["*"] = osc52.paste("*"),
+        },
+    }
+end
 
 o.fileencoding = "utf-8"
 
