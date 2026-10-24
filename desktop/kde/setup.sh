@@ -338,15 +338,47 @@ CANONICAL_SHORTCUTS = {
         "Window One Desktop to the Left": "",
         "Window One Desktop Up": "",
         "Window One Desktop Down": "",
-        "Overview": "Meta+Tab; Meta+W",
+        "Expose": "Ctrl+F9; Meta+F9",
+        "ExposeAll": "Launch (C); Ctrl+F10; Meta+F10",
+        "ExposeClass": "Ctrl+F7; Meta+F7",
+        "Overview": "Meta+W; Meta+Tab",
         "Grid View": "Meta+Shift+Tab",
         "Walk Through Windows": "Alt+Tab",
         "Walk Through Windows (Reverse)": "Alt+Shift+Tab",
         "Walk Through Windows of Current Application": "Alt+`; Meta+`",
         "Walk Through Windows of Current Application (Reverse)": "Alt+~; Meta+~",
-        "Show Desktop": "Meta+D",
+        "Show Desktop": "",
         "Kill Window": "Meta+Ctrl+Esc",
+        "Window Restore": "Meta+Backspace",
+        "KrohnkiteDecrease": "Meta+D",
+        "KrohnkiteFloatAll": "Meta+Shift+F",
+        "KrohnkiteFocusDown": "Meta+J",
+        "KrohnkiteFocusLeft": "Meta+H",
+        "KrohnkiteFocusNext": "Meta+.",
+        "KrohnkiteFocusPrev": "Meta+\\,",
+        "KrohnkiteFocusRight": "Meta+L",
+        "KrohnkiteFocusUp": "Meta+K",
+        "KrohnkiteGrowHeight": "Meta+Ctrl+J",
+        "KrohnkiteIncrease": "Meta+I",
+        "KrohnkiteMonocleLayout": "Meta+M",
+        "KrohnkiteNextLayout": "Meta+\\\\",
+        "KrohnkitePreviousLayout": "Meta+|",
+        "KrohnkiteRotate": "Meta+R",
+        "KrohnkiteRotatePart": "Meta+Shift+R",
+        "KrohnkiteSetMaster": "Meta+Return",
+        "KrohnkiteShiftDown": "Meta+Shift+J",
+        "KrohnkiteShiftLeft": "Meta+Shift+H",
+        "KrohnkiteShiftRight": "Meta+Shift+L",
+        "KrohnkiteShiftUp": "Meta+Shift+K",
+        "KrohnkiteShrinkHeight": "Meta+Ctrl+K",
+        "KrohnkiteShrinkWidth": "Meta+Ctrl+H",
+        "KrohnkiteTileLayout": "Meta+T",
+        "KrohnkiteToggleFloat": "Meta+F",
+        "KrohnkitegrowWidth": "Meta+Ctrl+L",
         "ToggleMouseClick": "",
+        "view_actual_size": "",
+        "view_zoom_in": "",
+        "view_zoom_out": "",
     },
     "plasmashell": {
         "activate application launcher": "Meta; Alt+F1",
@@ -514,7 +546,8 @@ kwinrc.set("org.kde.kdecoration2", "ButtonsOnLeft", "M")
 if not kwinrc.has_section("Desktops"):
     kwinrc.add_section("Desktops")
 kwinrc.set("Desktops", "Number", "4")
-kwinrc.set("Desktops", "Rows", "1")
+if not kwinrc.has_option("Desktops", "Rows"):
+    kwinrc.set("Desktops", "Rows", "2")
 
 if not kwinrc.has_section("Windows"):
     kwinrc.add_section("Windows")
@@ -531,6 +564,22 @@ kwinrc.set("Plugins", "squashEnabled", "false")
 kwinrc.set("Plugins", "scaleEnabled", "false")
 kwinrc.set("Plugins", "blurEnabled", "true")
 kwinrc.set("Plugins", "slideEnabled", "true")
+kwinrc.set("Plugins", "krohnkiteEnabled", "true")
+kwinrc.set("Plugins", "hidecursorEnabled", "true")
+kwinrc.set("Plugins", "zoomEnabled", "false")
+
+if not kwinrc.has_section("Script-krohnkite"):
+    kwinrc.add_section("Script-krohnkite")
+kwinrc.set("Script-krohnkite", "monocleMaximize", "false")
+kwinrc.set("Script-krohnkite", "screenGapBetween", "10")
+kwinrc.set("Script-krohnkite", "screenGapBottom", "10")
+kwinrc.set("Script-krohnkite", "screenGapLeft", "10")
+kwinrc.set("Script-krohnkite", "screenGapRight", "10")
+kwinrc.set("Script-krohnkite", "screenGapTop", "10")
+
+if not kwinrc.has_section("TabBox"):
+    kwinrc.add_section("TabBox")
+kwinrc.set("TabBox", "DesktopMode", "0")
 
 if not kwinrc.has_section("Effect-blur"):
     kwinrc.add_section("Effect-blur")
@@ -538,7 +587,7 @@ kwinrc.set("Effect-blur", "NoiseStrength", "8")
 kwinrc.set("Effect-blur", "Saturation", "500")
 
 write_ini(kwinrc, kwinrc_path)
-print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops/1 Row; Super Key: Launcher; Effects: Magic Lamp + Blur + Slide)")
+print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops/2 Rows; Super Key: Launcher; Effects: Magic Lamp + Blur + Slide; Krohnkite Tiling)")
 
 # 5. Configure Panel & Task Manager (Floating 42px, Adaptive Opacity, All Workspaces)
 if os.path.exists(appletsrc_path):
@@ -642,13 +691,23 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kwinrc --group "org.kde.kdecoration2" --key "ButtonsOnRight" "IAX"
     "$KWRITECMD" --file kwinrc --group "org.kde.kdecoration2" --key "ButtonsOnLeft" "M"
     "$KWRITECMD" --file kwinrc --group "Desktops" --key "Number" "4"
-    "$KWRITECMD" --file kwinrc --group "Desktops" --key "Rows" "1"
+    "$KWRITECMD" --file kwinrc --group "Desktops" --key "Rows" "2"
     "$KWRITECMD" --file kwinrc --group "Windows" --key "RollOverDesktops" "false"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "magiclampEnabled" "true"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "squashEnabled" "false"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "scaleEnabled" "false"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "blurEnabled" "true"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "slideEnabled" "true"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "krohnkiteEnabled" "true"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "hidecursorEnabled" "true"
+    "$KWRITECMD" --file kwinrc --group "Plugins" --key "zoomEnabled" "false"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "monocleMaximize" "false"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapBetween" "10"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapBottom" "10"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapLeft" "10"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapRight" "10"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapTop" "10"
+    "$KWRITECMD" --file kwinrc --group "TabBox" --key "DesktopMode" "0"
     "$KWRITECMD" --file kwinrc --group "Effect-blur" --key "NoiseStrength" "8"
     "$KWRITECMD" --file kwinrc --group "Effect-blur" --key "Saturation" "500"
 
@@ -670,6 +729,26 @@ if [[ -n "$KWRITECMD" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
+# 7b. PowerDevil Laptop DDC/CI Optimization
+# Disables libddcutil monitor probing to eliminate I2C bus locks, 400ms sleep loops
+# (i2c_detect_x37), and KWin DRM atomic commit frame drops on laptops.
+# ------------------------------------------------------------------------------
+if [[ -d "$HOME/.config" ]]; then
+    log_info "Configuring PowerDevil systemd drop-in (disabling libddcutil on internal display)..."
+    mkdir -p "$HOME/.config/systemd/user/plasma-powerdevil.service.d"
+    cat << 'EOF' > "$HOME/.config/systemd/user/plasma-powerdevil.service.d/override.conf"
+[Service]
+# Disable libddcutil DDC/CI monitor probing to eliminate I2C bus locking,
+# 400ms sleep loops (i2c_detect_x37), and KWin DRM atomic commit stutter on laptops.
+Environment="POWERDEVIL_NO_DDCUTIL=1"
+EOF
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl --user daemon-reload >/dev/null 2>&1 || true
+        systemctl --user restart plasma-powerdevil.service >/dev/null 2>&1 || true
+    fi
+fi
+
+# ------------------------------------------------------------------------------
 # 8. Live Session Broadcast & Reconfiguration
 # ------------------------------------------------------------------------------
 log_info "Broadcasting live session reload signals to KDE components..."
@@ -686,19 +765,23 @@ try:
     except Exception:
         pass
 
-    # 2. VirtualDesktopManager (1 row, no wrap-around)
+    # 2. VirtualDesktopManager (2 rows, no wrap-around)
     try:
         vdm = bus.get_object("org.kde.KWin", "/VirtualDesktopManager")
         vdm_props = dbus.Interface(vdm, "org.freedesktop.DBus.Properties")
-        vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "rows", dbus.UInt32(1))
+        vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "rows", dbus.UInt32(2))
         vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "navigationWrappingAround", dbus.Boolean(False))
     except Exception:
         pass
 
-    # 3. KWin Effects (magiclamp, blur, slide)
+    # 3. KWin Effects (magiclamp, blur, slide; disable zoom)
     try:
         effects = bus.get_object("org.kde.KWin", "/Effects")
         eff_iface = dbus.Interface(effects, "org.kde.kwin.Effects")
+        try:
+            eff_iface.unloadEffect("zoom")
+        except Exception:
+            pass
         for eff in ["magiclamp", "blur", "slide"]:
             try:
                 eff_iface.loadEffect(eff)
@@ -728,16 +811,18 @@ fi
 
 if [[ -n "$QDBUS_BIN" ]]; then
     "$QDBUS_BIN" org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null 2>&1 || true
-    "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.rows 1 >/dev/null 2>&1 || true
+    "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.rows 2 >/dev/null 2>&1 || true
     "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.navigationWrappingAround false >/dev/null 2>&1 || true
+    "$QDBUS_BIN" org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect zoom >/dev/null 2>&1 || true
     for eff in magiclamp blur slide; do
         "$QDBUS_BIN" org.kde.KWin /Effects org.kde.kwin.Effects.loadEffect "$eff" >/dev/null 2>&1 || true
         "$QDBUS_BIN" org.kde.KWin /Effects org.kde.kwin.Effects.reconfigureEffect "$eff" >/dev/null 2>&1 || true
     done
 elif command -v busctl >/dev/null 2>&1; then
     busctl --user call org.kde.KWin /KWin org.kde.KWin reconfigure >/dev/null 2>&1 || true
-    busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager rows u 1 >/dev/null 2>&1 || true
+    busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager rows u 2 >/dev/null 2>&1 || true
     busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager navigationWrappingAround b false >/dev/null 2>&1 || true
+    busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects unloadEffect s zoom >/dev/null 2>&1 || true
     for eff in magiclamp blur slide; do
         busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects loadEffect s "$eff" >/dev/null 2>&1 || true
         busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects reconfigureEffect s "$eff" >/dev/null 2>&1 || true
@@ -751,7 +836,7 @@ dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange in
 # Apply / preserve active Taskbar Preset via taskbar manager
 if [[ -x "$SCRIPT_DIR/taskbar/taskbar.sh" ]]; then
     CHOSEN_PRESET="${1:-}"
-    if [[ -z "$CHOSEN_PRESET" ]]; then
+    if [[ -z "$CHOSEN_PRESET" || "$CHOSEN_PRESET" =~ ^-- ]]; then
         CHOSEN_PRESET=$("$SCRIPT_DIR/taskbar/taskbar.sh" active 2>/dev/null || true)
     fi
     CHOSEN_PRESET="${CHOSEN_PRESET:-floating-compact}"
@@ -884,15 +969,19 @@ checks = [
     ("Super Key Modifier (kwinrc ModifierOnlyShortcuts)", check_ini(kwinrc_path, "ModifierOnlyShortcuts", "Meta", "activateLauncherMenu")),
     ("Titlebar Buttons (Minimize, Maximize, Close)", check_ini(kwinrc_path, "org.kde.kdecoration2", "ButtonsOnRight", "IAX")),
     ("Virtual Desktops (4 Workspaces)", check_ini(kwinrc_path, "Desktops", "Number", "4")),
-    ("Desktop Layout (1 Row)", check_ini(kwinrc_path, "Desktops", "Rows", "1")),
+    ("Desktop Layout (Multi-Row / 2 Rows)", check_ini(kwinrc_path, "Desktops", "Rows", "2")),
     ("Desktop Boundaries (No Wrap-Around)", check_ini(kwinrc_path, "Windows", "RollOverDesktops", "false")),
     ("KWin Effects (Compiz Magic Lamp)", check_ini(kwinrc_path, "Plugins", "magiclampEnabled", "true")),
     ("KWin Effects (Background Blur)", check_ini(kwinrc_path, "Plugins", "blurEnabled", "true")),
     ("Desktop Switch Animation (Slide)", check_ini(kwinrc_path, "Plugins", "slideEnabled", "true")),
+    ("Krohnkite Tiling Plugin", check_ini(kwinrc_path, "Plugins", "krohnkiteEnabled", "true")),
+    ("Krohnkite Tiling Gaps (10px)", check_ini(kwinrc_path, "Script-krohnkite", "screenGapBetween", "10")),
     ("Keyboard Rate (250ms / 40Hz)", check_ini(kcminputrc_path, "Keyboard", "RepeatDelay", "250")),
     ("Touchpad Tap-to-click & Natural Scroll", check_ini(kcminputrc_path, "Touchpad", "tapToClick", "true") and check_ini(kcminputrc_path, "Touchpad", "naturalScroll", "true")),
     ("Default Terminal Executable", os.path.exists(os.path.join(home, ".local/bin/default-terminal"))),
     ("Default Browser Executable", os.path.exists(os.path.join(home, ".local/bin/default-browser"))),
+    ("Screen Zoom Disabled", check_ini(kwinrc_path, "Plugins", "zoomEnabled", "false")),
+    ("PowerDevil libddcutil override (no I2C stutter)", os.path.exists(os.path.join(home, ".config/systemd/user/plasma-powerdevil.service.d/override.conf"))),
     ("UI Fonts (Sans Serif 11)", check_ini(kdeglobals_path, "General", "font", "Sans Serif")),
     ("Monospace Font (Monospace 10)", check_ini(kdeglobals_path, "General", "fixed", "Monospace")),
 ]

@@ -47,8 +47,10 @@ is_rog_machine() {
 has_nvidia_gpu() {
     lspci 2>/dev/null | grep -qiE "(VGA|3D|Display).*NVIDIA" || \
     { command -v cardwire >/dev/null 2>&1 && cardwire list 2>/dev/null | grep -qi "NVIDIA"; } || \
+    [[ -f /sys/devices/platform/asus-nb-wmi/dgpu_disable ]] || \
     [[ -d /proc/driver/nvidia ]] || \
-    [[ -d /sys/module/nvidia ]]
+    [[ -d /sys/module/nvidia ]] || \
+    grep -qiE "ROG|TUF|G614|G814|Zephyrus" /sys/class/dmi/id/product_name 2>/dev/null
 }
 
 rebuild_initramfs() {
@@ -84,6 +86,8 @@ verify_profile() {
 
     if ! has_nvidia_gpu; then
         log_warn "No NVIDIA discrete GPU found on this system."
+    elif [[ -f /sys/devices/platform/asus-nb-wmi/dgpu_disable ]] && [[ "$(cat /sys/devices/platform/asus-nb-wmi/dgpu_disable 2>/dev/null)" == "1" ]]; then
+        log_success "NVIDIA dGPU detected (ASUS MUX / Eco Mode active, dGPU currently in low-power sleep)."
     else
         log_success "NVIDIA GPU detected."
     fi

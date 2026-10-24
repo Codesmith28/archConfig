@@ -33,6 +33,27 @@ GRUB_FILE="/etc/default/grub"
 TARGET_FONT="/boot/grub2/fonts/unicode.pf2"
 SOURCE_FONT="/usr/share/grub/unicode.pf2"
 
+detect_native_resolution() {
+    local mode=""
+    for m in /sys/class/drm/*/modes; do
+        if [[ -r "$m" ]]; then
+            mode="$(head -n 1 "$m" 2>/dev/null || true)"
+            if [[ -n "$mode" ]]; then
+                echo "$mode"
+                return
+            fi
+        fi
+    done
+    if command -v kscreen-doctor >/dev/null 2>&1; then
+        mode="$(kscreen-doctor -o 2>/dev/null | grep -oE '[0-9]+x[0-9]+' | head -n 1 || true)"
+        if [[ -n "$mode" ]]; then
+            echo "$mode"
+            return
+        fi
+    fi
+    echo "1920x1200"
+}
+
 verify_grub() {
     echo -e "\n${BOLD}=== GRUB Graphical Terminal Status Check ===${NC}\n"
 
@@ -44,17 +65,29 @@ verify_grub() {
     # Check GRUB_TERMINAL_OUTPUT
     term=$(grep "^[[:space:]]*GRUB_TERMINAL_OUTPUT=" "$GRUB_FILE" 2>/dev/null || echo "")
     if [[ "$term" =~ gfxterm ]]; then
-        log_success "Terminal output: ${BOLD}${term}${NC} (automatic best resolution enabled)"
+        log_success "Terminal output: ${BOLD}${term}${NC} (graphical gfxterm active)"
     else
         log_warn "Terminal output: ${BOLD}${term:-none (defaulting to console text mode)}${NC}"
     fi
 
-    # Check that manual GFXMODE attempts are cleaned up
+    # Check GFXMODE resolution
+    local native_res
+    native_res="$(detect_native_resolution)"
     gfxmode=$(grep "^[[:space:]]*GRUB_GFXMODE=" "$GRUB_FILE" 2>/dev/null || echo "")
-    if [[ -n "$gfxmode" ]]; then
-        log_info "Legacy GFXMODE setting present: ${gfxmode}"
+    if [[ "$gfxmode" =~ $native_res ]]; then
+        log_success "Display resolution: ${BOLD}${gfxmode}${NC} (matches native ${native_res})"
+    elif [[ -n "$gfxmode" ]]; then
+        log_info "Configured GFXMODE: ${gfxmode} (detected native: ${native_res})"
     else
-        log_success "No hardcoded GFXMODE (native UEFI GOP auto-resolution active)"
+        log_warn "No GRUB_GFXMODE configured (UEFI GOP defaults to low resolution / text)"
+    fi
+
+    # Check GFXPAYLOAD
+    gfxpayload=$(grep "^[[:space:]]*GRUB_GFXPAYLOAD_LINUX=" "$GRUB_FILE" 2>/dev/null || echo "")
+    if [[ "$gfxpayload" =~ keep ]]; then
+        log_success "Kernel graphical handoff: ${BOLD}${gfxpayload}${NC} (smooth flicker-free boot)"
+    else
+        log_warn "Kernel graphical handoff: ${BOLD}${gfxpayload:-none}${NC}"
     fi
 
     # Check Font
@@ -114,12 +147,18 @@ if grep -q "^[[:space:]]*GRUB_TERMINAL=" "$GRUB_FILE"; then
     run_as_root sed -i 's|^[[:space:]]*GRUB_TERMINAL=.*|# & (disabled in favor of GRUB_TERMINAL_OUTPUT="gfxterm")|' "$GRUB_FILE"
 fi
 
-# 3. Configure font directive for gfxterm
+# 3. Configure native display resolution & smooth kernel handoff
+native_res="$(detect_native_resolution)"
+log_info "Setting GRUB resolution to native panel: ${native_res}x32,${native_res},auto..."
+echo "GRUB_GFXMODE=\"${native_res}x32,${native_res},auto\"" | run_as_root tee -a "$GRUB_FILE" >/dev/null
+echo 'GRUB_GFXPAYLOAD_LINUX="keep"' | run_as_root tee -a "$GRUB_FILE" >/dev/null
+
+# 4. Configure font directive for gfxterm
 echo "GRUB_FONT=\"${TARGET_FONT}\"" | run_as_root tee -a "$GRUB_FILE" >/dev/null
 
-log_success "Updated ${GRUB_FILE} with GRUB_TERMINAL_OUTPUT=\"gfxterm\"."
+log_success "Updated ${GRUB_FILE} with gfxterm, native ${native_res} resolution, and keep payload."
 
-# 4. Provision unicode font in /boot/grub2/fonts/
+# 5. Provision unicode font in /boot/grub2/fonts/
 if [[ -f "$SOURCE_FONT" ]]; then
     run_as_root mkdir -p "$(dirname "$TARGET_FONT")"
     run_as_root cp "$SOURCE_FONT" "$TARGET_FONT"
@@ -127,7 +166,7 @@ if [[ -f "$SOURCE_FONT" ]]; then
     log_success "Provisioned GRUB unicode font at ${TARGET_FONT}"
 fi
 
-# 5. Regenerate GRUB bootloader configuration
+# 6. Regenerate GRUB bootloader configuration
 log_info "Regenerating GRUB bootloader configuration..."
 if command -v grub2-mkconfig >/dev/null 2>&1; then
     run_as_root grub2-mkconfig -o /etc/grub2.cfg

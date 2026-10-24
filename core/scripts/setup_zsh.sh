@@ -143,8 +143,8 @@ if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
 fi
 
 if ! command -v zsh >/dev/null 2>&1; then
-    echo "  ⚠️ Warning: 'zsh' binary was not found in PATH."
-    echo "  Please install Zsh using your system package manager:"
+    echo "  ℹ️ Notice: 'zsh' binary was not found in PATH."
+    echo "  Skipping Zsh environment setup (non-blocking). To use Zsh later, install it via:"
     case "$OS" in
         Darwin)
             echo "    brew install zsh"
@@ -164,8 +164,8 @@ if ! command -v zsh >/dev/null 2>&1; then
             echo "    Please install zsh for your platform."
             ;;
     esac
-    echo "  After installing zsh, re-run this setup script."
-    exit 1
+    echo "  Continuing setup without interruption..."
+    exit 0
 else
     echo "  ✓ Found zsh: $(command -v zsh) ($(zsh --version 2>/dev/null || echo 'unknown'))"
 fi
