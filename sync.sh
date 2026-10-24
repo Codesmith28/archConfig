@@ -310,6 +310,15 @@ elif [ "$DETECTED_DE" = "hyprland" ]; then
     link_item "$REPO_DIR/desktop/hyprland/swaync" "$HOME/.config/swaync"
 fi
 
+# ------------------------------------------------------------------------------
+# 8. Check Linux Hardware & Power Optimizations (if applicable)
+# ------------------------------------------------------------------------------
+if [ "$(uname -s)" = "Linux" ] && [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
+    echo ""
+    echo "==> Verifying Linux Hardware & Power Optimizations..."
+    bash "$REPO_DIR/hardware-linux/setup.sh" --verify || true
+fi
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  ✅ All configurations synchronized successfully!"
@@ -325,5 +334,13 @@ fi
 if ! command -v zoxide >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1 || ! command -v starship >/dev/null 2>&1 || ! command -v leaf >/dev/null 2>&1; then
     echo ""
     echo "  💡 Tip: Run ./core/scripts/setup_shell_dependencies.sh to install core CLI dependencies."
+fi
+if [ "$(uname -s)" = "Linux" ]; then
+    echo ""
+    echo "  ⚡ Hardware & Power: To install kernel power rules, battery limits & sleep fixes, run:"
+    echo "     sudo ./hardware-linux/setup.sh"
+    if [ -f "$REPO_DIR/distros/$DETECTED_OS/setup.sh" ]; then
+        echo "     sudo ./distros/$DETECTED_OS/setup.sh"
+    fi
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

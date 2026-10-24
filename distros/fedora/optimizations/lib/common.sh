@@ -21,10 +21,15 @@ run_as_root() {
     if [[ "$(id -u)" -eq 0 ]]; then
         "$@"
     elif command -v sudo >/dev/null 2>&1; then
-        sudo "$@"
+        if sudo -n true 2>/dev/null || [[ -t 0 ]]; then
+            sudo "$@"
+        else
+            log_warn "Root privileges required for: $* (sudo password required, skipping in non-interactive run)"
+            return 1
+        fi
     else
         log_error "Root privileges required. Please run with sudo or as root."
-        exit 1
+        return 1
     fi
 }
 
