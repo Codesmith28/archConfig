@@ -1,6 +1,6 @@
 [Unit]
 Description=Set Battery Charging Limit
-After=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+After=multi-user.target
 
 [Service]
 Type=oneshot
@@ -8,4 +8,4 @@ EnvironmentFile=-/etc/default/battery-limit
 ExecStart=/usr/local/bin/set-battery-limit.sh
 
 [Install]
-WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+WantedBy=multi-user.target

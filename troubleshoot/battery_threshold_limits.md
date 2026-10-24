@@ -60,15 +60,15 @@ Files in `/sys` reset on every system reboot. To make the threshold persistent a
 ### Option A: The archConfig Standard Setup (Recommended)
 This repository installs a dedicated script at `/usr/local/bin/set-battery-limit.sh` with auto-detection for standard sysfs thresholds (`charge_control_end_threshold`), legacy ThinkPad nodes, and Lenovo IdeaPad `conservation_mode`:
 ```bash
-# Configurable via BATTERY_LIMIT env var, /etc/default/battery-limit, or CLI argument:
-BATTERY_LIMIT="${1:-${BATTERY_LIMIT:-80}}"
+# Configurable via /etc/default/battery-limit, BATTERY_LIMIT env var, or CLI argument:
+BATTERY_LIMIT=85
 ```
 
 And installs `/etc/systemd/system/battery-limit.service`:
 ```ini
 [Unit]
 Description=Set Battery Charging Limit
-After=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+After=multi-user.target
 
 [Service]
 Type=oneshot
@@ -76,13 +76,17 @@ EnvironmentFile=-/etc/default/battery-limit
 ExecStart=/usr/local/bin/set-battery-limit.sh
 
 [Install]
-WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+WantedBy=multi-user.target
 ```
 
-Enable and start:
+To guarantee persistence across sleep/wake and AC connect/disconnect:
+- **Sleep / Resume**: A hook in `/usr/lib/systemd/system-sleep/battery-limit.sh` re-applies the limit on resume (`post`).
+- **Power Plug / Unplug**: A udev rule in `/etc/udev/rules.d/90-battery-limit.rules` re-applies the limit whenever power supply state changes.
+
+Enable and verify:
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now battery-limit.service
+sudo ./hardware-linux/setup.sh battery
+./hardware-linux/setup.sh --verify
 ```
 
 ### Option B: Standalone Inline Service Unit

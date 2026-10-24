@@ -3,9 +3,15 @@
 # Universal Battery Charging Limit & Threshold Controller
 # ==============================================================================
 
-# Target battery charging cap percentage (e.g. 80, 85, 100 to disable cap).
-# Overridable via CLI argument ($1) or BATTERY_LIMIT environment variable.
-BATTERY_LIMIT="${1:-${BATTERY_LIMIT:-80}}"
+# 1. Source persistent environment configuration if present
+if [[ -f /etc/default/battery-limit ]]; then
+    # shellcheck disable=SC1091
+    source /etc/default/battery-limit
+fi
+
+# Target battery charging cap percentage (e.g. 85, 80, 60, 100 to disable cap).
+# Priority: CLI argument ($1) > /etc/default/battery-limit > default 85%
+BATTERY_LIMIT="${1:-${BATTERY_LIMIT:-85}}"
 
 # Validate input limit (1-100)
 if ! [[ "$BATTERY_LIMIT" =~ ^[0-9]+$ ]] || [ "$BATTERY_LIMIT" -lt 1 ] || [ "$BATTERY_LIMIT" -gt 100 ]; then
@@ -47,9 +53,18 @@ for psy in /sys/class/power_supply/*; do
     # Apply end/stop threshold
     for end_node in "$psy/charge_control_end_threshold" "$psy/charge_stop_threshold"; do
         if [ -f "$end_node" ]; then
-            if write_node "$BATTERY_LIMIT" "$end_node"; then
+            if write_node "$BATTERY_LIMIT" "$end_node" && [ "$(cat "$end_node" 2>/dev/null)" = "$BATTERY_LIMIT" ]; then
                 applied=1
                 echo "Set charging limit to ${BATTERY_LIMIT}% on $(basename "$psy")"
+            else
+                # If requested limit (e.g. 85%) is rejected because the ASUS EC firmware only supports discrete steps (60, 80, 100)
+                if [ "$BATTERY_LIMIT" -ne 80 ] && write_node 80 "$end_node" && [ "$(cat "$end_node" 2>/dev/null)" = "80" ]; then
+                    applied=1
+                    echo "Notice: Hardware EC rejected ${BATTERY_LIMIT}% (discrete firmware steps only); fell back to 80% on $(basename "$psy")"
+                elif write_node "$BATTERY_LIMIT" "$end_node"; then
+                    applied=1
+                    echo "Set charging limit on $(basename "$psy") (readback: $(cat "$end_node" 2>/dev/null)%)"
+                fi
             fi
         fi
     done
