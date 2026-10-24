@@ -267,6 +267,13 @@ if command -v asusd >/dev/null 2>&1 || [[ -d /etc/asusd ]]; then
 fi
 
 # 6. Enable systemd sleep services
+if [[ -f /etc/fedora-release ]] && ! systemctl list-unit-files nvidia-suspend.service &>/dev/null; then
+    if command -v dnf >/dev/null 2>&1; then
+        log_info "NVIDIA sleep services not found. Attempting to install xorg-x11-drv-nvidia-power..."
+        run_as_root dnf install -y xorg-x11-drv-nvidia-power || log_warn "Could not install xorg-x11-drv-nvidia-power"
+    fi
+fi
+
 SERVICES=("nvidia-suspend.service" "nvidia-hibernate.service" "nvidia-resume.service")
 if [[ -d /sys/module/nvidia ]] || systemctl list-unit-files nvidia-suspend.service &>/dev/null; then
     run_as_root systemctl daemon-reload

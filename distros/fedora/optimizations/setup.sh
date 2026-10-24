@@ -121,12 +121,12 @@ for dir_name in "${MODULES_TO_RUN[@]}"; do
 
     if [[ -f "$dir/setup.sh" ]]; then
         log_info "Executing setup: $dir_name/setup.sh"
-        bash "$dir/setup.sh" "$BIN_DEST" "$SERVICE_DEST"
+        bash "$dir/setup.sh" "$BIN_DEST" "$SERVICE_DEST" || log_warn "Setup script for $dir_name finished with non-fatal warnings (continuing)."
     elif [[ -f "$dir/install.sh" ]]; then
         log_info "Executing installer: $dir_name/install.sh"
-        bash "$dir/install.sh" "$BIN_DEST" "$SERVICE_DEST"
+        bash "$dir/install.sh" "$BIN_DEST" "$SERVICE_DEST" || log_warn "Installer script for $dir_name finished with non-fatal warnings (continuing)."
     else
-        install_optimization "$dir" "$BIN_DEST" "$SERVICE_DEST"
+        install_optimization "$dir" "$BIN_DEST" "$SERVICE_DEST" || log_warn "Install optimization for $dir_name failed (continuing)."
     fi
 
     executed_modules+=("$dir_name")

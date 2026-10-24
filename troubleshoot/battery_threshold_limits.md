@@ -114,12 +114,33 @@ sudo systemctl enable --now battery-threshold.service
 
 Modern laptops often default to `s2idle` (modern standby), which drains significant battery while suspended in a backpack or overnight.
 
-To switch the kernel's default sleep mode to `deep` (S3 Suspend-to-RAM) via GRUB:
+To switch the kernel's default sleep mode to `deep` (S3 Suspend-to-RAM) reliably across reboots:
+
+1. **Kernel Command-Line Persistence (GRUB / BLS)**:
 ```bash
-# Run iff GRUB / grubby is available:
+# Update kernel arguments via grubby (Fedora / RHEL / CentOS BLS):
 if command -v grubby >/dev/null 2>&1 && { [ -d /boot/grub ] || [ -d /boot/grub2 ] || command -v grub-mkconfig >/dev/null 2>&1 || command -v grub2-mkconfig >/dev/null 2>&1; }; then
     sudo grubby --update-kernel=ALL --args="mem_sleep_default=deep"
 fi
+```
+
+2. **systemd tmpfiles.d (Sysfs Boot-time Injection)**:
+```bash
+echo "w /sys/power/mem_sleep - - - - deep" | sudo tee /etc/tmpfiles.d/deep-sleep.conf
+```
+
+3. **systemd sleep.conf Drop-in**:
+```bash
+sudo mkdir -p /etc/systemd/sleep.conf.d
+cat << 'EOF' | sudo tee /etc/systemd/sleep.conf.d/deep-sleep.conf
+[Sleep]
+MemorySleepMode=deep
+EOF
+```
+
+4. **Apply Immediately to Active Kernel**:
+```bash
+echo deep | sudo tee /sys/power/mem_sleep
 ```
 
 Verify supported and active sleep modes:
