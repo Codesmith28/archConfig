@@ -1,0 +1,5 @@
+# ==============================================================================
+# archConfig Battery Limit Udev Dispatch
+# Re-enforce battery threshold whenever power supply status changes
+# ==============================================================================
+SUBSYSTEM=="power_supply", ACTION=="change", KERNEL=="BAT[0-9]*|ADP[0-9]*|AC*", RUN+="/usr/local/bin/set-battery-limit.sh"

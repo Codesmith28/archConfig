@@ -134,3 +134,9 @@ else
     set_platform_profile "quiet"
     set_cpu_epp "power"
 fi
+
+# 5. Re-enforce battery limit if present (prevents ASUS EC reset on AC plug/unplug)
+if [[ -x /usr/local/bin/set-battery-limit.sh ]]; then
+    /usr/local/bin/set-battery-limit.sh >/dev/null 2>&1 || true
+fi
+
