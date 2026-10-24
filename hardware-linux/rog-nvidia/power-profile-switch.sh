@@ -9,18 +9,31 @@
 # ==============================================================================
 set -euo pipefail
 
+# Detach immediately when invoked by udev to avoid blocking event loops
+if [[ "${1:-}" == "--async" ]]; then
+    nohup "$0" --run-worker </dev/null >/dev/null 2>&1 &
+    exit 0
+fi
+
 LOCKFILE="/run/power-profile-switch.lock"
 exec 200>"$LOCKFILE" 2>/dev/null || exec 200>"/tmp/power-profile-switch.lock"
 
 # Non-blocking lock: If a debounce routine is already running, avoid stampeding
 flock -n 200 || exit 0
 
-# Hysteresis debounce: Wait 4 seconds for power rail to stabilize before evaluating
-# This eliminates stutter during momentary grid cutoffs, loose plugs, or inverter switches.
-sleep 4
+# Debounce to allow voltage rail to stabilize
+sleep 2
 
 # Check all power supply online attributes dynamically
-if grep -qs 1 /sys/class/power_supply/*/online; then
+target_state="battery"
+grep -qs 1 /sys/class/power_supply/*/online && target_state="ac"
+
+# Deduplicate state to prevent redundant writes and ACPI feedback loops
+STATEFILE="/run/laptop-power-state"
+[[ "$target_state" == "$(cat "$STATEFILE" 2>/dev/null || true)" ]] && exit 0
+echo "$target_state" > "$STATEFILE" 2>/dev/null || true
+
+if [[ "$target_state" == "ac" ]]; then
     # Plugged into AC (barrel jack or USB-C PD)
     if command -v cardwire >/dev/null 2>&1; then
         cardwire set smart 2>/dev/null || true

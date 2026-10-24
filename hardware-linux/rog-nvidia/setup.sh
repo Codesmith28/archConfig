@@ -155,7 +155,12 @@ verify_profile() {
         log_success "Active Power Profile: $prof"
     fi
 
-    # 6. Installed scripts and udev rules
+    # 6. asusd configuration
+    if [[ -f /etc/asusd/asusd.ron ]] && grep -q "change_platform_profile_on_battery:[[:space:]]*false" /etc/asusd/asusd.ron; then
+        log_success "asusd profile switching: disabled (ACPI storm protected)"
+    fi
+
+    # 7. Installed scripts and udev rules
     echo ""
     log_info "Checking installed automation files:"
     [[ -x /usr/local/bin/power-profile-switch.sh ]] && \
@@ -247,7 +252,17 @@ if command -v cardwire >/dev/null 2>&1; then
     log_success "Cardwire auto-switch configured (Battery: Integrated, AC/Display: Auto)"
 fi
 
-# 5. Enable systemd sleep services
+# 5. Configure asusd daemon policies if installed (prevents ACPI profile race)
+if command -v asusd >/dev/null 2>&1 || [[ -d /etc/asusd ]]; then
+    asusd_conf="/etc/asusd/asusd.ron"
+    if [[ -f "$asusd_conf" ]]; then
+        run_as_root sed -i 's/change_platform_profile_on_battery:[[:space:]]*true/change_platform_profile_on_battery: false/g; s/change_platform_profile_on_ac:[[:space:]]*true/change_platform_profile_on_ac: false/g; s/platform_profile_linked_epp:[[:space:]]*true/platform_profile_linked_epp: false/g' "$asusd_conf"
+        command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart asusd.service 2>/dev/null || true
+        log_success "asusd configured: internal profile switching disabled to prevent ACPI storm"
+    fi
+fi
+
+# 6. Enable systemd sleep services
 SERVICES=("nvidia-suspend.service" "nvidia-hibernate.service" "nvidia-resume.service")
 if [[ -d /sys/module/nvidia ]] || systemctl list-unit-files nvidia-suspend.service &>/dev/null; then
     run_as_root systemctl daemon-reload
