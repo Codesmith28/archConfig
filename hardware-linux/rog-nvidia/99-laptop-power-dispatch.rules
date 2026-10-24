@@ -1,6 +1,9 @@
 # ==============================================================================
 # Dynamic Laptop Power Dispatch Rules
 # Profile: ASUS ROG + NVIDIA RTX Laptop
-# Dispatches power profile and GPU posture switcher on AC connect/disconnect
+# Dispatches power profile and GPU posture switcher on AC / USB-PD connect/disconnect.
+# Restricts triggers to Mains and USB power supplies to prevent ACPI event storms
+# and battery capacity polling loops.
 # ==============================================================================
-ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}!="", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", RUN+="/usr/local/bin/power-profile-switch.sh --async"

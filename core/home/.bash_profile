@@ -10,3 +10,7 @@ fi
 if [ -f "$HOME/.bashrc" ] && [ -z "$BASHRC_SOURCED" ]; then
     . "$HOME/.bashrc"
 fi
+
+
+# Ensure ~/.local/bin is available in login shells
+export PATH="$HOME/.local/bin:$PATH"

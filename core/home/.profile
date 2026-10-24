@@ -94,3 +94,7 @@ fi
 
 unset _SOURCING_PROFILE
 
+
+
+# Ensure ~/.local/bin is available in POSIX environment
+export PATH="$HOME/.local/bin:$PATH"

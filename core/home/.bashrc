@@ -100,3 +100,7 @@ if [ -d "/usr/local/cuda" ]; then
     export PATH="$CUDA_HOME/bin:$PATH"
     export LD_LIBRARY_PATH="$CUDA_HOME/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
+
+
+# Ensure ~/.local/bin is available in interactive shells
+export PATH="$HOME/.local/bin:$PATH"

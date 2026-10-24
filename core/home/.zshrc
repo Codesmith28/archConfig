@@ -240,3 +240,7 @@ if [ -f "$HOME/.zshrc.local" ]; then
     source "$HOME/.zshrc.local"
 fi
 
+
+
+# Ensure ~/.local/bin is available in Zsh environment
+export PATH="$HOME/.local/bin:$PATH"

@@ -39,10 +39,18 @@ if [[ "$target_state" == "ac" ]]; then
         cardwire set smart 2>/dev/null || true
     fi
     if command -v powerprofilesctl >/dev/null 2>&1; then
-        powerprofilesctl set performance 2>/dev/null || true
+        cur_prof="$(powerprofilesctl get 2>/dev/null || true)"
+        if [[ "$cur_prof" != "performance" ]]; then
+            powerprofilesctl set performance 2>/dev/null || true
+        fi
     fi
     for epp in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
-        [[ -w "$epp" ]] && echo "balance_performance" > "$epp" 2>/dev/null || true
+        if [[ -w "$epp" ]]; then
+            cur_epp="$(cat "$epp" 2>/dev/null || true)"
+            if [[ "$cur_epp" != "balance_performance" ]]; then
+                echo "balance_performance" > "$epp" 2>/dev/null || true
+            fi
+        fi
     done
 else
     # Running on Battery
@@ -50,9 +58,17 @@ else
         cardwire set integrated 2>/dev/null || true
     fi
     if command -v powerprofilesctl >/dev/null 2>&1; then
-        powerprofilesctl set power-saver 2>/dev/null || true
+        cur_prof="$(powerprofilesctl get 2>/dev/null || true)"
+        if [[ "$cur_prof" != "power-saver" ]]; then
+            powerprofilesctl set power-saver 2>/dev/null || true
+        fi
     fi
     for epp in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
-        [[ -w "$epp" ]] && echo "power" > "$epp" 2>/dev/null || true
+        if [[ -w "$epp" ]]; then
+            cur_epp="$(cat "$epp" 2>/dev/null || true)"
+            if [[ "$cur_epp" != "power" ]]; then
+                echo "power" > "$epp" 2>/dev/null || true
+            fi
+        fi
     done
 fi

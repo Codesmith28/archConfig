@@ -104,7 +104,7 @@ Toggle Screen Reader On and Off=Meta+Alt+S
 _launch=Meta+Return
 
 [default-browser.desktop][Global Shortcuts]
-_launch=Meta+Shift+B; Meta+B
+_launch=Meta+B; Meta+Shift+B
 
 
 [kmix][Global Shortcuts]
@@ -138,9 +138,9 @@ Cycle Overview=
 Cycle Overview Opposite=
 Decrease Opacity=
 Edit Tiles=Meta+T
-Expose=Ctrl+F9
-ExposeAll=Launch (C); Ctrl+F10
-ExposeClass=Ctrl+F7
+Expose=Ctrl+F9; Meta+F9
+ExposeAll=Launch (C); Ctrl+F10; Meta+F10
+ExposeClass=Ctrl+F7; Meta+F7
 ExposeClassCurrentDesktop=
 Grid View=Meta+Shift+Tab
 Increase Opacity=
@@ -148,6 +148,41 @@ Invert=Meta+Ctrl+I
 Invert Screen Colors=
 InvertWindow=Meta+Ctrl+U
 Kill Window=Meta+Ctrl+Esc
+KrohnkiteBTreeLayout=
+KrohnkiteColumnsLayout=
+KrohnkiteDecrease=Meta+D
+KrohnkiteFloatAll=Meta+Shift+F
+KrohnkiteFloatingLayout=
+KrohnkiteFocusDown=Meta+J
+KrohnkiteFocusLeft=Meta+H
+KrohnkiteFocusNext=Meta+.
+KrohnkiteFocusPrev=Meta+\,
+KrohnkiteFocusRight=Meta+L
+KrohnkiteFocusUp=Meta+K
+KrohnkiteGrowHeight=Meta+Ctrl+J
+KrohnkiteIncrease=Meta+I
+KrohnkiteMonocleLayout=Meta+M
+KrohnkiteNextLayout=Meta+\\
+KrohnkitePreviousLayout=Meta+|
+KrohnkiteQuarterLayout=
+KrohnkiteRotate=Meta+R
+KrohnkiteRotatePart=Meta+Shift+R
+KrohnkiteSetMaster=Meta+Return
+KrohnkiteShiftDown=Meta+Shift+J
+KrohnkiteShiftLeft=Meta+Shift+H
+KrohnkiteShiftRight=Meta+Shift+L
+KrohnkiteShiftUp=Meta+Shift+K
+KrohnkiteShrinkHeight=Meta+Ctrl+K
+KrohnkiteShrinkWidth=Meta+Ctrl+H
+KrohnkiteSpiralLayout=
+KrohnkiteSpreadLayout=
+KrohnkiteStackedLayout=
+KrohnkiteStairLayout=
+KrohnkiteTileLayout=Meta+T
+KrohnkiteToggleFloat=Meta+F
+KrohnkiteTreeColumnLayout=
+KrohnkitegrowWidth=Meta+Ctrl+L
+KrohnkitetoggleDock=
 Move Tablet to Next Output=
 MoveMouseToCenter=Meta+F6
 MoveMouseToFocus=Meta+F5
@@ -155,9 +190,9 @@ MoveZoomDown=
 MoveZoomLeft=
 MoveZoomRight=
 MoveZoomUp=
-Overview=Meta+Tab; Meta+W
+Overview=Meta+W; Meta+Tab
 Setup Window Shortcut=
-Show Desktop=Meta+D
+Show Desktop=
 Switch One Desktop Down=
 Switch One Desktop Up=
 Switch One Desktop to the Left=
@@ -255,6 +290,7 @@ Window Quick Tile Top Left=
 Window Quick Tile Top Right=
 Window Raise=
 Window Resize=
+Window Restore=Meta+Backspace
 Window Shade=
 Window Shrink Horizontal=
 Window Shrink Vertical=
@@ -291,9 +327,9 @@ Window to Screen 5=
 Window to Screen 6=
 Window to Screen 7=
 disableInputCapture=Meta+Shift+Esc
-view_actual_size=Meta+0
-view_zoom_in=Meta++; Meta+=
-view_zoom_out=Meta+-
+view_actual_size=
+view_zoom_in=
+view_zoom_out=
 
 [mediacontrol][Global Shortcuts]
 mediavolumedown=
@@ -356,7 +392,7 @@ PowerOff=Power Off
 Sleep=Sleep
 Toggle Keyboard Backlight=Keyboard Light On/Off
 Turn Off Screen=
-powerProfile=Battery; Launch (4)
+powerProfile=
 
 [plasmashell][Global Shortcuts]
 Slideshow Wallpaper Next Image=
@@ -397,7 +433,7 @@ switch to previous activity=
 toggle do not disturb=
 
 [systemsettings.desktop][Global Shortcuts]
-_launch=Meta+I; Tools
+_launch=Meta+I
 kcm-kscreen=
 kcm-lookandfeel=
 kcm-powerdevilprofilesconfig=
