@@ -1,3 +1,5 @@
+local deps = require("config.deps")
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -66,7 +68,7 @@ return {
 
             -- Configure Pyrefly as the active Python LSP
             opts.servers.pyrefly = vim.tbl_deep_extend("force", {
-                enabled = true,
+                enabled = deps.has_python,
                 init_options = {
                     pyrefly = {
                         typeCheckingMode = "default",
@@ -94,7 +96,7 @@ return {
             }, opts.servers.pyrefly or {})
 
             opts.servers.ruff = vim.tbl_deep_extend("force", {
-                enabled = true,
+                enabled = deps.has_python,
                 cmd_env = { RUFF_TRACE = "messages" },
                 init_options = {
                     settings = {

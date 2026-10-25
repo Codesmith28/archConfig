@@ -25,9 +25,11 @@ map("i", "<A-S-Up>", "<cmd>t.-1<CR>", { desc = "Duplicate line up" })
 map("v", "<A-S-Down>", ":t '> <CR>gv", { silent = true, desc = "Duplicate selection down" })
 map("v", "<A-S-Up>", ":t '<-1 <CR>gv", { silent = true, desc = "Duplicate selection up" })
 
--- Add go tags:
-map("n", "<leader>gsj", "<cmd>GoTagAdd json<CR>", { desc = "Add json struct tags" })
-map("n", "<leader>gsy", "<cmd>GoTagAdd yaml<CR>", { desc = "Add yaml struct tags" })
+-- Add go tags (only if go is available):
+if require("config.deps").has_go then
+    map("n", "<leader>gsj", "<cmd>GoTagAdd json<CR>", { desc = "Add json struct tags" })
+    map("n", "<leader>gsy", "<cmd>GoTagAdd yaml<CR>", { desc = "Add yaml struct tags" })
+end
 
 -- Format only git-modified lines (Works for both Conform formatters & LSP/JDTLS)
 local function format_modified_lines()

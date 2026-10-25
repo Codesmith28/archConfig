@@ -99,3 +99,18 @@ if java_home then
     vim.env.PATH = java_home .. "/bin:" .. vim.env.PATH
 end
 
+-- Silently drop notifications for missing language dependencies / executables
+local orig_notify = vim.notify
+vim.notify = function(msg, level, opts)
+    if type(msg) == "string" then
+        if
+            msg:find("rust%-analyzer.*not found")
+            or msg:find("Could not find executable.*in PATH")
+            or msg:find("spawn: go failed")
+            or msg:find("not found in PATH")
+        then
+            return
+        end
+    end
+    return orig_notify(msg, level, opts)
+end

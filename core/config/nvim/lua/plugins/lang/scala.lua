@@ -1,6 +1,9 @@
+local deps = require("config.deps")
+
 return {
     {
         "scalameta/nvim-metals",
+        enabled = deps.has_scala,
         dependencies = {
             "nvim-lua/plenary.nvim",
         },

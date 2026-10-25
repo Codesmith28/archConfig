@@ -1,3 +1,4 @@
+local deps = require("config.deps")
 local cf_cache = {}
 
 local function sync_clang_format(buf)
@@ -63,6 +64,7 @@ return {
         opts = {
             servers = {
                 clangd = {
+                    enabled = deps.has_cpp,
                     cmd = {
                         "clangd",
                         "--background-index",
@@ -81,6 +83,10 @@ return {
         "stevearc/conform.nvim",
         optional = true,
         init = function()
+            if not deps.has_cpp then
+                return
+            end
+
             local group = vim.api.nvim_create_augroup("ClangFormatSync", { clear = true })
 
             -- Format C/C++ buffers on open with nearest .clang-format and sync indent
@@ -100,7 +106,20 @@ return {
             -- Dynamically sync indent on buffer focus / filetype
             vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "FocusGained" }, {
                 group = group,
-                pattern = { "c", "cpp", "objc", "objcpp", "cuda", "*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp", "*.cu" },
+                pattern = {
+                    "c",
+                    "cpp",
+                    "objc",
+                    "objcpp",
+                    "cuda",
+                    "*.c",
+                    "*.cpp",
+                    "*.cc",
+                    "*.cxx",
+                    "*.h",
+                    "*.hpp",
+                    "*.cu",
+                },
                 callback = function(args)
                     sync_clang_format(args.buf)
                 end,

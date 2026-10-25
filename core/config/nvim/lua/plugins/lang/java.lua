@@ -1,6 +1,9 @@
+local deps = require("config.deps")
+
 return {
     {
         "mfussenegger/nvim-jdtls",
+        enabled = deps.has_java,
         -- Merges with LazyVim's official Java Extra
         opts = function(_, opts)
             -- Performance: allocate sufficient heap and disable main class scanning on large projects
@@ -26,9 +29,18 @@ return {
                     runtimes = (function()
                         local runtimes = {}
                         local candidates = {
-                            { name = "JavaSE-21", paths = { "/usr/lib/jvm/java-21-openjdk-amd64", "/usr/lib/jvm/java-21-openjdk" } },
-                            { name = "JavaSE-17", paths = { "/usr/lib/jvm/java-17-openjdk-amd64", "/usr/lib/jvm/java-17-openjdk" } },
-                            { name = "JavaSE-11", paths = { "/usr/lib/jvm/java-11-openjdk-amd64", "/usr/lib/jvm/java-11-openjdk" } },
+                            {
+                                name = "JavaSE-21",
+                                paths = { "/usr/lib/jvm/java-21-openjdk-amd64", "/usr/lib/jvm/java-21-openjdk" },
+                            },
+                            {
+                                name = "JavaSE-17",
+                                paths = { "/usr/lib/jvm/java-17-openjdk-amd64", "/usr/lib/jvm/java-17-openjdk" },
+                            },
+                            {
+                                name = "JavaSE-11",
+                                paths = { "/usr/lib/jvm/java-11-openjdk-amd64", "/usr/lib/jvm/java-11-openjdk" },
+                            },
                         }
                         for _, item in ipairs(candidates) do
                             for _, p in ipairs(item.paths) do
@@ -104,5 +116,15 @@ return {
 
             return opts
         end,
+    },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            servers = {
+                jdtls = {
+                    enabled = deps.has_java,
+                },
+            },
+        },
     },
 }

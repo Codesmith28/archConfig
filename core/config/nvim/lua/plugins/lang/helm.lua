@@ -1,3 +1,5 @@
+local deps = require("config.deps")
+
 return {
     {
         "towolf/vim-helm",
@@ -12,5 +14,15 @@ return {
                 },
             })
         end,
+    },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            servers = {
+                helm_ls = {
+                    enabled = deps.has_helm,
+                },
+            },
+        },
     },
 }

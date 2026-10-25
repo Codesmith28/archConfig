@@ -1,3 +1,5 @@
+local deps = require("config.deps")
+
 local function get_gpp_compiler()
     for v = 25, 11, -1 do
         local candidates = {
@@ -54,6 +56,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 return {
     "A7lavinraj/assistant.nvim",
+    enabled = deps.has_cpp,
     lazy = false,
     keys = {
         { "<leader>a", "<cmd>Assistant<cr>", desc = "Assistant.nvim" },

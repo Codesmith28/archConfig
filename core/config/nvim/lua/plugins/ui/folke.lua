@@ -166,6 +166,29 @@ return {
             presets = {
                 lsp_doc_border = true, -- Adds rounded border to hover docs and signature help
             },
+            routes = {
+                {
+                    filter = {
+                        event = "notify",
+                        find = "rust%-analyzer.*not found",
+                    },
+                    opts = { skip = true },
+                },
+                {
+                    filter = {
+                        event = "notify",
+                        find = "Could not find executable.*in PATH",
+                    },
+                    opts = { skip = true },
+                },
+                {
+                    filter = {
+                        event = "notify",
+                        find = "spawn: go failed",
+                    },
+                    opts = { skip = true },
+                },
+            },
         },
     },
 }
