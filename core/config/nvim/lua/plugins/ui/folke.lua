@@ -162,11 +162,11 @@ return {
     },
     {
         "folke/noice.nvim",
-        opts = {
-            presets = {
-                lsp_doc_border = true, -- Adds rounded border to hover docs and signature help
-            },
-            routes = {
+        opts = function(_, opts)
+            opts.presets = opts.presets or {}
+            opts.presets.lsp_doc_border = true -- Adds rounded border to hover docs and signature help
+            opts.routes = opts.routes or {}
+            vim.list_extend(opts.routes, {
                 {
                     filter = {
                         event = "notify",
@@ -188,7 +188,7 @@ return {
                     },
                     opts = { skip = true },
                 },
-            },
-        },
+            })
+        end,
     },
 }
