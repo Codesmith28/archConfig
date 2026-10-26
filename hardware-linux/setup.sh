@@ -5,8 +5,7 @@
 # Distro-agnostic hardware optimizations for Linux hosts (Fedora, Arch, Ubuntu, OmArchy):
 # 1. battery         : 85% charging cap & deep sleep (S3) threshold control
 # 2. usb-wake        : USB sleep isolation (Hot backpack mouse/dongle wake block)
-# 3. bluetooth-sleep : Clean A2DP audio disconnect before sleep & resync on resume
-# 4. rog-nvidia      : ASUS ROG + NVIDIA RTX D3cold, Cardwire eBPF & debounced switching
+# 3. rog-nvidia      : ASUS ROG + NVIDIA RTX D3cold, Cardwire eBPF & debounced switching
 # ==============================================================================
 set -euo pipefail
 
@@ -31,7 +30,7 @@ if [[ "$(uname -s)" != "Linux" ]]; then
     exit 0
 fi
 
-MODULES=("battery" "usb-wake" "bluetooth" "rog-nvidia")
+MODULES=("battery" "usb-wake" "rog-nvidia")
 REQUESTED=("$@")
 
 should_run() {

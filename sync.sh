@@ -195,6 +195,11 @@ echo ""
 echo "==> Synchronizing Core Application Configs (~/.config/)..."
 mkdir -p "$HOME/.config" "$HOME/.local/share/fonts"
 
+# Clean up legacy WirePlumber symlink if it points to archConfig
+if [ -L "$HOME/.config/wireplumber" ] && [[ "$(readlink "$HOME/.config/wireplumber" 2>/dev/null)" == *"/archConfig/"* ]]; then
+    rm -rf "$HOME/.config/wireplumber"
+fi
+
 for item in "$REPO_DIR/core/config"/*; do
     [ -e "$item" ] || continue
     name="$(basename "$item")"
@@ -208,15 +213,6 @@ for item in "$REPO_DIR/core/config"/*; do
     fi
     link_item "$item" "$HOME/.config/$name"
 done
-
-# WirePlumber 0.5 loads device Lua scripts from XDG_DATA_HOME (~/.local/share/wireplumber/scripts/)
-if [ -d "$REPO_DIR/core/config/wireplumber/scripts/device" ]; then
-    mkdir -p "$HOME/.local/share/wireplumber/scripts/device"
-    for wp_script in "$REPO_DIR/core/config/wireplumber/scripts/device"/*; do
-        [ -f "$wp_script" ] || continue
-        link_item "$wp_script" "$HOME/.local/share/wireplumber/scripts/device/$(basename "$wp_script")"
-    done
-fi
 
 # ------------------------------------------------------------------------------
 # 4. Synchronize Core Home Dotfiles (~/.*)

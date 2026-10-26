@@ -13,9 +13,8 @@ This directory contains unified, cross-distro hardware and power management modu
 hardware-linux/
 ├── battery/          # 85% charging cap & deep sleep (S3) threshold control
 ├── usb-wake/         # USB sleep isolation (Hot backpack mouse/dongle wake block)
-├── bluetooth/     # Intel AX211 SCO packet fix (btusb.conf) & pre-sleep audio disconnect
-├── rog-nvidia/    # ASUS ROG + NVIDIA RTX D3cold, Cardwire eBPF & debounced switching
-└── setup.sh       # Universal master runner with hardware validation & --verify flag
+├── rog-nvidia/       # ASUS ROG + NVIDIA RTX D3cold, Cardwire eBPF & debounced switching
+└── setup.sh          # Universal master runner with hardware validation & --verify flag
 ```
 
 ---
@@ -32,13 +31,7 @@ hardware-linux/
 * **Benefit:** Prevents accidental wakeups in backpacks caused by wireless mice, dongles, or trackpads while maintaining power button wake.
 * **Component:** Installs `isolate-wake.sh` and enables `disable-xhci-wake.service`.
 
-### 3. `bluetooth/` (Intel AX211 SCO Hardware Fix & Audio Sleep Hook)
-* **What it does:**
-  * Writes `/etc/modprobe.d/btusb.conf` (`options btusb enable_autosuspend=0 force_scofix=1 reset=1`): Resolves Intel AX211 controller firmware buffer misalignment, eliminating `corrupted SCO packet` crashes, audio freezing, and microphone drops during voice calls.
-  * Installs `/usr/lib/systemd/system-sleep/bluetooth-sleep.sh`: Pre-disconnects active A2DP audio sessions (OnePlus Nord Buds, AirPods, headphones) before suspend, and re-powers the Bluetooth radio on wake to eliminate deadlocks.
-  * Pairs with `core/config/wireplumber/` which enforces mSBC HD Voice, dynamic routing, and immediate 0ms return to high-fidelity AAC stereo after calls.
-
-### 4. `rog-nvidia/` (ASUS ROG + NVIDIA dGPU Optimization)
+### 3. `rog-nvidia/` (ASUS ROG + NVIDIA dGPU Optimization)
 * **What it does:**
   * Enforces fine-grained `D3cold` (0W idle) and VRAM preservation via `/var/lib/systemd/sleep`.
   * Configures Cardwire eBPF LSM GPU isolation (`Smart` mode on AC, `Integrated` mode on Battery).
