@@ -203,6 +203,33 @@ EOF
 
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 
+# Power Profile & Toggle DnD Helpers
+if [[ -f "$SCRIPT_DIR/powerprofile" ]]; then
+    install -m 755 "$SCRIPT_DIR/powerprofile" "$HOME/.local/bin/powerprofile"
+fi
+
+if [[ -f "$SCRIPT_DIR/toggle-dnd" ]]; then
+    install -m 755 "$SCRIPT_DIR/toggle-dnd" "$HOME/.local/bin/toggle-dnd"
+fi
+
+# ------------------------------------------------------------------------------
+# 4b. Ensure Krohnkite Tiling Extension is Installed
+# ------------------------------------------------------------------------------
+if [[ ! -d "$HOME/.local/share/kwin/scripts/krohnkite" ]]; then
+    log_info "Installing Krohnkite tiling extension for KDE Plasma..."
+    mkdir -p "$HOME/.local/share/kwin/scripts"
+    TMP_KROHNKITE="/tmp/krohnkite_install.$$"
+    mkdir -p "$TMP_KROHNKITE"
+    if curl -fsSL -o "$TMP_KROHNKITE/krohnkite.kwinscript" "https://github.com/anametologin/krohnkite/releases/download/0.9.9.2/krohnkite.kwinscript" 2>/dev/null; then
+        if command -v kpackagetool6 >/dev/null 2>&1; then
+            kpackagetool6 -t KWin/Script -i "$TMP_KROHNKITE/krohnkite.kwinscript" >/dev/null 2>&1 || true
+        elif command -v kpackagetool5 >/dev/null 2>&1; then
+            kpackagetool5 -t KWin/Script -i "$TMP_KROHNKITE/krohnkite.kwinscript" >/dev/null 2>&1 || true
+        fi
+    fi
+    rm -rf "$TMP_KROHNKITE"
+fi
+
 # ------------------------------------------------------------------------------
 # 5. Copy Shortcut Schemes for GUI Import Compatibility (KF5 & KF6)
 # ------------------------------------------------------------------------------
@@ -275,6 +302,16 @@ def key_to_qt(s):
     for i in range(1, 36):
         special[f'f{i}'] = 0x01000030 + (i - 1)
         
+    # Hardware launch and media keys
+    for i in range(16):
+        hex_c = f"{i:x}"
+        code = 0x010000a2 + i
+        special[f"launch ({hex_c})"] = code
+        special[f"launch ({hex_c.upper()})"] = code
+        special[f"launch {hex_c}"] = code
+        special[f"launch {hex_c.upper()}"] = code
+    special['battery'] = 0x010000fe
+        
     kl = key_name.lower()
     if kl in special:
         return mods | special[kl]
@@ -296,6 +333,32 @@ def parse_shortcuts(shortcut_str):
         if code is not None and code not in res:
             res.append(code)
     return res
+
+# Discover applet IDs from plasma-org.kde.plasma.desktop-appletsrc
+tray_id = None
+notif_id = None
+clock_id = None
+
+if os.path.exists(appletsrc_path):
+    import re
+    applet_cfg_init = configparser.RawConfigParser(strict=False, interpolation=None)
+    applet_cfg_init.optionxform = str
+    try:
+        applet_cfg_init.read(appletsrc_path, encoding="utf-8")
+        for sec in applet_cfg_init.sections():
+            if applet_cfg_init.has_option(sec, "plugin"):
+                plugin = applet_cfg_init.get(sec, "plugin")
+                nums = re.findall(r"Applets\]\[?(\d+)", sec)
+                if nums:
+                    aid = nums[-1]
+                    if plugin == "org.kde.plasma.systemtray":
+                        tray_id = aid
+                    elif plugin == "org.kde.plasma.notifications":
+                        notif_id = aid
+                    elif plugin == "org.kde.plasma.digitalclock":
+                        clock_id = aid
+    except Exception:
+        pass
 
 # 1. Canonical Desktop Shortcuts (Full GNOME Parity & Conflict-Free)
 CANONICAL_SHORTCUTS = {
@@ -372,7 +435,8 @@ CANONICAL_SHORTCUTS = {
         "KrohnkiteShiftUp": "Meta+Shift+K",
         "KrohnkiteShrinkHeight": "Meta+Ctrl+K",
         "KrohnkiteShrinkWidth": "Meta+Ctrl+H",
-        "KrohnkiteTileLayout": "Meta+T",
+        "KrohnkiteBTreeLayout": "Meta+T",
+        "KrohnkiteTileLayout": "",
         "KrohnkiteToggleFloat": "Meta+F",
         "KrohnkitegrowWidth": "Meta+Ctrl+L",
         "ToggleMouseClick": "",
@@ -383,6 +447,7 @@ CANONICAL_SHORTCUTS = {
     "plasmashell": {
         "activate application launcher": "Meta; Alt+F1",
         "show-on-mouse-pos": "Meta+V",
+        "toggle do not disturb": "Launch (1)",
         "manage activities": "",
         "next activity": "",
         "previous activity": "",
@@ -424,10 +489,17 @@ CANONICAL_SHORTCUTS = {
         "Lock Session": "Meta+L; Screensaver",
     },
     "org_kde_powerdevil": {
-        "powerProfile": "",
+        "powerProfile": "Launch (4); Battery",
         "powerprofile": "",
     }
 }
+
+if tray_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {tray_id}"] = "Meta+A"
+if notif_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {notif_id}"] = "Meta+N"
+if clock_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {clock_id}"] = "Meta+Shift+N"
 
 # 2. Try applying live shortcuts via D-Bus (KGlobalAccel in Plasma 6 / 5)
 try:
@@ -515,6 +587,21 @@ for comp, actions in CANONICAL_SHORTCUTS.items():
             parts = cur.split(",")
             dflt = parts[1] if len(parts) > 1 else "none"
             desc = ",".join(parts[2:]) if len(parts) > 2 and parts[2].strip() else act_name
+            # Preserve existing hardware/custom keys for powerProfile and toggle do not disturb
+            if comp == "org_kde_powerdevil" and act_name == "powerProfile":
+                cur_tokens = [t.strip() for t in parts[0].replace(r"\t", ";").split(";") if t.strip() and t.strip().lower() != "none"]
+                combined = ["Launch (4)"]
+                for tok in cur_tokens:
+                    if tok not in combined:
+                        combined.append(tok)
+                val_str = r"\t".join(combined)
+            elif comp == "plasmashell" and act_name == "toggle do not disturb":
+                cur_tokens = [t.strip() for t in parts[0].replace(r"\t", ";").split(";") if t.strip() and t.strip().lower() != "none"]
+                combined = ["Launch (1)"]
+                for tok in cur_tokens:
+                    if tok not in combined:
+                        combined.append(tok)
+                val_str = r"\t".join(combined)
             kglobal.set(comp, act_name, f"{val_str},{dflt},{desc}")
         else:
             kglobal.set(comp, act_name, f"{val_str},none,{act_name}")
@@ -528,9 +615,8 @@ for comp, actions in CANONICAL_SHORTCUTS.items():
             val_str = r"\t".join(tokens) if tokens else "none"
             kglobal.set(svc_sec, act_name, val_str)
 
-if not kdeglobals.has_section("StandardShortcuts"):
-    kdeglobals.add_section("StandardShortcuts")
-kdeglobals.set("StandardShortcuts", "ConfigureNotifications", "Meta+N")
+if kdeglobals.has_section("StandardShortcuts") and kdeglobals.has_option("StandardShortcuts", "ConfigureNotifications"):
+    kdeglobals.remove_option("StandardShortcuts", "ConfigureNotifications")
 
 write_ini(kglobal, kglobal_path)
 write_ini(kdeglobals, kdeglobals_path)
@@ -546,8 +632,7 @@ kwinrc.set("org.kde.kdecoration2", "ButtonsOnLeft", "M")
 if not kwinrc.has_section("Desktops"):
     kwinrc.add_section("Desktops")
 kwinrc.set("Desktops", "Number", "4")
-if not kwinrc.has_option("Desktops", "Rows"):
-    kwinrc.set("Desktops", "Rows", "2")
+kwinrc.set("Desktops", "Rows", "1")
 
 if not kwinrc.has_section("Windows"):
     kwinrc.add_section("Windows")
@@ -576,6 +661,9 @@ kwinrc.set("Script-krohnkite", "screenGapBottom", "10")
 kwinrc.set("Script-krohnkite", "screenGapLeft", "10")
 kwinrc.set("Script-krohnkite", "screenGapRight", "10")
 kwinrc.set("Script-krohnkite", "screenGapTop", "10")
+kwinrc.set("Script-krohnkite", "binaryTreeLayoutOrder", "1")
+for lay in ["tile", "monocle", "threeColumn", "spiral", "quarter", "stacked", "columns", "spread", "floating", "stair", "cascade"]:
+    kwinrc.set("Script-krohnkite", f"{lay}LayoutOrder", "0")
 
 if not kwinrc.has_section("TabBox"):
     kwinrc.add_section("TabBox")
@@ -587,9 +675,9 @@ kwinrc.set("Effect-blur", "NoiseStrength", "8")
 kwinrc.set("Effect-blur", "Saturation", "500")
 
 write_ini(kwinrc, kwinrc_path)
-print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops/2 Rows; Super Key: Launcher; Effects: Magic Lamp + Blur + Slide; Krohnkite Tiling)")
+print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops/1 Row; Super Key: Launcher; Effects: Magic Lamp + Blur + Slide; Krohnkite BSP Tiling)")
 
-# 5. Configure Panel & Task Manager (Floating 42px, Adaptive Opacity, All Workspaces)
+# 5. Configure Panel, Task Manager & Applet Shortcuts (Super+A Tray, Super+N Notifications, Super+Shift+N Calendar)
 if os.path.exists(appletsrc_path):
     applet_cfg = read_ini(appletsrc_path)
     for sec in applet_cfg.sections():
@@ -606,6 +694,21 @@ if os.path.exists(appletsrc_path):
                     applet_cfg.add_section(gen_sec)
                 applet_cfg.set(gen_sec, "showOnlyCurrentDesktop", "false")
                 applet_cfg.set(gen_sec, "showOnlyCurrentActivity", "true")
+            elif plugin == "org.kde.plasma.systemtray":
+                sh_sec = f"{sec}][Shortcuts"
+                if not applet_cfg.has_section(sh_sec):
+                    applet_cfg.add_section(sh_sec)
+                applet_cfg.set(sh_sec, "global", "Meta+A")
+            elif plugin == "org.kde.plasma.notifications":
+                sh_sec = f"{sec}][Shortcuts"
+                if not applet_cfg.has_section(sh_sec):
+                    applet_cfg.add_section(sh_sec)
+                applet_cfg.set(sh_sec, "global", "Meta+N")
+            elif plugin == "org.kde.plasma.digitalclock":
+                sh_sec = f"{sec}][Shortcuts"
+                if not applet_cfg.has_section(sh_sec):
+                    applet_cfg.add_section(sh_sec)
+                applet_cfg.set(sh_sec, "global", "Meta+Shift+N")
     write_ini(applet_cfg, appletsrc_path)
 
 plasmashellrc_path = os.path.join(home, ".config/plasmashellrc")
@@ -619,7 +722,7 @@ if os.path.exists(plasmashellrc_path):
         if sec.startswith("PlasmaViews][Panel ") and "Defaults" in sec:
             ps_cfg.set(sec, "thickness", "42")
     write_ini(ps_cfg, plasmashellrc_path)
-print("    ✓ Panel & Task Manager configured (Panel: 42px Floating, Adaptive; Task Manager: All Workspaces)")
+print("    ✓ Panel & Applets configured (Panel: 42px Floating, Adaptive; Shortcuts: Super+A Tray, Super+N Notif, Super+Shift+N Calendar; Tasks: All Workspaces)")
 
 # 6. Configure Input (Keyboard Repeat 250ms/40Hz, Touchpad Tap-to-click & Natural Scroll)
 kcminput = read_ini(kcminputrc_path)
@@ -691,7 +794,7 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kwinrc --group "org.kde.kdecoration2" --key "ButtonsOnRight" "IAX"
     "$KWRITECMD" --file kwinrc --group "org.kde.kdecoration2" --key "ButtonsOnLeft" "M"
     "$KWRITECMD" --file kwinrc --group "Desktops" --key "Number" "4"
-    "$KWRITECMD" --file kwinrc --group "Desktops" --key "Rows" "2"
+    "$KWRITECMD" --file kwinrc --group "Desktops" --key "Rows" "1"
     "$KWRITECMD" --file kwinrc --group "Windows" --key "RollOverDesktops" "false"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "magiclampEnabled" "true"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "squashEnabled" "false"
@@ -707,6 +810,10 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapLeft" "10"
     "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapRight" "10"
     "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapTop" "10"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "binaryTreeLayoutOrder" "1"
+    for lay in tile monocle threeColumn spiral quarter stacked columns spread floating stair cascade; do
+        "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "${lay}LayoutOrder" "0"
+    done
     "$KWRITECMD" --file kwinrc --group "TabBox" --key "DesktopMode" "0"
     "$KWRITECMD" --file kwinrc --group "Effect-blur" --key "NoiseStrength" "8"
     "$KWRITECMD" --file kwinrc --group "Effect-blur" --key "Saturation" "500"
@@ -717,6 +824,7 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kcminputrc --group "Touchpad" --key "naturalScroll" "true"
 
     "$KWRITECMD" --file kdeglobals --group "General" --key "TerminalApplication" "default-terminal"
+    "$KWRITECMD" --file kdeglobals --group "StandardShortcuts" --key "ConfigureNotifications" ""
     "$KWRITECMD" --file kdeglobals --group "General" --key "font" "Sans Serif,11,-1,5,50,0,0,0,0,0"
     "$KWRITECMD" --file kdeglobals --group "General" --key "fixed" "Monospace,10,-1,5,50,0,0,0,0,0"
     "$KWRITECMD" --file kdeglobals --group "General" --key "desktopFont" "Sans Serif,11,-1,5,50,0,0,0,0,0"
@@ -765,12 +873,29 @@ try:
     except Exception:
         pass
 
-    # 2. VirtualDesktopManager (2 rows, no wrap-around)
+    # 2. VirtualDesktopManager (1 row, 4 desktops, no wrap-around)
     try:
         vdm = bus.get_object("org.kde.KWin", "/VirtualDesktopManager")
         vdm_props = dbus.Interface(vdm, "org.freedesktop.DBus.Properties")
-        vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "rows", dbus.UInt32(2))
+        vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "rows", dbus.UInt32(1))
         vdm_props.Set("org.kde.KWin.VirtualDesktopManager", "navigationWrappingAround", dbus.Boolean(False))
+        vdm_iface = dbus.Interface(vdm, "org.kde.KWin.VirtualDesktopManager")
+        desktops = vdm_props.Get("org.kde.KWin.VirtualDesktopManager", "desktops")
+        if len(desktops) > 4:
+            for d in desktops[4:]:
+                vdm_iface.removeDesktop(d[1])
+        elif len(desktops) < 4:
+            for i in range(len(desktops) + 1, 5):
+                vdm_iface.createDesktop(dbus.UInt32(i - 1), f"Desktop {i}")
+    except Exception:
+        pass
+
+    # 2b. Reload Krohnkite Scripting Live without requiring logout
+    try:
+        k_scripting = bus.get_object("org.kde.KWin", "/Scripting")
+        k_s_iface = dbus.Interface(k_scripting, "org.kde.kwin.Scripting")
+        if k_s_iface.isScriptLoaded("krohnkite"):
+            k_s_iface.unloadScript("krohnkite")
     except Exception:
         pass
 
@@ -794,7 +919,54 @@ try:
     except Exception:
         pass
 
-    print("    ✓ Live session D-Bus broadcast reloaded KWin, VirtualDesktopManager, and Effects")
+    # 4. PlasmaShell Widgets Global Shortcut Live Injection
+    try:
+        import os, configparser, re
+        appletsrc_path = os.path.expanduser("~/.config/plasma-org.kde.plasma.desktop-appletsrc")
+        t_id, n_id, c_id = None, None, None
+        if os.path.exists(appletsrc_path):
+            cfg = configparser.RawConfigParser(strict=False, interpolation=None)
+            cfg.optionxform = str
+            cfg.read(appletsrc_path, encoding="utf-8")
+            for sec in cfg.sections():
+                if cfg.has_option(sec, "plugin"):
+                    p = cfg.get(sec, "plugin")
+                    nums = re.findall(r"Applets\]\[?(\d+)", sec)
+                    if nums:
+                        aid = nums[-1]
+                        if p == "org.kde.plasma.systemtray":
+                            t_id = aid
+                        elif p == "org.kde.plasma.notifications":
+                            n_id = aid
+                        elif p == "org.kde.plasma.digitalclock":
+                            c_id = aid
+        plasma = bus.get_object("org.kde.plasmashell", "/PlasmaShell")
+        p_iface = dbus.Interface(plasma, "org.kde.PlasmaShell")
+        js_code = f"""
+        for (var i = 0; i < panels().length; i++) {{
+            var p = panels()[i];
+            if ({repr(t_id)}) {{
+                var tray = p.widgetById({repr(t_id)});
+                if (tray) {{
+                    tray.globalShortcut = 'Meta+A';
+                    if ({repr(n_id)}) {{
+                        tray.currentConfigGroup = ['Applets', String({repr(n_id)}), 'Shortcuts'];
+                        tray.writeConfig('global', 'Meta+N');
+                        tray.reloadConfig();
+                    }}
+                }}
+            }}
+            if ({repr(c_id)}) {{
+                var clock = p.widgetById({repr(c_id)});
+                if (clock) {{ clock.globalShortcut = 'Meta+Shift+N'; }}
+            }}
+        }}
+        """
+        p_iface.evaluateScript(js_code)
+    except Exception:
+        pass
+
+    print("    ✓ Live session D-Bus broadcast reloaded KWin, VirtualDesktopManager, Effects, and Plasma Widgets")
 except Exception as e:
     print(f"    ℹ Note: Live D-Bus broadcast deferred ({e}); changes will activate on next login")
 PYEOF
@@ -811,7 +983,7 @@ fi
 
 if [[ -n "$QDBUS_BIN" ]]; then
     "$QDBUS_BIN" org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null 2>&1 || true
-    "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.rows 2 >/dev/null 2>&1 || true
+    "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.rows 1 >/dev/null 2>&1 || true
     "$QDBUS_BIN" org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.navigationWrappingAround false >/dev/null 2>&1 || true
     "$QDBUS_BIN" org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect zoom >/dev/null 2>&1 || true
     for eff in magiclamp blur slide; do
@@ -820,7 +992,7 @@ if [[ -n "$QDBUS_BIN" ]]; then
     done
 elif command -v busctl >/dev/null 2>&1; then
     busctl --user call org.kde.KWin /KWin org.kde.KWin reconfigure >/dev/null 2>&1 || true
-    busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager rows u 2 >/dev/null 2>&1 || true
+    busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager rows u 1 >/dev/null 2>&1 || true
     busctl --user set-property org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager navigationWrappingAround b false >/dev/null 2>&1 || true
     busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects unloadEffect s zoom >/dev/null 2>&1 || true
     for eff in magiclamp blur slide; do
@@ -874,12 +1046,34 @@ def check_ini(path, sec, key, expected_sub):
 
 # Attempt live D-Bus verification first
 live_shortcuts = {}
+t_id, n_id, c_id = None, None, None
+if os.path.exists(appletsrc_path):
+    import re
+    try:
+        acfg = configparser.RawConfigParser(strict=False, interpolation=None)
+        acfg.optionxform = str
+        acfg.read(appletsrc_path, encoding="utf-8")
+        for sec in acfg.sections():
+            if acfg.has_option(sec, "plugin"):
+                p = acfg.get(sec, "plugin")
+                nums = re.findall(r"Applets\]\[?(\d+)", sec)
+                if nums:
+                    aid = nums[-1]
+                    if p == "org.kde.plasma.systemtray":
+                        t_id = aid
+                    elif p == "org.kde.plasma.notifications":
+                        n_id = aid
+                    elif p == "org.kde.plasma.digitalclock":
+                        c_id = aid
+    except Exception:
+        pass
+
 try:
     import dbus
     bus = dbus.SessionBus()
     kglobal = bus.get_object("org.kde.kglobalaccel", "/kglobalaccel")
     iface = dbus.Interface(kglobal, "org.kde.KGlobalAccel")
-    for comp in ["kwin", "plasmashell", "org.kde.spectacle.desktop", "default-terminal.desktop", "default-browser.desktop", "org.kde.dolphin.desktop"]:
+    for comp in ["kwin", "plasmashell", "org_kde_powerdevil", "org.kde.spectacle.desktop", "default-terminal.desktop", "default-browser.desktop", "org.kde.dolphin.desktop"]:
         try:
             for a in iface.allActionsForComponent([comp]):
                 keys = iface.shortcutKeys(a)
@@ -969,17 +1163,26 @@ checks = [
     ("Super Key Modifier (kwinrc ModifierOnlyShortcuts)", check_ini(kwinrc_path, "ModifierOnlyShortcuts", "Meta", "activateLauncherMenu")),
     ("Titlebar Buttons (Minimize, Maximize, Close)", check_ini(kwinrc_path, "org.kde.kdecoration2", "ButtonsOnRight", "IAX")),
     ("Virtual Desktops (4 Workspaces)", check_ini(kwinrc_path, "Desktops", "Number", "4")),
-    ("Desktop Layout (Multi-Row / 2 Rows)", check_ini(kwinrc_path, "Desktops", "Rows", "2")),
+    ("Desktop Layout (Single-Row / 1 Row)", check_ini(kwinrc_path, "Desktops", "Rows", "1")),
     ("Desktop Boundaries (No Wrap-Around)", check_ini(kwinrc_path, "Windows", "RollOverDesktops", "false")),
     ("KWin Effects (Compiz Magic Lamp)", check_ini(kwinrc_path, "Plugins", "magiclampEnabled", "true")),
     ("KWin Effects (Background Blur)", check_ini(kwinrc_path, "Plugins", "blurEnabled", "true")),
     ("Desktop Switch Animation (Slide)", check_ini(kwinrc_path, "Plugins", "slideEnabled", "true")),
     ("Krohnkite Tiling Plugin", check_ini(kwinrc_path, "Plugins", "krohnkiteEnabled", "true")),
     ("Krohnkite Tiling Gaps (10px)", check_ini(kwinrc_path, "Script-krohnkite", "screenGapBetween", "10")),
+    ("Krohnkite BSP Layout (BinaryTree)", check_ini(kwinrc_path, "Script-krohnkite", "binaryTreeLayoutOrder", "1")),
+    ("Krohnkite Non-BSP Layouts Disabled", check_ini(kwinrc_path, "Script-krohnkite", "tileLayoutOrder", "0")),
+    ("Status & Notifications Shortcut (Meta+A)", verify_shortcut("plasmashell", f"activate widget {t_id}" if t_id else "activate widget 7", 268435521)),
+    ("Notifications Panel Shortcut (Meta+N)", verify_shortcut("plasmashell", f"activate widget {n_id}" if n_id else "activate widget 18", 268435534)),
+    ("Calendar Panel Shortcut (Meta+Shift+N)", verify_shortcut("plasmashell", f"activate widget {c_id}" if c_id else "activate widget 22", 301989966)),
+    ("Power Profile Switch Shortcut (Launch 4)", verify_shortcut("org_kde_powerdevil", "powerProfile", 16777382)),
+    ("Toggle Do Not Disturb Shortcut (Launch 1)", verify_shortcut("plasmashell", "toggle do not disturb", 16777379)),
     ("Keyboard Rate (250ms / 40Hz)", check_ini(kcminputrc_path, "Keyboard", "RepeatDelay", "250")),
     ("Touchpad Tap-to-click & Natural Scroll", check_ini(kcminputrc_path, "Touchpad", "tapToClick", "true") and check_ini(kcminputrc_path, "Touchpad", "naturalScroll", "true")),
     ("Default Terminal Executable", os.path.exists(os.path.join(home, ".local/bin/default-terminal"))),
     ("Default Browser Executable", os.path.exists(os.path.join(home, ".local/bin/default-browser"))),
+    ("Power Profile CLI Helper", os.path.exists(os.path.join(home, ".local/bin/powerprofile"))),
+    ("Toggle DnD CLI Helper", os.path.exists(os.path.join(home, ".local/bin/toggle-dnd"))),
     ("Screen Zoom Disabled", check_ini(kwinrc_path, "Plugins", "zoomEnabled", "false")),
     ("PowerDevil libddcutil override (no I2C stutter)", os.path.exists(os.path.join(home, ".config/systemd/user/plasma-powerdevil.service.d/override.conf"))),
     ("UI Fonts (Sans Serif 11)", check_ini(kdeglobals_path, "General", "font", "Sans Serif")),

@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""Universal KDE Plasma Power Profile Switcher & Reader."""
+import sys
+
+def main():
+    try:
+        import dbus
+        bus = dbus.SessionBus()
+        pm = bus.get_object("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement/Actions/PowerProfile")
+        iface = dbus.Interface(pm, "org.kde.Solid.PowerManagement.Actions.PowerProfile")
+        curr = str(iface.currentProfile())
+        choices = [str(c) for c in iface.profileChoices()]
+        system_props = None
+    except Exception:
+        # Fallback to system power-profiles-daemon / tuned-ppd via system bus
+        try:
+            import dbus
+            sbus = dbus.SystemBus()
+            ppd = sbus.get_object("net.hadess.PowerProfiles", "/net/hadess/PowerProfiles")
+            system_props = dbus.Interface(ppd, "org.freedesktop.DBus.Properties")
+            curr = str(system_props.Get("net.hadess.PowerProfiles", "ActiveProfile"))
+            profs = system_props.Get("net.hadess.PowerProfiles", "Profiles")
+            choices = [str(p["Profile"]) for p in profs]
+            iface = None
+        except Exception as e2:
+            print(f"Error connecting to power profile service: {e2}", file=sys.stderr)
+            sys.exit(1)
+
+    arg = sys.argv[1].lower() if len(sys.argv) > 1 else ""
+
+    if arg in ("switch", "cycle", "next", "toggle"):
+        idx = (choices.index(curr) + 1) % len(choices) if curr in choices else 0
+        new_prof = choices[idx]
+        if iface:
+            iface.setProfile(new_prof)
+        elif system_props:
+            system_props.Set("net.hadess.PowerProfiles", "ActiveProfile", dbus.String(new_prof))
+        print(f"Power profile switched: {curr} -> {new_prof}")
+    elif arg in choices:
+        if iface:
+            iface.setProfile(arg)
+        elif system_props:
+            system_props.Set("net.hadess.PowerProfiles", "ActiveProfile", dbus.String(arg))
+        print(f"Power profile set to: {arg}")
+    elif arg in ("read", "get", "status", "curr", "current", ""):
+        print(f"Current power profile: {curr} (Available: {', '.join(choices)})")
+    else:
+        print(f"Usage: {sys.argv[0]} [current|next|power-saver|balanced|performance]", file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

@@ -21,7 +21,7 @@ Begin=Ctrl+Home
 BeginningOfLine=Home
 Clear=
 Close=Ctrl+Esc; Ctrl+W
-ConfigureNotifications=Meta+N
+ConfigureNotifications=
 ConfigureToolbars=
 Copy=Ctrl+C; Ctrl+Ins
 CreateFolder=Ctrl+Shift+N
@@ -148,7 +148,7 @@ Invert=Meta+Ctrl+I
 Invert Screen Colors=
 InvertWindow=Meta+Ctrl+U
 Kill Window=Meta+Ctrl+Esc
-KrohnkiteBTreeLayout=
+KrohnkiteBTreeLayout=Meta+T
 KrohnkiteColumnsLayout=
 KrohnkiteDecrease=Meta+D
 KrohnkiteFloatAll=Meta+Shift+F
@@ -178,7 +178,7 @@ KrohnkiteSpiralLayout=
 KrohnkiteSpreadLayout=
 KrohnkiteStackedLayout=
 KrohnkiteStairLayout=
-KrohnkiteTileLayout=Meta+T
+KrohnkiteTileLayout=
 KrohnkiteToggleFloat=Meta+F
 KrohnkiteTreeColumnLayout=
 KrohnkitegrowWidth=Meta+Ctrl+L
@@ -392,7 +392,7 @@ PowerOff=Power Off
 Sleep=Sleep
 Toggle Keyboard Backlight=Keyboard Light On/Off
 Turn Off Screen=
-powerProfile=
+powerProfile=Launch (4); Battery
 
 [plasmashell][Global Shortcuts]
 Slideshow Wallpaper Next Image=
@@ -430,7 +430,7 @@ show-barcode=
 show-on-mouse-pos=Meta+V
 switch to next activity=
 switch to previous activity=
-toggle do not disturb=
+toggle do not disturb=Launch (1)
 
 [systemsettings.desktop][Global Shortcuts]
 _launch=Meta+I
