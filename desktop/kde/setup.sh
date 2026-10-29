@@ -497,9 +497,9 @@ CANONICAL_SHORTCUTS = {
 if tray_id:
     CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {tray_id}"] = "Meta+A"
 if notif_id:
-    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {notif_id}"] = "Meta+N"
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {notif_id}"] = "Meta+Shift+N"
 if clock_id:
-    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {clock_id}"] = "Meta+Shift+N"
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {clock_id}"] = "Meta+N"
 
 # 2. Try applying live shortcuts via D-Bus (KGlobalAccel in Plasma 6 / 5)
 try:
@@ -677,7 +677,7 @@ kwinrc.set("Effect-blur", "Saturation", "500")
 write_ini(kwinrc, kwinrc_path)
 print("    ✓ kwinrc configured (Buttons: IAX; 4 Desktops/1 Row; Super Key: Launcher; Effects: Magic Lamp + Blur + Slide; Krohnkite BSP Tiling)")
 
-# 5. Configure Panel, Task Manager & Applet Shortcuts (Super+A Tray, Super+N Notifications, Super+Shift+N Calendar)
+# 5. Configure Panel, Task Manager & Applet Shortcuts (Super+A Tray, Super+N Calendar, Super+Shift+N Notifications)
 if os.path.exists(appletsrc_path):
     applet_cfg = read_ini(appletsrc_path)
     for sec in applet_cfg.sections():
@@ -703,12 +703,12 @@ if os.path.exists(appletsrc_path):
                 sh_sec = f"{sec}][Shortcuts"
                 if not applet_cfg.has_section(sh_sec):
                     applet_cfg.add_section(sh_sec)
-                applet_cfg.set(sh_sec, "global", "Meta+N")
+                applet_cfg.set(sh_sec, "global", "Meta+Shift+N")
             elif plugin == "org.kde.plasma.digitalclock":
                 sh_sec = f"{sec}][Shortcuts"
                 if not applet_cfg.has_section(sh_sec):
                     applet_cfg.add_section(sh_sec)
-                applet_cfg.set(sh_sec, "global", "Meta+Shift+N")
+                applet_cfg.set(sh_sec, "global", "Meta+N")
     write_ini(applet_cfg, appletsrc_path)
 
 plasmashellrc_path = os.path.join(home, ".config/plasmashellrc")
@@ -722,7 +722,7 @@ if os.path.exists(plasmashellrc_path):
         if sec.startswith("PlasmaViews][Panel ") and "Defaults" in sec:
             ps_cfg.set(sec, "thickness", "42")
     write_ini(ps_cfg, plasmashellrc_path)
-print("    ✓ Panel & Applets configured (Panel: 42px Floating, Adaptive; Shortcuts: Super+A Tray, Super+N Notif, Super+Shift+N Calendar; Tasks: All Workspaces)")
+print("    ✓ Panel & Applets configured (Panel: 42px Floating, Adaptive; Shortcuts: Super+A Tray, Super+N Calendar, Super+Shift+N Notifications; Tasks: All Workspaces)")
 
 # 6. Configure Input (Keyboard Repeat 250ms/40Hz, Touchpad Tap-to-click & Natural Scroll)
 kcminput = read_ini(kcminputrc_path)
@@ -951,14 +951,14 @@ try:
                     tray.globalShortcut = 'Meta+A';
                     if ({repr(n_id)}) {{
                         tray.currentConfigGroup = ['Applets', String({repr(n_id)}), 'Shortcuts'];
-                        tray.writeConfig('global', 'Meta+N');
+                        tray.writeConfig('global', 'Meta+Shift+N');
                         tray.reloadConfig();
                     }}
                 }}
             }}
             if ({repr(c_id)}) {{
                 var clock = p.widgetById({repr(c_id)});
-                if (clock) {{ clock.globalShortcut = 'Meta+Shift+N'; }}
+                if (clock) {{ clock.globalShortcut = 'Meta+N'; }}
             }}
         }}
         """
@@ -1173,8 +1173,8 @@ checks = [
     ("Krohnkite BSP Layout (BinaryTree)", check_ini(kwinrc_path, "Script-krohnkite", "binaryTreeLayoutOrder", "1")),
     ("Krohnkite Non-BSP Layouts Disabled", check_ini(kwinrc_path, "Script-krohnkite", "tileLayoutOrder", "0")),
     ("Status & Notifications Shortcut (Meta+A)", verify_shortcut("plasmashell", f"activate widget {t_id}" if t_id else "activate widget 7", 268435521)),
-    ("Notifications Panel Shortcut (Meta+N)", verify_shortcut("plasmashell", f"activate widget {n_id}" if n_id else "activate widget 18", 268435534)),
-    ("Calendar Panel Shortcut (Meta+Shift+N)", verify_shortcut("plasmashell", f"activate widget {c_id}" if c_id else "activate widget 22", 301989966)),
+    ("Calendar Panel Shortcut (Meta+N)", verify_shortcut("plasmashell", f"activate widget {c_id}" if c_id else "activate widget 22", 268435534)),
+    ("Notifications Panel Shortcut (Meta+Shift+N)", verify_shortcut("plasmashell", f"activate widget {n_id}" if n_id else "activate widget 18", 301989966)),
     ("Power Profile Switch Shortcut (Launch 4)", verify_shortcut("org_kde_powerdevil", "powerProfile", 16777382)),
     ("Toggle Do Not Disturb Shortcut (Launch 1)", verify_shortcut("plasmashell", "toggle do not disturb", 16777379)),
     ("Keyboard Rate (250ms / 40Hz)", check_ini(kcminputrc_path, "Keyboard", "RepeatDelay", "250")),
