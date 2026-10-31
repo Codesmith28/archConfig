@@ -24,11 +24,19 @@ write_node() {
     if [ "$EUID" -eq 0 ]; then
         echo "$val" > "$node" 2>/dev/null
     else
-        echo "$val" | sudo tee "$node" >/dev/null 2>&1
+        echo "$val" | sudo -n tee "$node" >/dev/null 2>&1
     fi
 }
 
 applied=0
+
+# 0. ASUS ROG laptops via asusctl / asusd (works unprivileged via dbus)
+if command -v asusctl >/dev/null 2>&1; then
+    if asusctl battery limit "$BATTERY_LIMIT" >/dev/null 2>&1; then
+        applied=1
+        echo "Set charging limit to ${BATTERY_LIMIT}% via asusctl"
+    fi
+fi
 
 # 1. Standard Linux power_supply class (ASUS, ThinkPad, Dell, Framework, Apple Silicon, etc.)
 for psy in /sys/class/power_supply/*; do
@@ -53,7 +61,11 @@ for psy in /sys/class/power_supply/*; do
     # Apply end/stop threshold
     for end_node in "$psy/charge_control_end_threshold" "$psy/charge_stop_threshold"; do
         if [ -f "$end_node" ]; then
-            if write_node "$BATTERY_LIMIT" "$end_node" && [ "$(cat "$end_node" 2>/dev/null)" = "$BATTERY_LIMIT" ]; then
+            current_val="$(cat "$end_node" 2>/dev/null || echo "")"
+            if [ "$current_val" = "$BATTERY_LIMIT" ]; then
+                applied=1
+                echo "Charging limit is already set to ${BATTERY_LIMIT}% on $(basename "$psy")"
+            elif write_node "$BATTERY_LIMIT" "$end_node" && [ "$(cat "$end_node" 2>/dev/null)" = "$BATTERY_LIMIT" ]; then
                 applied=1
                 echo "Set charging limit to ${BATTERY_LIMIT}% on $(basename "$psy")"
             else
