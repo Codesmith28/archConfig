@@ -63,3 +63,18 @@ function run_cpp() {
     fi
 }
 
+# ------------------------------------------------------------------------------
+# Multi-argument open wrapper for Linux (xdg-open)
+# ------------------------------------------------------------------------------
+if [ "$(uname -s)" = "Linux" ] && command -v xdg-open >/dev/null 2>&1; then
+    function open() {
+        if [ $# -eq 0 ]; then
+            echo "Usage: open <file|url>..." >&2
+            return 1
+        fi
+        for target in "$@"; do
+            (xdg-open "$target" >/dev/null 2>&1 &)
+        done
+    }
+fi
+

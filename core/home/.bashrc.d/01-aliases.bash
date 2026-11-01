@@ -61,6 +61,7 @@ alias confa='${EDITOR:-nvim} ~/.bashrc.d/01-aliases.bash'
 alias confn='${EDITOR:-nvim} ~/.config/nvim/'
 alias confg='${EDITOR:-nvim} ~/.config/ghostty/config'
 alias confw='${EDITOR:-nvim} ~/.config/work/work.sh'
+alias conff='${EDITOR:-nvim} ~/.config/fontconfig/fonts.conf'
 
 # ------------------------------------------------------------------------------
 # Developer Tools & Cross-Platform Utilities
@@ -68,13 +69,11 @@ alias confw='${EDITOR:-nvim} ~/.config/work/work.sh'
 case "$(uname -s)" in
 Darwin)
     # macOS
-    alias open='open'
     alias copy='pbcopy'
     alias paste='pbpaste'
     ;;
 Linux)
     # Linux
-    alias open='xdg-open'
     if command -v wl-copy >/dev/null 2>&1; then
         alias copy='wl-copy'
         alias paste='wl-paste'
