@@ -213,21 +213,494 @@ if [[ -f "$SCRIPT_DIR/toggle-dnd" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 4b. Ensure Krohnkite Tiling Extension is Installed
+# 4b. Ensure Krohnkite Tiling Extension is Installed & Up-to-Date
 # ------------------------------------------------------------------------------
-if [[ ! -d "$HOME/.local/share/kwin/scripts/krohnkite" ]]; then
-    log_info "Installing Krohnkite tiling extension for KDE Plasma..."
+KROHNKITE_DIR="$HOME/.local/share/kwin/scripts/krohnkite"
+KROHNKITE_VER="0.9.10.0"
+KROHNKITE_URL="https://codeberg.org/anametologin/Krohnkite/releases/download/${KROHNKITE_VER}/krohnkite.kwinscript"
+
+needs_krohnkite_install=false
+if [[ ! -f "$KROHNKITE_DIR/metadata.json" ]]; then
+    needs_krohnkite_install=true
+elif ! grep -q "\"Version\": \"${KROHNKITE_VER}\"" "$KROHNKITE_DIR/metadata.json" 2>/dev/null; then
+    needs_krohnkite_install=true
+fi
+
+if [[ "$needs_krohnkite_install" == "true" ]]; then
+    log_info "Installing Krohnkite tiling extension (v${KROHNKITE_VER}) for KDE Plasma..."
     mkdir -p "$HOME/.local/share/kwin/scripts"
     TMP_KROHNKITE="/tmp/krohnkite_install.$$"
     mkdir -p "$TMP_KROHNKITE"
-    if curl -fsSL -o "$TMP_KROHNKITE/krohnkite.kwinscript" "https://github.com/anametologin/krohnkite/releases/download/0.9.9.2/krohnkite.kwinscript" 2>/dev/null; then
+    if curl -fsSL -o "$TMP_KROHNKITE/krohnkite.kwinscript" "$KROHNKITE_URL" 2>/dev/null; then
         if command -v kpackagetool6 >/dev/null 2>&1; then
+            kpackagetool6 -t KWin/Script -u "$TMP_KROHNKITE/krohnkite.kwinscript" >/dev/null 2>&1 || \
             kpackagetool6 -t KWin/Script -i "$TMP_KROHNKITE/krohnkite.kwinscript" >/dev/null 2>&1 || true
         elif command -v kpackagetool5 >/dev/null 2>&1; then
+            kpackagetool5 -t KWin/Script -u "$TMP_KROHNKITE/krohnkite.kwinscript" >/dev/null 2>&1 || \
             kpackagetool5 -t KWin/Script -i "$TMP_KROHNKITE/krohnkite.kwinscript" >/dev/null 2>&1 || true
+        fi
+        # Fallback if kpackagetool didn't extract or is missing:
+        if [[ ! -f "$KROHNKITE_DIR/metadata.json" ]] && command -v unzip >/dev/null 2>&1; then
+            mkdir -p "$KROHNKITE_DIR"
+            unzip -qo "$TMP_KROHNKITE/krohnkite.kwinscript" -d "$KROHNKITE_DIR"
         fi
     fi
     rm -rf "$TMP_KROHNKITE"
+fi
+
+# ------------------------------------------------------------------------------
+# 4c. Patch Krohnkite for Dynamic Resizing, BTree Fixes & State Persistence
+# ------------------------------------------------------------------------------
+if [[ -d "$KROHNKITE_DIR" ]]; then
+    python3 - "$KROHNKITE_DIR" << 'PYEOF'
+import sys, os
+
+krohnkite_dir = sys.argv[1]
+qml_path = os.path.join(krohnkite_dir, "contents/ui/main.qml")
+js_path = os.path.join(krohnkite_dir, "contents/code/script.js")
+
+# --- 1. Patch main.qml for persistent window states ---
+qml_changed = False
+if os.path.isfile(qml_path):
+    with open(qml_path, "r", encoding="utf-8") as f:
+        qml = f.read()
+
+    if "import QtCore" not in qml:
+        qml = qml.replace("import QtQuick 2.15\n", "import QtQuick 2.15\nimport QtCore\n")
+        qml_changed = True
+
+    target_store = '''        }
+    }
+
+    Component.onCompleted: {'''
+    repl_store = '''        }
+    }
+
+    Settings {
+        id: persistentStore
+        category: "KrohnkiteWindowStates"
+        property string rememberedStatesJson: "{}"
+
+        function getStates() {
+            try {
+                return JSON.parse(rememberedStatesJson || "{}");
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveStates(statesObj) {
+            try {
+                rememberedStatesJson = JSON.stringify(statesObj);
+            } catch (e) {
+            }
+        }
+    }
+
+    Component.onCompleted: {'''
+    if target_store in qml:
+        qml = qml.replace(target_store, repl_store)
+        qml_changed = True
+
+    target_api = '''            "shortcuts": shortcutsLoader.item.shortcutList,
+            "dbus": dbusCallLoader.item
+        };'''
+    repl_api = '''            "shortcuts": shortcutsLoader.item.shortcutList,
+            "dbus": dbusCallLoader.item,
+            "storage": persistentStore
+        };'''
+    if target_api in qml:
+        qml = qml.replace(target_api, repl_api)
+        qml_changed = True
+
+    if qml_changed:
+        with open(qml_path, "w", encoding="utf-8") as f:
+            f.write(qml)
+
+# --- 2. Patch script.js for live resizing, BTree fixes, and state persistence ---
+js_changed = False
+if os.path.isfile(js_path):
+    with open(js_path, "r", encoding="utf-8") as f:
+        js = f.read()
+
+    # A. initStorage in KWinRuntime constructor
+    t_init = '''        this._runningShortcutSequence = null;
+        this.engine = new TilingEngine();
+        this.control = new TilingController(this.engine);'''
+    r_init = '''        this._runningShortcutSequence = null;
+        this.engine = new TilingEngine();
+        this.engine.initStorage(api.storage);
+        this.control = new TilingController(this.engine);'''
+    if t_init in js:
+        js = js.replace(t_init, r_init)
+        js_changed = True
+
+    # B. Live resizing in interactiveMoveResizeStepped
+    t_step = '''        this._connect(client.interactiveMoveResizeStepped, (geometry) => {
+            if (!client || client.deleted)
+                return;
+            LOG === null || LOG === void 0 ? void 0 : LOG.send(LogModules.interactiveMoveResizeStepped, "eventFired", `window: caption:${client.caption} internalID:${client.internalId},interactiveMoveResizeStepped:${geometry}`, { winClass: [`${client.resourceClass}`] });
+            if (client.resize)
+                return;
+            this.control.onWindowDragging(this, window, geometry, "windowInteractiveMoveResizeSteppedCB");
+        });'''
+    r_step = '''        this._connect(client.interactiveMoveResizeStepped, (geometry) => {
+            if (!client || client.deleted)
+                return;
+            LOG === null || LOG === void 0 ? void 0 : LOG.send(LogModules.interactiveMoveResizeStepped, "eventFired", `window: caption:${client.caption} internalID:${client.internalId},interactiveMoveResizeStepped:${geometry}`, { winClass: [`${client.resourceClass}`] });
+            if (client.resize) {
+                if (CONFIG.adjustLayout && CONFIG.adjustLayoutLive && window.isTiled) {
+                    window.interactiveGeometry = toRect(geometry);
+                    this.control.onWindowResize(this, window, "windowInteractiveMoveResizeSteppedCB");
+                }
+                return;
+            }
+            this.control.onWindowDragging(this, window, geometry, "windowInteractiveMoveResizeSteppedCB");
+        });'''
+    if t_step in js:
+        js = js.replace(t_step, r_step)
+        js_changed = True
+
+    # C. Window interactiveGeometry property in WindowClass constructor
+    t_wc = '''        this._dockTemplate = new Dock(DefaultDockCfg.instance);
+        this._minSize = window.minSize;
+        this._maxSize = window.maxSize;
+    }'''
+    r_wc = '''        this._dockTemplate = new Dock(DefaultDockCfg.instance);
+        this._minSize = window.minSize;
+        this._maxSize = window.maxSize;
+        this.interactiveGeometry = null;
+    }'''
+    if t_wc in js:
+        js = js.replace(t_wc, r_wc)
+        js_changed = True
+
+    # D. actualGeometry returns interactiveGeometry when live resizing
+    t_act = '''    get actualGeometry() {
+        return this.window.geometry;
+    }'''
+    r_act = '''    get actualGeometry() {
+        if (this.interactiveGeometry)
+            return this.interactiveGeometry;
+        return this.window.geometry;
+    }'''
+    if t_act in js:
+        js = js.replace(t_act, r_act)
+        js_changed = True
+
+    # E. geometryDelta value equality check instead of identity
+    t_delta = '''    get geometryDelta() {
+        if (this.geometry === this.actualGeometry)
+            return null;
+        return RectDelta.fromRects(this.geometry, this.actualGeometry);
+    }'''
+    r_delta = '''    get geometryDelta() {
+        if (!this.geometry || this.geometry.equals(this.actualGeometry))
+            return null;
+        return RectDelta.fromRects(this.geometry, this.actualGeometry);
+    }'''
+    if t_delta in js:
+        js = js.replace(t_delta, r_delta)
+        js_changed = True
+
+    # F. Dragging float state update & saving
+    t_drag = '''            if (distance > 30) {
+                window.floatGeometry = window.actualGeometry;
+                window.state = WindowState.Floating;
+                this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}:keepTilingOnDrag=${CONFIG.keepTilingOnDrag}`);
+                return;
+            }
+        }
+        window.commit(ctx);'''
+    r_drag = '''            if (distance > 30) {
+                window.floatGeometry = window.actualGeometry;
+                window.state = WindowState.Floating;
+                this.engine.setRememberedState(window, WindowState.Floating);
+                this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}:keepTilingOnDrag=${CONFIG.keepTilingOnDrag}`);
+                return;
+            }
+        }
+        if (window.isFloating) {
+            window.floatGeometry = window.actualGeometry;
+            this.engine.setRememberedState(window, WindowState.Floating);
+        }
+        window.commit(ctx);'''
+    if t_drag in js:
+        js = js.replace(t_drag, r_drag)
+        js_changed = True
+
+    # G. onWindowResize and onWindowResizeOver handlers
+    t_res = '''    onWindowResize(ctx, window, reason) {
+        if (CONFIG.adjustLayout &&
+            CONFIG.adjustLayoutLive &&
+            window.state === WindowState.Tiled) {
+            this.engine.adjustLayout(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+        else if (window.state === WindowState.Docked) {
+            this.engine.adjustDock(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+    }
+    onWindowResizeOver(ctx, window, reason) {
+        if (CONFIG.adjustLayout && window.isTiled) {
+            this.engine.adjustLayout(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+        else if (window.state === WindowState.Docked) {
+            this.engine.adjustDock(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+        else if (!CONFIG.adjustLayout)
+            this.engine.enforceSize(ctx, window);
+    }'''
+    r_res = '''    onWindowResize(ctx, window, reason) {
+        if (CONFIG.adjustLayout &&
+            CONFIG.adjustLayoutLive &&
+            window.isTiled) {
+            this.engine.adjustLayout(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+        else if (window.state === WindowState.Docked) {
+            this.engine.adjustDock(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+    }
+    onWindowResizeOver(ctx, window, reason) {
+        window.interactiveGeometry = null;
+        if (CONFIG.adjustLayout && window.isTiled) {
+            this.engine.adjustLayout(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+        else if (window.state === WindowState.Docked) {
+            this.engine.adjustDock(window);
+            this.engine.arrange(ctx, reason, `${getMethodName()}:windowState=${window.state}`);
+        }
+        else if (window.isFloating) {
+            window.floatGeometry = window.actualGeometry;
+            this.engine.setRememberedState(window, WindowState.Floating);
+        }
+        else if (!CONFIG.adjustLayout)
+            this.engine.enforceSize(ctx, window);
+    }'''
+    if t_res in js:
+        js = js.replace(t_res, r_res)
+        js_changed = True
+
+    # H. TilingEngine: constructor storage init & setRememberedState methods
+    t_eng = '''        this._arrangePending = false;
+        this._pendingExtraSurfaces = new Map();
+        this._batchDepth = 0;
+    }
+    adjustLayout(basis) {'''
+    r_eng = '''        this._arrangePending = false;
+        this._pendingExtraSurfaces = new Map();
+        this._batchDepth = 0;
+        this.rememberedStates = new Map();
+        this.storage = null;
+    }
+    initStorage(storage) {
+        this.storage = storage;
+        if (storage && storage.getStates) {
+            try {
+                const saved = storage.getStates();
+                if (saved && typeof saved === "object") {
+                    for (const [key, val] of Object.entries(saved)) {
+                        this.rememberedStates.set(key, val);
+                    }
+                }
+            } catch (e) {
+            }
+        }
+    }
+    setRememberedState(window, state) {
+        if (!window || !window.windowClassName)
+            return;
+        const key = window.windowClassName;
+        const geom = (window.floatGeometry || window.actualGeometry);
+        const entry = {
+            state: state,
+            geometry: (state === WindowState.Floating && geom)
+                ? {
+                    x: geom.x,
+                    y: geom.y,
+                    width: geom.width,
+                    height: geom.height
+                }
+                : null
+        };
+        this.rememberedStates.set(key, entry);
+        if (this.storage && this.storage.saveStates) {
+            try {
+                const obj = {};
+                for (const [k, v] of this.rememberedStates.entries()) {
+                    obj[k] = v;
+                }
+                this.storage.saveStates(obj);
+            } catch (e) {
+            }
+        }
+    }
+    adjustLayout(basis) {'''
+    if t_eng in js:
+        js = js.replace(t_eng, r_eng)
+        js_changed = True
+
+    # I. WindowState.Undecided restore remembered state
+    t_und = '''            else if (window.state === WindowState.Undecided) {
+                window.state = window.shouldFloat
+                    ? WindowState.Floating
+                    : WindowState.Tiled;
+            }'''
+    r_und = '''            else if (window.state === WindowState.Undecided) {
+                const remembered = this.rememberedStates.get(window.windowClassName);
+                if (remembered !== undefined && (remembered.state === WindowState.Floating || remembered.state === WindowState.Tiled)) {
+                    window.state = remembered.state;
+                    if (remembered.state === WindowState.Floating && remembered.geometry) {
+                        window.floatGeometry = new Rect(
+                            remembered.geometry.x,
+                            remembered.geometry.y,
+                            remembered.geometry.width,
+                            remembered.geometry.height
+                        );
+                    }
+                }
+                else {
+                    window.state = window.shouldFloat
+                        ? WindowState.Floating
+                        : WindowState.Tiled;
+                }
+            }'''
+    if t_und in js:
+        js = js.replace(t_und, r_und)
+        js_changed = True
+
+    # J. onWindowRemoved: remember state
+    t_rem = '''        if (window.state === WindowState.Docked) {
+            this.docks.remove(window);
+        }
+        this.windows.remove(window);'''
+    r_rem = '''        if (window.state === WindowState.Docked) {
+            this.docks.remove(window);
+        }
+        if (window.windowClassName && (window.state === WindowState.Floating || window.state === WindowState.Tiled)) {
+            this.setRememberedState(window, window.state);
+        }
+        this.windows.remove(window);'''
+    if t_rem in js:
+        js = js.replace(t_rem, r_rem)
+        js_changed = True
+
+    # K. toggleFloat: remember state
+    t_tf = '''    toggleFloat(window) {
+        if (WindowClass.isToggleableState(window.state)) {
+            if (window.isFloating)
+                window.state = window.previousState;
+            else
+                window.state = WindowState.Floating;
+        }
+    }'''
+    r_tf = '''    toggleFloat(window) {
+        if (WindowClass.isToggleableState(window.state)) {
+            if (window.isFloating) {
+                window.state = window.previousState;
+                this.setRememberedState(window, window.state);
+            }
+            else {
+                window.state = WindowState.Floating;
+                this.setRememberedState(window, WindowState.Floating);
+            }
+        }
+    }'''
+    if t_tf in js:
+        js = js.replace(t_tf, r_tf)
+        js_changed = True
+
+    # L. BinaryTreeLayout: dynamic adjust, ratio preservation, and clone fix
+    t_bt = '''class BinaryTreeLayout {
+    get description() {
+        return "BTree";
+    }
+    constructor(capacity) {
+        this.classID = BinaryTreeLayout.id;
+        this.capacity = capacity !== undefined ? capacity : null;
+        this.parts = new HalfSplitLayoutPart(new FillLayoutPart(), new FillLayoutPart());
+        this.parts.angle = 0;
+    }
+    apply(ctx, tileables, area, gap) {
+        tileables.forEach((tileable) => (tileable.state = WindowState.Tiled));
+        this.create_parts(tileables.length);
+        let rectangles = this.parts.apply(area, tileables, gap);
+        rectangles.forEach((geometry, i) => {
+            tileables[i].geometry = geometry;
+        });
+    }
+    create_parts(tiles_len) {
+        let head = this.get_head();
+        head.angle = 0;'''
+    r_bt = '''class BinaryTreeLayout {
+    get description() {
+        return "BTree";
+    }
+    constructor(capacity) {
+        this.classID = BinaryTreeLayout.id;
+        this.capacity = capacity !== undefined ? capacity : null;
+        this.parts = new HalfSplitLayoutPart(new FillLayoutPart(), new FillLayoutPart());
+        this.parts.angle = 0;
+        this.tiles_len = 0;
+    }
+    adjust(area, tiles, basis, delta, gap) {
+        this.parts.adjust(area, tiles, basis, delta, gap);
+    }
+    apply(ctx, tileables, area, gap) {
+        tileables.forEach((tileable) => (tileable.state = WindowState.Tiled));
+        if (this.tiles_len !== tileables.length) {
+            this.create_parts(tileables.length);
+            this.tiles_len = tileables.length;
+        }
+        let rectangles = this.parts.apply(area, tileables, gap);
+        rectangles.forEach((geometry, i) => {
+            tileables[i].geometry = geometry;
+        });
+    }
+    create_parts(tiles_len) {
+        const prevRatio = this.parts ? this.parts.ratio : 0.5;
+        let head = this.get_head();
+        head.angle = 0;
+        head.ratio = prevRatio;'''
+    if t_bt in js:
+        js = js.replace(t_bt, r_bt)
+        js_changed = True
+
+    t_btc = '''    clone() {
+        const other = new StackedLayout();
+        return other;
+    }
+    toString() {
+        return "BTreeLayout()";
+    }
+}'''
+    r_btc = '''    clone() {
+        const other = new BinaryTreeLayout(this.capacity);
+        other.parts = this.parts;
+        other.tiles_len = this.tiles_len;
+        return other;
+    }
+    toString() {
+        return "BTreeLayout()";
+    }
+}'''
+    if t_btc in js:
+        js = js.replace(t_btc, r_btc)
+        js_changed = True
+
+    if js_changed:
+        with open(js_path, "w", encoding="utf-8") as f:
+            f.write(js)
+
+    if qml_changed or js_changed:
+        print("    ✓ Patched Krohnkite for Hyprland-like dynamic resizing & state persistence")
+PYEOF
 fi
 
 # ------------------------------------------------------------------------------
@@ -655,6 +1128,8 @@ kwinrc.set("Plugins", "zoomEnabled", "false")
 
 if not kwinrc.has_section("Script-krohnkite"):
     kwinrc.add_section("Script-krohnkite")
+kwinrc.set("Script-krohnkite", "adjustLayout", "true")
+kwinrc.set("Script-krohnkite", "adjustLayoutLive", "true")
 kwinrc.set("Script-krohnkite", "monocleMaximize", "false")
 kwinrc.set("Script-krohnkite", "screenGapBetween", "10")
 kwinrc.set("Script-krohnkite", "screenGapBottom", "10")
@@ -804,6 +1279,8 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "krohnkiteEnabled" "true"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "hidecursorEnabled" "true"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "zoomEnabled" "false"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "adjustLayout" "true"
+    "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "adjustLayoutLive" "true"
     "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "monocleMaximize" "false"
     "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapBetween" "10"
     "$KWRITECMD" --file kwinrc --group "Script-krohnkite" --key "screenGapBottom" "10"
@@ -896,6 +1373,10 @@ try:
         k_s_iface = dbus.Interface(k_scripting, "org.kde.kwin.Scripting")
         if k_s_iface.isScriptLoaded("krohnkite"):
             k_s_iface.unloadScript("krohnkite")
+        krohnkite_qml = os.path.expanduser("~/.local/share/kwin/scripts/krohnkite/contents/ui/main.qml")
+        if os.path.exists(krohnkite_qml):
+            k_s_iface.loadDeclarativeScript(krohnkite_qml, "krohnkite", signature="ss")
+            k_s_iface.start()
     except Exception:
         pass
 
@@ -1170,6 +1651,7 @@ checks = [
     ("Desktop Switch Animation (Slide)", check_ini(kwinrc_path, "Plugins", "slideEnabled", "true")),
     ("Krohnkite Tiling Plugin", check_ini(kwinrc_path, "Plugins", "krohnkiteEnabled", "true")),
     ("Krohnkite Tiling Gaps (10px)", check_ini(kwinrc_path, "Script-krohnkite", "screenGapBetween", "10")),
+    ("Krohnkite Live Layout Adjustment", check_ini(kwinrc_path, "Script-krohnkite", "adjustLayoutLive", "true")),
     ("Krohnkite BSP Layout (BinaryTree)", check_ini(kwinrc_path, "Script-krohnkite", "binaryTreeLayoutOrder", "1")),
     ("Krohnkite Non-BSP Layouts Disabled", check_ini(kwinrc_path, "Script-krohnkite", "tileLayoutOrder", "0")),
     ("Status & Notifications Shortcut (Meta+A)", verify_shortcut("plasmashell", f"activate widget {t_id}" if t_id else "activate widget 7", 268435521)),
