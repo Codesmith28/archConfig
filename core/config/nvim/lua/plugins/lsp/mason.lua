@@ -26,9 +26,15 @@ return {
             if deps.has_cpp then
                 vim.list_extend(tools, {
                     "clangd",
-                    "clang-format",
                     "codelldb",
                 })
+                -- Only install clang-format via Mason if no system clang-format binary is found
+                local has_system_cf = vim.fn.executable("/usr/bin/clang-format") == 1
+                    or vim.fn.executable("/opt/homebrew/bin/clang-format") == 1
+                    or vim.fn.executable("/usr/local/bin/clang-format") == 1
+                if not has_system_cf then
+                    table.insert(tools, "clang-format")
+                end
             end
 
             -- Java

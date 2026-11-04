@@ -181,14 +181,6 @@ if [[ -n "$DEFAULT_NODE_VER" && -d "$NVM_DIR/versions/node" ]]; then
 fi
 
 
-# ========== Bun ==========
-if [ -d "$HOME/.bun" ]; then
-    export BUN_INSTALL="$HOME/.bun"
-    [ -d "$BUN_INSTALL/bin" ] && export PATH="$BUN_INSTALL/bin:$PATH"
-    if [ -s "$HOME/.bun/_bun" ]; then
-        command -v zsh-defer >/dev/null 2>&1 && zsh-defer source "$HOME/.bun/_bun" || source "$HOME/.bun/_bun"
-    fi
-fi
 
 
 # ========== Pyenv ==========
@@ -244,3 +236,4 @@ fi
 
 # Ensure ~/.local/bin is available in Zsh environment
 export PATH="$HOME/.local/bin:$PATH"
+

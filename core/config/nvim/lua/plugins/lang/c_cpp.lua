@@ -58,6 +58,70 @@ local function sync_clang_format(buf)
     end
 end
 
+if deps.has_cpp then
+    local group = vim.api.nvim_create_augroup("ClangFormatSync", { clear = true })
+
+    -- Format C/C++ buffers on open with nearest .clang-format and sync indent
+    vim.api.nvim_create_autocmd("BufReadPost", {
+        group = group,
+        pattern = { "*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp", "*.cu" },
+        callback = function(args)
+            pcall(function()
+                require("conform").format({ bufnr = args.buf }, function()
+                    sync_clang_format(args.buf)
+                end)
+            end)
+            sync_clang_format(args.buf)
+        end,
+    })
+
+    -- Dynamically sync indent on buffer focus / filetype
+    vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "FocusGained" }, {
+        group = group,
+        pattern = {
+            "c",
+            "cpp",
+            "objc",
+            "objcpp",
+            "cuda",
+            "*.c",
+            "*.cpp",
+            "*.cc",
+            "*.cxx",
+            "*.h",
+            "*.hpp",
+            "*.cu",
+        },
+        callback = function(args)
+            sync_clang_format(args.buf)
+        end,
+    })
+
+    -- Sync indent whenever Conform finishes formatting
+    vim.api.nvim_create_autocmd("User", {
+        group = group,
+        pattern = "ConformFormatPost",
+        callback = function(args)
+            local buf = args.data and args.data.bufnr or vim.api.nvim_get_current_buf()
+            sync_clang_format(buf)
+        end,
+    })
+
+    -- Invalidate cache and update all buffers when .clang-format is saved
+    vim.api.nvim_create_autocmd("BufWritePost", {
+        group = group,
+        pattern = { "*/.clang-format", ".clang-format" },
+        callback = function()
+            cf_cache = {}
+            for _, b in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_loaded(b) then
+                    sync_clang_format(b)
+                end
+            end
+        end,
+    })
+end
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -78,76 +142,5 @@ return {
                 },
             },
         },
-    },
-    {
-        "stevearc/conform.nvim",
-        optional = true,
-        init = function()
-            if not deps.has_cpp then
-                return
-            end
-
-            local group = vim.api.nvim_create_augroup("ClangFormatSync", { clear = true })
-
-            -- Format C/C++ buffers on open with nearest .clang-format and sync indent
-            vim.api.nvim_create_autocmd("BufReadPost", {
-                group = group,
-                pattern = { "*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp", "*.cu" },
-                callback = function(args)
-                    pcall(function()
-                        require("conform").format({ bufnr = args.buf }, function()
-                            sync_clang_format(args.buf)
-                        end)
-                    end)
-                    sync_clang_format(args.buf)
-                end,
-            })
-
-            -- Dynamically sync indent on buffer focus / filetype
-            vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "FocusGained" }, {
-                group = group,
-                pattern = {
-                    "c",
-                    "cpp",
-                    "objc",
-                    "objcpp",
-                    "cuda",
-                    "*.c",
-                    "*.cpp",
-                    "*.cc",
-                    "*.cxx",
-                    "*.h",
-                    "*.hpp",
-                    "*.cu",
-                },
-                callback = function(args)
-                    sync_clang_format(args.buf)
-                end,
-            })
-
-            -- Sync indent whenever Conform finishes formatting
-            vim.api.nvim_create_autocmd("User", {
-                group = group,
-                pattern = "ConformFormatPost",
-                callback = function(args)
-                    local buf = args.data and args.data.bufnr or vim.api.nvim_get_current_buf()
-                    sync_clang_format(buf)
-                end,
-            })
-
-            -- Invalidate cache and update all buffers when .clang-format is saved
-            vim.api.nvim_create_autocmd("BufWritePost", {
-                group = group,
-                pattern = { "*/.clang-format", ".clang-format" },
-                callback = function()
-                    cf_cache = {}
-                    for _, b in ipairs(vim.api.nvim_list_bufs()) do
-                        if vim.api.nvim_buf_is_loaded(b) then
-                            sync_clang_format(b)
-                        end
-                    end
-                end,
-            })
-        end,
     },
 }

@@ -83,22 +83,9 @@ if [ -f "$HOME/.bashrc.local" ]; then
     . "$HOME/.bashrc.local"
 fi
 
-# bun (if installed)
-if [ -d "$HOME/.bun" ]; then
-    export BUN_INSTALL="$HOME/.bun"
-    [ -d "$BUN_INSTALL/bin" ] && export PATH="$BUN_INSTALL/bin:$PATH"
-fi
-
 # Rust / Cargo environment (if installed)
 if [ -f "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
-fi
-
-# NVIDIA CUDA Toolkit (if installed)
-if [ -d "/usr/local/cuda" ]; then
-    export CUDA_HOME=/usr/local/cuda
-    export PATH="$CUDA_HOME/bin:$PATH"
-    export LD_LIBRARY_PATH="$CUDA_HOME/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
 
 

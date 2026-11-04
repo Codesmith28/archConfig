@@ -29,6 +29,7 @@ _ldpath_prepend() {
 _path_prepend "$HOME/bin"
 _path_prepend "$HOME/.local/bin"
 _path_prepend "$HOME/.fzf/bin"
+_path_prepend "$HOME/.bun/bin"
 _path_prepend "/opt/nvim-linux-x86_64/bin"
 _path_prepend "/opt/homebrew/bin"
 _path_prepend "/opt/homebrew/sbin"
@@ -47,6 +48,7 @@ fi
 # ------------------------------------------------------------------------------
 # 3. Language & Tool Environments
 # ------------------------------------------------------------------------------
+[ -d "$HOME/.bun" ] && export BUN_INSTALL="$HOME/.bun"
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"

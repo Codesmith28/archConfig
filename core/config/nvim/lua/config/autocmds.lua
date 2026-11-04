@@ -14,6 +14,14 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
     end,
 })
 
+-- Auto-reload buffer if file was changed externally and not modified locally
+vim.api.nvim_create_autocmd("FileChangedShell", {
+    group = user_checktime_group,
+    callback = function()
+        vim.v.fcs_choice = "reload"
+    end,
+})
+
 -- Notification when a file changes on disk
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
     group = user_checktime_group,

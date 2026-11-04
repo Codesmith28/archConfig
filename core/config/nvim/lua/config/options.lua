@@ -47,7 +47,24 @@ o.ignorecase = true
 o.smartcase = true
 
 -- Global Behavior Flags
-vim.g.autoformat = false
+vim.g.autoformat = true
+
+-- Swap file handling across multiple windows:
+-- Silently open for editing without blocking prompt, then notify non-intrusively
+vim.opt.shortmess:append("A")
+vim.api.nvim_create_autocmd("SwapExists", {
+    group = vim.api.nvim_create_augroup("user_swap_handling", { clear = true }),
+    callback = function(args)
+        vim.v.swapchoice = "e"
+        vim.schedule(function()
+            vim.notify(
+                string.format("Swap file found for '%s' (opened anyway).", vim.fn.fnamemodify(args.file, ":t")),
+                vim.log.levels.WARN,
+                { title = "Swap File" }
+            )
+        end)
+    end,
+})
 
 -- UI Rendering and View Scrolloffs
 o.termguicolors = true
@@ -97,20 +114,4 @@ local java_home = resolve_java_home()
 if java_home then
     vim.env.JAVA_HOME = java_home
     vim.env.PATH = java_home .. "/bin:" .. vim.env.PATH
-end
-
--- Silently drop notifications for missing language dependencies / executables
-local orig_notify = vim.notify
-vim.notify = function(msg, level, opts)
-    if type(msg) == "string" then
-        if
-            msg:find("rust%-analyzer.*not found")
-            or msg:find("Could not find executable.*in PATH")
-            or msg:find("spawn: go failed")
-            or msg:find("not found in PATH")
-        then
-            return
-        end
-    end
-    return orig_notify(msg, level, opts)
 end
