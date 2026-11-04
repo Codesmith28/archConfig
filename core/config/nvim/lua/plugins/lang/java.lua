@@ -31,7 +31,11 @@ return {
                         local candidates = {
                             {
                                 name = "JavaSE-21",
-                                paths = { "/usr/lib/jvm/java-21-openjdk-amd64", "/usr/lib/jvm/java-21-openjdk" },
+                                paths = {
+                                    "/usr/lib/jvm/java-21-openjdk-amd64",
+                                    "/usr/lib/jvm/java-21-openjdk",
+                                    "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
+                                },
                             },
                             {
                                 name = "JavaSE-17",
@@ -39,7 +43,11 @@ return {
                             },
                             {
                                 name = "JavaSE-11",
-                                paths = { "/usr/lib/jvm/java-11-openjdk-amd64", "/usr/lib/jvm/java-11-openjdk" },
+                                paths = {
+                                    "/usr/lib/jvm/java-11-openjdk-amd64",
+                                    "/usr/lib/jvm/java-11-openjdk",
+                                    "/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home",
+                                },
                             },
                         }
                         for _, item in ipairs(candidates) do
