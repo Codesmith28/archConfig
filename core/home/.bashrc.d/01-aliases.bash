@@ -11,10 +11,10 @@ if command -v dircolors >/dev/null 2>&1; then
 fi
 
 if command -v eza >/dev/null 2>&1; then
-    alias ls='eza --icons'
-    alias ll='eza -l --icons'
-    alias la='eza -a --icons'
-    alias lla='eza -al --icons'
+    alias ls='eza --icons=always'
+    alias ll='eza -l --icons=always'
+    alias la='eza -a --icons=always'
+    alias lla='eza -al --icons=always'
 else
     alias ls='ls --color=auto'
     alias ll='ls -alF'

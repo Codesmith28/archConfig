@@ -6,7 +6,7 @@
 if command -v eza >/dev/null 2>&1; then
     function lt() {
         local level=${1:-1}
-        eza -a --tree --level="$level" --icons
+        eza -a --tree --level="$level" --icons=always
     }
 fi
 
