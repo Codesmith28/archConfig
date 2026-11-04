@@ -61,16 +61,11 @@ end
 if deps.has_cpp then
     local group = vim.api.nvim_create_augroup("ClangFormatSync", { clear = true })
 
-    -- Format C/C++ buffers on open with nearest .clang-format and sync indent
+    -- Sync C/C++ buffer indent with nearest .clang-format on open
     vim.api.nvim_create_autocmd("BufReadPost", {
         group = group,
         pattern = { "*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp", "*.cu" },
         callback = function(args)
-            pcall(function()
-                require("conform").format({ bufnr = args.buf }, function()
-                    sync_clang_format(args.buf)
-                end)
-            end)
             sync_clang_format(args.buf)
         end,
     })

@@ -11,6 +11,38 @@ map("i", "kj", "<Esc>", { desc = "Escape insert mode" })
 map("n", "<C-a>", "ggVG", { desc = "Select all" })
 map("n", "<C-c>", 'mzggVG"+y`z', { desc = "Copy all to clipboard" })
 
+-- Fast, non-blocking save that can be spammed without delay
+-- Skips formatting and disk writes if buffer is unmodified; prevents prompt freezes across multiple nvim instances
+local function fast_save()
+    local buf = vim.api.nvim_get_current_buf()
+    local name = vim.api.nvim_buf_get_name(buf)
+
+    -- If buffer is not modified and already exists on disk, nothing to write
+    if not vim.bo[buf].modified and name ~= "" then
+        pcall(vim.cmd, "checktime")
+        return
+    end
+
+    -- If file has a name, write with 'silent! write!' to prevent modal conflict prompts if modified externally
+    if name ~= "" then
+        vim.cmd("silent! write!")
+    else
+        vim.cmd("write")
+    end
+end
+
+map({ "n", "v", "x", "s" }, "<C-s>", function()
+    fast_save()
+    if vim.fn.mode() ~= "n" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+    end
+end, { desc = "Save File (Fast & Safe)" })
+
+map("i", "<C-s>", function()
+    fast_save()
+    vim.cmd("stopinsert")
+end, { desc = "Save File (Fast & Safe)" })
+
 -- Harpoon 2 mappings are managed in lua/plugins/editor/harpoon.lua (<leader>ha, <leader>hh, <leader>h1-h4)
 
 -- Move lines in visual mode

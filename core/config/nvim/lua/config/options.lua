@@ -49,7 +49,12 @@ o.smartcase = true
 -- Global Behavior Flags
 vim.g.autoformat = true
 
--- Swap file handling across multiple windows:
+-- Disable swap files to avoid conflicts, file locks, and freezes when opening
+-- the same file across multiple Neovim instances. Persistent undo ('undofile') is
+-- already enabled by LazyVim for crash recovery.
+o.swapfile = false
+
+-- Fallback swap handling for any legacy swap files on disk:
 -- Silently open for editing without blocking prompt, then notify non-intrusively
 vim.opt.shortmess:append("A")
 vim.api.nvim_create_autocmd("SwapExists", {
