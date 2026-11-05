@@ -3,13 +3,13 @@
 # Fontconfig Setup & Global Override Script
 # ==============================================================================
 # Configures system-wide (/etc/fonts/local.conf) and user-space (~/.config/fontconfig)
-# font preferences and overrides. Uses sudo by default to keep system-wide
-# and user-space configs synchronized.
+# font preferences and overrides. Symlinks /etc/fonts/local.conf to fonts.conf
+# so changes in fonts.conf take effect immediately across system & user queries.
 #
 # Usage:
-#   ./setup.sh          # Synchronizes system-wide & user-space (auto-elevates via sudo)
+#   ./setup.sh          # Symlinks system-wide & user-space (auto-elevates via sudo)
 #   ./setup.sh --user   # User-space only (~/.config/fontconfig, no sudo required)
-#   ./setup.sh --system # Explicit system-wide and user-space sync (default)
+#   ./setup.sh --system # Explicit system-wide symlink and user-space sync (default)
 # ==============================================================================
 set -euo pipefail
 
@@ -71,11 +71,14 @@ echo "=================================================="
 # 2. System-wide configuration (/etc/fonts/local.conf)
 if [ "$APPLY_SYSTEM" = true ]; then
     echo ""
-    echo "==> [1/3] Installing system-wide configuration (/etc/fonts/local.conf)..."
+    echo "==> [1/3] Ensuring system-wide configuration symlink (/etc/fonts/local.conf)..."
     mkdir -p /etc/fonts
-    cp "$FONTS_CONF" /etc/fonts/local.conf
-    chmod 644 /etc/fonts/local.conf
-    echo "    ✓ System-level configuration installed to /etc/fonts/local.conf"
+    if [ -L /etc/fonts/local.conf ] && [ "$(readlink -f /etc/fonts/local.conf)" = "$FONTS_CONF" ]; then
+        echo "    ✓ Symlink verified: /etc/fonts/local.conf -> $FONTS_CONF"
+    else
+        ln -sfn "$FONTS_CONF" /etc/fonts/local.conf
+        echo "    ✓ Created symlink: /etc/fonts/local.conf -> $FONTS_CONF"
+    fi
 
     echo ""
     echo "==> [2/3] Ensuring user-level fontconfig symlink..."
@@ -150,11 +153,13 @@ declare -a test_mono_fonts=(
     "Courier New"
     "TeX Gyre Cursor"
 )
+target_mono="$(match_font "monospace" | sed -n 's/.*: "\([^"]*\)".*/\1/p')"
+target_mono="${target_mono:-Hack Nerd Font}"
 all_mono_ok=true
 for t in "${test_mono_fonts[@]}"; do
     res="$(match_font "$t")"
     printf "    %-20s -> %s\n" "$t" "$res"
-    if [[ ! "$res" =~ JetBrainsMono ]]; then
+    if [[ ! "$res" =~ "$target_mono" ]]; then
         all_mono_ok=false
     fi
 done
@@ -174,7 +179,7 @@ done
 
 echo ""
 if [ "$all_mono_ok" = true ]; then
-    echo "✨ Configuration complete! Monospace queries resolve to JetBrainsMono Nerd Font."
+    echo "✨ Configuration complete! Monospace queries resolve to $target_mono."
 else
     echo "⚠️  Note: Some monospace queries resolved to fallback fonts. Check installed fonts in ~/.local/share/fonts."
 fi
