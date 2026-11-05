@@ -212,6 +212,10 @@ if [[ -f "$SCRIPT_DIR/toggle-dnd" ]]; then
     install -m 755 "$SCRIPT_DIR/toggle-dnd" "$HOME/.local/bin/toggle-dnd"
 fi
 
+if [[ -f "$SCRIPT_DIR/toggle-darkmode" ]]; then
+    install -m 755 "$SCRIPT_DIR/toggle-darkmode" "$HOME/.local/bin/toggle-darkmode"
+fi
+
 # ------------------------------------------------------------------------------
 # 4b. Ensure Krohnkite Tiling Extension is Installed & Up-to-Date
 # ------------------------------------------------------------------------------
@@ -811,6 +815,10 @@ def parse_shortcuts(shortcut_str):
 tray_id = None
 notif_id = None
 clock_id = None
+wifi_id = None
+bt_id = None
+vol_id = None
+disp_id = None
 
 if os.path.exists(appletsrc_path):
     import re
@@ -830,6 +838,16 @@ if os.path.exists(appletsrc_path):
                         notif_id = aid
                     elif plugin == "org.kde.plasma.digitalclock":
                         clock_id = aid
+                    elif plugin == "org.kde.plasma.networkmanagement":
+                        wifi_id = aid
+                    elif plugin == "org.kde.plasma.bluetooth":
+                        bt_id = aid
+                    elif plugin == "org.kde.plasma.volume":
+                        vol_id = aid
+                    elif plugin == "org.kde.plasma.brightness":
+                        disp_id = aid
+                    elif plugin == "org.kde.kscreen" and not disp_id:
+                        disp_id = aid
     except Exception:
         pass
 
@@ -973,6 +991,14 @@ if notif_id:
     CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {notif_id}"] = "Meta+Shift+N"
 if clock_id:
     CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {clock_id}"] = "Meta+N"
+if wifi_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {wifi_id}"] = "Meta+Alt+W"
+if bt_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {bt_id}"] = "Meta+Alt+B"
+if vol_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {vol_id}"] = "Meta+Alt+V; Meta+Shift+V"
+if disp_id:
+    CANONICAL_SHORTCUTS["plasmashell"][f"activate widget {disp_id}"] = "Meta+Alt+D; Meta+Shift+D"
 
 # 2. Try applying live shortcuts via D-Bus (KGlobalAccel in Plasma 6 / 5)
 try:
@@ -996,11 +1022,21 @@ try:
             if comp in comp_actions and act_name in comp_actions[comp]:
                 action_id = comp_actions[comp][act_name]
             else:
+                act_desc = act_name
+                if "activate widget" in act_name:
+                    w_num = act_name.split()[-1]
+                    if w_num == str(tray_id): act_desc = "Activate System Tray Widget"
+                    elif w_num == str(notif_id): act_desc = "Activate Notifications Widget"
+                    elif w_num == str(clock_id): act_desc = "Activate Digital Clock Widget"
+                    elif w_num == str(wifi_id): act_desc = "Activate Networks Widget"
+                    elif w_num == str(bt_id): act_desc = "Activate Bluetooth Widget"
+                    elif w_num == str(vol_id): act_desc = "Activate Audio Volume Widget"
+                    elif w_num == str(disp_id): act_desc = "Activate Brightness & Display Widget"
                 action_id = [
                     dbus.String(comp),
                     dbus.String(act_name),
                     dbus.String(comp),
-                    dbus.String(act_name)
+                    dbus.String(act_desc)
                 ]
                 try:
                     iface.doRegister(action_id)
@@ -1093,7 +1129,33 @@ if kdeglobals.has_section("StandardShortcuts") and kdeglobals.has_option("Standa
 
 write_ini(kglobal, kglobal_path)
 write_ini(kdeglobals, kdeglobals_path)
-print("    ✓ kglobalshortcutsrc and kdeglobals persistent config files synchronized")
+
+if os.path.exists(appletsrc_path):
+    try:
+        app_cfg = read_ini(appletsrc_path)
+        w_scs = {
+            tray_id: "Meta+A",
+            notif_id: "Meta+Shift+N",
+            clock_id: "Meta+N",
+            wifi_id: "Meta+Alt+W",
+            bt_id: "Meta+Alt+B",
+            vol_id: "Meta+Alt+V",
+            disp_id: "Meta+Alt+D",
+        }
+        for aid, sc in w_scs.items():
+            if not aid:
+                continue
+            for s_name in app_cfg.sections():
+                if s_name.endswith(f"Applets][{aid}]") or s_name.endswith(f"Applets][{aid}"):
+                    sc_s = f"{s_name}][Shortcuts"
+                    if not app_cfg.has_section(sc_s):
+                        app_cfg.add_section(sc_s)
+                    app_cfg.set(sc_s, "global", sc)
+        write_ini(app_cfg, appletsrc_path)
+    except Exception:
+        pass
+
+print("    ✓ kglobalshortcutsrc, kdeglobals, and plasma-org.kde.plasma.desktop-appletsrc persistent configs synchronized")
 
 # 4. Configure KWin (Window Titlebar Buttons, Virtual Desktops, Modifier-Only Super & Magic Lamp)
 kwinrc = read_ini(kwinrc_path)
@@ -1404,7 +1466,7 @@ try:
     try:
         import os, configparser, re
         appletsrc_path = os.path.expanduser("~/.config/plasma-org.kde.plasma.desktop-appletsrc")
-        t_id, n_id, c_id = None, None, None
+        t_id, n_id, c_id, w_id, b_id, v_id, d_id = None, None, None, None, None, None, None
         if os.path.exists(appletsrc_path):
             cfg = configparser.RawConfigParser(strict=False, interpolation=None)
             cfg.optionxform = str
@@ -1415,12 +1477,14 @@ try:
                     nums = re.findall(r"Applets\]\[?(\d+)", sec)
                     if nums:
                         aid = nums[-1]
-                        if p == "org.kde.plasma.systemtray":
-                            t_id = aid
-                        elif p == "org.kde.plasma.notifications":
-                            n_id = aid
-                        elif p == "org.kde.plasma.digitalclock":
-                            c_id = aid
+                        if p == "org.kde.plasma.systemtray": t_id = aid
+                        elif p == "org.kde.plasma.notifications": n_id = aid
+                        elif p == "org.kde.plasma.digitalclock": c_id = aid
+                        elif p == "org.kde.plasma.networkmanagement": w_id = aid
+                        elif p == "org.kde.plasma.bluetooth": b_id = aid
+                        elif p == "org.kde.plasma.volume": v_id = aid
+                        elif p == "org.kde.plasma.brightness": d_id = aid
+                        elif p == "org.kde.kscreen" and not d_id: d_id = aid
         plasma = bus.get_object("org.kde.plasmashell", "/PlasmaShell")
         p_iface = dbus.Interface(plasma, "org.kde.PlasmaShell")
         js_code = f"""
@@ -1430,10 +1494,21 @@ try:
                 var tray = p.widgetById({repr(t_id)});
                 if (tray) {{
                     tray.globalShortcut = 'Meta+A';
-                    if ({repr(n_id)}) {{
-                        tray.currentConfigGroup = ['Applets', String({repr(n_id)}), 'Shortcuts'];
-                        tray.writeConfig('global', 'Meta+Shift+N');
-                        tray.reloadConfig();
+                    var subItems = [
+                        [{repr(n_id)}, 'Meta+Shift+N'],
+                        [{repr(w_id)}, 'Meta+Alt+W'],
+                        [{repr(b_id)}, 'Meta+Alt+B'],
+                        [{repr(v_id)}, 'Meta+Alt+V'],
+                        [{repr(d_id)}, 'Meta+Alt+D']
+                    ];
+                    for (var j = 0; j < subItems.length; j++) {{
+                        var sid = subItems[j][0];
+                        var ssc = subItems[j][1];
+                        if (sid) {{
+                            tray.currentConfigGroup = ['Applets', String(sid), 'Shortcuts'];
+                            tray.writeConfig('global', ssc);
+                            tray.reloadConfig();
+                        }}
                     }}
                 }}
             }}
@@ -1492,7 +1567,7 @@ if [[ -x "$SCRIPT_DIR/taskbar/taskbar.sh" ]]; then
     if [[ -z "$CHOSEN_PRESET" || "$CHOSEN_PRESET" =~ ^-- ]]; then
         CHOSEN_PRESET=$("$SCRIPT_DIR/taskbar/taskbar.sh" active 2>/dev/null || true)
     fi
-    CHOSEN_PRESET="${CHOSEN_PRESET:-floating-compact}"
+    CHOSEN_PRESET="${CHOSEN_PRESET:-dock-dodge}"
     log_info "Ensuring taskbar preset ($CHOSEN_PRESET) is applied..."
     "$SCRIPT_DIR/taskbar/taskbar.sh" apply "$CHOSEN_PRESET"
 fi
@@ -1527,7 +1602,7 @@ def check_ini(path, sec, key, expected_sub):
 
 # Attempt live D-Bus verification first
 live_shortcuts = {}
-t_id, n_id, c_id = None, None, None
+t_id, n_id, c_id, w_id, b_id, v_id, d_id = None, None, None, None, None, None, None
 if os.path.exists(appletsrc_path):
     import re
     try:
@@ -1546,6 +1621,16 @@ if os.path.exists(appletsrc_path):
                         n_id = aid
                     elif p == "org.kde.plasma.digitalclock":
                         c_id = aid
+                    elif p == "org.kde.plasma.networkmanagement":
+                        w_id = aid
+                    elif p == "org.kde.plasma.bluetooth":
+                        b_id = aid
+                    elif p == "org.kde.plasma.volume":
+                        v_id = aid
+                    elif p == "org.kde.plasma.brightness":
+                        d_id = aid
+                    elif p == "org.kde.kscreen" and not d_id:
+                        d_id = aid
     except Exception:
         pass
 
@@ -1598,7 +1683,7 @@ def verify_panel():
             cfg.read(plasmashellrc_path, encoding="utf-8")
             for sec in cfg.sections():
                 if "PlasmaViews][Panel" in sec:
-                    if cfg.has_option(sec, "thickness") and cfg.get(sec, "thickness") == "42":
+                    if cfg.has_option(sec, "thickness") and cfg.get(sec, "thickness") in ("42", "44"):
                         return True
                     if cfg.has_option(sec, "floating") and cfg.get(sec, "floating") == "1":
                         return True
@@ -1639,7 +1724,7 @@ checks = [
     ("Spectacle Region (Meta+Shift+A)", verify_shortcut("org.kde.spectacle.desktop", "RectangularRegionScreenShot", 301989953)),
     ("Spectacle Window (Meta+Shift+W)", verify_shortcut("org.kde.spectacle.desktop", "ActiveWindowScreenShot", 301989975)),
     ("Task Manager (All Workspaces)", verify_taskmanager()),
-    ("Panel Configuration (42px Height)", verify_panel()),
+    ("Dock Configuration (44px Height)", verify_panel()),
     ("Taskbar Preset Match", check_taskbar_preset()),
     ("Super Key Modifier (kwinrc ModifierOnlyShortcuts)", check_ini(kwinrc_path, "ModifierOnlyShortcuts", "Meta", "activateLauncherMenu")),
     ("Titlebar Buttons (Minimize, Maximize, Close)", check_ini(kwinrc_path, "org.kde.kdecoration2", "ButtonsOnRight", "IAX")),
@@ -1657,6 +1742,10 @@ checks = [
     ("Status & Notifications Shortcut (Meta+A)", verify_shortcut("plasmashell", f"activate widget {t_id}" if t_id else "activate widget 7", 268435521)),
     ("Calendar Panel Shortcut (Meta+N)", verify_shortcut("plasmashell", f"activate widget {c_id}" if c_id else "activate widget 22", 268435534)),
     ("Notifications Panel Shortcut (Meta+Shift+N)", verify_shortcut("plasmashell", f"activate widget {n_id}" if n_id else "activate widget 18", 301989966)),
+    ("WiFi Dock Shortcut (Meta+Alt+W)", verify_shortcut("plasmashell", f"activate widget {w_id}" if w_id else "activate widget 17", 402653271)),
+    ("Bluetooth Dock Shortcut (Meta+Alt+B)", verify_shortcut("plasmashell", f"activate widget {b_id}" if b_id else "activate widget 24", 402653250)),
+    ("Volume Dock Shortcut (Meta+Alt+V / Meta+Shift+V)", verify_shortcut("plasmashell", f"activate widget {v_id}" if v_id else "activate widget 20", [402653270, 301989974])),
+    ("Display & Brightness Shortcut (Meta+Alt+D / Meta+Shift+D)", verify_shortcut("plasmashell", f"activate widget {d_id}" if d_id else "activate widget 25", [402653252, 301989956])),
     ("Power Profile Switch Shortcut (Launch 4)", verify_shortcut("org_kde_powerdevil", "powerProfile", 16777382)),
     ("Toggle Do Not Disturb Shortcut (Launch 1)", verify_shortcut("plasmashell", "toggle do not disturb", 16777379)),
     ("Keyboard Rate (250ms / 40Hz)", check_ini(kcminputrc_path, "Keyboard", "RepeatDelay", "250")),
@@ -1665,6 +1754,7 @@ checks = [
     ("Default Browser Executable", os.path.exists(os.path.join(home, ".local/bin/default-browser"))),
     ("Power Profile CLI Helper", os.path.exists(os.path.join(home, ".local/bin/powerprofile"))),
     ("Toggle DnD CLI Helper", os.path.exists(os.path.join(home, ".local/bin/toggle-dnd"))),
+    ("Toggle Dark Mode CLI Helper", os.path.exists(os.path.join(home, ".local/bin/toggle-darkmode"))),
     ("Screen Zoom Disabled", check_ini(kwinrc_path, "Plugins", "zoomEnabled", "false")),
     ("PowerDevil libddcutil override (no I2C stutter)", os.path.exists(os.path.join(home, ".config/systemd/user/plasma-powerdevil.service.d/override.conf"))),
     ("UI Fonts (Sans Serif 11)", check_ini(kdeglobals_path, "General", "font", "Sans Serif")),

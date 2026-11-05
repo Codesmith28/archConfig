@@ -1,0 +1,15 @@
+{
+  "id": "dock-dodge",
+  "name": "Dock (Dodge Windows)",
+  "description": "Centered 44px translucent floating dock, dodges maximized windows, multi-workspace tasks",
+  "layoutType": "single",
+  "location": "bottom",
+  "height": 44,
+  "floating": true,
+  "lengthMode": "fill",
+  "hiding": "dodgewindows",
+  "opacity": "translucent",
+  "alignment": "center",
+  "showOnlyCurrentDesktop": false,
+  "showOnlyCurrentActivity": true
+}

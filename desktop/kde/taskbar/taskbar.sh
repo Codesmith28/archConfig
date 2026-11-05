@@ -45,12 +45,8 @@ Usage:
   $(basename "$0") help                     Show this help message
 
 Presets:
-  floating-compact   Modern 42px floating dock panel, adaptive opacity (Default)
-  gnome              GNOME Two-Bar: Top status bar + Bottom launcher & tasks dock
-  dock-mac           macOS style centered 42px floating dock, dodges windows
-  classic-windows    Non-floating 42px edge-to-edge taskbar, active workspace apps
-  minimal-autohide   Slim 42px floating autohide panel for maximal screen estate
-  top-bar            Clean 42px top status bar, edge-to-edge
+  dock-dodge         Centered 44px translucent floating dock, dodges windows (Default)
+  dock-always        Centered 44px translucent floating dock, always visible
 EOF
 }
 
@@ -208,10 +204,19 @@ def load_preset(name_or_path):
         return None
     import re
     name_or_path = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', str(name_or_path)).strip()
-    candidate_path = name_or_path
+    aliases = {
+        "dock": "dock-dodge",
+        "dodge": "dock-dodge",
+        "floating-compact": "dock-dodge",
+        "dock-mac": "dock-dodge",
+        "always": "dock-always",
+        "dock-always-shown": "dock-always"
+    }
+    resolved_name = aliases.get(name_or_path.lower(), name_or_path)
+    candidate_path = resolved_name
     if not os.path.exists(candidate_path):
         if not candidate_path.endswith(".json"):
-            candidate_path = os.path.join(presets_dir, f"{name_or_path}.json")
+            candidate_path = os.path.join(presets_dir, f"{resolved_name}.json")
     if os.path.exists(candidate_path):
         try:
             with open(candidate_path, "r", encoding="utf-8") as f:
@@ -281,11 +286,12 @@ def write_ini(cfg, path):
 
 def persist_preset_to_disk(preset):
     layout_type = preset.get("layoutType", "single")
-    bottom_height = str(preset.get("height", 42) if preset.get("location") == "bottom" or layout_type == "gnome-split" else 42)
+    bottom_height = str(preset.get("height", 44) if preset.get("location") == "bottom" or layout_type == "gnome-split" else 44)
     top_height = str(preset.get("topHeight", 30) if layout_type == "gnome-split" else (preset.get("height", 30) if preset.get("location") == "top" else 30))
 
     length_mode_map = {"fill": "0", "fit": "1", "custom": "2"}
     hiding_map = {"none": "0", "autohide": "1", "dodgewindows": "2", "windowscover": "2", "windowsbelow": "3"}
+    opacity_map = {"default": "0", "opaque": "1", "translucent": "2", "adaptive": "3"}
 
     top_panel_ids = set()
     bottom_panel_ids = set()
@@ -326,6 +332,7 @@ def persist_preset_to_disk(preset):
             ps_cfg.set(sec, "floating", "0" if is_top else ("1" if preset.get("floating", True) else "0"))
             ps_cfg.set(sec, "panelLengthMode", "0" if is_top else length_mode_map.get(preset.get("lengthMode", "fill"), "0"))
             ps_cfg.set(sec, "panelVisibility", "0" if is_top else hiding_map.get(preset.get("hiding", "none"), "0"))
+            ps_cfg.set(sec, "panelOpacity", opacity_map.get(preset.get("opacity", "translucent"), "2"))
         if sec.startswith("PlasmaViews][Panel ") and "Defaults" in sec:
             pid = sec.split("Panel ")[-1].split("]")[0].strip()
             is_top = pid in top_panel_ids or (layout_type != "gnome-split" and preset.get("location") == "top")
@@ -378,13 +385,13 @@ elif action == "current":
     sys.exit(0)
 
 elif action == "apply":
-    preset_name = target_preset if target_preset else "floating-compact"
+    preset_name = target_preset if target_preset else "dock-dodge"
     preset = load_preset(preset_name)
     if not preset:
         print(f"  \033[0;31m[ERR]\033[0m Preset '{preset_name}' not found in {presets_dir}")
         sys.exit(1)
 
-    print(f"  \033[0;34m[INFO]\033[0m Applying taskbar preset: '\033[1m{preset.get('name', preset_name)}\033[0m' (Adaptive)...")
+    print(f"  \033[0;34m[INFO]\033[0m Applying taskbar preset: '\033[1m{preset.get('name', preset_name)}\033[0m'...")
 
     layout_type = preset.get("layoutType", "single")
 
@@ -452,10 +459,11 @@ print("applied-gnome");
     else:
         # Single panel layout: clean up extra panels and restore standard full widgets
         loc = preset.get("location", "bottom")
-        target_height = int(preset.get("height", 30 if loc == "top" else 42))
+        target_height = int(preset.get("height", 44))
         fl = str(preset.get("floating", True)).lower()
         lm = preset.get("lengthMode", "fill")
         hd = preset.get("hiding", "none")
+        op = preset.get("opacity", "translucent")
         align = preset.get("alignment", "center")
         cd = str(preset.get("showOnlyCurrentDesktop", False)).lower()
         ca = str(preset.get("showOnlyCurrentActivity", True)).lower()
@@ -471,7 +479,7 @@ for (let i = 1; i < pList.length; i++) {{
 
 mainP.location = "{loc}";
 mainP.height = {target_height};
-mainP.opacity = "adaptive";
+mainP.opacity = "{op}";
 mainP.floating = {fl};
 mainP.lengthMode = "{lm}";
 mainP.hiding = "{hd}";
@@ -485,8 +493,14 @@ for (let w of mainP.widgets()) {{
         w.writeConfig("showOnlyCurrentDesktop", {cd});
         w.writeConfig("showOnlyCurrentActivity", {ca});
     }}
+    if (w.type.indexOf("kicker") !== -1) {{
+        w.currentConfigGroup = ["General"];
+        w.writeConfig("icon", "start-here");
+    }}
 }}
 
+if (!existing["org.kde.plasma.kicker"]) mainP.addWidget("org.kde.plasma.kicker");
+if (!existing["org.kde.plasma.icontasks"]) mainP.addWidget("org.kde.plasma.icontasks");
 if (!existing["org.kde.plasma.marginsseparator"]) mainP.addWidget("org.kde.plasma.marginsseparator");
 if (!existing["org.kde.plasma.systemtray"]) mainP.addWidget("org.kde.plasma.systemtray");
 if (!existing["org.kde.plasma.digitalclock"]) mainP.addWidget("org.kde.plasma.digitalclock");
@@ -507,7 +521,7 @@ print("applied-single");
     sys.exit(0)
 
 elif action == "verify":
-    preset_name = target_preset if target_preset else "floating-compact"
+    preset_name = target_preset if target_preset else "dock-dodge"
     preset = load_preset(preset_name)
     if not preset:
         print(f"  \033[0;31m[ERR]\033[0m Preset '{preset_name}' not found.")

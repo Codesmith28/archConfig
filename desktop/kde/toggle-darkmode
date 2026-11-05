@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# toggle-darkmode - KDE Plasma 6 & GTK Light/Dark Theme Switcher
+# ==============================================================================
+set -euo pipefail
+
+CURRENT_THEME=$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null || echo "BreezeDark")
+
+ACTION="${1:-toggle}"
+
+case "$ACTION" in
+    status|get|current)
+        if [[ "$CURRENT_THEME" =~ (Dark|dark) ]]; then
+            echo "Theme: Dark ($CURRENT_THEME)"
+        else
+            echo "Theme: Light ($CURRENT_THEME)"
+        fi
+        exit 0
+        ;;
+    light|Light)
+        TARGET="light"
+        ;;
+    dark|Dark)
+        TARGET="dark"
+        ;;
+    toggle|next|switch|*)
+        if [[ "$CURRENT_THEME" =~ (Dark|dark) ]]; then
+            TARGET="light"
+        else
+            TARGET="dark"
+        fi
+        ;;
+esac
+
+if [[ "$TARGET" == "dark" ]]; then
+    plasma-apply-colorscheme BreezeDark >/dev/null 2>&1 || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' >/dev/null 2>&1 || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' >/dev/null 2>&1 || true
+    if [[ -f "$HOME/.config/gtk-3.0/settings.ini" ]]; then
+        sed -i 's/gtk-theme-name=.*/gtk-theme-name=adw-gtk3-dark/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+        sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=true/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    fi
+    echo "Switched to Dark Mode (BreezeDark)"
+else
+    plasma-apply-colorscheme BreezeLight >/dev/null 2>&1 || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' >/dev/null 2>&1 || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' >/dev/null 2>&1 || true
+    if [[ -f "$HOME/.config/gtk-3.0/settings.ini" ]]; then
+        sed -i 's/gtk-theme-name=.*/gtk-theme-name=adw-gtk3/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+        sed -i 's/gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=false/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    fi
+    echo "Switched to Light Mode (BreezeLight)"
+fi
+
+dbus-send --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:0 int32:0 >/dev/null 2>&1 || true
