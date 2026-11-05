@@ -9,6 +9,9 @@ DRY_RUN=false
 TARGET_DISTRO=""
 TARGET_DE=""
 CUSTOM_BACKUP_DIR=""
+WAKATIME_KEY_ARG=""
+OPT_OUT_WAKATIME=false
+NON_INTERACTIVE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -29,15 +32,30 @@ while [[ $# -gt 0 ]]; do
             CUSTOM_BACKUP_DIR="$2"
             shift 2
             ;;
+        --wakatime-key)
+            WAKATIME_KEY_ARG="$2"
+            shift 2
+            ;;
+        --no-wakatime|--skip-wakatime)
+            OPT_OUT_WAKATIME=true
+            shift
+            ;;
+        --non-interactive)
+            NON_INTERACTIVE=true
+            shift
+            ;;
         -h|--help)
             echo "Usage: ./sync.sh [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --dry-run            Show what symlinks would be created without making changes"
-            echo "  --distro <name>      Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
-            echo "  --de <name>          Override desktop environment (gnome, kde, hyprland, none)"
-            echo "  --backup-dir <path>  Custom directory for backing up existing host configs (default: ~/.config/old_config_backups)"
-            echo "  -h, --help           Show this help message"
+            echo "  --dry-run              Show what symlinks would be created without making changes"
+            echo "  --distro <name>        Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
+            echo "  --de <name>            Override desktop environment (gnome, kde, hyprland, none)"
+            echo "  --backup-dir <path>    Custom directory for backing up existing host configs (default: ~/.config/old_config_backups)"
+            echo "  --wakatime-key <key>   Provide WakaTime API key directly"
+            echo "  --no-wakatime          Opt out of WakaTime (do not configure or prompt for API key)"
+            echo "  --non-interactive      Run non-interactively without prompting"
+            echo "  -h, --help             Show this help message"
             exit 0
             ;;
         *)
@@ -234,6 +252,90 @@ if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ] && [ ! -f "$HOME/.gi
     fi
 fi
 
+# Manage WakaTime API key & Opt-out preference before ~/.wakatime.cfg symlink
+WAKATIME_LOCAL_CFG="$HOME/.wakatime.cfg.local"
+_existing_waka_key=""
+
+if [ -f "$WAKATIME_LOCAL_CFG" ]; then
+    _existing_waka_key="$(grep -E '^[[:space:]]*api_key[[:space:]]*=' "$WAKATIME_LOCAL_CFG" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]]*api_key[[:space:]]*=[[:space:]]*//' | tr -d ' "\r\n' || true)"
+fi
+if [ -z "$_existing_waka_key" ] && [ -f "$HOME/.wakatime.cfg" ] && [ ! -L "$HOME/.wakatime.cfg" ]; then
+    _existing_waka_key="$(grep -E '^[[:space:]]*api_key[[:space:]]*=' "$HOME/.wakatime.cfg" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]]*api_key[[:space:]]*=[[:space:]]*//' | tr -d ' "\r\n' || true)"
+fi
+
+FINAL_WAKA_KEY=""
+
+if [ "$OPT_OUT_WAKATIME" = true ]; then
+    FINAL_WAKA_KEY=""
+elif [ -n "$WAKATIME_KEY_ARG" ]; then
+    FINAL_WAKA_KEY="$(echo "$WAKATIME_KEY_ARG" | tr -d ' "\r\n')"
+elif [ -n "$_existing_waka_key" ]; then
+    if [ "$NON_INTERACTIVE" = true ] || [ "$DRY_RUN" = true ] || [ ! -t 0 ]; then
+        FINAL_WAKA_KEY="$_existing_waka_key"
+    else
+        _masked_key="$(echo "$_existing_waka_key" | sed -E 's/^(.{8}).*(.{4})$/\1...\2/')"
+        echo ""
+        echo "  🕒 WakaTime Configuration:"
+        echo "     Existing API Key detected: $_masked_key"
+        read -rp "     Enter WakaTime API key [Press Enter to keep, or type 'opt-out'/'none' to disable]: " _user_input || true
+        _clean_input="$(echo "${_user_input:-}" | tr -d ' "\r\n')"
+        case "$_clean_input" in
+            opt-out|none|skip|disable|no)
+                echo "  ⏭️ Opted out of WakaTime."
+                FINAL_WAKA_KEY=""
+                ;;
+            "")
+                FINAL_WAKA_KEY="$_existing_waka_key"
+                ;;
+            *)
+                FINAL_WAKA_KEY="$_clean_input"
+                ;;
+        esac
+    fi
+else
+    # No existing key found
+    if [ "$NON_INTERACTIVE" = true ] || [ "$DRY_RUN" = true ] || [ ! -t 0 ]; then
+        echo "  ℹ️ No WakaTime API key configured. Opting out by default."
+        FINAL_WAKA_KEY=""
+    else
+        echo ""
+        echo "  🕒 WakaTime Configuration:"
+        echo "     Leaderboards & code stats require an API key from https://wakatime.com/api-key"
+        read -rp "     Enter your WakaTime API key (leave blank to opt out): " _user_input || true
+        _clean_input="$(echo "${_user_input:-}" | tr -d ' "\r\n')"
+        if [ -n "$_clean_input" ] && [ "$_clean_input" != "opt-out" ] && [ "$_clean_input" != "none" ] && [ "$_clean_input" != "skip" ]; then
+            FINAL_WAKA_KEY="$_clean_input"
+        else
+            echo "  ⏭️ No API key provided. Opting out of WakaTime."
+            FINAL_WAKA_KEY=""
+        fi
+    fi
+fi
+
+if [ "$DRY_RUN" = false ]; then
+    touch "$WAKATIME_LOCAL_CFG"
+    chmod 600 "$WAKATIME_LOCAL_CFG"
+    if [ -n "$FINAL_WAKA_KEY" ]; then
+        cat <<EOF > "$WAKATIME_LOCAL_CFG"
+[settings]
+api_key = $FINAL_WAKA_KEY
+EOF
+        echo "  📦 WakaTime API key configured in ~/.wakatime.cfg.local"
+    else
+        cat <<EOF > "$WAKATIME_LOCAL_CFG"
+[settings]
+# WakaTime opted out (no API key configured)
+EOF
+        echo "  ⏭️ WakaTime opted out (no API key stored in ~/.wakatime.cfg.local)"
+    fi
+else
+    if [ -n "$FINAL_WAKA_KEY" ]; then
+        echo "  (dry-run) Would configure WakaTime API key in ~/.wakatime.cfg.local"
+    else
+        echo "  (dry-run) Would opt out of WakaTime in ~/.wakatime.cfg.local"
+    fi
+fi
+
 for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
     [ -e "$item" ] || continue
     name="$(basename "$item")"
@@ -326,6 +428,10 @@ fi
 if { [ ! -f "$HOME/.ssh/id_rsa" ] && [ ! -f "$HOME/.ssh/id_ed25519" ]; } || [ ! -f "$HOME/.gitconfig.local" ]; then
     echo ""
     echo "  💡 Tip: Run ./core/scripts/setup_git.sh to configure Git identity and SSH keys."
+fi
+if [ -z "$FINAL_WAKA_KEY" ]; then
+    echo ""
+    echo "  💡 Tip: To enable WakaTime later, re-run ./sync.sh with your API key or configure ~/.wakatime.cfg.local."
 fi
 if ! command -v zoxide >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1 || ! command -v starship >/dev/null 2>&1 || ! command -v leaf >/dev/null 2>&1; then
     echo ""
