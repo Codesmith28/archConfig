@@ -432,7 +432,11 @@ show-barcode=
 show-on-mouse-pos=Meta+V
 switch to next activity=
 switch to previous activity=
-toggle do not disturb=Launch (1)
+toggle do not disturb=Alt+Launch (1)
+
+[org.opengamingcollective.rog-control-center][Global Shortcuts]
+_k_friendly_name=ROG Control Center
+toggle_rog=Launch (1)
 
 [systemsettings.desktop][Global Shortcuts]
 _launch=Meta+I

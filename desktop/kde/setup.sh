@@ -477,7 +477,7 @@ CANONICAL_SHORTCUTS = {
     "plasmashell": {
         "activate application launcher": "Meta; Alt+F1",
         "show-on-mouse-pos": "Meta+V",
-        "toggle do not disturb": "Launch (1)",
+        "toggle do not disturb": "Alt+Launch (1)",
         "manage activities": "",
         "next activity": "",
         "previous activity": "",
@@ -524,6 +524,9 @@ CANONICAL_SHORTCUTS = {
     "org_kde_powerdevil": {
         "powerProfile": "Launch (4); Battery",
         "powerprofile": "",
+    },
+    "org.opengamingcollective.rog-control-center": {
+        "toggle_rog": "Launch (1)",
     }
 }
 
@@ -574,10 +577,12 @@ try:
                     elif w_num == str(bt_id): act_desc = "Activate Bluetooth Widget"
                     elif w_num == str(vol_id): act_desc = "Activate Audio Volume Widget"
                     elif w_num == str(disp_id): act_desc = "Activate Brightness & Display Widget"
+                elif act_name == "toggle_rog":
+                    act_desc = "Open/Close ROG Control Center"
                 action_id = [
                     dbus.String(comp),
                     dbus.String(act_name),
-                    dbus.String(comp),
+                    dbus.String("ROG Control Center" if comp == "org.opengamingcollective.rog-control-center" else comp),
                     dbus.String(act_desc)
                 ]
                 try:
@@ -630,6 +635,8 @@ for stale_sec in ["zen.desktop", "services][zen.desktop", "kitty.desktop", "serv
 for comp, actions in CANONICAL_SHORTCUTS.items():
     if not kglobal.has_section(comp):
         kglobal.add_section(comp)
+    if comp == "org.opengamingcollective.rog-control-center" and not kglobal.has_option(comp, "_k_friendly_name"):
+        kglobal.set(comp, "_k_friendly_name", "ROG Control Center")
     for act_name, shortcut_str in actions.items():
         tokens = [t.strip() for t in shortcut_str.split(";") if t.strip()]
         val_str = r"\t".join(tokens) if tokens else "none"
@@ -638,7 +645,7 @@ for comp, actions in CANONICAL_SHORTCUTS.items():
             parts = cur.split(",")
             dflt = parts[1] if len(parts) > 1 else "none"
             desc = ",".join(parts[2:]) if len(parts) > 2 and parts[2].strip() else act_name
-            # Preserve existing hardware/custom keys for powerProfile and toggle do not disturb
+            # Preserve existing hardware/custom keys for powerProfile, toggle do not disturb, and rog-control-center
             if comp == "org_kde_powerdevil" and act_name == "powerProfile":
                 cur_tokens = [t.strip() for t in parts[0].replace(r"\t", ";").split(";") if t.strip() and t.strip().lower() != "none"]
                 combined = ["Launch (4)"]
@@ -648,14 +655,29 @@ for comp, actions in CANONICAL_SHORTCUTS.items():
                 val_str = r"\t".join(combined)
             elif comp == "plasmashell" and act_name == "toggle do not disturb":
                 cur_tokens = [t.strip() for t in parts[0].replace(r"\t", ";").split(";") if t.strip() and t.strip().lower() != "none"]
-                combined = ["Launch (1)"]
+                combined = ["Alt+Launch (1)"]
                 for tok in cur_tokens:
+                    if tok in ("Launch (1)", "Launch 1"):
+                        continue
                     if tok not in combined:
                         combined.append(tok)
                 val_str = r"\t".join(combined)
+            elif comp == "org.opengamingcollective.rog-control-center" and act_name == "toggle_rog":
+                cur_tokens = [t.strip() for t in parts[0].replace(r"\t", ";").split(";") if t.strip() and t.strip().lower() != "none"]
+                combined = ["Launch (1)"]
+                for tok in cur_tokens:
+                    if "alt" in tok.lower() and "launch" in tok.lower():
+                        continue
+                    if tok not in combined:
+                        combined.append(tok)
+                val_str = r"\t".join(combined)
+                dflt = "Launch (3)" if dflt == "none" else dflt
+                desc = "Open/Close ROG Control Center" if desc == "toggle_rog" else desc
             kglobal.set(comp, act_name, f"{val_str},{dflt},{desc}")
         else:
-            kglobal.set(comp, act_name, f"{val_str},none,{act_name}")
+            dflt_val = "Launch (3)" if comp == "org.opengamingcollective.rog-control-center" and act_name == "toggle_rog" else "none"
+            desc_val = "Open/Close ROG Control Center" if comp == "org.opengamingcollective.rog-control-center" and act_name == "toggle_rog" else act_name
+            kglobal.set(comp, act_name, f"{val_str},{dflt_val},{desc_val}")
 
     if comp.endswith(".desktop"):
         svc_sec = f"services][{comp}"
@@ -1183,7 +1205,7 @@ try:
     bus = dbus.SessionBus()
     kglobal = bus.get_object("org.kde.kglobalaccel", "/kglobalaccel")
     iface = dbus.Interface(kglobal, "org.kde.KGlobalAccel")
-    for comp in ["kwin", "plasmashell", "org_kde_powerdevil", "org.kde.spectacle.desktop", "default-terminal.desktop", "default-browser.desktop", "toggle-darkmode.desktop", "org.kde.dolphin.desktop"]:
+    for comp in ["kwin", "plasmashell", "org_kde_powerdevil", "org.kde.spectacle.desktop", "default-terminal.desktop", "default-browser.desktop", "toggle-darkmode.desktop", "org.kde.dolphin.desktop", "org.opengamingcollective.rog-control-center"]:
         try:
             for a in iface.allActionsForComponent([comp]):
                 keys = iface.shortcutKeys(a)
@@ -1304,7 +1326,8 @@ checks = [
     ("Volume Dock Shortcut (Meta+Alt+V / Meta+Shift+V)", verify_shortcut("plasmashell", f"activate widget {v_id}" if v_id else "activate widget 20", [402653270, 301989974])),
     ("Display & Brightness Shortcut (Meta+Alt+D / Meta+Shift+D)", verify_shortcut("plasmashell", f"activate widget {d_id}" if d_id else "activate widget 25", [402653252, 301989956])),
     ("Power Profile Switch Shortcut (Launch 4)", verify_shortcut("org_kde_powerdevil", "powerProfile", 16777382)),
-    ("Toggle Do Not Disturb Shortcut (Launch 1)", verify_shortcut("plasmashell", "toggle do not disturb", 16777379)),
+    ("ROG Control Center Shortcut (Launch 1)", verify_shortcut("org.opengamingcollective.rog-control-center", "toggle_rog", 16777379)),
+    ("Toggle Do Not Disturb Shortcut (Alt+Launch 1)", verify_shortcut("plasmashell", "toggle do not disturb", 150995107)),
     ("Keyboard Rate (250ms / 40Hz)", check_ini(kcminputrc_path, "Keyboard", "RepeatDelay", "250")),
     ("Touchpad Tap-to-click & Natural Scroll", check_ini(kcminputrc_path, "Touchpad", "tapToClick", "true") and check_ini(kcminputrc_path, "Touchpad", "naturalScroll", "true")),
     ("Default Terminal Executable", os.path.exists(os.path.join(home, ".local/bin/default-terminal"))),
