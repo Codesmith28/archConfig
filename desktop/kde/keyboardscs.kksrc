@@ -106,6 +106,9 @@ _launch=Meta+Return
 [default-browser.desktop][Global Shortcuts]
 _launch=Meta+B; Meta+Shift+B
 
+[toggle-darkmode.desktop][Global Shortcuts]
+_launch=Meta+Ctrl+D\tMeta+Alt+T
+
 
 [kmix][Global Shortcuts]
 decrease_microphone_volume=Microphone Volume Down
