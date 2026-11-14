@@ -1,7 +1,7 @@
 <h1 align="center">🚀 archConfig</h1>
 
 <p align="center">
-  <a href="https://github.com/Codesmith28/archConfig"><img src="https://img.shields.io/badge/Platform-Fedora%20|%20Arch%20|%20Ubuntu%20|%20macOS-blue?logo=linux&logoColor=white" alt="Platform" /></a>
+  <a href="https://github.com/Codesmith28/archConfig"><img src="https://img.shields.io/badge/Platform-Arch%20|%20Ubuntu%20|%20macOS%20|%20Fedora-blue?logo=linux&logoColor=white" alt="Platform" /></a>
   <a href="file:///home/codesmith28/archConfig/desktop"><img src="https://img.shields.io/badge/Desktop-GNOME%20|%20KDE%20|%20Hyprland-purple" alt="Desktop" /></a>
   <a href="file:///home/codesmith28/archConfig/core/config/nvim"><img src="https://img.shields.io/badge/Editor-Neovim%20(LazyVim)-green?logo=neovim&logoColor=white" alt="Editor" /></a>
   <a href="file:///home/codesmith28/archConfig/core/config"><img src="https://img.shields.io/badge/Terminals-Ghostty%20|%20Herdr-black" alt="Terminal" /></a>
@@ -10,7 +10,7 @@
 <h3 align="center"><em>Distros change, muscle memory shouldn't. Started on Arch, built for everywhere.</em></h3>
 
 <p align="center">
-A unified, modular, zero-drift dotfiles and bootstrap system delivering an identical developer experience across <b>Arch Linux</b>, <b>Fedora</b>, <b>Ubuntu</b>, and <b>macOS</b>.
+A unified, modular, zero-drift dotfiles and bootstrap system delivering an identical developer experience across <b>Arch Linux</b>, <b>Ubuntu</b>, <b>macOS</b>, and <b>Fedora</b>.
 </p>
 
 ---
@@ -26,7 +26,7 @@ graph TD
     Sync["🚀 sync.sh (Auto-Detector & Linker)"]
     Core["🌐 core/<br/>(Universal Shell, Neovim, Ghostty, Herdr, Starship, Yazi)"]
     Desktop["🖥️ desktop/<br/>(GNOME, KDE Plasma, Hyprland Lua/Classic)"]
-    Distros["📦 distros/<br/>(Fedora, Arch, Ubuntu, macOS, OmArchy)"]
+    Distros["📦 distros/<br/>(Arch, Ubuntu, macOS, Fedora, OmArchy)"]
     Troubleshoot["🩺 troubleshoot/<br/>(GRUB, Dual-Boot, Toolchain fixes)"]
     
     Sync --> Core
@@ -55,7 +55,7 @@ cd ~/archConfig
 
 ### 2. Synchronize dotfiles
 > [!IMPORTANT]
-> **Zero configuration required**: `./sync.sh` automatically detects your operating system (`Arch`, `Fedora`, `Ubuntu`, `macOS`) and active desktop environment (`GNOME`, `KDE`, `Hyprland`, or headless).
+> **Zero configuration required**: `./sync.sh` automatically detects your operating system (`Arch`, `Ubuntu`, `macOS`, `Fedora`) and active desktop environment (`GNOME`, `KDE`, `Hyprland`, or headless).
 
 ```bash
 # Preview changes safely without touching files
@@ -70,14 +70,17 @@ cd ~/archConfig
 
 Override detection when configuring a secondary environment or container:
 ```bash
-# Fedora Workstation with GNOME
-./sync.sh --distro fedora --de gnome
-
 # Arch Linux with Hyprland
 ./sync.sh --distro arch --de hyprland
 
+# Ubuntu with GNOME
+./sync.sh --distro ubuntu --de gnome
+
 # macOS Terminal Workstation
 ./sync.sh --distro mac --de none
+
+# Fedora Workstation with GNOME
+./sync.sh --distro fedora --de gnome
 ```
 </details>
 
@@ -96,10 +99,10 @@ Override detection when configuring a secondary environment or container:
 
 Run native system package installers and hardware drivers on clean machines:
 
-* **Fedora**: `cd distros/fedora && bash setup.sh` — DNF packages, RPM Fusion, developer toolchains, and NVIDIA configuration.
 * **Arch Linux**: `cd distros/arch && bash setup.sh` — Pacman packages, AUR helper setup, and system services.
 * **Ubuntu**: `cd distros/ubuntu && bash setup.sh` — APT dependencies, PPA repositories, and desktop optimizations.
 * **macOS**: `cd distros/mac && bash setup.sh` — Homebrew bundle, CLI utilities, and cask applications.
+* **Fedora**: `cd distros/fedora && bash setup.sh` — DNF packages, RPM Fusion, developer toolchains, and NVIDIA configuration.
 
 ---
 
