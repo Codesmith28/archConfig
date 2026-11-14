@@ -45,8 +45,8 @@ Usage:
   $(basename "$0") help                     Show this help message
 
 Presets:
-  dock-dodge         Centered 44px translucent floating dock, dodges windows (Default)
-  dock-always        Centered 44px translucent floating dock, always visible
+  dock-dodge         Centered 42px translucent floating dock, dodges windows (Default)
+  dock-always        Centered 42px translucent floating dock, always visible
 EOF
 }
 
@@ -116,6 +116,7 @@ if (pList.length === 0) {
         let hasTask = false;
         let taskCd = false;
         let taskCa = true;
+        let clockConfig = {};
         for (let w of p.widgets()) {
             wTypes.push(w.type);
             if (w.type.indexOf("tasks") !== -1) {
@@ -125,6 +126,18 @@ if (pList.length === 0) {
                 let ca = w.readConfig("showOnlyCurrentActivity");
                 taskCd = (cd === "true" || cd === true);
                 taskCa = (ca === "true" || ca === true);
+            }
+            if (w.type.indexOf("digitalclock") !== -1) {
+                w.currentConfigGroup = ["Appearance"];
+                clockConfig = {
+                    widget: "org.kde.plasma.digitalclock",
+                    use24hFormat: parseInt(w.readConfig("use24hFormat")) || 1,
+                    showDate: w.readConfig("showDate") === "true" || w.readConfig("showDate") === true,
+                    dateFormat: w.readConfig("dateFormat") || "shortDate",
+                    customDateFormat: w.readConfig("customDateFormat") || "",
+                    dateDisplayFormat: parseInt(w.readConfig("dateDisplayFormat")) || 0,
+                    showSeconds: parseInt(w.readConfig("showSeconds")) || 0
+                };
             }
         }
         panelsData.push({
@@ -138,7 +151,8 @@ if (pList.length === 0) {
             alignment: p.alignment,
             widgets: wTypes,
             showOnlyCurrentDesktop: taskCd,
-            showOnlyCurrentActivity: taskCa
+            showOnlyCurrentActivity: taskCa,
+            clock: clockConfig
         });
     }
 
@@ -186,6 +200,7 @@ if (pList.length === 0) {
         alignment: primary.alignment,
         showOnlyCurrentDesktop: primary.showOnlyCurrentDesktop,
         showOnlyCurrentActivity: primary.showOnlyCurrentActivity,
+        clock: primary.clock,
         panels: panelsData
     };
     print(JSON.stringify(result));
@@ -286,12 +301,15 @@ def write_ini(cfg, path):
 
 def persist_preset_to_disk(preset):
     layout_type = preset.get("layoutType", "single")
-    bottom_height = str(preset.get("height", 44) if preset.get("location") == "bottom" or layout_type == "gnome-split" else 44)
-    top_height = str(preset.get("topHeight", 30) if layout_type == "gnome-split" else (preset.get("height", 30) if preset.get("location") == "top" else 30))
+    target_loc = preset.get("location", "bottom")
+    target_height = str(preset.get("height", 42))
+    top_height = str(preset.get("topHeight", 30) if layout_type == "gnome-split" else (preset.get("height", 30) if target_loc == "top" else 30))
 
     length_mode_map = {"fill": "0", "fit": "1", "custom": "2"}
     hiding_map = {"none": "0", "autohide": "1", "dodgewindows": "2", "windowscover": "2", "windowsbelow": "3"}
     opacity_map = {"default": "0", "opaque": "1", "translucent": "2", "adaptive": "3"}
+    location_map = {"top": "3", "bottom": "4", "left": "5", "right": "6"}
+    formfactor_map = {"top": "2", "bottom": "2", "left": "3", "right": "3"}
 
     top_panel_ids = set()
     bottom_panel_ids = set()
@@ -300,21 +318,53 @@ def persist_preset_to_disk(preset):
     if os.path.exists(appletsrc_path):
         applet_cfg = read_ini(appletsrc_path)
         for sec in applet_cfg.sections():
-            if applet_cfg.has_option(sec, "plugin") and applet_cfg.get(sec, "plugin") == "org.kde.panel":
-                cid = sec.split("][")[-1].replace("]", "").strip()
-                loc = applet_cfg.get(sec, "location", fallback="")
-                if loc == "3" or (layout_type != "gnome-split" and preset.get("location") == "top"): # Top bar
-                    top_panel_ids.add(cid)
-                    applet_cfg.set(sec, "thickness", top_height)
-                    applet_cfg.set(sec, "floating", "0")
-                    applet_cfg.set(sec, "panelLengthMode", "0")
-                    applet_cfg.set(sec, "panelVisibility", "0")
-                else: # Bottom bar
-                    bottom_panel_ids.add(cid)
-                    applet_cfg.set(sec, "thickness", bottom_height)
-                    applet_cfg.set(sec, "floating", "1" if preset.get("floating", True) else "0")
-                    applet_cfg.set(sec, "panelLengthMode", length_mode_map.get(preset.get("lengthMode", "fill"), "0"))
-                    applet_cfg.set(sec, "panelVisibility", hiding_map.get(preset.get("hiding", "none"), "0"))
+            if applet_cfg.has_option(sec, "plugin"):
+                plugin = applet_cfg.get(sec, "plugin")
+                if plugin == "org.kde.panel":
+                    cid = sec.split("][")[-1].replace("]", "").strip()
+                    loc = applet_cfg.get(sec, "location", fallback="")
+                    if loc == "3" or (layout_type == "gnome-split" and target_loc == "top"): # Top bar
+                        top_panel_ids.add(cid)
+                        applet_cfg.set(sec, "thickness", top_height)
+                        applet_cfg.set(sec, "floating", "0")
+                        applet_cfg.set(sec, "panelLengthMode", "0")
+                        applet_cfg.set(sec, "panelVisibility", "0")
+                    else: # Primary bar (bottom or vertical left)
+                        bottom_panel_ids.add(cid)
+                        applet_cfg.set(sec, "location", location_map.get(target_loc, "4"))
+                        applet_cfg.set(sec, "formfactor", formfactor_map.get(target_loc, "2"))
+                        applet_cfg.set(sec, "thickness", target_height)
+                        applet_cfg.set(sec, "floating", "1" if preset.get("floating", True) else "0")
+                        applet_cfg.set(sec, "panelLengthMode", length_mode_map.get(preset.get("lengthMode", "fill"), "0"))
+                        applet_cfg.set(sec, "panelVisibility", hiding_map.get(preset.get("hiding", "none"), "0"))
+                elif plugin in ["org.kde.plasma.icontasks", "org.kde.plasma.taskmanager"]:
+                    gen_sec = f"{sec}][Configuration][General"
+                    if not applet_cfg.has_section(gen_sec):
+                        applet_cfg.add_section(gen_sec)
+                    applet_cfg.set(gen_sec, "showOnlyCurrentDesktop", "true" if preset.get("showOnlyCurrentDesktop", False) else "false")
+                    applet_cfg.set(gen_sec, "showOnlyCurrentActivity", "true" if preset.get("showOnlyCurrentActivity", True) else "false")
+                elif plugin == "org.kde.plasma.digitalclock":
+                    sh_sec = f"{sec}][Shortcuts"
+                    if not applet_cfg.has_section(sh_sec):
+                        applet_cfg.add_section(sh_sec)
+                    applet_cfg.set(sh_sec, "global", "Meta+N")
+                    if "clock" in preset:
+                        clk_cfg = preset["clock"]
+                        app_sec = f"{sec}][Configuration][Appearance"
+                        if not applet_cfg.has_section(app_sec):
+                            applet_cfg.add_section(app_sec)
+                        if "use24hFormat" in clk_cfg:
+                            applet_cfg.set(app_sec, "use24hFormat", str(clk_cfg["use24hFormat"]))
+                        if "showDate" in clk_cfg:
+                            applet_cfg.set(app_sec, "showDate", "true" if clk_cfg["showDate"] else "false")
+                        if "dateFormat" in clk_cfg:
+                            applet_cfg.set(app_sec, "dateFormat", str(clk_cfg["dateFormat"]))
+                        if "customDateFormat" in clk_cfg:
+                            applet_cfg.set(app_sec, "customDateFormat", str(clk_cfg["customDateFormat"]))
+                        if "dateDisplayFormat" in clk_cfg:
+                            applet_cfg.set(app_sec, "dateDisplayFormat", str(clk_cfg["dateDisplayFormat"]))
+                        if "showSeconds" in clk_cfg:
+                            applet_cfg.set(app_sec, "showSeconds", str(clk_cfg["showSeconds"]))
             elif "icontasks" in sec or "taskmanager" in sec:
                 gen_sec = f"{sec}][Configuration][General" if not sec.endswith("Configuration][General") else sec
                 if not applet_cfg.has_section(gen_sec):
@@ -328,17 +378,60 @@ def persist_preset_to_disk(preset):
     for sec in ps_cfg.sections():
         if sec.startswith("PlasmaViews][Panel ") and not any(sub in sec for sub in ["Defaults", "Horizontal", "Vertical"]):
             pid = sec.split("Panel ")[-1].replace("]", "").strip()
-            is_top = pid in top_panel_ids or (layout_type != "gnome-split" and preset.get("location") == "top")
+            is_top = pid in top_panel_ids or (layout_type == "gnome-split" and pid in top_panel_ids)
             ps_cfg.set(sec, "floating", "0" if is_top else ("1" if preset.get("floating", True) else "0"))
             ps_cfg.set(sec, "panelLengthMode", "0" if is_top else length_mode_map.get(preset.get("lengthMode", "fill"), "0"))
             ps_cfg.set(sec, "panelVisibility", "0" if is_top else hiding_map.get(preset.get("hiding", "none"), "0"))
             ps_cfg.set(sec, "panelOpacity", opacity_map.get(preset.get("opacity", "translucent"), "2"))
         if sec.startswith("PlasmaViews][Panel ") and "Defaults" in sec:
             pid = sec.split("Panel ")[-1].split("]")[0].strip()
-            is_top = pid in top_panel_ids or (layout_type != "gnome-split" and preset.get("location") == "top")
-            ps_cfg.set(sec, "thickness", top_height if is_top else bottom_height)
+            is_top = pid in top_panel_ids
+            ps_cfg.set(sec, "thickness", top_height if is_top else target_height)
 
     write_ini(ps_cfg, plasmashellrc_path)
+
+    # 3. Synchronize kglobalshortcutsrc & live KGlobalAccel for Clock shortcut (Meta+N)
+    clock_aid = None
+    for s in applet_cfg.sections():
+        if applet_cfg.has_option(s, "plugin") and applet_cfg.get(s, "plugin") == "org.kde.plasma.digitalclock":
+            if "Applets][" in s:
+                clock_aid = s.split("Applets][")[-1].split("]")[0]
+
+    if clock_aid:
+        kglobal_path = os.path.join(home, ".config/kglobalshortcutsrc")
+        if os.path.exists(kglobal_path):
+            kg_cfg = read_ini(kglobal_path)
+            if not kg_cfg.has_section("plasmashell"):
+                kg_cfg.add_section("plasmashell")
+            for opt in list(kg_cfg.options("plasmashell")):
+                if opt.startswith("activate widget ") and opt != f"activate widget {clock_aid}":
+                    val = kg_cfg.get("plasmashell", opt)
+                    if "Meta+N" in val:
+                        kg_cfg.remove_option("plasmashell", opt)
+            kg_cfg.set("plasmashell", f"activate widget {clock_aid}", "Meta+N,none,Activate Clock Widget")
+            write_ini(kg_cfg, kglobal_path)
+
+        try:
+            import dbus
+            bus = dbus.SessionBus()
+            kglobal = bus.get_object("org.kde.kglobalaccel", "/kglobalaccel")
+            iface = dbus.Interface(kglobal, "org.kde.KGlobalAccel")
+            action_id = [
+                dbus.String("plasmashell"),
+                dbus.String(f"activate widget {clock_aid}"),
+                dbus.String("plasmashell"),
+                dbus.String("Activate Clock Widget")
+            ]
+            try:
+                iface.doRegister(action_id)
+            except Exception:
+                pass
+            keys = [
+                dbus.Struct((dbus.Array([dbus.Int32(268435534), dbus.Int32(0), dbus.Int32(0), dbus.Int32(0)], signature='i'),))
+            ]
+            iface.setForeignShortcutKeys(action_id, keys)
+        except Exception:
+            pass
 
 # --- Actions ---
 live = get_live_panel_config()
@@ -378,6 +471,14 @@ elif action == "current":
         print(f"  Panel {i+1} ({pinfo.get('location')}):       height={pinfo.get('height')}px, opacity={pinfo.get('opacity')}, floating={pinfo.get('floating')}, hiding={pinfo.get('hiding')}")
         w_names = [w.replace("org.kde.plasma.", "") for w in pinfo.get("widgets", [])]
         print(f"    Widgets:            {', '.join(w_names)}")
+        if pinfo.get("clock"):
+            clk = pinfo["clock"]
+            if clk.get("widget") == "com.cyberbessa.verticalclock":
+                print(f"    Clock:              VerticalClock (style={clk.get('clockStyle')}, 24h={clk.get('use24Hour')}, date='{clk.get('dateFormat')}', showDate={clk.get('showDate')})")
+            else:
+                clk_fmt = "24h" if clk.get("use24hFormat") == 2 else "12h/locale"
+                custom_str = f", custom='{clk.get('customDateFormat')}'" if clk.get('customDateFormat') else ""
+                print(f"    Clock:              {clk_fmt}, dateFormat={clk.get('dateFormat')}{custom_str}, showDate={clk.get('showDate')}")
     if matched_preset:
         print(f"  Matched Preset:       \033[1;32m{matched_preset['id']} ({matched_preset.get('name')})\033[0m")
     else:
@@ -459,7 +560,7 @@ print("applied-gnome");
     else:
         # Single panel layout: clean up extra panels and restore standard full widgets
         loc = preset.get("location", "bottom")
-        target_height = int(preset.get("height", 44))
+        target_height = int(preset.get("height", 42))
         fl = str(preset.get("floating", True)).lower()
         lm = preset.get("lengthMode", "fill")
         hd = preset.get("hiding", "none")
@@ -467,6 +568,17 @@ print("applied-gnome");
         align = preset.get("alignment", "center")
         cd = str(preset.get("showOnlyCurrentDesktop", False)).lower()
         ca = str(preset.get("showOnlyCurrentActivity", True)).lower()
+
+        clk_cfg = preset.get("clock", {})
+        has_clock = "true" if bool(clk_cfg) else "false"
+
+        clk_24h = int(clk_cfg.get("use24hFormat", 1))
+        clk_show_date = "true" if clk_cfg.get("showDate", True) else "false"
+        clk_date_format = clk_cfg.get("dateFormat", "custom")
+        clk_custom_date = clk_cfg.get("customDateFormat", "ddd dd, MMM")
+        clk_date_display = int(clk_cfg.get("dateDisplayFormat", 0))
+        clk_show_seconds = int(clk_cfg.get("showSeconds", 0))
+        show_pager = "true" if preset.get("showPager", True) else "false"
 
         apply_script = f"""
 let pList = panels();
@@ -485,6 +597,13 @@ mainP.lengthMode = "{lm}";
 mainP.hiding = "{hd}";
 mainP.alignment = "{align}";
 
+// Remove any unwanted third-party or vertical clock widgets
+for (let w of mainP.widgets()) {{
+    if (w.type.indexOf("verticalclock") !== -1) {{
+        w.remove();
+    }}
+}}
+
 let existing = {{}};
 for (let w of mainP.widgets()) {{
     existing[w.type] = true;
@@ -497,15 +616,55 @@ for (let w of mainP.widgets()) {{
         w.currentConfigGroup = ["General"];
         w.writeConfig("icon", "start-here");
     }}
+    if (w.type === "org.kde.plasma.digitalclock" && {has_clock}) {{
+        w.globalShortcut = "Meta+N";
+        w.currentConfigGroup = ["Appearance"];
+        w.writeConfig("use24hFormat", {clk_24h});
+        w.writeConfig("showDate", {clk_show_date});
+        w.writeConfig("dateFormat", "{clk_date_format}");
+        w.writeConfig("customDateFormat", "{clk_custom_date}");
+        w.writeConfig("dateDisplayFormat", {clk_date_display});
+        w.writeConfig("showSeconds", {clk_show_seconds});
+    }}
 }}
 
 if (!existing["org.kde.plasma.kicker"]) mainP.addWidget("org.kde.plasma.kicker");
 if (!existing["org.kde.plasma.icontasks"]) mainP.addWidget("org.kde.plasma.icontasks");
 if (!existing["org.kde.plasma.marginsseparator"]) mainP.addWidget("org.kde.plasma.marginsseparator");
 if (!existing["org.kde.plasma.systemtray"]) mainP.addWidget("org.kde.plasma.systemtray");
-if (!existing["org.kde.plasma.digitalclock"]) mainP.addWidget("org.kde.plasma.digitalclock");
-if (!existing["org.kde.plasma.pager"]) mainP.addWidget("org.kde.plasma.pager");
-if (!existing["org.kde.plasma.showdesktop"]) mainP.addWidget("org.kde.plasma.showdesktop");
+
+if ({show_pager}) {{
+    if (!existing["org.kde.plasma.pager"]) mainP.addWidget("org.kde.plasma.pager");
+}} else {{
+    for (let w of mainP.widgets()) {{
+        if (w.type.indexOf("pager") !== -1) {{
+            w.remove();
+        }}
+    }}
+}}
+
+// Remove any existing clock widget and showdesktop, then add them in exact order at the end
+for (let w of mainP.widgets()) {{
+    if (w.type.indexOf("clock") !== -1 || w.type === "org.kde.plasma.showdesktop") {{
+        w.remove();
+    }}
+}}
+
+let dClk = mainP.addWidget("org.kde.plasma.digitalclock");
+if (dClk) {{
+    dClk.globalShortcut = "Meta+N";
+    if ({has_clock}) {{
+        dClk.currentConfigGroup = ["Appearance"];
+        dClk.writeConfig("use24hFormat", {clk_24h});
+        dClk.writeConfig("showDate", {clk_show_date});
+        dClk.writeConfig("dateFormat", "{clk_date_format}");
+        dClk.writeConfig("customDateFormat", "{clk_custom_date}");
+        dClk.writeConfig("dateDisplayFormat", {clk_date_display});
+        dClk.writeConfig("showSeconds", {clk_show_seconds});
+    }}
+}}
+
+mainP.addWidget("org.kde.plasma.showdesktop");
 
 print("applied-single");
 """
@@ -549,14 +708,22 @@ elif action == "save":
         "description": "Custom taskbar preset exported on live KDE session",
         "layoutType": live.get("layoutType", "single"),
         "location": live.get("location", "bottom"),
-        "height": 42,
+        "height": live.get("height", 44),
         "floating": live.get("floating", True),
         "lengthMode": live.get("lengthMode", "fill"),
         "hiding": live.get("hiding", "none"),
-        "opacity": "adaptive",
+        "opacity": live.get("opacity", "translucent"),
         "alignment": live.get("alignment", "center"),
         "showOnlyCurrentDesktop": live.get("showOnlyCurrentDesktop", False),
-        "showOnlyCurrentActivity": live.get("showOnlyCurrentActivity", True)
+        "showOnlyCurrentActivity": live.get("showOnlyCurrentActivity", True),
+        "clock": live.get("clock", {
+            "use24hFormat": 1,
+            "showDate": True,
+            "dateFormat": "custom",
+            "customDateFormat": "ddd dd, MMM",
+            "dateDisplayFormat": 0,
+            "showSeconds": 0
+        })
     }
 
     os.makedirs(presets_dir, exist_ok=True)

@@ -477,15 +477,16 @@ r_eng = '''        this._arrangePending = false;
             }
             if (candidate) {
                 savedGeom = {
-                    x: Math.round(candidate.x),
-                    y: Math.round(candidate.y),
                     width: Math.round(candidate.width),
                     height: Math.round(candidate.height)
                 };
             }
         } else if (state === WindowState.Tiled) {
             if (existing && existing.geometry && existing.geometry.width > 0) {
-                savedGeom = existing.geometry;
+                savedGeom = {
+                    width: Math.round(existing.geometry.width),
+                    height: Math.round(existing.geometry.height)
+                };
             }
         }
         const entry = {
@@ -620,21 +621,16 @@ r_vis = '''        visibles.forEach((window) => {
             window.window.updateSrfTime(srf.id);
             if (window.state === WindowState.Undecided) {
                 const remembered = this.rememberedStates.get(window.windowClassName);
-                if (window.shouldFloat && (!remembered || remembered.geometry === null)) {
+                if (window.shouldFloat && (!remembered || !remembered.geometry || !remembered.geometry.width)) {
                     window.state = WindowState.Floating;
-                    window.shouldCommitFloat = true;
                 }
                 else if (remembered !== undefined && (remembered.state === WindowState.Floating || remembered.state === WindowState.Tiled)) {
                     window.state = remembered.state;
-                    if (remembered.state === WindowState.Floating) {
-                        if (remembered.geometry && remembered.geometry.width > 0) {
-                            window.floatGeometry = new Rect(
-                                remembered.geometry.x,
-                                remembered.geometry.y,
-                                remembered.geometry.width,
-                                remembered.geometry.height
-                            );
-                        }
+                    if (remembered.state === WindowState.Floating && remembered.geometry && remembered.geometry.width > 0) {
+                        const cur = window.actualGeometry || window.floatGeometry;
+                        const curX = cur ? cur.x : 0;
+                        const curY = cur ? cur.y : 0;
+                        window.floatGeometry = new Rect(curX, curY, remembered.geometry.width, remembered.geometry.height);
                         window.shouldCommitFloat = true;
                     }
                 }
@@ -720,24 +716,14 @@ r_tf = '''    toggleFloat(window) {
                 window.state = WindowState.Floating;
                 const remembered = this.rememberedStates.get(window.windowClassName);
                 let targetGeom = null;
+                const workingArea = window.surface ? window.surface.workingArea : null;
                 if (remembered && remembered.geometry && remembered.geometry.width > 0) {
-                    targetGeom = new Rect(
-                        remembered.geometry.x,
-                        remembered.geometry.y,
-                        remembered.geometry.width,
-                        remembered.geometry.height
-                    );
+                    const cur = window.actualGeometry || window.floatGeometry;
+                    const curX = cur ? cur.x : 0;
+                    const curY = cur ? cur.y : 0;
+                    targetGeom = new Rect(curX, curY, remembered.geometry.width, remembered.geometry.height);
                 } else if (window.floatGeometry && (!window.geometry || !window.floatGeometry.equals(window.geometry))) {
                     targetGeom = window.floatGeometry;
-                } else {
-                    const workingArea = window.surface ? window.surface.workingArea : null;
-                    if (workingArea) {
-                        const defW = Math.min(Math.round(workingArea.width * 0.6), Math.max(window.minSize.width || 0, 960));
-                        const defH = Math.min(Math.round(workingArea.height * 0.7), Math.max(window.minSize.height || 0, 600));
-                        const defX = workingArea.x + Math.round((workingArea.width - defW) / 2);
-                        const defY = workingArea.y + Math.round((workingArea.height - defH) / 2);
-                        targetGeom = new Rect(defX, defY, defW, defH);
-                    }
                 }
                 if (targetGeom) {
                     window.floatGeometry = targetGeom;
@@ -994,6 +980,15 @@ if os.path.exists(conf_path):
             if isinstance(data, str):
                 data = json.loads(data)
             changed = False
+            for app, val in list(data.items()):
+                if isinstance(val, dict) and isinstance(val.get("geometry"), dict):
+                    geom = val["geometry"]
+                    if "x" in geom or "y" in geom:
+                        val["geometry"] = {
+                            "width": geom.get("width", 0),
+                            "height": geom.get("height", 0)
+                        }
+                        changed = True
             for app in stale_small_apps:
                 if app in data and isinstance(data[app], dict) and data[app].get("state") == "Tiled" and not data[app].get("geometry"):
                     del data[app]
@@ -1101,7 +1096,8 @@ try:
             geom = state_info.get("geometry", None)
             if geom:
                 lbl = "geom" if st == "Floating" else "cached float"
-                geom_str = f" [{lbl}: {geom['width']}x{geom['height']}+{geom['x']}+{geom['y']}]"
+                coords = f"+{geom['x']}+{geom['y']}" if "x" in geom and "y" in geom else " (centered)"
+                geom_str = f" [{lbl}: {geom['width']}x{geom['height']}{coords}]"
             else:
                 geom_str = ""
             print(f"  • {app_name:<40} -> {st}{geom_str}")

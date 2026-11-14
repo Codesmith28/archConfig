@@ -1,15 +1,25 @@
 {
   "id": "dock-always",
   "name": "Dock (Always Shown)",
-  "description": "Centered 44px translucent floating dock, always visible, multi-workspace tasks",
+  "description": "Centered 42px translucent floating dock, always visible, multi-workspace tasks",
   "layoutType": "single",
   "location": "bottom",
-  "height": 44,
+  "height": 42,
   "floating": true,
   "lengthMode": "fill",
   "hiding": "none",
   "opacity": "translucent",
   "alignment": "center",
   "showOnlyCurrentDesktop": false,
-  "showOnlyCurrentActivity": true
+  "showOnlyCurrentActivity": true,
+  "showPager": true,
+  "clockWidget": "org.kde.plasma.digitalclock",
+  "clock": {
+    "use24hFormat": 1,
+    "showDate": true,
+    "dateFormat": "custom",
+    "customDateFormat": "ddd dd, MMM",
+    "dateDisplayFormat": 0,
+    "showSeconds": 0
+  }
 }

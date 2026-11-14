@@ -736,6 +736,7 @@ kwinrc.set("Desktops", "Rows", "1")
 if not kwinrc.has_section("Windows"):
     kwinrc.add_section("Windows")
 kwinrc.set("Windows", "RollOverDesktops", "false")
+kwinrc.set("Windows", "Placement", "Centered")
 
 if not kwinrc.has_section("ModifierOnlyShortcuts"):
     kwinrc.add_section("ModifierOnlyShortcuts")
@@ -898,6 +899,7 @@ if [[ -n "$KWRITECMD" ]]; then
     "$KWRITECMD" --file kwinrc --group "Desktops" --key "Number" "4"
     "$KWRITECMD" --file kwinrc --group "Desktops" --key "Rows" "1"
     "$KWRITECMD" --file kwinrc --group "Windows" --key "RollOverDesktops" "false"
+    "$KWRITECMD" --file kwinrc --group "Windows" --key "Placement" "Centered"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "magiclampEnabled" "true"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "squashEnabled" "false"
     "$KWRITECMD" --file kwinrc --group "Plugins" --key "scaleEnabled" "false"
@@ -1307,6 +1309,7 @@ checks = [
     ("Virtual Desktops (4 Workspaces)", check_ini(kwinrc_path, "Desktops", "Number", "4")),
     ("Desktop Layout (Single-Row / 1 Row)", check_ini(kwinrc_path, "Desktops", "Rows", "1")),
     ("Desktop Boundaries (No Wrap-Around)", check_ini(kwinrc_path, "Windows", "RollOverDesktops", "false")),
+    ("Window Placement (Centered)", check_ini(kwinrc_path, "Windows", "Placement", "Centered")),
     ("KWin Effects (Compiz Magic Lamp)", check_ini(kwinrc_path, "Plugins", "magiclampEnabled", "true")),
     ("KWin Effects (Background Blur)", check_ini(kwinrc_path, "Plugins", "blurEnabled", "true")),
     ("Desktop Switch Animation (Slide)", check_ini(kwinrc_path, "Plugins", "slideEnabled", "true")),
