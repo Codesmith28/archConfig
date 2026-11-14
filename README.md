@@ -1,17 +1,25 @@
-# 🚀 archConfig
+<h1 align="center">🚀 archConfig</h1>
 
-[![Linux](https://img.shields.io/badge/Platform-Fedora%20|%20Arch%20|%20Ubuntu%20|%20macOS-blue?logo=linux&logoColor=white)](file:///home/codesmith28/archConfig)
-[![Desktop](https://img.shields.io/badge/Desktop-GNOME%20|%20KDE%20|%20Hyprland-purple)](file:///home/codesmith28/archConfig/desktop)
-[![Editor](https://img.shields.io/badge/Editor-Neovim%20(LazyVim)-green?logo=neovim&logoColor=white)](file:///home/codesmith28/archConfig/core/config/nvim)
-[![Terminal](https://img.shields.io/badge/Terminals-Ghostty%20|%20Herdr-black)](file:///home/codesmith28/archConfig/core/config)
+<p align="center">
+  <a href="https://github.com/Codesmith28/archConfig"><img src="https://img.shields.io/badge/Platform-Fedora%20|%20Arch%20|%20Ubuntu%20|%20macOS-blue?logo=linux&logoColor=white" alt="Platform" /></a>
+  <a href="file:///home/codesmith28/archConfig/desktop"><img src="https://img.shields.io/badge/Desktop-GNOME%20|%20KDE%20|%20Hyprland-purple" alt="Desktop" /></a>
+  <a href="file:///home/codesmith28/archConfig/core/config/nvim"><img src="https://img.shields.io/badge/Editor-Neovim%20(LazyVim)-green?logo=neovim&logoColor=white" alt="Editor" /></a>
+  <a href="file:///home/codesmith28/archConfig/core/config"><img src="https://img.shields.io/badge/Terminals-Ghostty%20|%20Herdr-black" alt="Terminal" /></a>
+</p>
 
-A unified, modular, cross-distribution dotfiles and bootstrap system. Designed to deliver an identical, high-performance developer workflow across **Fedora**, **Arch Linux**, **Ubuntu**, **macOS**, and **OmArchy** without configuration fragmentation.
+<h3 align="center"><em>Distros change, muscle memory shouldn't. Started on Arch, built for everywhere.</em></h3>
+
+<p align="center">
+A unified, modular, zero-drift dotfiles and bootstrap system delivering an identical developer experience across <b>Arch Linux</b>, <b>Fedora</b>, <b>Ubuntu</b>, and <b>macOS</b>.
+</p>
 
 ---
 
 ## 🏗️ Layered Architecture
 
-The repository separates universal developer tooling from desktop environments, distro-specific package installers, and troubleshooting runbooks:
+The repository decouples universal tools from desktop environments, distro-specific package installers, and recovery runbooks:
+
+<div align="center">
 
 ```mermaid
 graph TD
@@ -27,15 +35,13 @@ graph TD
     Sync --> Troubleshoot
 ```
 
-| Layer | Directory | Purpose |
-| :--- | :--- | :--- |
-| **Core Configs** | [`core/config/`](file:///home/codesmith28/archConfig/core/config) | Universal application configurations (`nvim`, `ghostty`, `herdr`, `leaf`, `starship.toml`, `yazi`, `fastfetch`, `fontconfig`). |
-| **Core Home** | [`core/home/`](file:///home/codesmith28/archConfig/core/home) | Universal shell & Git dotfiles (`.bashrc`, `.bashrc.d/`, `.bash_profile`, `.profile`, `.zshrc`, `.inputrc`, `.vimrc`, `.gitconfig`). |
-| **Core Scripts & Setup** | [`core/scripts/`](file:///home/codesmith28/archConfig/core/scripts) | Universal cross-platform setup (`core/setup.sh`), developer tooling (`setup_git.sh` for Git/SSH profiles, `setup_shell_dependencies.sh` for unattended curl installation of starship, leaf, zoxide, fzf, lazydocker, herdr, etc.). |
-| **Desktop Layer** | [`desktop/`](file:///home/codesmith28/archConfig/desktop) | Modular DE configs: GNOME extensions/dconf, KDE Plasma shortcuts, and Hyprland (Lua & classic). |
-| **Distro Layer** | [`distros/`](file:///home/codesmith28/archConfig/distros) | Package installation scripts, systemd unit files, and hardware optimizations per distribution. |
-| **Troubleshooting** | [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) | Centralized runbooks and scripts for bootloader recovery, GPU switching, and Git credential/SSH fixes. |
-| **AI Skills** | [`.agents/skills/`](file:///home/codesmith28/archConfig/.agents/skills) | Rules for AI agents (`archconfig-guard`) to guarantee zero cross-distro breakage and maintain docs. |
+</div>
+
+* **[`core/`](file:///home/codesmith28/archConfig/core)** — Universal app configs (`nvim`, `ghostty`, `herdr`, `yazi`, `starship`), shell dotfiles, and automated setup.
+* **[`desktop/`](file:///home/codesmith28/archConfig/desktop)** — Modular DE configurations for GNOME (dconf/extensions), KDE Plasma, and Hyprland.
+* **[`distros/`](file:///home/codesmith28/archConfig/distros)** — Distro-native package installation, systemd services, and hardware optimizations.
+* **[`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot)** — Self-contained recovery guides & executable repair scripts for GRUB, dual-boot, and compilers.
+* **[`.agents/skills/`](file:///home/codesmith28/archConfig/.agents/skills)** — Guardian skill (`archconfig-guard`) preventing multi-distro breakage.
 
 ---
 
@@ -46,134 +52,68 @@ graph TD
 git clone --depth 1 https://github.com/Codesmith28/archConfig.git ~/archConfig
 cd ~/archConfig
 ```
-> [!TIP]
-> Using `--depth 1` creates a shallow clone (~2 MB) for instant bootstrapping on fresh installs.
-
 
 ### 2. Synchronize dotfiles
-The root synchronizer automatically detects your operating system and desktop environment:
+> [!IMPORTANT]
+> **Zero configuration required**: `./sync.sh` automatically detects your operating system (`Arch`, `Fedora`, `Ubuntu`, `macOS`) and active desktop environment (`GNOME`, `KDE`, `Hyprland`, or headless).
 
 ```bash
-# Preview symlink actions (safe dry-run)
+# Preview changes safely without touching files
 ./sync.sh --dry-run
 
-# Apply symlinks
+# Run auto-detection & link dotfiles
 ./sync.sh
 ```
 
-#### Manual Overrides
-You can explicitly override detection when setting up a specific environment:
+<details>
+<summary><b>🔧 Need manual overrides? (Click to expand)</b></summary>
+
+Override detection when configuring a secondary environment or container:
 ```bash
-# Fedora with GNOME
+# Fedora Workstation with GNOME
 ./sync.sh --distro fedora --de gnome
 
-# Arch with Hyprland
+# Arch Linux with Hyprland
 ./sync.sh --distro arch --de hyprland
 
-# macOS Workstation
+# macOS Terminal Workstation
 ./sync.sh --distro mac --de none
 ```
+</details>
 
 ---
 
-## 🛠️ Toolchains & Developer Features
+## 🛠️ Developer Toolchains & Features
 
-### Dynamic Compiler Discovery (C++26)
-No more hardcoded compiler names or version mismatches between Homebrew and Linux package managers:
-- Dynamically discovers the newest installed GCC/G++ by scanning candidate system directories without hardcoded version ranges.
-- Automatically exports `$CC`, `$CXX`, and provides modern C++ runner helper:
-  ```bash
-  run_cpp solution.cpp    # Compiles with -std=c++26 -O2 -Wall using newest available g++
-  ```
-- Neovim's `clangd` LSP and `assistant.lua` (competitive programming runner) dynamically detect compiler versions and system include paths across platforms.
-
-### Neovim Setup (`core/config/nvim`)
-- **Base**: Modern LazyVim distribution.
-- **Python**: Integrated with `pyrefly` fast type-checker and language server.
-- **Java**: Automatic `resolve_java_home()` supporting macOS Homebrew, Fedora, Arch, and Ubuntu JDK installations.
-- **C/C++**: Clangd configured with universal query-driver for complete standard library intellisense.
-- **Competitive Programming**: Integrated test-case assistant with hotkeys for fast problem verification.
-
-### Universal Git & Directory-Scoped SSH Setup (`core/scripts/setup_git.sh`)
-Cross-distro vanilla Git configuration with automated SSH routing and profile isolation:
-- **Base Config**: High-efficiency defaults (`pull.rebase = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `rerere.enabled = true`, intuitive aliases).
-- **Push Interception**: Automatically rewrites GitHub HTTPS pushes to SSH via `pushInsteadOf` to prevent credential prompts.
-- **Multi-Profile Isolation**: Configure directory-scoped identities (e.g. `~/work`, `~/uni`) with dedicated SSH keys stored directly in `~/.ssh/` (e.g. `id_ed25519_work`, `id_ed25519_uni`) and isolated via `includeIf` and `sshCommand`, while retaining the default key (`id_ed25519` / `id_rsa`) everywhere else.
-- **Run Setup**:
-  ```bash
-  # Interactive setup:
-  ./core/scripts/setup_git.sh
-
-  # Create a directory-scoped profile:
-  ./core/scripts/setup_git.sh --profile work --profile-name "Work Name" --profile-email "user@work.com"
-  ```
-
-### Universal Shell Productivity (`core/setup.sh`)
-Automated, unattended bootstrap for essential shell navigation and fuzzy-search tools (automatically executed during `./sync.sh` across all Mac and Linux environments):
-- **`zoxide`**: Installs via the official script into `~/.local/bin` (already exported in `~/.profile`). Replaces standard `cd` with smart scoring (`z`, `zi`).
-- **`fzf`**: Clones `junegunn/fzf` into `~/.fzf` and runs with `--key-bindings --completion --no-update-rc` to generate completion scripts without dirtying tracked dotfiles (`.bashrc` / `.zshrc`).
-- **Run Setup Standalone**:
-  ```bash
-  # Standalone core setup:
-  ./core/setup.sh
-
-  # Force update:
-  ./core/setup.sh --update
-  ```
+* 🚀 **Dynamic C++26 Discovery**: Auto-detects the newest installed GCC/G++ across Linux and macOS Homebrew, exports `$CC`/`$CXX`, and provides `run_cpp` for instant builds.
+* ⚡ **Unified LazyVim**: Out-of-the-box LSP support for Python (`pyrefly`), C/C++ (`clangd`), dynamic JDK resolution (`resolve_java_home()`), and competitive programming test runner.
+* 🔐 **Isolated Multi-Profile Git & SSH**: Automatically rewrites HTTPS to SSH and scopes identities (e.g. work vs personal) by directory without credential leaks (`core/scripts/setup_git.sh`).
+* 🐚 **Modern Shell Stack**: Unattended bootstrap for `zoxide`, `fzf`, `yazi`, `starship`, and `vim-plug` without dirtying tracked files (`core/setup.sh`).
 
 ---
 
 ## 📦 Distribution Bootstrapping
 
-When setting up a fresh machine, run the setup scripts inside [`distros/`](file:///home/codesmith28/archConfig/distros):
+Run native system package installers and hardware drivers on clean machines:
 
-### Fedora Workstation
-```bash
-cd distros/fedora
-# Install core packages, RPM Fusion, and developer tools
-bash setup.sh
-```
-
-### Arch Linux (KDE, GNOME, or Hyprland)
-```bash
-cd distros/arch
-# Install official repos, AUR packages, and hardware services
-bash setup.sh
-```
-
-### Ubuntu (Desktop or Server)
-```bash
-cd distros/ubuntu
-# Install system packages and optimizations
-bash setup.sh
-```
-
-### macOS (Darwin)
-```bash
-cd distros/mac
-# Install Homebrew formulas, casks, and tooling
-bash setup.sh
-```
+* **Fedora**: `cd distros/fedora && bash setup.sh` — DNF packages, RPM Fusion, developer toolchains, and NVIDIA configuration.
+* **Arch Linux**: `cd distros/arch && bash setup.sh` — Pacman packages, AUR helper setup, and system services.
+* **Ubuntu**: `cd distros/ubuntu && bash setup.sh` — APT dependencies, PPA repositories, and desktop optimizations.
+* **macOS**: `cd distros/mac && bash setup.sh` — Homebrew bundle, CLI utilities, and cask applications.
 
 ---
 
 ## 🩺 Troubleshooting Runbooks
 
-Common hardware and dual-boot solutions are documented in [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot):
-
-- **[KDE Plasma Cross-Distro Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/kde_plasma_cross_distro_setup.md)**: Resolving active shortcut persistence (`kglobalshortcutsrc`), Plasma 6 migration, VM/SSH session detection, default terminal routing, and window management across distros.
-- **[GNOME Cross-Distro Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/gnome_cross_distro_setup.md)**: Resolving DBus session attachment, GSettings schema compilation, Ubuntu dock conflicts, and shortcut collision elimination across distros.
-- **[Restoring GRUB Bootloader](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)**: Reinstalling EFI entries after Windows updates or BIOS resets; fixing missing Windows dual-boot entries with `os-prober`.
-- **[Automated GRUB Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Single-command script to reinstall GRUB on UEFI systems.
-- **[Fixing `<bits/stdc++.h>` on macOS](file:///home/codesmith28/archConfig/troubleshoot/fix_bits_stdcxx_macos.md)**: Resolving missing C++ bits headers on Darwin systems.
+* 🐧 **[KDE Plasma Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/kde_plasma_cross_distro_setup.md)**: Fix shortcut persistence (`kglobalshortcutsrc`), Plasma 6 migration, and window routing.
+* 🎨 **[GNOME Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/gnome_cross_distro_setup.md)**: Fix DBus session attachment, GSettings compilation, and Ubuntu dock collisions.
+* 🥾 **[GRUB Recovery Guide](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)** & **[Auto-Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Restore EFI boot entries and dual-boot entries after Windows updates.
+* 🍎 **[macOS `<bits/stdc++.h>` Fix](file:///home/codesmith28/archConfig/troubleshoot/fix_bits_stdcxx_macos.md)**: Resolve missing C++ bits headers on Darwin for competitive programming.
 
 ---
 
 ## 🤖 AI Assistant Guidelines
 
-This repository includes an Antigravity Agent Skill in [`.agents/skills/archconfig-guard`](file:///home/codesmith28/archConfig/.agents/skills/archconfig-guard). When using AI coding assistants in this repo:
-1. **Never hardcode compiler versions or platform-exclusive commands** in `core/`.
-2. **Never break existing symlinks** on live systems; use backward-compatible shims when refactoring paths.
-3. **Always document new solutions** in [`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot) whenever resolving a platform-specific bug.
-
-For detailed migration history and architectural rationale, consult [MIGRATION.md](file:///home/codesmith28/archConfig/MIGRATION.md).
+* Controlled by [archconfig-guard](file:///home/codesmith28/archConfig/.agents/skills/archconfig-guard) to enforce cross-platform compatibility rules.
+* Never hardcodes compiler versions or platform-exclusive commands in `core/`.
+* For historical context and design decisions, see [MIGRATION.md](file:///home/codesmith28/archConfig/MIGRATION.md).

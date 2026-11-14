@@ -3,7 +3,7 @@
 # archConfig Core Layer Bootstrap Master Runner (macOS & Linux)
 #
 # Sets up cross-platform core developer dependencies:
-# (starship, leaf, zoxide, fzf, herdr, lazydocker, lazygit, uv, yazi, eza, fastfetch)
+# (starship, leaf, zoxide, fzf, herdr, lazydocker, lazygit, uv, yazi, eza, fastfetch, vim-plug)
 # ==============================================================================
 set -euo pipefail
 

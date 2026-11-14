@@ -17,6 +17,7 @@
 #  9. yazi       - Blazing fast terminal file manager + ya cli (sxyazi/yazi)
 # 10. eza        - Modern, maintained replacement for ls (eza-community/eza)
 # 11. fastfetch  - High-performance neofetch alternative (fastfetch-cli/fastfetch)
+# 12. vim-plug   - Minimalist Vim plugin manager (junegunn/vim-plug)
 #
 # Safe execution guarantee:
 # - Existing installations in PATH are preserved and NOT overwritten unless --update is passed.
@@ -42,7 +43,7 @@ for arg in "$@"; do
             echo "Installs archConfig universal core dependencies via curl without root."
             echo ""
             echo "Available tools:"
-            echo "  starship, leaf, zoxide, fzf, herdr, lazydocker, lazygit, uv, yazi, eza, fastfetch"
+            echo "  starship, leaf, zoxide, fzf, herdr, lazydocker, lazygit, uv, yazi, eza, fastfetch, vim-plug"
             echo ""
             echo "Options:"
             echo "  --update, -u   Force re-download / update even if already installed"
@@ -417,6 +418,30 @@ if should_process "fastfetch"; then
             trap - EXIT
         else
             echo "  ⚠️ Warning: Could not resolve latest fastfetch release tag."
+        fi
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 12. vim-plug (Vim Plugin Manager for ~/.vimrc)
+# ------------------------------------------------------------------------------
+if should_process "vim-plug"; then
+    echo ""
+    echo "==> Checking vim-plug..."
+    VIM_PLUG_DEST="${HOME}/.vim/autoload/plug.vim"
+    if [ -f "$VIM_PLUG_DEST" ] && [ "$UPDATE" = false ]; then
+        echo "  ✓ vim-plug is already installed at $VIM_PLUG_DEST"
+    else
+        echo "  → Installing / updating vim-plug for classic Vim..."
+        mkdir -p "${HOME}/.vim/autoload"
+        if download_file "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" "$VIM_PLUG_DEST"; then
+            echo "  ✓ vim-plug ready at $VIM_PLUG_DEST"
+            if command -v vim >/dev/null 2>&1 && [ -f "${HOME}/.vimrc" ]; then
+                echo "  → Running :PlugInstall non-interactively..."
+                vim -es -u "${HOME}/.vimrc" -i NONE -c "PlugInstall" -c "qa" 2>/dev/null || true
+            fi
+        else
+            echo "  ⚠️ Warning: Failed to download vim-plug."
         fi
     fi
 fi
