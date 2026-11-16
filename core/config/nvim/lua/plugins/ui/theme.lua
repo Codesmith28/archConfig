@@ -53,8 +53,8 @@ return {
         lazy = false,
         priority = 1000,
         opts = {
-            transparent = "false",
-            -- contrast = "hard",
+            transparent = "true",
+            contrast = "hard",
         },
     },
 
@@ -72,7 +72,8 @@ return {
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "catppuccin-mocha",
+            colorscheme = "gruvbox_v2",
+            -- colorscheme = "catppuccin-mocha",
         },
     },
 }

@@ -12,8 +12,8 @@ window-height = 62
 window-theme = ghostty
 window-padding-x = 5
 window-padding-y = 5
-window-decoration = client
-gtk-titlebar-style = tabs
+window-decoration = server
+gtk-titlebar-style = native
 
 confirm-close-surface=false
 resize-overlay = never

@@ -4,7 +4,7 @@ onboarding = false
 delivery = "herdr"
 
 [theme]
-name = "nord"
+name = "gruvbox"
 auto_switch = false
 
 [terminal]
