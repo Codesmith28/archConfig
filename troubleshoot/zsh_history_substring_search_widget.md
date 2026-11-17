@@ -28,7 +28,10 @@ In severe cases, arrow-key history recall is completely broken, leaving the shel
 
 ## Implemented Solution
 
-### 1. Robust Multi-Distro Plugin Loader (`core/home/.zshrc`)
+### 1. Robust Multi-Distro Plugin Loader & Auto-Bootstrapper (`core/home/.zshrc`)
+- **Zero-root auto-bootstrap**: If Antidote is absent on a fresh system, `.zshrc` automatically installs Antidote to `${ZDOTDIR:-$HOME}/.antidote` via `git clone` or `curl | tar` without needing root/sudo permissions.
+- **Auto-bundling & cache**: Generates `plugins.txt` if missing and compiles the static bundle at `~/.config/zsh/plugins.zsh` for sub-5ms shell startup.
+- **Direct curl fallback**: If Antidote or git is unavailable, `_bootstrap_plugin_curl` fetches and extracts tarballs from GitHub directly into `~/.local/share/zsh/plugins/`.
 - **Pre-configured settings**: Set plugin flags (such as `HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1` and `ZSH_AUTOSUGGEST_*`) before plugins are sourced.
 - **Universal Antidote detection**: Searches across standard paths:
   - `${ARCHCONFIG_ANTIDOTE_DIR:-}`
@@ -42,7 +45,13 @@ In severe cases, arrow-key history recall is completely broken, leaving the shel
 - **Static bundle fast-path**: Sources `~/.config/zsh/plugins.zsh` directly if newer than `plugins.txt` or if Antidote is absent.
 - **Cross-distro fallback resolution**: Checks system-wide distro paths for `zsh-history-substring-search`, `zsh-autosuggestions`, and `zsh-syntax-highlighting` across Arch, Fedora, Debian/Ubuntu, and macOS Homebrew.
 
-### 2. Defensive Keybindings with Graceful Fallback
+### 2. Full Multi-Distro FZF Integration
+- **Auto-path and auto-bootstrap**: Automatically ensures `~/.fzf/bin` is in `$PATH`, and bootstraps `~/.fzf` binary if missing.
+- **Modern native integration**: Runs `eval "$(fzf --zsh)"` (fzf 0.48+) for zero-latency fuzzy history search (`Ctrl+R`), file finding (`Ctrl+T`), and cd jumping (`Alt+C`).
+- **Legacy and distro fallbacks**: Supports `~/.fzf.zsh` and package directories across Arch, Fedora, Debian/Ubuntu, and macOS Homebrew.
+- **Fast backends**: Automatically sets `fd` / `fdfind` as `FZF_DEFAULT_COMMAND` with `.git` exclusions if installed.
+
+### 3. Defensive Keybindings with Graceful Fallback
 Keybindings now inspect the ZLE widget table before binding:
 ```zsh
 if (( ${+widgets[history-substring-search-up]} )) && (( ${+widgets[history-substring-search-down]} )); then
@@ -105,4 +114,5 @@ Should report:
 ```text
   ✓ Interactive Zsh environment initialized cleanly!
   ✓ History substring search widgets verified (history-substring-search-up/down)
+  ✓ FZF integration verified (fzf-history-widget, fzf-file-widget, fzf-cd-widget)
 ```

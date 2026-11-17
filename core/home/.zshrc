@@ -63,27 +63,65 @@ for _dir in \
     fi
 done
 
+# Auto-bootstrap Antidote via git or curl if missing (cross-distro user-space installer)
+if [ -z "$_antidote_dir" ]; then
+    _antidote_dir="${ZDOTDIR:-$HOME}/.antidote"
+    if command -v git >/dev/null 2>&1; then
+        git clone --quiet --depth=1 https://github.com/mattmc3/antidote.git "$_antidote_dir" 2>/dev/null
+    elif command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
+        mkdir -p "$_antidote_dir" 2>/dev/null
+        curl -fsSL https://github.com/mattmc3/antidote/archive/refs/heads/main.tar.gz 2>/dev/null | tar -xz --strip-components=1 -C "$_antidote_dir" 2>/dev/null
+    fi
+    [ -f "$_antidote_dir/antidote.zsh" ] || _antidote_dir=""
+fi
+
 _plugins_txt="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins.txt"
 _plugins_zsh="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins.zsh"
 [ -f "$_plugins_txt" ] || _plugins_txt="${ZDOTDIR:-$HOME}/.zsh_plugins.txt"
+[ -f "$_plugins_txt" ] || _plugins_txt="${ARCHCONFIG_DIR:-$HOME/archConfig}/core/config/zsh/plugins.txt"
 [ -f "$_plugins_zsh" ] || _plugins_zsh="${ZDOTDIR:-$HOME}/.zsh_plugins.zsh"
+
+# Ensure plugins.txt exists with default cross-distro plugin suite
+if [ ! -f "$_plugins_txt" ]; then
+    _plugins_txt="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins.txt"
+    mkdir -p "${_plugins_txt:h}" 2>/dev/null
+    cat <<'EOF' >| "$_plugins_txt" 2>/dev/null
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+zsh-users/zsh-syntax-highlighting
+EOF
+fi
 
 if [ -n "$_antidote_dir" ] && [ -f "$_plugins_txt" ]; then
     source "$_antidote_dir/antidote.zsh"
     # Fast path: if static compiled bundle exists and is newer than plugins.txt, source it directly;
-    # otherwise, let antidote load and regenerate it.
+    # otherwise, generate/update bundle and source it.
     if [ -f "$_plugins_zsh" ] && [ "$_plugins_zsh" -nt "$_plugins_txt" ]; then
         source "$_plugins_zsh"
     else
-        antidote load "$_plugins_txt"
+        mkdir -p "${_plugins_zsh:h}" 2>/dev/null
+        antidote bundle < "$_plugins_txt" >| "$_plugins_zsh" 2>/dev/null
+        [ -s "$_plugins_zsh" ] && source "$_plugins_zsh" || antidote load "$_plugins_txt"
     fi
 elif [ -f "$_plugins_zsh" ]; then
     source "$_plugins_zsh"
 fi
 unset _antidote_dir _plugins_txt _plugins_zsh
 
+# Helper to auto-download and source a standalone plugin via curl/tar if Antidote or bundle is unavailable
+_bootstrap_plugin_curl() {
+    local name="$1" repo="$2" entry_script="$3"
+    local dest="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/$name"
+    if [ ! -f "$dest/$entry_script" ] && command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
+        mkdir -p "$dest" 2>/dev/null
+        curl -fsSL "https://github.com/$repo/archive/refs/heads/master.tar.gz" 2>/dev/null | tar -xz --strip-components=1 -C "$dest" 2>/dev/null
+    fi
+    [ -f "$dest/$entry_script" ] && source "$dest/$entry_script"
+}
+
 # ---------- Fallback Multi-Distro Plugin Resolution ----------
-# History Substring Search (Arch, Fedora, Debian/Ubuntu, macOS Homebrew, or OMZ)
+# History Substring Search (Arch, Fedora, Debian/Ubuntu, macOS Homebrew, OMZ, or curl fallback)
 if (( ! ${+widgets[history-substring-search-up]} )); then
     for _hist_search in \
         /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh \
@@ -91,6 +129,7 @@ if (( ! ${+widgets[history-substring-search-up]} )); then
         /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
         /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
         "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-history-substring-search.zsh(N) \
+        "${XDG_DATA_HOME:-$HOME/.local/share}"/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh \
         "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh \
         "$HOME/.oh-my-zsh/plugins/history-substring-search/history-substring-search.plugin.zsh"; do
         if [ -f "$_hist_search" ]; then
@@ -99,6 +138,9 @@ if (( ! ${+widgets[history-substring-search-up]} )); then
         fi
     done
     unset _hist_search
+    if (( ! ${+widgets[history-substring-search-up]} )); then
+        _bootstrap_plugin_curl "zsh-history-substring-search" "zsh-users/zsh-history-substring-search" "zsh-history-substring-search.zsh"
+    fi
 fi
 
 # Autosuggestions fallback
@@ -108,13 +150,17 @@ if ! typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1; then
         /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
         /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
         /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
-        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-autosuggestions.zsh(N); do
+        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-autosuggestions.zsh(N) \
+        "${XDG_DATA_HOME:-$HOME/.local/share}"/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh; do
         if [ -f "$_autosuggest" ]; then
             source "$_autosuggest"
             break
         fi
     done
     unset _autosuggest
+    if ! typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1; then
+        _bootstrap_plugin_curl "zsh-autosuggestions" "zsh-users/zsh-autosuggestions" "zsh-autosuggestions.zsh"
+    fi
 fi
 
 # Syntax Highlighting fallback
@@ -124,14 +170,19 @@ if ! typeset -f _zsh_highlight >/dev/null 2>&1; then
         /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
         /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
         /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
-        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-syntax-highlighting.zsh(N); do
+        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-syntax-highlighting.zsh(N) \
+        "${XDG_DATA_HOME:-$HOME/.local/share}"/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
         if [ -f "$_syntax" ]; then
             source "$_syntax"
             break
         fi
     done
     unset _syntax
+    if ! typeset -f _zsh_highlight >/dev/null 2>&1; then
+        _bootstrap_plugin_curl "zsh-syntax-highlighting" "zsh-users/zsh-syntax-highlighting" "zsh-syntax-highlighting.zsh"
+    fi
 fi
+unset -f _bootstrap_plugin_curl
 
 # ---------- Plugin Settings & Keybindings ----------
 # Use emacs keybindings by default (prevents EDITOR=nvim/vi from forcing viins mode)
@@ -247,9 +298,59 @@ command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 # ========== Deferred plugins ==========
 [ -f "$HOME/.zsh-defer/zsh-defer.plugin.zsh" ] && source "$HOME/.zsh-defer/zsh-defer.plugin.zsh" 2>/dev/null
 
-# These are heavy → defer them
-if [ -f ~/.fzf.zsh ]; then
-    command -v zsh-defer >/dev/null 2>&1 && zsh-defer source ~/.fzf.zsh || source ~/.fzf.zsh
+# ========== FZF (Fuzzy Finder) ==========
+# Ensure ~/.fzf/bin is in PATH if present
+[ -d "$HOME/.fzf/bin" ] && [[ ":$PATH:" != *":$HOME/.fzf/bin:"* ]] && export PATH="$HOME/.fzf/bin:$PATH"
+
+# Auto-bootstrap fzf binary if not present
+if ! command -v fzf >/dev/null 2>&1 && [ ! -x "$HOME/.fzf/bin/fzf" ]; then
+    if command -v git >/dev/null 2>&1; then
+        git clone --quiet --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf" 2>/dev/null
+        [ -x "$HOME/.fzf/install" ] && "$HOME/.fzf/install" --bin >/dev/null 2>&1
+        [ -d "$HOME/.fzf/bin" ] && export PATH="$HOME/.fzf/bin:$PATH"
+    fi
+fi
+
+if command -v fzf >/dev/null 2>&1; then
+    # Enhanced search backend (fd / fdfind if available)
+    if command -v fd >/dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
+    elif command -v fdfind >/dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --exclude .git'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_ALT_C_COMMAND='fdfind --type d --hidden --exclude .git'
+    fi
+
+    export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --inline-info'
+
+    # Sourcing completion and keybindings
+    # 1. Modern fzf (0.48+) native zsh integration
+    if fzf --zsh >/dev/null 2>&1; then
+        eval "$(fzf --zsh)"
+    # 2. Traditional ~/.fzf.zsh wrapper
+    elif [ -f "$HOME/.fzf.zsh" ]; then
+        source "$HOME/.fzf.zsh"
+    # 3. Multi-distro package paths (Arch, Fedora, Debian/Ubuntu, macOS Homebrew, git)
+    else
+        for _fzf_dir in \
+            /usr/share/fzf \
+            /usr/share/fzf/shell \
+            /usr/share/doc/fzf/examples \
+            "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf/shell" \
+            /usr/local/opt/fzf/shell \
+            "$HOME/.fzf/shell"; do
+            if [ -f "$_fzf_dir/key-bindings.zsh" ]; then
+                [ -f "$_fzf_dir/completion.zsh" ] && source "$_fzf_dir/completion.zsh" 2>/dev/null
+                source "$_fzf_dir/key-bindings.zsh" 2>/dev/null
+                break
+            fi
+        done
+        unset _fzf_dir
+    fi
+elif [ -f "$HOME/.fzf.zsh" ]; then
+    source "$HOME/.fzf.zsh"
 fi
 
 

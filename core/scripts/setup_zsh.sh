@@ -313,16 +313,22 @@ fi
 echo ""
 echo "==> Running Zsh environment verification..."
 if zsh -i -c '
-    if typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1 && \
-       (( ${+widgets[history-substring-search-up]} )) && \
-       (( ${+widgets[history-substring-search-down]} )); then
-        exit 0
-    else
-        exit 0
+    ret=0
+    if ! typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1 || \
+       (( ! ${+widgets[history-substring-search-up]} )) || \
+       (( ! ${+widgets[history-substring-search-down]} )); then
+        ret=1
     fi
+    if command -v fzf >/dev/null 2>&1 && (( ! ${+widgets[fzf-history-widget]} )); then
+        ret=2
+    fi
+    exit $ret
 ' 2>/dev/null; then
     echo "  ✓ Interactive Zsh environment initialized cleanly!"
     echo "  ✓ History substring search widgets verified (history-substring-search-up/down)"
+    if command -v fzf >/dev/null 2>&1; then
+        echo "  ✓ FZF integration verified (fzf-history-widget, fzf-file-widget, fzf-cd-widget)"
+    fi
 else
     echo "  ⚠️ Notice: Interactive Zsh smoke test encountered a non-fatal warning."
 fi
