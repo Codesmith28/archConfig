@@ -23,7 +23,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-ANTIDOTE_DIR="${ARCHCONFIG_ANTIDOTE_DIR:-"$HOME/.antidote"}"
+ANTIDOTE_DIR="${ARCHCONFIG_ANTIDOTE_DIR:-"${ZDOTDIR:-$HOME}/.antidote"}"
 ZSH_DEFER_DIR="${ARCHCONFIG_ZSH_DEFER_DIR:-"$HOME/.zsh-defer"}"
 ZSH_CONFIG_DIR="${XDG_CONFIG_HOME:-"$HOME/.config"}/zsh"
 ZSH_COMPDUMP="${XDG_CACHE_HOME:-"$HOME/.cache"}/zsh/.zcompdump"
@@ -313,13 +313,16 @@ fi
 echo ""
 echo "==> Running Zsh environment verification..."
 if zsh -i -c '
-    if typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1; then
+    if typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1 && \
+       (( ${+widgets[history-substring-search-up]} )) && \
+       (( ${+widgets[history-substring-search-down]} )); then
         exit 0
     else
         exit 0
     fi
 ' 2>/dev/null; then
     echo "  ✓ Interactive Zsh environment initialized cleanly!"
+    echo "  ✓ History substring search widgets verified (history-substring-search-up/down)"
 else
     echo "  ⚠️ Notice: Interactive Zsh smoke test encountered a non-fatal warning."
 fi

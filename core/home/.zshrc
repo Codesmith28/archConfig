@@ -40,27 +40,127 @@ zstyle ':completion:*' group-name ''
 
 compinit -d "$ZSH_COMPDUMP" -C
 
-# ---------- Antidote Plugin Manager ----------
-if [ -f "$HOME/.antidote/antidote.zsh" ]; then
-    source "$HOME/.antidote/antidote.zsh"
-    if [ -f "$HOME/.config/zsh/plugins.txt" ]; then
-        antidote load "$HOME/.config/zsh/plugins.txt"
+# ---------- Plugin Settings (configured before plugin sourcing) ----------
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+# ---------- Antidote Plugin Manager & Static Bundle Loading ----------
+_antidote_dir=""
+for _dir in \
+    "${ARCHCONFIG_ANTIDOTE_DIR:-}" \
+    "${ZDOTDIR:-$HOME}/.antidote" \
+    "$HOME/.antidote" \
+    "${XDG_DATA_HOME:-$HOME/.local/share}/antidote" \
+    /usr/share/zsh-antidote \
+    /usr/share/antidote \
+    /opt/homebrew/share/antidote \
+    /usr/local/share/antidote; do
+    if [ -n "$_dir" ] && [ -f "$_dir/antidote.zsh" ]; then
+        _antidote_dir="$_dir"
+        break
     fi
+done
+
+_plugins_txt="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins.txt"
+_plugins_zsh="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins.zsh"
+[ -f "$_plugins_txt" ] || _plugins_txt="${ZDOTDIR:-$HOME}/.zsh_plugins.txt"
+[ -f "$_plugins_zsh" ] || _plugins_zsh="${ZDOTDIR:-$HOME}/.zsh_plugins.zsh"
+
+if [ -n "$_antidote_dir" ] && [ -f "$_plugins_txt" ]; then
+    source "$_antidote_dir/antidote.zsh"
+    # Fast path: if static compiled bundle exists and is newer than plugins.txt, source it directly;
+    # otherwise, let antidote load and regenerate it.
+    if [ -f "$_plugins_zsh" ] && [ "$_plugins_zsh" -nt "$_plugins_txt" ]; then
+        source "$_plugins_zsh"
+    else
+        antidote load "$_plugins_txt"
+    fi
+elif [ -f "$_plugins_zsh" ]; then
+    source "$_plugins_zsh"
+fi
+unset _antidote_dir _plugins_txt _plugins_zsh
+
+# ---------- Fallback Multi-Distro Plugin Resolution ----------
+# History Substring Search (Arch, Fedora, Debian/Ubuntu, macOS Homebrew, or OMZ)
+if (( ! ${+widgets[history-substring-search-up]} )); then
+    for _hist_search in \
+        /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh \
+        /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
+        /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
+        /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
+        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-history-substring-search.zsh(N) \
+        "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh \
+        "$HOME/.oh-my-zsh/plugins/history-substring-search/history-substring-search.plugin.zsh"; do
+        if [ -f "$_hist_search" ]; then
+            source "$_hist_search"
+            break
+        fi
+    done
+    unset _hist_search
+fi
+
+# Autosuggestions fallback
+if ! typeset -f _zsh_autosuggest_bind_widgets >/dev/null 2>&1; then
+    for _autosuggest in \
+        /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+        /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+        /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+        /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-autosuggestions.zsh(N); do
+        if [ -f "$_autosuggest" ]; then
+            source "$_autosuggest"
+            break
+        fi
+    done
+    unset _autosuggest
+fi
+
+# Syntax Highlighting fallback
+if ! typeset -f _zsh_highlight >/dev/null 2>&1; then
+    for _syntax in \
+        /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+        /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+        /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+        /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+        "${XDG_CACHE_HOME:-$HOME/.cache}"/antidote/**/zsh-syntax-highlighting.zsh(N); do
+        if [ -f "$_syntax" ]; then
+            source "$_syntax"
+            break
+        fi
+    done
+    unset _syntax
 fi
 
 # ---------- Plugin Settings & Keybindings ----------
 # Use emacs keybindings by default (prevents EDITOR=nvim/vi from forcing viins mode)
 bindkey -e
 
-# Fish-like autosuggestions settings
-export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-export ZSH_AUTOSUGGEST_USE_ASYNC=1
-export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-bindkey '^f' autosuggest-accept 2>/dev/null || true
+# Fish-like autosuggestions accept keybinding (only if widget is available)
+if (( ${+widgets[autosuggest-accept]} )); then
+    bindkey '^f' autosuggest-accept 2>/dev/null || true
+fi
 
 # History substring search keybindings (Up / Down arrow keys)
-bindkey '^[[A' history-substring-search-up 2>/dev/null || true
-bindkey '^[[B' history-substring-search-down 2>/dev/null || true
+if (( ${+widgets[history-substring-search-up]} )) && (( ${+widgets[history-substring-search-down]} )); then
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+    bindkey '^[OA' history-substring-search-up
+    bindkey '^[OB' history-substring-search-down
+    [ -n "${terminfo[kcuu1]:-}" ] && bindkey "$terminfo[kcuu1]" history-substring-search-up 2>/dev/null || true
+    [ -n "${terminfo[kcud1]:-}" ] && bindkey "$terminfo[kcud1]" history-substring-search-down 2>/dev/null || true
+    bindkey -M vicmd 'k' history-substring-search-up 2>/dev/null || true
+    bindkey -M vicmd 'j' history-substring-search-down 2>/dev/null || true
+else
+    # Fallback to standard line / history navigation if history-substring-search is unavailable
+    bindkey '^[[A' up-line-or-history
+    bindkey '^[[B' down-line-or-history
+    bindkey '^[OA' up-line-or-history
+    bindkey '^[OB' down-line-or-history
+    [ -n "${terminfo[kcuu1]:-}" ] && bindkey "$terminfo[kcuu1]" up-line-or-history 2>/dev/null || true
+    [ -n "${terminfo[kcud1]:-}" ] && bindkey "$terminfo[kcud1]" down-line-or-history 2>/dev/null || true
+fi
 
 # Completion menu navigation (Shift-Tab cycles backward)
 bindkey '^[[Z' reverse-menu-complete 2>/dev/null || true
