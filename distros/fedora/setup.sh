@@ -6,6 +6,11 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$DIR/../.." && pwd)"
 
+echo "==> Setting up essential packages..."
+if [ -f "$REPO_DIR/distros/common/setup_packages.sh" ]; then
+    bash "$REPO_DIR/distros/common/setup_packages.sh" "$@"
+fi
+
 echo "==> Setting up Fedora hardware and system optimizations..."
 if [ -f "$DIR/optimizations/setup.sh" ]; then
     bash "$DIR/optimizations/setup.sh" "$@"

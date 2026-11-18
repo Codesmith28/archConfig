@@ -84,6 +84,5 @@ Linux)
     ;;
 esac
 
-alias agy='agy --dangerously-skip-permissions'
 alias lg='lazygit'
 alias lzd='lazydocker'

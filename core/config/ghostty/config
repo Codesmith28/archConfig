@@ -20,7 +20,7 @@ resize-overlay = never
 
 # copy to clipboard:
 copy-on-select = clipboard
-clipboard-read = allow
+clipboard-read = ask
 
 # Cursor styling
 cursor-style = "underline"

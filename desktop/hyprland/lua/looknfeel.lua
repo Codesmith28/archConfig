@@ -31,6 +31,9 @@ o.window({ tag = "default-opacity" }, { opacity = "1.0 1.0" })
 o.window({ tag = "chromium-based-browser" }, { opacity = "1.0 1.0" })
 o.window({ tag = "firefox-based-browser" }, { opacity = "1.0 1.0" })
 
+-- Center all floating windows
+o.window({ floating = true }, { center = true })
+
 -- Window rules for specific applications
 local small_window_size = { 1500, 1000 }
 

@@ -125,14 +125,4 @@ return {
             return opts
         end,
     },
-    {
-        "neovim/nvim-lspconfig",
-        opts = {
-            servers = {
-                jdtls = {
-                    enabled = deps.has_java,
-                },
-            },
-        },
-    },
 }

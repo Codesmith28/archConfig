@@ -1,0 +1,69 @@
+{
+  "Competitive Programming Template": {
+    "prefix": ["cp", "cptemplate"],
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "",
+      "#define fastio ios_base::sync_with_stdio(false); cin.tie(NULL);",
+      "#define nl '\\n'",
+      "#define all(x) (x).begin(), (x).end()",
+      "#define sz(x) ((int)(x).size())",
+      "",
+      "using ll = long long;",
+      "using pii = pair<int, int>;",
+      "using pll = pair<ll, ll>;",
+      "using vi = vector<int>;",
+      "using vll = vector<ll>;",
+      "",
+      "void solve() {",
+      "    ${0}",
+      "}",
+      "",
+      "int main() {",
+      "    fastio;",
+      "    int t = 1;",
+      "    cin >> t;",
+      "    while (t--) {",
+      "        solve();",
+      "    }",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Competitive programming starter template with fast I/O and test cases"
+  },
+  "Basic Template": {
+    "prefix": ["basic", "starter"],
+    "body": [
+      "#include <iostream>",
+      "",
+      "using namespace std;",
+      "",
+      "int main() {",
+      "    ios_base::sync_with_stdio(false);",
+      "    cin.tie(NULL);",
+      "",
+      "    ${0}",
+      "",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Basic C++ starter template with fast I/O"
+  },
+  "Fast I/O": {
+    "prefix": ["fastio", "fio"],
+    "body": [
+      "ios_base::sync_with_stdio(false);",
+      "cin.tie(NULL);"
+    ],
+    "description": "Fast I/O for competitive programming"
+  },
+  "CP Headers": {
+    "prefix": ["headers", "cpheaders"],
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;"
+    ],
+    "description": "Standard CP headers with bits/stdc++.h"
+  }
+}

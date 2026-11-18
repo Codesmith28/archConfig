@@ -30,9 +30,11 @@ _path_prepend "$HOME/bin"
 _path_prepend "$HOME/.local/bin"
 _path_prepend "$HOME/.fzf/bin"
 _path_prepend "$HOME/.bun/bin"
-_path_prepend "/opt/nvim-linux-x86_64/bin"
-_path_prepend "/opt/homebrew/bin"
-_path_prepend "/opt/homebrew/sbin"
+[ -d "/opt/nvim-linux-x86_64/bin" ] && _path_prepend "/opt/nvim-linux-x86_64/bin"
+[ -d "/opt/homebrew/bin" ] && _path_prepend "/opt/homebrew/bin"
+[ -d "/opt/homebrew/sbin" ] && _path_prepend "/opt/homebrew/sbin"
+[ -d "/usr/local/bin" ] && _path_prepend "/usr/local/bin"
+[ -d "/home/linuxbrew/.linuxbrew/bin" ] && _path_prepend "/home/linuxbrew/.linuxbrew/bin"
 
 unset -f _path_prepend _ldpath_prepend
 
@@ -55,7 +57,14 @@ fi
 [ -d "$HOME/.bun" ] && export BUN_INSTALL="$HOME/.bun"
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew initialization (Apple Silicon, Intel Mac, Linuxbrew)
+if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ] && . "$HOME/.sdkman/bin/sdkman-init.sh"
 [ -f "$HOME/.profile.local" ] && . "$HOME/.profile.local"
 

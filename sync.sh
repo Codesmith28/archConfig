@@ -2,7 +2,9 @@
 # ==============================================================================
 # archConfig Universal Cross-Distro Dotfile Synchronizer
 # ==============================================================================
-set -e
+set -euo pipefail
+
+trap 'echo "❌ Error encountered on line $LINENO. Synchronization aborted." >&2' ERR
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DRY_RUN=false
@@ -11,7 +13,15 @@ TARGET_DE=""
 CUSTOM_BACKUP_DIR=""
 WAKATIME_KEY_ARG=""
 OPT_OUT_WAKATIME=false
+RECONFIGURE_WAKATIME=false
 NON_INTERACTIVE=false
+SYNC_CORE_ONLY=false
+SYNC_DESKTOP_ONLY=false
+SKIP_DEPS=false
+
+# Respect XDG Base Directory specification
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -21,12 +31,24 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --distro)
-            TARGET_DISTRO="$2"
+            TARGET_DISTRO="$(echo "$2" | tr '[:upper:]' '[:lower:]')"
             shift 2
             ;;
         --de)
-            TARGET_DE="$2"
+            TARGET_DE="$(echo "$2" | tr '[:upper:]' '[:lower:]')"
             shift 2
+            ;;
+        --core-only)
+            SYNC_CORE_ONLY=true
+            shift
+            ;;
+        --desktop-only)
+            SYNC_DESKTOP_ONLY=true
+            shift
+            ;;
+        --skip-deps)
+            SKIP_DEPS=true
+            shift
             ;;
         --backup-dir)
             CUSTOM_BACKUP_DIR="$2"
@@ -40,6 +62,10 @@ while [[ $# -gt 0 ]]; do
             OPT_OUT_WAKATIME=true
             shift
             ;;
+        --reconfigure-wakatime)
+            RECONFIGURE_WAKATIME=true
+            shift
+            ;;
         --non-interactive)
             NON_INTERACTIVE=true
             export NON_INTERACTIVE=true
@@ -49,14 +75,18 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: ./sync.sh [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --dry-run              Show what symlinks would be created without making changes"
-            echo "  --distro <name>        Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
-            echo "  --de <name>            Override desktop environment (gnome, kde, hyprland, none)"
-            echo "  --backup-dir <path>    Custom directory for backing up existing host configs (default: ~/.config/old_config_backups)"
-            echo "  --wakatime-key <key>   Provide WakaTime API key directly"
-            echo "  --no-wakatime          Opt out of WakaTime (do not configure or prompt for API key)"
-            echo "  --non-interactive      Run non-interactively without prompting"
-            echo "  -h, --help             Show this help message"
+            echo "  --dry-run                 Show what symlinks would be created without making changes"
+            echo "  --distro <name>           Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
+            echo "  --de <name>               Override desktop environment (gnome, kde, hyprland, none)"
+            echo "  --core-only               Only synchronize core application configs and home dotfiles"
+            echo "  --desktop-only            Only synchronize desktop environment configurations"
+            echo "  --skip-deps               Skip downloading or running core dependency installers"
+            echo "  --backup-dir <path>       Custom directory for backing up existing host configs (default: ~/.config/old_config_backups)"
+            echo "  --wakatime-key <key>      Provide WakaTime API key directly"
+            echo "  --reconfigure-wakatime    Prompt to reconfigure existing WakaTime API key"
+            echo "  --no-wakatime             Opt out of WakaTime (do not configure or prompt for API key)"
+            echo "  --non-interactive         Run non-interactively without prompting"
+            echo "  -h, --help                Show this help message"
             exit 0
             ;;
         *)
@@ -103,52 +133,39 @@ detect_de() {
         return
     fi
 
+    if [ "$(uname -s)" = "Darwin" ]; then
+        echo "none"
+        return
+    fi
+
+    # Check for Hyprland session
+    if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] || pgrep -x "Hyprland" >/dev/null 2>&1; then
+        echo "hyprland"
+        return
+    fi
+
     local current_de="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}"
     current_de=$(echo "$current_de" | tr '[:upper:]' '[:lower:]')
 
-    if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] || echo "$current_de" | grep -q "hyprland"; then
+    if echo "$current_de" | grep -q "hyprland"; then
         echo "hyprland"
-        return
-    elif echo "$current_de" | grep -q "gnome"; then
+    elif echo "$current_de" | grep -q "gnome" || pgrep -x "gnome-shell" >/dev/null 2>&1; then
         echo "gnome"
-        return
-    elif echo "$current_de" | grep -qE "kde|plasma"; then
+    elif echo "$current_de" | grep -qE "kde|plasma" || [ -n "${KDE_FULL_SESSION:-}" ] || [ -n "${KDE_SESSION_VERSION:-}" ] || pgrep -x "plasmashell" >/dev/null 2>&1 || pgrep -x "kwin_wayland" >/dev/null 2>&1; then
         echo "kde"
-        return
-    elif [ "$(uname -s)" = "Darwin" ]; then
-        echo "mac_desktop"
-        return
-    fi
-
-    # Fallbacks for VM / SSH / headless environments where XDG_CURRENT_DESKTOP is unset
-    if [ -n "${KDE_FULL_SESSION:-}" ] || [ -n "${KDE_SESSION_VERSION:-}" ] || \
-       pgrep -x "plasmashell" >/dev/null 2>&1 || pgrep -x "kwin_wayland" >/dev/null 2>&1 || pgrep -x "kwin_x11" >/dev/null 2>&1 || \
-       { command -v systemctl >/dev/null 2>&1 && systemctl --user is-active plasma-plasmashell >/dev/null 2>&1; }; then
+    elif [ -f /usr/share/wayland-sessions/plasmawayland.desktop ] || [ -f /usr/share/wayland-sessions/plasma.desktop ]; then
         echo "kde"
-        return
-    elif pgrep -x "gnome-shell" >/dev/null 2>&1 || { command -v systemctl >/dev/null 2>&1 && systemctl --user is-active gnome-shell >/dev/null 2>&1; }; then
+    elif [ -f /usr/share/wayland-sessions/gnome.desktop ]; then
         echo "gnome"
-        return
-    elif pgrep -x "Hyprland" >/dev/null 2>&1; then
-        echo "hyprland"
-        return
+    else
+        echo "none"
     fi
-
-    # Session file fallback (default installed desktop on system)
-    if [ -f /usr/share/wayland-sessions/plasmawayland.desktop ] || [ -f /usr/share/wayland-sessions/plasma.desktop ] || [ -f /usr/share/xsessions/plasma.desktop ]; then
-        if [ ! -f /usr/share/wayland-sessions/gnome.desktop ] && [ ! -f /usr/share/xsessions/gnome.desktop ]; then
-            echo "kde"
-            return
-        fi
-    fi
-
-    echo "none"
 }
 
 DETECTED_OS="$(detect_os)"
 DETECTED_DE="$(detect_de)"
 
-BACKUP_ROOT="${CUSTOM_BACKUP_DIR:-${ARCHCONFIG_BACKUP_DIR:-$HOME/.config/old_config_backups}}"
+BACKUP_ROOT="${CUSTOM_BACKUP_DIR:-${ARCHCONFIG_BACKUP_DIR:-$CONFIG_DIR/old_config_backups}}"
 TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
 BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 HAS_BACKUPS=false
@@ -188,6 +205,11 @@ link_item() {
     local src="$1"
     local dest="$2"
 
+    if [ ! -e "$src" ]; then
+        echo "  ⚠️ Warning: Source does not exist: $src (skipping)" >&2
+        return 0
+    fi
+
     if [ -L "$dest" ]; then
         local raw_target
         raw_target="$(readlink "$dest" 2>/dev/null || true)"
@@ -203,226 +225,241 @@ link_item() {
     if [ "$DRY_RUN" = false ]; then
         mkdir -p "$(dirname "$dest")"
         ln -snf "$src" "$dest"
+        echo "  → Linked: $dest -> $src"
+    else
+        echo "  (dry-run) Would link: $dest -> $src"
     fi
-    echo "  → Linked: $dest -> $src"
 }
 
 # ------------------------------------------------------------------------------
 # 3. Synchronize Core Configurations (~/.config/)
 # ------------------------------------------------------------------------------
-echo ""
-echo "==> Synchronizing Core Application Configs (~/.config/)..."
-mkdir -p "$HOME/.config" "$HOME/.local/share/fonts"
-
-for item in "$REPO_DIR/core/config"/*; do
-    [ -e "$item" ] || continue
-    name="$(basename "$item")"
-    if [ "$name" = "herdr" ]; then
-        # For herdr, manage config.toml inside ~/.config/herdr so runtime sockets/logs remain local
-        mkdir -p "$HOME/.config/herdr"
-        if [ -f "$item/config.toml" ]; then
-            link_item "$item/config.toml" "$HOME/.config/herdr/config.toml"
+if [ "$SYNC_DESKTOP_ONLY" = false ]; then
+    echo ""
+    echo "==> Synchronizing Core Application Configs ($CONFIG_DIR/)..."
+    if [ "$DRY_RUN" = false ]; then
+        mkdir -p "$CONFIG_DIR"
+        if [ "$(uname -s)" = "Darwin" ]; then
+            mkdir -p "$HOME/Library/Fonts"
+        else
+            mkdir -p "$DATA_DIR/fonts"
         fi
-        continue
     fi
-    link_item "$item" "$HOME/.config/$name"
-done
 
-# WirePlumber 0.5 device scripts cleanup / sync
-# Clean up legacy custom autoswitch script overrides in ~/.local/share/wireplumber
-if [ -L "$HOME/.local/share/wireplumber/scripts/device/autoswitch-bluetooth-profile.lua" ]; then
-    rm -f "$HOME/.local/share/wireplumber/scripts/device/autoswitch-bluetooth-profile.lua"
-    rmdir "$HOME/.local/share/wireplumber/scripts/device" 2>/dev/null || true
-    rmdir "$HOME/.local/share/wireplumber/scripts" 2>/dev/null || true
-fi
-if [ -d "$REPO_DIR/core/config/wireplumber/scripts/device" ]; then
-    mkdir -p "$HOME/.local/share/wireplumber/scripts/device"
-    for wp_script in "$REPO_DIR/core/config/wireplumber/scripts/device"/*; do
-        [ -f "$wp_script" ] || continue
-        link_item "$wp_script" "$HOME/.local/share/wireplumber/scripts/device/$(basename "$wp_script")"
+    for item in "$REPO_DIR/core/config"/*; do
+        [ -e "$item" ] || continue
+        name="$(basename "$item")"
+        if [ "$name" = "herdr" ]; then
+            if [ "$DRY_RUN" = false ]; then
+                mkdir -p "$CONFIG_DIR/herdr"
+            fi
+            if [ -f "$item/config.toml" ]; then
+                link_item "$item/config.toml" "$CONFIG_DIR/herdr/config.toml"
+            fi
+            continue
+        fi
+        link_item "$item" "$CONFIG_DIR/$name"
+    done
+
+    # Clean legacy wireplumber scripts on Linux if present
+    if [ "$(uname -s)" = "Linux" ]; then
+        if [ "$DRY_RUN" = false ]; then
+            if [ -L "$DATA_DIR/wireplumber/scripts/device/autoswitch-bluetooth-profile.lua" ]; then
+                rm -f "$DATA_DIR/wireplumber/scripts/device/autoswitch-bluetooth-profile.lua"
+                rmdir "$DATA_DIR/wireplumber/scripts/device" 2>/dev/null || true
+                rmdir "$DATA_DIR/wireplumber/scripts" 2>/dev/null || true
+            fi
+        fi
+    fi
+
+    # ------------------------------------------------------------------------------
+    # 4. Synchronize Core Home Dotfiles (~/.*)
+    # ------------------------------------------------------------------------------
+    echo ""
+    echo "==> Synchronizing Home Dotfiles (~/)..."
+
+    # Ensure local git identity is preserved before ~/.gitconfig symlink
+    if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ] && [ ! -f "$HOME/.gitconfig.local" ]; then
+        if command -v git >/dev/null 2>&1; then
+            _ex_name="$(git config --file "$HOME/.gitconfig" user.name 2>/dev/null || true)"
+            _ex_email="$(git config --file "$HOME/.gitconfig" user.email 2>/dev/null || true)"
+            if [ -n "$_ex_name" ] || [ -n "$_ex_email" ]; then
+                if [ "$DRY_RUN" = false ]; then
+                    touch "$HOME/.gitconfig.local"
+                    [ -n "$_ex_name" ] && git config --file "$HOME/.gitconfig.local" user.name "$_ex_name"
+                    [ -n "$_ex_email" ] && git config --file "$HOME/.gitconfig.local" user.email "$_ex_email"
+                    echo "  📦 Preserved existing Git identity in ~/.gitconfig.local"
+                else
+                    echo "  (dry-run) Would preserve existing Git identity in ~/.gitconfig.local"
+                fi
+            fi
+        fi
+    fi
+
+    # Manage WakaTime API key & Opt-out preference before ~/.wakatime.cfg symlink
+    WAKATIME_LOCAL_CFG="$HOME/.wakatime.cfg.local"
+    _existing_waka_key=""
+
+    if [ -f "$WAKATIME_LOCAL_CFG" ]; then
+        _existing_waka_key="$(grep -E '^[[:space:]]*api_key[[:space:]]*=' "$WAKATIME_LOCAL_CFG" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]]*api_key[[:space:]]*=[[:space:]]*//' | tr -d ' "\r\n' || true)"
+    fi
+    if [ -z "$_existing_waka_key" ] && [ -f "$HOME/.wakatime.cfg" ] && [ ! -L "$HOME/.wakatime.cfg" ]; then
+        _existing_waka_key="$(grep -E '^[[:space:]]*api_key[[:space:]]*=' "$HOME/.wakatime.cfg" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]]*api_key[[:space:]]*=[[:space:]]*//' | tr -d ' "\r\n' || true)"
+    fi
+
+    FINAL_WAKA_KEY=""
+
+    if [ "$OPT_OUT_WAKATIME" = true ]; then
+        FINAL_WAKA_KEY=""
+    elif [ -n "$WAKATIME_KEY_ARG" ]; then
+        FINAL_WAKA_KEY="$(echo "$WAKATIME_KEY_ARG" | tr -d ' "\r\n')"
+    elif [ -n "$_existing_waka_key" ]; then
+        if [ "$RECONFIGURE_WAKATIME" = false ] || [ "$NON_INTERACTIVE" = true ] || [ "$DRY_RUN" = true ] || [ ! -t 0 ]; then
+            FINAL_WAKA_KEY="$_existing_waka_key"
+        else
+            _masked_key="$(echo "$_existing_waka_key" | sed -E 's/^(.{8}).*(.{4})$/\1...\2/')"
+            echo ""
+            echo "  🕒 WakaTime Configuration:"
+            echo "     Existing API Key detected: $_masked_key"
+            read -rp "     Enter WakaTime API key [Press Enter to keep, or type 'opt-out'/'none' to disable]: " _user_input || true
+            _clean_input="$(echo "${_user_input:-}" | tr -d ' "\r\n')"
+            case "$_clean_input" in
+                opt-out|none|skip|disable|no)
+                    echo "  ⏭️ Opted out of WakaTime."
+                    FINAL_WAKA_KEY=""
+                    ;;
+                "")
+                    FINAL_WAKA_KEY="$_existing_waka_key"
+                    ;;
+                *)
+                    FINAL_WAKA_KEY="$_clean_input"
+                    ;;
+            esac
+        fi
+    else
+        # No existing key found
+        if [ "$NON_INTERACTIVE" = true ] || [ "$DRY_RUN" = true ] || [ ! -t 0 ]; then
+            FINAL_WAKA_KEY=""
+        else
+            echo ""
+            echo "  🕒 WakaTime Configuration:"
+            echo "     Leaderboards & code stats require an API key from https://wakatime.com/api-key"
+            read -rp "     Enter your WakaTime API key (leave blank to opt out): " _user_input || true
+            _clean_input="$(echo "${_user_input:-}" | tr -d ' "\r\n')"
+            if [ -n "$_clean_input" ] && [ "$_clean_input" != "opt-out" ] && [ "$_clean_input" != "none" ] && [ "$_clean_input" != "skip" ]; then
+                FINAL_WAKA_KEY="$_clean_input"
+            else
+                echo "  ⏭️ No API key provided. Opting out of WakaTime."
+                FINAL_WAKA_KEY=""
+            fi
+        fi
+    fi
+
+    if [ "$DRY_RUN" = false ]; then
+        touch "$WAKATIME_LOCAL_CFG"
+        chmod 600 "$WAKATIME_LOCAL_CFG"
+        if [ -n "$FINAL_WAKA_KEY" ]; then
+            cat <<EOF > "$WAKATIME_LOCAL_CFG"
+[settings]
+api_key = $FINAL_WAKA_KEY
+EOF
+            echo "  📦 WakaTime API key configured in ~/.wakatime.cfg.local"
+        else
+            cat <<EOF > "$WAKATIME_LOCAL_CFG"
+[settings]
+# WakaTime opted out (no API key configured)
+EOF
+            echo "  ⏭️ WakaTime opted out in ~/.wakatime.cfg.local"
+        fi
+    else
+        if [ -n "$FINAL_WAKA_KEY" ]; then
+            echo "  (dry-run) Would configure WakaTime API key in ~/.wakatime.cfg.local"
+        else
+            echo "  (dry-run) Would opt out of WakaTime in ~/.wakatime.cfg.local"
+        fi
+    fi
+
+    for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
+        [ -e "$item" ] || continue
+        name="$(basename "$item")"
+        [ "$name" = "." ] && continue
+        [ "$name" = ".." ] && continue
+        [ "$name" = "*" ] && continue
+        link_item "$item" "$HOME/$name"
     done
 fi
 
 # ------------------------------------------------------------------------------
-# 4. Synchronize Core Home Dotfiles (~/.*)
-# ------------------------------------------------------------------------------
-echo ""
-echo "==> Synchronizing Home Dotfiles (~/)..."
-
-# Ensure local git identity is preserved before ~/.gitconfig symlink
-if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ] && [ ! -f "$HOME/.gitconfig.local" ]; then
-    if command -v git >/dev/null 2>&1; then
-        _ex_name="$(git config --file "$HOME/.gitconfig" user.name 2>/dev/null || true)"
-        _ex_email="$(git config --file "$HOME/.gitconfig" user.email 2>/dev/null || true)"
-        if [ -n "$_ex_name" ] || [ -n "$_ex_email" ]; then
-            touch "$HOME/.gitconfig.local"
-            [ -n "$_ex_name" ] && git config --file "$HOME/.gitconfig.local" user.name "$_ex_name"
-            [ -n "$_ex_email" ] && git config --file "$HOME/.gitconfig.local" user.email "$_ex_email"
-            echo "  📦 Preserved existing Git identity in ~/.gitconfig.local"
-        fi
-    fi
-fi
-
-# Manage WakaTime API key & Opt-out preference before ~/.wakatime.cfg symlink
-WAKATIME_LOCAL_CFG="$HOME/.wakatime.cfg.local"
-_existing_waka_key=""
-
-if [ -f "$WAKATIME_LOCAL_CFG" ]; then
-    _existing_waka_key="$(grep -E '^[[:space:]]*api_key[[:space:]]*=' "$WAKATIME_LOCAL_CFG" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]]*api_key[[:space:]]*=[[:space:]]*//' | tr -d ' "\r\n' || true)"
-fi
-if [ -z "$_existing_waka_key" ] && [ -f "$HOME/.wakatime.cfg" ] && [ ! -L "$HOME/.wakatime.cfg" ]; then
-    _existing_waka_key="$(grep -E '^[[:space:]]*api_key[[:space:]]*=' "$HOME/.wakatime.cfg" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]]*api_key[[:space:]]*=[[:space:]]*//' | tr -d ' "\r\n' || true)"
-fi
-
-FINAL_WAKA_KEY=""
-
-if [ "$OPT_OUT_WAKATIME" = true ]; then
-    FINAL_WAKA_KEY=""
-elif [ -n "$WAKATIME_KEY_ARG" ]; then
-    FINAL_WAKA_KEY="$(echo "$WAKATIME_KEY_ARG" | tr -d ' "\r\n')"
-elif [ -n "$_existing_waka_key" ]; then
-    if [ "$NON_INTERACTIVE" = true ] || [ "$DRY_RUN" = true ] || [ ! -t 0 ]; then
-        FINAL_WAKA_KEY="$_existing_waka_key"
-    else
-        _masked_key="$(echo "$_existing_waka_key" | sed -E 's/^(.{8}).*(.{4})$/\1...\2/')"
-        echo ""
-        echo "  🕒 WakaTime Configuration:"
-        echo "     Existing API Key detected: $_masked_key"
-        read -rp "     Enter WakaTime API key [Press Enter to keep, or type 'opt-out'/'none' to disable]: " _user_input || true
-        _clean_input="$(echo "${_user_input:-}" | tr -d ' "\r\n')"
-        case "$_clean_input" in
-            opt-out|none|skip|disable|no)
-                echo "  ⏭️ Opted out of WakaTime."
-                FINAL_WAKA_KEY=""
-                ;;
-            "")
-                FINAL_WAKA_KEY="$_existing_waka_key"
-                ;;
-            *)
-                FINAL_WAKA_KEY="$_clean_input"
-                ;;
-        esac
-    fi
-else
-    # No existing key found
-    if [ "$NON_INTERACTIVE" = true ] || [ "$DRY_RUN" = true ] || [ ! -t 0 ]; then
-        echo "  ℹ️ No WakaTime API key configured. Opting out by default."
-        FINAL_WAKA_KEY=""
-    else
-        echo ""
-        echo "  🕒 WakaTime Configuration:"
-        echo "     Leaderboards & code stats require an API key from https://wakatime.com/api-key"
-        read -rp "     Enter your WakaTime API key (leave blank to opt out): " _user_input || true
-        _clean_input="$(echo "${_user_input:-}" | tr -d ' "\r\n')"
-        if [ -n "$_clean_input" ] && [ "$_clean_input" != "opt-out" ] && [ "$_clean_input" != "none" ] && [ "$_clean_input" != "skip" ]; then
-            FINAL_WAKA_KEY="$_clean_input"
-        else
-            echo "  ⏭️ No API key provided. Opting out of WakaTime."
-            FINAL_WAKA_KEY=""
-        fi
-    fi
-fi
-
-if [ "$DRY_RUN" = false ]; then
-    touch "$WAKATIME_LOCAL_CFG"
-    chmod 600 "$WAKATIME_LOCAL_CFG"
-    if [ -n "$FINAL_WAKA_KEY" ]; then
-        cat <<EOF > "$WAKATIME_LOCAL_CFG"
-[settings]
-api_key = $FINAL_WAKA_KEY
-EOF
-        echo "  📦 WakaTime API key configured in ~/.wakatime.cfg.local"
-    else
-        cat <<EOF > "$WAKATIME_LOCAL_CFG"
-[settings]
-# WakaTime opted out (no API key configured)
-EOF
-        echo "  ⏭️ WakaTime opted out (no API key stored in ~/.wakatime.cfg.local)"
-    fi
-else
-    if [ -n "$FINAL_WAKA_KEY" ]; then
-        echo "  (dry-run) Would configure WakaTime API key in ~/.wakatime.cfg.local"
-    else
-        echo "  (dry-run) Would opt out of WakaTime in ~/.wakatime.cfg.local"
-    fi
-fi
-
-for item in "$REPO_DIR/core/home"/.* "$REPO_DIR/core/home"/*; do
-    [ -e "$item" ] || continue
-    name="$(basename "$item")"
-    [ "$name" = "." ] && continue
-    [ "$name" = ".." ] && continue
-    [ "$name" = "*" ] && continue
-    link_item "$item" "$HOME/$name"
-done
-
-# ------------------------------------------------------------------------------
 # 5. Universal Core Dependencies (curl / user-space)
 # ------------------------------------------------------------------------------
-echo ""
-echo "==> Ensuring Universal Core Dependencies are installed..."
-if [ -f "$REPO_DIR/core/setup.sh" ]; then
-    if [ "$DRY_RUN" = false ]; then
-        bash "$REPO_DIR/core/setup.sh"
-    else
-        echo "  (dry-run) Would execute $REPO_DIR/core/setup.sh"
-    fi
-fi
-
-# ------------------------------------------------------------------------------
-# 6. Yazi Plugin Provisioning
-# ------------------------------------------------------------------------------
-if command -v ya >/dev/null 2>&1; then
+if [ "$SYNC_DESKTOP_ONLY" = false ] && [ "$SKIP_DEPS" = false ]; then
     echo ""
-    echo "==> Ensuring Yazi packages are installed (git, full-border, etc.)..."
-    if [ "$DRY_RUN" = false ]; then
-        (cd "$REPO_DIR/core/config/yazi" && ya pkg install --discard 2>/dev/null || true)
-    else
-        echo "  (dry-run) Would execute 'ya pkg install --discard' in core/config/yazi"
-    fi
-fi
-
-# ------------------------------------------------------------------------------
-# 7. Apply Desktop Environment Layer (if applicable)
-# ------------------------------------------------------------------------------
-if [ "$DETECTED_DE" = "gnome" ]; then
-    echo ""
-    echo "==> Applying GNOME Desktop Layer..."
-    if [ -f "$REPO_DIR/desktop/gnome/setup.sh" ]; then
+    echo "==> Ensuring Universal Core Dependencies are installed..."
+    if [ -f "$REPO_DIR/core/setup.sh" ]; then
         if [ "$DRY_RUN" = false ]; then
-            bash "$REPO_DIR/desktop/gnome/setup.sh"
+            bash "$REPO_DIR/core/setup.sh"
         else
-            echo "  (dry-run) Would execute $REPO_DIR/desktop/gnome/setup.sh"
+            echo "  (dry-run) Would execute $REPO_DIR/core/setup.sh"
         fi
     fi
-elif [ "$DETECTED_DE" = "kde" ]; then
-    echo ""
-    echo "==> Applying KDE Plasma Layer..."
-    if [ -f "$REPO_DIR/desktop/kde/setup.sh" ]; then
+
+    # Yazi Plugin Provisioning
+    if command -v ya >/dev/null 2>&1; then
+        echo ""
+        echo "==> Ensuring Yazi packages are installed (git, full-border, etc.)..."
         if [ "$DRY_RUN" = false ]; then
-            bash "$REPO_DIR/desktop/kde/setup.sh"
+            (cd "$REPO_DIR/core/config/yazi" && ya pkg install --discard 2>/dev/null || true)
         else
-            echo "  (dry-run) Would execute $REPO_DIR/desktop/kde/setup.sh"
+            echo "  (dry-run) Would execute 'ya pkg install --discard' in core/config/yazi"
         fi
     fi
-elif [ "$DETECTED_DE" = "hyprland" ]; then
-    echo ""
-    echo "==> Applying Hyprland Wayland Layer..."
-    # If omarchy, use modern lua setup, otherwise classic
-    if [ "$DETECTED_OS" = "omarchy" ]; then
-        link_item "$REPO_DIR/desktop/hyprland/lua" "$HOME/.config/hypr"
-    else
-        link_item "$REPO_DIR/desktop/hyprland/classic" "$HOME/.config/hypr"
-    fi
-    link_item "$REPO_DIR/desktop/hyprland/waybar" "$HOME/.config/waybar"
-    link_item "$REPO_DIR/desktop/hyprland/rofi" "$HOME/.config/rofi"
-    link_item "$REPO_DIR/desktop/hyprland/swaync" "$HOME/.config/swaync"
 fi
 
 # ------------------------------------------------------------------------------
-# 8. Check Linux Hardware & Power Optimizations (if applicable)
+# 6. Apply Desktop Environment Layer (if applicable)
 # ------------------------------------------------------------------------------
-if [ "$(uname -s)" = "Linux" ] && [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
+if [ "$SYNC_CORE_ONLY" = false ]; then
+    if [ "$DETECTED_DE" = "gnome" ]; then
+        echo ""
+        echo "==> Applying GNOME Desktop Layer..."
+        if [ -f "$REPO_DIR/desktop/gnome/setup.sh" ]; then
+            if [ "$DRY_RUN" = false ]; then
+                bash "$REPO_DIR/desktop/gnome/setup.sh"
+            else
+                echo "  (dry-run) Would execute $REPO_DIR/desktop/gnome/setup.sh"
+            fi
+        fi
+    elif [ "$DETECTED_DE" = "kde" ]; then
+        echo ""
+        echo "==> Applying KDE Plasma Layer..."
+        if [ -f "$REPO_DIR/desktop/kde/setup.sh" ]; then
+            if [ "$DRY_RUN" = false ]; then
+                bash "$REPO_DIR/desktop/kde/setup.sh"
+            else
+                echo "  (dry-run) Would execute $REPO_DIR/desktop/kde/setup.sh"
+            fi
+        fi
+    elif [ "$DETECTED_DE" = "hyprland" ]; then
+        echo ""
+        echo "==> Applying Hyprland Wayland Layer..."
+        if [ "$DETECTED_OS" = "omarchy" ]; then
+            link_item "$REPO_DIR/desktop/hyprland/lua" "$CONFIG_DIR/hypr"
+        else
+            link_item "$REPO_DIR/desktop/hyprland/classic" "$CONFIG_DIR/hypr"
+        fi
+        link_item "$REPO_DIR/desktop/hyprland/waybar" "$CONFIG_DIR/waybar"
+        link_item "$REPO_DIR/desktop/hyprland/rofi" "$CONFIG_DIR/rofi"
+        link_item "$REPO_DIR/desktop/hyprland/swaync" "$CONFIG_DIR/swaync"
+        if [ -d "$REPO_DIR/desktop/hyprland/hyprshell" ]; then
+            link_item "$REPO_DIR/desktop/hyprland/hyprshell" "$CONFIG_DIR/hyprshell"
+        fi
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 7. Check Linux Hardware & Power Optimizations (if applicable)
+# ------------------------------------------------------------------------------
+if [ "$SYNC_DESKTOP_ONLY" = false ] && [ "$(uname -s)" = "Linux" ] && [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
     echo ""
     echo "==> Verifying Linux Hardware & Power Optimizations..."
     bash "$REPO_DIR/hardware-linux/setup.sh" --verify || true
@@ -440,20 +477,20 @@ if { [ ! -f "$HOME/.ssh/id_rsa" ] && [ ! -f "$HOME/.ssh/id_ed25519" ]; } || [ ! 
     echo ""
     echo "  💡 Tip: Run ./core/scripts/setup_git.sh to configure Git identity and SSH keys."
 fi
-if [ -z "$FINAL_WAKA_KEY" ]; then
-    echo ""
-    echo "  💡 Tip: To enable WakaTime later, re-run ./sync.sh with your API key or configure ~/.wakatime.cfg.local."
-fi
-if ! command -v zoxide >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1 || ! command -v starship >/dev/null 2>&1 || ! command -v leaf >/dev/null 2>&1; then
-    echo ""
-    echo "  💡 Tip: Run ./core/scripts/setup_shell_dependencies.sh to install core CLI dependencies."
-fi
 if [ "$(uname -s)" = "Linux" ]; then
     echo ""
     echo "  ⚡ Hardware & Power: To install kernel power rules, battery limits & sleep fixes, run:"
     echo "     sudo ./hardware-linux/setup.sh"
-    if [ -f "$REPO_DIR/distros/$DETECTED_OS/setup.sh" ]; then
-        echo "     sudo ./distros/$DETECTED_OS/setup.sh"
+    target_distro_script="$DETECTED_OS"
+    [ "$target_distro_script" = "ubuntu_server" ] && target_distro_script="ubuntu"
+    if [ -f "$REPO_DIR/distros/$target_distro_script/setup.sh" ]; then
+        echo "     sudo ./distros/$target_distro_script/setup.sh"
+    fi
+elif [ "$(uname -s)" = "Darwin" ]; then
+    if [ -f "$REPO_DIR/distros/mac/setup.sh" ]; then
+        echo ""
+        echo "  🍏 macOS Packages: To install Homebrew formulae and casks, run:"
+        echo "     ./distros/mac/setup.sh"
     fi
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

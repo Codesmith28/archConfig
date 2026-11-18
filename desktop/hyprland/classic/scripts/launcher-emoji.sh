@@ -6,7 +6,9 @@ selection="$("$HOME/.config/hypr/scripts/rofi-menu.sh" emoji "Emoji" -theme-str 
 [[ -z "$selection" ]] && exit 0
 
 emoji="$(printf '%s\n' "$selection" | sed -E 's/^([^[:space:]]+).*/\1/')"
-printf '%s' "$emoji" | wl-copy
+if command -v wl-copy >/dev/null 2>&1; then
+  printf '%s' "$emoji" | wl-copy
+fi
 
 if command -v notify-send >/dev/null 2>&1; then
   notify-send -a "Rofi Emoji" "Copied to clipboard" "$emoji"

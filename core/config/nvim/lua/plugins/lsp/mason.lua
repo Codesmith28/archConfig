@@ -10,6 +10,7 @@ return {
 
             -- Core standalone tools (self-contained binaries, independent of language runtimes)
             local tools = {
+                "lua-language-server",
                 "stylua",
                 "shfmt",
                 "shellcheck",
@@ -60,9 +61,6 @@ return {
                 vim.list_extend(tools, {
                     "pyrefly",
                     "ruff",
-                    "black",
-                    "isort",
-                    "flake8",
                 })
             end
 
@@ -140,9 +138,6 @@ return {
             local python_tools = {
                 ["pyrefly"] = true,
                 ["ruff"] = true,
-                ["black"] = true,
-                ["isort"] = true,
-                ["flake8"] = true,
             }
 
             local filtered = {}

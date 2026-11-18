@@ -63,6 +63,7 @@ switch-to-workspace-up=['<Super>Page_Up']
 button-layout='appmenu:minimize,maximize,close'
 
 [org/gnome/mutter]
+center-new-windows=true
 dynamic-workspaces=true
 
 [org/gnome/settings-daemon/plugins/media-keys]

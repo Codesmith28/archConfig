@@ -28,9 +28,12 @@ function y() {
 }
 
 # ------------------------------------------------------------------------------
-# VSCode shortcut: open project and close terminal
+# VSCode shortcuts: open project in VSCode
 # ------------------------------------------------------------------------------
 function vsc() {
+    code "${@:-.}"
+}
+function vscx() {
     code "${@:-.}" && exit
 }
 

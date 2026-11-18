@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
+# ==============================================================================
 # OmArchy Bootstrap Master Runner
+# ==============================================================================
 set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$DIR/../.." && pwd)"
 
+echo "==> Setting up essential packages..."
+if [ -f "$REPO_DIR/distros/common/setup_packages.sh" ]; then
+    bash "$REPO_DIR/distros/common/setup_packages.sh" "$@"
+fi
 
 # Run universal Linux hardware optimizations (battery, usb-wake, bluetooth, rog-nvidia)
 if [ -f "$REPO_DIR/hardware-linux/setup.sh" ]; then
