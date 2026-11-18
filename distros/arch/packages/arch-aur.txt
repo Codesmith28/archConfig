@@ -1,4 +1,6 @@
 asusctl
+asusctl-rog-gui
+cardwire-bin
 google-chrome
 pacseek
 spotify-adblock

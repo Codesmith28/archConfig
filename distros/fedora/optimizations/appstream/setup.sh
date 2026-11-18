@@ -20,7 +20,14 @@ else
         if [[ "$(id -u)" -eq 0 ]]; then
             "$@"
         elif command -v sudo >/dev/null 2>&1; then
-            if sudo -n true 2>/dev/null || [[ -t 0 ]]; then
+            if [[ "${NON_INTERACTIVE:-false}" == "true" ]]; then
+                if sudo -n true 2>/dev/null; then
+                    sudo "$@"
+                else
+                    log_warn "Sudo requires password authentication (non-interactive mode); skipping: $*"
+                    return 1
+                fi
+            elif sudo -n true 2>/dev/null || [[ -t 0 ]]; then
                 sudo "$@"
             else
                 log_warn "Sudo requires password authentication; skipping: $*"
@@ -52,7 +59,7 @@ fi
 
 if [[ ${#missing_repos[@]} -gt 0 ]]; then
     log_info "Installing RPM Fusion repositories..."
-    run_as_root dnf install -y "${missing_repos[@]}"
+    run_as_root dnf install -y "${missing_repos[@]}" || log_warn "Failed to install RPM Fusion repositories."
 fi
 
 # 3. Install AppStream metadata packages (Required for GNOME Software / KDE Discover on Fedora 41+ DNF5)
@@ -66,7 +73,7 @@ fi
 
 if [[ ${#missing_appstream[@]} -gt 0 ]]; then
     log_info "Installing AppStream metadata packages: ${missing_appstream[*]}..."
-    run_as_root dnf install -y "${missing_appstream[@]}"
+    run_as_root dnf install -y "${missing_appstream[@]}" || log_warn "Failed to install AppStream metadata packages."
 else
     log_success "RPM Fusion AppStream metadata packages are already installed."
 fi

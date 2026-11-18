@@ -140,7 +140,7 @@ echo -e "${BOLD}Summary of configured optimizations:${NC}"
 for mod in "${executed_modules[@]}"; do
     case "$mod" in
         config_grub)
-            echo -e "  ${GREEN}✔${NC} ${BOLD}config_grub${NC}    : gfxterm graphical mode, native resolution, font in /boot, smooth handoff"
+            echo -e "  ${GREEN}✔${NC} ${BOLD}config_grub${NC}    : gfxterm graphical mode, native UEFI GOP auto-resolution, smooth handoff"
             ;;
         optimize_gnome)
             echo -e "  ${GREEN}✔${NC} ${BOLD}optimize_gnome${NC} : Fast keyrate (250ms/25ms), Super+Return terminal shortcut, keybindings, Ptyxis launcher"

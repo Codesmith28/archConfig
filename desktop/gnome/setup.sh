@@ -22,7 +22,19 @@ run_root() {
     if [[ "$(id -u)" -eq 0 ]]; then
         "$@"
     elif command -v sudo >/dev/null 2>&1; then
-        sudo "$@"
+        if [[ "${NON_INTERACTIVE:-false}" == "true" ]]; then
+            if sudo -n true 2>/dev/null; then
+                sudo "$@"
+            else
+                log_warn "Sudo requires password authentication (non-interactive mode); skipping: $*"
+                return 1
+            fi
+        elif sudo -n true 2>/dev/null || [[ -t 0 ]]; then
+            sudo "$@"
+        else
+            log_warn "Sudo requires password authentication; skipping: $*"
+            return 1
+        fi
     else
         log_error "Root privileges or sudo required to run: $*"
         return 1
@@ -51,14 +63,17 @@ install_distro_packages() {
             fi
             if [[ ${#fedora_pkgs[@]} -gt 0 ]]; then
                 log_info "Installing ${fedora_pkgs[*]} via dnf..."
-                run_root dnf install -y "${fedora_pkgs[@]}"
+                run_root dnf install -y "${fedora_pkgs[@]}" || log_warn "Failed to install Fedora packages (${fedora_pkgs[*]})."
             fi
 
             # COPR package required by blur-my-shell + dash-to-dock for rounded window blur
             if ! rpm -q gnome-rounded-blur >/dev/null 2>&1; then
-                log_info "Enabling COPR repo aneagle/gnome-rounded-blur and installing gnome-rounded-blur..."
-                run_root dnf copr enable -y aneagle/gnome-rounded-blur
-                run_root dnf install -y gnome-rounded-blur
+                log_info "Enabling COPR repo ublue-os/packages and installing gnome-rounded-blur..."
+                if run_root dnf copr enable -y ublue-os/packages; then
+                    run_root dnf install -y gnome-rounded-blur || log_warn "Failed to install gnome-rounded-blur from COPR."
+                else
+                    log_warn "Could not enable COPR repo ublue-os/packages; skipping gnome-rounded-blur."
+                fi
             fi
 
             if command -v flatpak >/dev/null 2>&1; then
@@ -71,7 +86,7 @@ install_distro_packages() {
             # Ensure RPM Fusion AppStream metadata & PackageKit are active for GNOME Software
             local fedora_appstream="$SCRIPT_DIR/../../distros/fedora/optimizations/appstream/setup.sh"
             if [[ -f "$fedora_appstream" ]]; then
-                bash "$fedora_appstream"
+                bash "$fedora_appstream" || log_warn "Fedora AppStream setup returned non-zero code."
             fi
             ;;
         ubuntu|debian|pop|linuxmint)
@@ -84,8 +99,8 @@ install_distro_packages() {
             fi
             if [[ ${#missing_pkgs[@]} -gt 0 ]]; then
                 log_info "Installing ${missing_pkgs[*]} via apt..."
-                run_root apt-get update -qq
-                run_root apt-get install -y "${missing_pkgs[@]}"
+                run_root apt-get update -qq || true
+                run_root apt-get install -y "${missing_pkgs[@]}" || log_warn "Failed to install apt packages (${missing_pkgs[*]})."
             fi
             ;;
         arch|manjaro|endeavouros)
@@ -98,7 +113,7 @@ install_distro_packages() {
             fi
             if [[ ${#missing_pkgs[@]} -gt 0 ]]; then
                 log_info "Installing ${missing_pkgs[*]} via pacman..."
-                run_root pacman -S --needed --noconfirm "${missing_pkgs[@]}"
+                run_root pacman -S --needed --noconfirm "${missing_pkgs[@]}" || log_warn "Failed to install pacman packages (${missing_pkgs[*]})."
             fi
             ;;
         *)
@@ -546,6 +561,20 @@ fi
 dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Super>v']" 2>/dev/null || true
 dconf write /org/gnome/shell/extensions/clipboard-indicator/enable-keybindings true 2>/dev/null || true
 
+# ==============================================================================
+# Blur My Shell Extension Configuration (Persistent Across AC / Battery)
+# ==============================================================================
+BLUR_MY_SHELL_SCHEMAS="$HOME/.local/share/gnome-shell/extensions/blur-my-shell@aunetx/schemas"
+if [[ -d "$BLUR_MY_SHELL_SCHEMAS" ]]; then
+    gsettings --schemadir "$BLUR_MY_SHELL_SCHEMAS" set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
+fi
+
+if gsettings list-schemas 2>/dev/null | grep -q "^org\.gnome\.shell\.extensions\.blur-my-shell$"; then
+    gsettings set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
+fi
+
+dconf write /org/gnome/shell/extensions/blur-my-shell/power-saver false 2>/dev/null || true
+
 # ------------------------------------------------------------------------------
 # 8. Post-Setup Verification Suite
 # ------------------------------------------------------------------------------
@@ -561,6 +590,7 @@ checks = [
     ("Interface Font (Sans)", ["gsettings", "get", "org.gnome.desktop.interface", "font-name"], lambda v: "sans" in v.lower()),
     ("Mono Font (Monospace)", ["gsettings", "get", "org.gnome.desktop.interface", "monospace-font-name"], lambda v: "monospace" in v.lower()),
     ("Default Terminal Executable", ["which", "default-terminal"], lambda v: len(v.strip()) > 0),
+    ("Blur My Shell Persistent Power State", ["dconf", "read", "/org/gnome/shell/extensions/blur-my-shell/power-saver"], lambda v: v.strip() == "false"),
 ]
 
 all_passed = True

@@ -131,4 +131,18 @@ fi
 dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Super>v']" 2>/dev/null || true
 dconf write /org/gnome/shell/extensions/clipboard-indicator/enable-keybindings true 2>/dev/null || true
 
+# ------------------------------------------------------------------------------
+# 10. Blur My Shell (Persistent Active State Across AC / Battery)
+# ------------------------------------------------------------------------------
+BLUR_MY_SHELL_SCHEMAS="$HOME/.local/share/gnome-shell/extensions/blur-my-shell@aunetx/schemas"
+if [[ -d "$BLUR_MY_SHELL_SCHEMAS" ]]; then
+    gsettings --schemadir "$BLUR_MY_SHELL_SCHEMAS" set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
+fi
+
+if gsettings list-schemas 2>/dev/null | grep -q "^org\.gnome\.shell\.extensions\.blur-my-shell$"; then
+    gsettings set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
+fi
+
+dconf write /org/gnome/shell/extensions/blur-my-shell/power-saver false 2>/dev/null || true
+
 echo "GNOME configurations applied successfully!"

@@ -12,8 +12,8 @@ CYAN=$'\033[0;36m'
 BOLD=$'\033[1m'
 NC=$'\033[0m' # No Color
 
-log_info()    { echo -e "${BLUE}[INFO]${NC} $*"; }
-log_success() { echo -e "${GREEN}[OK]${NC}   $*"; }
+log_info()    { echo -e "${BLUE}[INFO]${NC} $*" >&2; }
+log_success() { echo -e "${GREEN}[OK]${NC}   $*" >&2; }
 log_warn()    { echo -e "${YELLOW}[WARN]${NC} $*" >&2; }
 log_error()   { echo -e "${RED}[ERR]${NC}  $*" >&2; }
 
@@ -21,7 +21,14 @@ run_as_root() {
     if [[ "$(id -u)" -eq 0 ]]; then
         "$@"
     elif command -v sudo >/dev/null 2>&1; then
-        if sudo -n true 2>/dev/null || [[ -t 0 ]]; then
+        if [[ "${NON_INTERACTIVE:-false}" == "true" ]]; then
+            if sudo -n true 2>/dev/null; then
+                sudo "$@"
+            else
+                log_warn "Root privileges required for: $* (sudo password required, skipping in non-interactive run)"
+                return 1
+            fi
+        elif sudo -n true 2>/dev/null || [[ -t 0 ]]; then
             sudo "$@"
         else
             log_warn "Root privileges required for: $* (sudo password required, skipping in non-interactive run)"

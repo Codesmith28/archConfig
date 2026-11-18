@@ -30,8 +30,8 @@ GTK 4 uses Vulkan for hardware-accelerated rendering by default. During Vulkan i
 
 ## 2. Key GNOME Extensions & Multi-Distro Packages
 
-`setup.sh` automatically installs `gnome-tweaks` and `extension-manager` across Fedora, Ubuntu, and Arch. On Fedora, it also enables the `aneagle/gnome-rounded-blur` COPR repository and installs `gnome-rounded-blur` to support blur-my-shell and dash-to-dock rounded blur rendering. It provisions the 5 canonical GNOME extensions:
-1. **Blur my Shell** (`blur-my-shell@aunetx`): Blur effect for top panel, dash, overview, and app folders.
+`setup.sh` automatically installs `gnome-tweaks` and `extension-manager` across Fedora, Ubuntu, and Arch. On Fedora, it also enables the `ublue-os/packages` COPR repository and installs `gnome-rounded-blur` to support blur-my-shell and dash-to-dock rounded blur rendering. It provisions the 5 canonical GNOME extensions:
+1. **Blur my Shell** (`blur-my-shell@aunetx`): Blur effect for top panel, dash, overview, and app folders (configured to remain active at all times across both AC power and battery states).
 2. **Clipboard Indicator** (`clipboard-indicator@tudmotu.com`): Clipboard history manager mapped to `Super + V`.
 3. **Compiz Alike Magic Lamp Effect** (`compiz-alike-magic-lamp-effect@hermes83.github.com`): Fluid window minimize animation.
 4. **Dash to Dock** (`dash-to-dock@micxgx.gmail.com`): Centered bottom dock with autohide, running dots, and conflicting shortcuts disabled.
