@@ -1,0 +1,5 @@
+# ==============================================================================
+# Intel AX211 Bluetooth USB Power Control Rule
+# Prevents USB autosuspend / ACPI sleep state race conditions on the Bluetooth radio
+# ==============================================================================
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="8087", ATTR{idProduct}=="0033", ATTR{power/control}="on"

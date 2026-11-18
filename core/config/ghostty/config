@@ -1,4 +1,4 @@
-theme = Gruvbox Dark Hard
+theme = TokyoNight
 
 font-family = monospace
 font-style = Regular
@@ -6,14 +6,14 @@ font-size = 10
 bold-color = bright
 
 # Window
-window-width = 210
-window-height = 62
+window-width = 200
+window-height = 60
 
 window-theme = ghostty
 window-padding-x = 5
 window-padding-y = 5
 window-decoration = server
-gtk-titlebar-style = native
+gtk-titlebar-style = tabs
 
 confirm-close-surface=false
 resize-overlay = never

@@ -8,25 +8,51 @@ o.expandtab = true
 o.tabstop = 4
 o.shiftwidth = 4
 
--- Clipboard (use OSC 52 in terminal to prevent Wayland dock glitches)
+-- Clipboard: Use OSC 52 for yanking to host system clipboard universally
+-- (works over SSH, across terminal multiplexers like Herdr, on macOS, and on Wayland
+-- without invoking wl-copy which causes transient window flicker in GNOME).
+-- For pasting, avoid terminal OSC 52 read queries (which time out or get blocked
+-- by terminals/multiplexers for security reasons); instead, paste from internal
+-- registers/cache directly. External text pasted into terminal Neovim is handled
+-- automatically via terminal bracketed paste (Ctrl+Shift+V / Cmd+V).
 o.clipboard = "unnamedplus"
 
--- Over SSH there is no local clipboard provider, so yank via OSC 52 escape sequences
--- that the terminal forwards to the host's clipboard (needs clipboard-write allowed in terminal)
-if vim.env.SSH_TTY or vim.env.SSH_CONNECTION then
-    local osc52 = require("vim.ui.clipboard.osc52")
-    vim.g.clipboard = {
-        name = "OSC 52",
-        copy = {
-            ["+"] = osc52.copy("+"),
-            ["*"] = osc52.copy("*"),
-        },
-        paste = {
-            ["+"] = osc52.paste("+"),
-            ["*"] = osc52.paste("*"),
-        },
-    }
+local osc52 = require("vim.ui.clipboard.osc52")
+local clipboard_cache = { ["+"] = nil, ["*"] = nil }
+
+local function osc_copy(reg)
+    local fn = osc52.copy(reg)
+    return function(lines, regtype)
+        clipboard_cache[reg] = { lines, regtype }
+        fn(lines)
+    end
 end
+
+local function safe_paste(reg)
+    return function()
+        local val = clipboard_cache[reg] or clipboard_cache[reg == "+" and "*" or "+"]
+        if val and val[1] and #val[1] > 0 then
+            return val
+        end
+        local reginfo = vim.fn.getreginfo('"')
+        if reginfo and reginfo.regcontents and #reginfo.regcontents > 0 then
+            return { reginfo.regcontents, reginfo.regtype or "v" }
+        end
+        return { {}, "" }
+    end
+end
+
+vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+        ["+"] = osc_copy("+"),
+        ["*"] = osc_copy("*"),
+    },
+    paste = {
+        ["+"] = safe_paste("+"),
+        ["*"] = safe_paste("*"),
+    },
+}
 
 o.fileencoding = "utf-8"
 

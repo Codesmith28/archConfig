@@ -4,11 +4,12 @@ onboarding = false
 delivery = "herdr"
 
 [theme]
-name = "gruvbox"
+name = "tokyo-night"
 auto_switch = false
 
 [terminal]
-new_cwd = "follow"
+default_shell = ""
+shell_mode = "auto"
 
 [ui]
 # accent = "blue"
