@@ -7,7 +7,9 @@ set shiftwidth=8              " Indentation = 4 spaces
 " set expandtab                 " Use spaces instead of tabs
 set smartindent               " Auto-indent new lines
 set autoindent
-set clipboard=unnamedplus     " Use system clipboard
+if has('clipboard')
+  set clipboard=unnamedplus     " Use system clipboard if supported
+endif
 set hlsearch                  " Highlight search results
 set incsearch                 " Show search matches as you type
 set ignorecase smartcase      " Case-insensitive unless capital used
@@ -32,10 +34,10 @@ call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-commentary'
 call plug#end()
 
-" Sync yank to system clipboard
-if exists('##TextYankPost')
+" Sync yank to system clipboard via OSC 52 if native clipboard is unavailable
+if !has('clipboard') && exists('##TextYankPost') && exists('*echoraw') && exists('*base64_encode') && exists('*str2blob')
   augroup SyncYankToClipboard
     autocmd!
-    autocmd TextYankPost * if v:event.operator ==# 'y' | call setreg('+', getreg('"')) | endif
+    autocmd TextYankPost * if v:event.operator ==# 'y' | call echoraw(printf("\<Esc>]52;c;%s\<Esc>\\", base64_encode(str2blob(v:event.regcontents)))) | endif
   augroup END
 endif

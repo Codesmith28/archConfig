@@ -41,8 +41,11 @@ unset -f _path_prepend _ldpath_prepend
 # ------------------------------------------------------------------------------
 if command -v nvim >/dev/null 2>&1; then
     export EDITOR='nvim'
+    export VISUAL='nvim'
+    export MANPAGER='nvim +Man!'
 else
     export EDITOR='vi'
+    export VISUAL='vi'
 fi
 
 # ------------------------------------------------------------------------------

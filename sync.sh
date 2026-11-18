@@ -42,6 +42,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --non-interactive)
             NON_INTERACTIVE=true
+            export NON_INTERACTIVE=true
             shift
             ;;
         -h|--help)
@@ -213,11 +214,6 @@ echo ""
 echo "==> Synchronizing Core Application Configs (~/.config/)..."
 mkdir -p "$HOME/.config" "$HOME/.local/share/fonts"
 
-# Clean up legacy WirePlumber symlink if it points to archConfig
-if [ -L "$HOME/.config/wireplumber" ] && [[ "$(readlink "$HOME/.config/wireplumber" 2>/dev/null)" == *"/archConfig/"* ]]; then
-    rm -rf "$HOME/.config/wireplumber"
-fi
-
 for item in "$REPO_DIR/core/config"/*; do
     [ -e "$item" ] || continue
     name="$(basename "$item")"
@@ -231,6 +227,21 @@ for item in "$REPO_DIR/core/config"/*; do
     fi
     link_item "$item" "$HOME/.config/$name"
 done
+
+# WirePlumber 0.5 device scripts cleanup / sync
+# Clean up legacy custom autoswitch script overrides in ~/.local/share/wireplumber
+if [ -L "$HOME/.local/share/wireplumber/scripts/device/autoswitch-bluetooth-profile.lua" ]; then
+    rm -f "$HOME/.local/share/wireplumber/scripts/device/autoswitch-bluetooth-profile.lua"
+    rmdir "$HOME/.local/share/wireplumber/scripts/device" 2>/dev/null || true
+    rmdir "$HOME/.local/share/wireplumber/scripts" 2>/dev/null || true
+fi
+if [ -d "$REPO_DIR/core/config/wireplumber/scripts/device" ]; then
+    mkdir -p "$HOME/.local/share/wireplumber/scripts/device"
+    for wp_script in "$REPO_DIR/core/config/wireplumber/scripts/device"/*; do
+        [ -f "$wp_script" ] || continue
+        link_item "$wp_script" "$HOME/.local/share/wireplumber/scripts/device/$(basename "$wp_script")"
+    done
+fi
 
 # ------------------------------------------------------------------------------
 # 4. Synchronize Core Home Dotfiles (~/.*)

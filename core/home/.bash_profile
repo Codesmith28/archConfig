@@ -14,3 +14,4 @@ fi
 
 # Ensure ~/.local/bin is available in login shells
 export PATH="$HOME/.local/bin:$PATH"
+. "$HOME/.cargo/env"

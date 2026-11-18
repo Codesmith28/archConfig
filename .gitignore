@@ -1,0 +1,44 @@
+# ==============================================================================
+# archConfig Universal Repository .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Secrets, Credentials & Local Machine Overrides
+# ------------------------------------------------------------------------------
+.wakatime.cfg.local
+*.wakatime.cfg.local
+core/home/.wakatime.cfg.local
+*.local
+*.local.*
+*.key
+*.secret
+*.token
+.env
+.env.*
+!.env.example
+
+# ------------------------------------------------------------------------------
+# 2. Terminal, Editor & IDE Ephemeral Artifacts
+# ------------------------------------------------------------------------------
+# Ghostty syntax tree cache
+.ast/
+**/.ast/
+
+# Vim / Neovim swap files & scratch buffers
+*.swp
+*.swo
+*~
+Untitled
+core/config/nvim/Untitled
+
+# macOS / OS metadata
+.DS_Store
+Thumbs.db
+
+# ------------------------------------------------------------------------------
+# 3. Cache & Runtime Temp Files
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.cache/
+**/.cache/
