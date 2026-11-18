@@ -46,6 +46,7 @@ if command -v nvim >/dev/null 2>&1; then
 else
     export EDITOR='vi'
     export VISUAL='vi'
+    export MANPAGER='vi +Man!'
 fi
 
 # ------------------------------------------------------------------------------
@@ -98,8 +99,6 @@ elif [ -n "$ZSH_VERSION" ] && [ -z "$_SOURCING_ZSHRC" ]; then
 fi
 
 unset _SOURCING_PROFILE
-
-
 
 # Ensure ~/.local/bin is available in POSIX environment
 export PATH="$HOME/.local/bin:$PATH"

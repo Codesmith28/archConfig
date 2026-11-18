@@ -49,6 +49,22 @@ When following generic manuals or forum guides for NVIDIA power management and C
 ### 4. PCI Audio Controller (`0x040300`) Missing from Runtime PM
 - Fedora's upstream `/usr/lib/udev/rules.d/80-nvidia-pm.rules` configures runtime PM for VGA (`0x030000`) and 3D (`0x030200`) controllers, but omits the companion NVIDIA HD Audio Controller (`0x040300`, device `0000:01:00.1`). Adding an explicit udev rule for `0x040300` prevents audio handles from blocking the PCIe root port from sleeping.
 
+### 5. Deprecation of `supergfxctl` in Favor of `cardwire`
+- **Why `supergfxctl` is Deprecated**:
+  - `supergfxctl` historically switched hybrid graphics by dynamically unbinding PCIe device nodes and unloading NVIDIA kernel drivers.
+  - On modern Linux kernels and Wayland, this unbind mechanism frequently crashed the compositor, caused kernel deadlocks during suspend/wake, and strictly required a **full user logout or system reboot** to switch modes.
+  - Upstream ASUS Linux (`asusctl`) officially archived and deprecated `supergfxctl`, decoupling it from `asusctl` dependencies.
+- **Why `cardwire` Replaces It**:
+  - `cardwire` operates at the Linux Security Module (LSM) syscall level using eBPF hooks on `/dev/dri/*` and `/dev/nvidia*`.
+  - It does NOT touch kernel modules or PCIe bindings, meaning mode switches (Integrated $\leftrightarrow$ Hybrid $\leftrightarrow$ Smart) happen **instantly without rebooting or logging out**.
+  - Background apps attempting to access the blocked dGPU simply receive `-ENOENT`, leaving the discrete GPU in true `D3cold` (0W idle).
+- **Migration Clean-Up**:
+  - Always stop, disable, and mask `supergfxd.service` to avoid conflicting with `cardwired.service`:
+    ```bash
+    sudo systemctl disable --now supergfxd.service 2>/dev/null || true
+    sudo systemctl mask supergfxd.service
+    ```
+
 ---
 
 ## ⚙️ Architecture: How Cardwire Works with NVIDIA D3cold
