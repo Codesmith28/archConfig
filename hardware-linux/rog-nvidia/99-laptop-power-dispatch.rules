@@ -2,8 +2,19 @@
 # Dynamic Laptop Power Dispatch Rules
 # Profile: ASUS ROG + NVIDIA RTX Laptop
 # Dispatches power profile and GPU posture switcher on AC / USB-PD connect/disconnect.
-# Restricts triggers to Mains and USB power supplies to prevent ACPI event storms
-# and battery capacity polling loops.
+#
+# Anti-Storm Defenses:
+# 1. Match strictly on ACTION=="change" and SUBSYSTEM=="power_supply".
+# 2. Require ENV{POWER_SUPPLY_ONLINE}=="?*" so that battery charge rate, voltage,
+#    current, and temperature polling telemetry are 100% ignored.
+# 3. Restrict Mains power to barrel jack (ADP0, AC, ACAD) and USB to PD supplies.
+# 4. Trigger /usr/local/bin/power-profile-switch.sh --async which implements
+#    pre-flight state deduplication and singleton execution to suppress storms.
 # ==============================================================================
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", RUN+="/usr/local/bin/power-profile-switch.sh --async"
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+
+# Barrel Jack AC Adapter online state transitions (connect / disconnect)
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+
+# USB Type-C Power Delivery (UCSI / PD) online state transitions (connect / disconnect)
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+

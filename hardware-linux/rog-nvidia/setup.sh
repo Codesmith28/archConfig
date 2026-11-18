@@ -66,6 +66,368 @@ rebuild_initramfs() {
     fi
 }
 
+detect_distro() {
+    if [[ -f /etc/os-release ]]; then
+        # shellcheck disable=SC1091
+        source /etc/os-release
+        case "${ID:-}" in
+            fedora)
+                echo "fedora"
+                ;;
+            arch|archarm|endeavouros|manjaro|omarchy)
+                echo "arch"
+                ;;
+            ubuntu|debian|pop|mint)
+                echo "ubuntu"
+                ;;
+            *)
+                if [[ "${ID_LIKE:-}" =~ (fedora|rhel) ]]; then
+                    echo "fedora"
+                elif [[ "${ID_LIKE:-}" =~ arch ]]; then
+                    echo "arch"
+                elif [[ "${ID_LIKE:-}" =~ (ubuntu|debian) ]]; then
+                    echo "ubuntu"
+                else
+                    echo "unknown"
+                fi
+                ;;
+        esac
+    else
+        echo "unknown"
+    fi
+}
+
+# ------------------------------------------------------------------------------
+# ASUS Control & Cardwire Installation Helpers
+# ------------------------------------------------------------------------------
+configure_asusd_policies() {
+    if command -v busctl >/dev/null 2>&1 && systemctl is-active --quiet asusd.service 2>/dev/null; then
+        busctl set-property xyz.ljones.Asusd /xyz/ljones xyz.ljones.Platform ChangePlatformProfileOnBattery b false >/dev/null 2>&1 || true
+        busctl set-property xyz.ljones.Asusd /xyz/ljones xyz.ljones.Platform ChangePlatformProfileOnAc b false >/dev/null 2>&1 || true
+        busctl set-property xyz.ljones.Asusd /xyz/ljones xyz.ljones.Platform PlatformProfileLinkedEpp b false >/dev/null 2>&1 || true
+    fi
+    if command -v asusd >/dev/null 2>&1 || [[ -d /etc/asusd ]]; then
+        run_as_root mkdir -p /etc/asusd
+        local asusd_conf="/etc/asusd/asusd.ron"
+        if [[ -f "$asusd_conf" ]]; then
+            run_as_root sed -i 's/change_platform_profile_on_battery:[[:space:]]*true/change_platform_profile_on_battery: false/g; s/change_platform_profile_on_ac:[[:space:]]*true/change_platform_profile_on_ac: false/g; s/platform_profile_linked_epp:[[:space:]]*true/platform_profile_linked_epp: false/g; s/ChargeMode:[[:space:]]*[0-9]*,//g' "$asusd_conf"
+            command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart asusd.service 2>/dev/null || true
+            log_success "asusd configured: internal profile switching and rogue ChargeMode disabled"
+        fi
+    fi
+    if [[ -f /etc/tuned/ppd.conf ]]; then
+        run_as_root sed -i 's/sysfs_acpi_monitor=[[:space:]]*true/sysfs_acpi_monitor=false/g; s/battery_detection=[[:space:]]*true/battery_detection=false/g' /etc/tuned/ppd.conf
+        command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart tuned-ppd.service 2>/dev/null || true
+        log_success "tuned-ppd configured: sysfs_acpi_monitor and battery_detection disabled"
+    fi
+    local dgpu_node="/sys/devices/platform/asus-nb-wmi/dgpu_disable"
+    if [[ -f "$dgpu_node" ]]; then
+        local cur_val
+        cur_val="$(cat "$dgpu_node" 2>/dev/null || true)"
+        if [[ "$cur_val" != "0" ]]; then
+            run_as_root bash -c "echo 0 > $dgpu_node" 2>/dev/null || true
+        fi
+    fi
+    if [[ -e /sys/bus/pci/rescan ]] && ! lspci -d 10de: >/dev/null 2>&1; then
+        run_as_root bash -c "echo 1 > /sys/bus/pci/rescan" 2>/dev/null || true
+    fi
+}
+
+decommission_supergfxctl() {
+    log_info "Checking for deprecated supergfxctl / supergfxd.service..."
+    if systemctl is-active --quiet supergfxd.service 2>/dev/null; then
+        log_info "Stopping supergfxd.service (deprecated upstream; replaced by Cardwire eBPF)..."
+        run_as_root systemctl stop supergfxd.service 2>/dev/null || true
+    fi
+    if systemctl is-enabled --quiet supergfxd.service 2>/dev/null; then
+        run_as_root systemctl disable supergfxd.service 2>/dev/null || true
+        run_as_root systemctl mask supergfxd.service 2>/dev/null || true
+        log_success "supergfxd.service disabled and masked to eliminate PCI bus unbind conflicts."
+    fi
+}
+
+install_asusctl() {
+    local distro
+    distro="$(detect_distro)"
+    log_info "Verifying ASUS control suite (asusctl / asusd) on $distro..."
+
+    case "$distro" in
+        fedora)
+            if ! command -v asusctl >/dev/null 2>&1 || ! command -v rog-control-center >/dev/null 2>&1; then
+                log_info "Enabling Fedora Copr repo 'lukenukem/asus-linux'..."
+                if ! dnf repolist 2>/dev/null | grep -qi "lukenukem:asus-linux"; then
+                    run_as_root dnf copr enable -y lukenukem/asus-linux || log_warn "Could not enable copr lukenukem/asus-linux"
+                fi
+                log_info "Installing asusctl and asusctl-rog-gui (ASUS ROG Control Center GUI)..."
+                if command -v pkcon >/dev/null 2>&1; then
+                    pkcon install -y asusctl asusctl-rog-gui || run_as_root dnf install -y asusctl asusctl-rog-gui || run_as_root dnf install -y asusctl || log_warn "Failed to install asusctl"
+                else
+                    run_as_root dnf install -y asusctl asusctl-rog-gui || run_as_root dnf install -y asusctl || log_warn "Failed to install asusctl via dnf"
+                fi
+            else
+                log_success "asusctl and asusctl-rog-gui packages already installed."
+            fi
+            ;;
+        arch)
+            if ! command -v asusctl >/dev/null 2>&1 || ! command -v rog-control-center >/dev/null 2>&1; then
+                if command -v yay >/dev/null 2>&1; then
+                    log_info "Installing asusctl and asusctl-rog-gui via yay..."
+                    yay -S --noconfirm --needed asusctl asusctl-rog-gui || log_warn "yay failed to install asusctl"
+                elif command -v paru >/dev/null 2>&1; then
+                    log_info "Installing asusctl and asusctl-rog-gui via paru..."
+                    paru -S --noconfirm --needed asusctl asusctl-rog-gui || log_warn "paru failed to install asusctl"
+                else
+                    # Configure g14 pacman repository if missing
+                    if ! grep -q "^\[g14\]" /etc/pacman.conf 2>/dev/null; then
+                        log_info "Configuring ASUS Linux g14 pacman repository..."
+                        cat << 'EOF' | run_as_root tee -a /etc/pacman.conf >/dev/null
+
+[g14]
+SigLevel = DatabaseNever Optional TrustAll
+Server = https://arch.asus-linux.org
+EOF
+                        run_as_root pacman -Sy || true
+                    fi
+                    log_info "Installing asusctl and asusctl-rog-gui via pacman..."
+                    run_as_root pacman -S --noconfirm --needed asusctl asusctl-rog-gui || run_as_root pacman -S --noconfirm --needed asusctl || log_warn "pacman failed to install asusctl"
+                fi
+            else
+                log_success "asusctl and asusctl-rog-gui packages already installed."
+            fi
+            ;;
+        ubuntu)
+            if ! command -v asusctl >/dev/null 2>&1; then
+                log_info "Checking community PPA for asusctl (ppa:mitchellaugustin/asusctl)..."
+                if command -v add-apt-repository >/dev/null 2>&1; then
+                    run_as_root add-apt-repository -y ppa:mitchellaugustin/asusctl 2>/dev/null || true
+                    run_as_root apt-get update 2>/dev/null || true
+                    run_as_root apt-get install -y asusctl 2>/dev/null || log_warn "Community PPA install failed or not available for this release."
+                fi
+                if ! command -v asusctl >/dev/null 2>&1; then
+                    log_warn "asusctl is not officially packaged for Ubuntu. To build from source:"
+                    log_warn "  sudo apt install -y build-essential cmake clang libclang-dev libudev-dev pkg-config git"
+                    log_warn "  git clone https://github.com/OpenGamingCollective/asusctl.git /tmp/asusctl && cd /tmp/asusctl && make && sudo make install"
+                fi
+            else
+                log_success "asusctl already installed."
+            fi
+            ;;
+        *)
+            log_warn "Distro '$distro' not recognized for automatic asusctl packaging."
+            ;;
+    esac
+
+    # Enable and start services
+    if systemctl list-unit-files asusd.service &>/dev/null; then
+        run_as_root systemctl daemon-reload 2>/dev/null || true
+        run_as_root systemctl enable --now asusd.service 2>/dev/null || systemctl start asusd.service 2>/dev/null || true
+        log_success "asusd.service active."
+    fi
+
+    # Configure asusd daemon policies to eliminate ACPI power-profile races
+    configure_asusd_policies
+}
+
+configure_cardwire_policies() {
+    if command -v cardwire >/dev/null 2>&1; then
+        log_info "Configuring Cardwire daemon auto-switching policies..."
+        cardwire config battery-auto-switch true >/dev/null 2>&1 || true
+        cardwire config battery-auto-switch-mode integrated >/dev/null 2>&1 || true
+        cardwire config external-display-auto-switch true >/dev/null 2>&1 || true
+        cardwire config save >/dev/null 2>&1 || true
+        log_success "Cardwire auto-switch configured (Battery: Integrated, AC/Display: Auto)"
+    fi
+}
+
+install_cardwire() {
+    if command -v cardwire >/dev/null 2>&1; then
+        log_success "Cardwire binary already present: $(command -v cardwire) ($(cardwire --version 2>/dev/null || echo 'active'))"
+        configure_cardwire_policies
+        return 0
+    fi
+
+    local distro
+    distro="$(detect_distro)"
+    log_info "Cardwire not found. Initiating installation for distro: $distro..."
+
+    # Verify BPF LSM prerequisite
+    if [[ -r /sys/kernel/security/lsm ]] && ! grep -qw "bpf" /sys/kernel/security/lsm 2>/dev/null; then
+        log_warn "Kernel LSM configuration does not list 'bpf'. Cardwire eBPF hooks require 'bpf' in LSM."
+        log_warn "Add 'lsm=lockdown,capability,yama,selinux,bpf,landlock' to kernel bootloader arguments if cardwired fails to attach."
+    fi
+
+    local tag ver
+    tag="$(curl -fsSL --connect-timeout 5 https://api.github.com/repos/OpenGamingCollective/cardwire/releases/latest 2>/dev/null | grep -Po '"tag_name":\s*"\K[^"]+' || echo "v0.12.3")"
+    [[ -z "$tag" ]] && tag="v0.12.3"
+    ver="${tag#v}"
+    log_info "Target Cardwire release version: $tag ($ver)"
+
+    case "$distro" in
+        arch)
+            if command -v yay >/dev/null 2>&1; then
+                log_info "Installing cardwire-bin via yay..."
+                yay -S --noconfirm --needed cardwire-bin || true
+            elif command -v paru >/dev/null 2>&1; then
+                log_info "Installing cardwire-bin via paru..."
+                paru -S --noconfirm --needed cardwire-bin || true
+            fi
+            if ! command -v cardwire >/dev/null 2>&1; then
+                local arch_pkg="https://github.com/OpenGamingCollective/cardwire/releases/download/${tag}/cardwire-${ver}-1-x86_64.pkg.tar.zst"
+                local tmp_pkg="/tmp/cardwire-${ver}.pkg.tar.zst"
+                log_info "Downloading Arch package: $arch_pkg..."
+                if curl -fsSL --connect-timeout 10 --max-time 120 "$arch_pkg" -o "$tmp_pkg"; then
+                    run_as_root pacman -U --noconfirm "$tmp_pkg" || log_warn "pacman -U cardwire failed"
+                    rm -f "$tmp_pkg"
+                fi
+            fi
+            ;;
+        ubuntu)
+            local deb_url="https://github.com/OpenGamingCollective/cardwire/releases/download/${tag}/cardwire_${ver}-1_amd64.deb"
+            local tmp_deb="/tmp/cardwire_${ver}_amd64.deb"
+            log_info "Downloading Ubuntu deb package: $deb_url..."
+            if curl -fsSL --connect-timeout 10 --max-time 120 "$deb_url" -o "$tmp_deb"; then
+                run_as_root dpkg -i "$tmp_deb" 2>/dev/null || run_as_root apt-get install -f -y "$tmp_deb" 2>/dev/null || log_warn "Failed to install cardwire deb package"
+                rm -f "$tmp_deb"
+            else
+                log_warn "Failed to download Cardwire debian package."
+            fi
+            ;;
+        fedora)
+            if command -v dnf >/dev/null 2>&1; then
+                if ! dnf repolist 2>/dev/null | grep -qi "terra"; then
+                    log_info "Configuring Terra repository for Cardwire RPM packaging..."
+                    run_as_root dnf config-manager --add-repo https://terra.fyralabs.com/terra.repo 2>/dev/null || true
+                fi
+                log_info "Attempting to install cardwire via DNF..."
+                run_as_root dnf install -y cardwire cardwire-gui 2>/dev/null || log_info "DNF install not available; falling back to direct release package."
+            fi
+            if ! command -v cardwire >/dev/null 2>&1; then
+                local tar_url="https://github.com/OpenGamingCollective/cardwire/releases/download/${tag}/cardwire-${ver}-1-x86_64.pkg.tar.zst"
+                local tmp_tar="/tmp/cardwire-${ver}.pkg.tar.zst"
+                local tmp_dir
+                tmp_dir="$(mktemp -d /tmp/cardwire-install.XXXXXX)"
+                log_info "Downloading Cardwire binary package: $tar_url..."
+                if curl -fsSL --connect-timeout 10 --max-time 120 "$tar_url" -o "$tmp_tar"; then
+                    tar --zstd -xf "$tmp_tar" -C "$tmp_dir" 2>/dev/null || tar -xf "$tmp_tar" -C "$tmp_dir"
+
+                    run_as_root mkdir -p /usr/local/bin /etc/systemd/system /etc/dbus-1/system.d
+                    if [[ -f "$tmp_dir/usr/bin/cardwire" ]]; then
+                        run_as_root cp -f "$tmp_dir/usr/bin/cardwire" /usr/local/bin/cardwire
+                        run_as_root chmod 755 /usr/local/bin/cardwire
+                        [[ ! -e /usr/bin/cardwire ]] && run_as_root ln -sf /usr/local/bin/cardwire /usr/bin/cardwire 2>/dev/null || true
+                    fi
+                    if [[ -f "$tmp_dir/usr/bin/cardwired" ]]; then
+                        run_as_root cp -f "$tmp_dir/usr/bin/cardwired" /usr/local/bin/cardwired
+                        run_as_root chmod 755 /usr/local/bin/cardwired
+                        [[ ! -e /usr/bin/cardwired ]] && run_as_root ln -sf /usr/local/bin/cardwired /usr/bin/cardwired 2>/dev/null || true
+                    fi
+                    if [[ -f "$tmp_dir/usr/bin/cardwire-gui" ]]; then
+                        run_as_root cp -f "$tmp_dir/usr/bin/cardwire-gui" /usr/local/bin/cardwire-gui
+                        run_as_root chmod 755 /usr/local/bin/cardwire-gui
+                        [[ ! -e /usr/bin/cardwire-gui ]] && run_as_root ln -sf /usr/local/bin/cardwire-gui /usr/bin/cardwire-gui 2>/dev/null || true
+                    fi
+
+                    # D-Bus security policy
+                    if [[ -f "$tmp_dir/usr/share/dbus-1/system.d/org.opengamingcollective.cardwire.conf" ]]; then
+                        run_as_root cp -f "$tmp_dir/usr/share/dbus-1/system.d/org.opengamingcollective.cardwire.conf" /etc/dbus-1/system.d/
+                        run_as_root chmod 644 /etc/dbus-1/system.d/org.opengamingcollective.cardwire.conf
+                        command -v systemctl >/dev/null 2>&1 && run_as_root systemctl reload dbus 2>/dev/null || true
+                    fi
+
+                    # Systemd service unit
+                    if [[ -f "$tmp_dir/usr/lib/systemd/system/cardwired.service" ]]; then
+                        run_as_root cp -f "$tmp_dir/usr/lib/systemd/system/cardwired.service" /etc/systemd/system/cardwired.service
+                        if [[ ! -x /usr/bin/cardwired && -x /usr/local/bin/cardwired ]]; then
+                            run_as_root sed -i 's|ExecStart=/usr/bin/cardwired|ExecStart=/usr/local/bin/cardwired|g' /etc/systemd/system/cardwired.service
+                        fi
+                        run_as_root chmod 644 /etc/systemd/system/cardwired.service
+                    fi
+
+                    # Icons & desktop entry
+                    if [[ -d "$tmp_dir/usr/share/icons" ]]; then
+                        run_as_root cp -r "$tmp_dir/usr/share/icons/"* /usr/share/icons/ 2>/dev/null || true
+                    fi
+                    if [[ -f "$tmp_dir/usr/share/applications/cardwire-gui.desktop" ]]; then
+                        run_as_root cp -f "$tmp_dir/usr/share/applications/cardwire-gui.desktop" /usr/share/applications/ 2>/dev/null || true
+                    fi
+
+                    rm -rf "$tmp_tar" "$tmp_dir"
+                    log_success "Cardwire binaries and system integration files installed."
+                else
+                    log_warn "Failed to download Cardwire release package (network error or offline)."
+                    rm -rf "$tmp_tar" "$tmp_dir"
+                fi
+            fi
+            ;;
+        *)
+            local tar_url="https://github.com/OpenGamingCollective/cardwire/releases/download/${tag}/cardwire-${ver}-1-x86_64.pkg.tar.zst"
+            local tmp_tar="/tmp/cardwire-${ver}.pkg.tar.zst"
+            local tmp_dir
+            tmp_dir="$(mktemp -d /tmp/cardwire-install.XXXXXX)"
+            log_info "Downloading Cardwire binary package: $tar_url..."
+            if curl -fsSL --connect-timeout 10 --max-time 120 "$tar_url" -o "$tmp_tar"; then
+                tar --zstd -xf "$tmp_tar" -C "$tmp_dir" 2>/dev/null || tar -xf "$tmp_tar" -C "$tmp_dir"
+
+                run_as_root mkdir -p /usr/local/bin /etc/systemd/system /etc/dbus-1/system.d
+                if [[ -f "$tmp_dir/usr/bin/cardwire" ]]; then
+                    run_as_root cp -f "$tmp_dir/usr/bin/cardwire" /usr/local/bin/cardwire
+                    run_as_root chmod 755 /usr/local/bin/cardwire
+                    [[ ! -e /usr/bin/cardwire ]] && run_as_root ln -sf /usr/local/bin/cardwire /usr/bin/cardwire 2>/dev/null || true
+                fi
+                if [[ -f "$tmp_dir/usr/bin/cardwired" ]]; then
+                    run_as_root cp -f "$tmp_dir/usr/bin/cardwired" /usr/local/bin/cardwired
+                    run_as_root chmod 755 /usr/local/bin/cardwired
+                    [[ ! -e /usr/bin/cardwired ]] && run_as_root ln -sf /usr/local/bin/cardwired /usr/bin/cardwired 2>/dev/null || true
+                fi
+                if [[ -f "$tmp_dir/usr/bin/cardwire-gui" ]]; then
+                    run_as_root cp -f "$tmp_dir/usr/bin/cardwire-gui" /usr/local/bin/cardwire-gui
+                    run_as_root chmod 755 /usr/local/bin/cardwire-gui
+                    [[ ! -e /usr/bin/cardwire-gui ]] && run_as_root ln -sf /usr/local/bin/cardwire-gui /usr/bin/cardwire-gui 2>/dev/null || true
+                fi
+
+                # D-Bus security policy
+                if [[ -f "$tmp_dir/usr/share/dbus-1/system.d/org.opengamingcollective.cardwire.conf" ]]; then
+                    run_as_root cp -f "$tmp_dir/usr/share/dbus-1/system.d/org.opengamingcollective.cardwire.conf" /etc/dbus-1/system.d/
+                    run_as_root chmod 644 /etc/dbus-1/system.d/org.opengamingcollective.cardwire.conf
+                    command -v systemctl >/dev/null 2>&1 && run_as_root systemctl reload dbus 2>/dev/null || true
+                fi
+
+                # Systemd service unit
+                if [[ -f "$tmp_dir/usr/lib/systemd/system/cardwired.service" ]]; then
+                    run_as_root cp -f "$tmp_dir/usr/lib/systemd/system/cardwired.service" /etc/systemd/system/cardwired.service
+                    if [[ ! -x /usr/bin/cardwired && -x /usr/local/bin/cardwired ]]; then
+                        run_as_root sed -i 's|ExecStart=/usr/bin/cardwired|ExecStart=/usr/local/bin/cardwired|g' /etc/systemd/system/cardwired.service
+                    fi
+                    run_as_root chmod 644 /etc/systemd/system/cardwired.service
+                fi
+
+                # Icons & desktop entry
+                if [[ -d "$tmp_dir/usr/share/icons" ]]; then
+                    run_as_root cp -r "$tmp_dir/usr/share/icons/"* /usr/share/icons/ 2>/dev/null || true
+                fi
+                if [[ -f "$tmp_dir/usr/share/applications/cardwire-gui.desktop" ]]; then
+                    run_as_root cp -f "$tmp_dir/usr/share/applications/cardwire-gui.desktop" /usr/share/applications/ 2>/dev/null || true
+                fi
+
+                rm -rf "$tmp_tar" "$tmp_dir"
+                log_success "Cardwire binaries and system integration files installed."
+            else
+                log_warn "Failed to download Cardwire release package (network error or offline)."
+                rm -rf "$tmp_tar" "$tmp_dir"
+            fi
+            ;;
+    esac
+
+    # Enable and start cardwired service if installed
+    if command -v cardwired >/dev/null 2>&1 || [[ -f /etc/systemd/system/cardwired.service || -f /usr/lib/systemd/system/cardwired.service ]]; then
+        run_as_root systemctl daemon-reload 2>/dev/null || true
+        run_as_root systemctl enable --now cardwired.service 2>/dev/null || true
+        log_success "cardwired.service enabled and started."
+    fi
+
+    configure_cardwire_policies
+}
+
 # ------------------------------------------------------------------------------
 # Verification Routine
 # ------------------------------------------------------------------------------
@@ -73,10 +435,12 @@ verify_profile() {
     echo -e "\n${BOLD}=== ASUS ROG + NVIDIA Power Status Check ===${NC}\n"
 
     # Hardware check
-    local board prod
+    local board prod host_distro
     board="$(cat /sys/class/dmi/id/board_name 2>/dev/null || echo 'Unknown')"
     prod="$(cat /sys/class/dmi/id/product_name 2>/dev/null || echo 'Unknown')"
+    host_distro="$(detect_distro)"
     log_info "Machine DMI: $prod (Board: $board)"
+    log_info "Detected Distro: $host_distro"
 
     if ! is_rog_machine; then
         log_warn "Host does not match ASUS ROG/TUF DMI signature."
@@ -136,16 +500,79 @@ verify_profile() {
         fi
     done
 
-    # 4. Cardwire GPU management
+    # 4. GPU Management Stack (Cardwire -> supergfxctl -> sysfs)
     echo ""
+    log_info "Checking GPU Management Stack:"
+
+    # 4a. Cardwire (Primary: eBPF LSM dynamic isolation)
     if command -v cardwire >/dev/null 2>&1; then
-        log_info "Cardwire status:"
-        cardwire get 2>/dev/null || true
-        log_info "Cardwire GPU list:"
+        local cw_ver cw_state
+        cw_ver="$(cardwire --version 2>/dev/null || echo 'installed')"
+        cw_state="$(systemctl is-active cardwired.service 2>/dev/null || echo 'inactive')"
+        log_success "Cardwire: $cw_ver (daemon cardwired: $cw_state)"
+        
+        # Check BPF LSM support
+        if [[ -r /sys/kernel/security/lsm ]]; then
+            if grep -qw "bpf" /sys/kernel/security/lsm 2>/dev/null; then
+                log_success "eBPF LSM status: active (bpf module loaded in kernel LSM)"
+            else
+                log_warn "eBPF LSM status: 'bpf' missing from /sys/kernel/security/lsm (requires bpf LSM for eBPF hooks)"
+            fi
+        fi
+
+        log_info "Cardwire active posture: $(cardwire get 2>/dev/null || echo 'unable to query')"
+        log_info "Cardwire GPU devices:"
         cardwire list 2>/dev/null || true
+    else
+        log_warn "Cardwire: NOT installed (Primary eBPF dynamic isolation unavailable)"
     fi
 
-    # 5. Power profiles & supply status
+    # 4b. Legacy supergfxctl status check
+    if command -v supergfxctl >/dev/null 2>&1 || systemctl is-active --quiet supergfxd.service 2>/dev/null; then
+        local sg_state
+        sg_state="$(systemctl is-active supergfxd.service 2>/dev/null || echo 'inactive')"
+        log_warn "Legacy supergfxctl detected (service: $sg_state). supergfxctl is deprecated upstream; run setup.sh to mask it and migrate to Cardwire."
+    fi
+
+    # 4c. ASUS WMI sysfs dgpu_disable (Hardware Fallback: Direct ACPI hardware cutoff)
+    if [[ -f /sys/devices/platform/asus-nb-wmi/dgpu_disable ]]; then
+        local dgpu_dis
+        dgpu_dis="$(cat /sys/devices/platform/asus-nb-wmi/dgpu_disable 2>/dev/null || echo 'unknown')"
+        log_success "ASUS WMI sysfs dgpu_disable: available (value: $dgpu_dis - Fallback)"
+    else
+        log_info "ASUS WMI sysfs dgpu_disable: not present on this motherboard"
+    fi
+
+    # 5. ASUS Control Utility (asusctl / asusd)
+    echo ""
+    log_info "Checking ASUS System Controls (asusctl / asusd):"
+    if command -v asusctl >/dev/null 2>&1; then
+        local asus_ver asusd_state
+        asus_ver="$(asusctl info 2>/dev/null | awk '/asusctl v/{print $2}' || echo 'installed')"
+        [[ -z "$asus_ver" ]] && asus_ver="installed"
+        asusd_state="$(systemctl is-active asusd.service 2>/dev/null || echo 'inactive')"
+        log_success "asusctl: $asus_ver (daemon asusd: $asusd_state)"
+        
+        if [[ -f /etc/asusd/asusd.ron ]]; then
+            if grep -q "change_platform_profile_on_battery:[[:space:]]*false" /etc/asusd/asusd.ron 2>/dev/null; then
+                log_success "asusd configuration: ACPI storm protection active (internal profile auto-switch disabled)"
+            else
+                log_warn "asusd configuration: /etc/asusd/asusd.ron has internal profile switching enabled (may conflict with power dispatch)"
+            fi
+        else
+            log_info "asusd configuration: /etc/asusd/asusd.ron not created yet"
+        fi
+    else
+        log_warn "asusctl: NOT installed (ASUS fan profiles, Aura RGB, AniMe Matrix, charging limit controls unavailable)"
+    fi
+
+    if command -v rog-control-center >/dev/null 2>&1; then
+        log_success "ASUS ROG UI: installed (/usr/bin/rog-control-center)"
+    else
+        log_warn "ASUS ROG UI (rog-control-center): NOT installed (package: asusctl-rog-gui)"
+    fi
+
+    # 6. Power profiles & supply status
     echo ""
     log_info "Power Supply & Profile status:"
     if grep -qs 1 /sys/class/power_supply/*/online; then
@@ -157,14 +584,17 @@ verify_profile() {
         local prof
         prof=$(powerprofilesctl get 2>/dev/null || echo "N/A")
         log_success "Active Power Profile: $prof"
+    elif command -v busctl >/dev/null 2>&1 && busctl introspect net.hadess.PowerProfiles /net/hadess/PowerProfiles >/dev/null 2>&1; then
+        local prof
+        prof=$(busctl get-property net.hadess.PowerProfiles /net/hadess/PowerProfiles net.hadess.PowerProfiles ActiveProfile 2>/dev/null | awk -F'"' '{print $2}' || echo "N/A")
+        log_success "Active Power Profile (via D-Bus): $prof"
+    elif command -v tuned-adm >/dev/null 2>&1; then
+        local prof
+        prof=$(tuned-adm active 2>/dev/null | awk -F': ' '{print $2}' || echo "N/A")
+        log_success "Active Power Profile (via tuned): $prof"
     fi
 
-    # 6. asusd configuration
-    if [[ -f /etc/asusd/asusd.ron ]] && grep -q "change_platform_profile_on_battery:[[:space:]]*false" /etc/asusd/asusd.ron; then
-        log_success "asusd profile switching: disabled (ACPI storm protected)"
-    fi
-
-    # 7. Installed scripts and udev rules
+    # 7. Installed scripts, udev rules, and user-space drop-ins
     echo ""
     log_info "Checking installed automation files:"
     [[ -x /usr/local/bin/power-profile-switch.sh ]] && \
@@ -176,6 +606,13 @@ verify_profile() {
     [[ -f /etc/udev/rules.d/99-laptop-power-dispatch.rules ]] && \
         log_success "Installed udev rule: /etc/udev/rules.d/99-laptop-power-dispatch.rules" || \
         log_warn "Missing /etc/udev/rules.d/99-laptop-power-dispatch.rules"
+
+    local pd_dropin="$HOME/.config/systemd/user/plasma-powerdevil.service.d/override.conf"
+    if [[ -f "$pd_dropin" ]] && grep -q "POWERDEVIL_NO_DDCUTIL=1" "$pd_dropin"; then
+        log_success "Installed user drop-in: $pd_dropin (POWERDEVIL_NO_DDCUTIL=1)"
+    else
+        log_info "User drop-in: not installed at $pd_dropin"
+    fi
     echo ""
 }
 
@@ -246,27 +683,32 @@ if command -v udevadm >/dev/null 2>&1; then
     run_as_root udevadm trigger --subsystem-match=power_supply || true
 fi
 
-# 4. Configure Cardwire daemon policies if installed
-if command -v cardwire >/dev/null 2>&1; then
-    log_info "Configuring Cardwire daemon auto-switching policies..."
-    cardwire config battery-auto-switch true >/dev/null 2>&1 || true
-    cardwire config battery-auto-switch-mode integrated >/dev/null 2>&1 || true
-    cardwire config external-display-auto-switch true >/dev/null 2>&1 || true
-    cardwire config save >/dev/null 2>&1 || true
-    log_success "Cardwire auto-switch configured (Battery: Integrated, AC/Display: Auto)"
-fi
-
-# 5. Configure asusd daemon policies if installed (prevents ACPI profile race)
-if command -v asusd >/dev/null 2>&1 || [[ -d /etc/asusd ]]; then
-    asusd_conf="/etc/asusd/asusd.ron"
-    if [[ -f "$asusd_conf" ]]; then
-        run_as_root sed -i 's/change_platform_profile_on_battery:[[:space:]]*true/change_platform_profile_on_battery: false/g; s/change_platform_profile_on_ac:[[:space:]]*true/change_platform_profile_on_ac: false/g; s/platform_profile_linked_epp:[[:space:]]*true/platform_profile_linked_epp: false/g' "$asusd_conf"
-        command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart asusd.service 2>/dev/null || true
-        log_success "asusd configured: internal profile switching disabled to prevent ACPI storm"
+# 4. Configure PowerDevil user-space override (disables libddcutil 400ms I2C bus locks)
+target_user="${SUDO_USER:-$USER}"
+user_home="$(getent passwd "$target_user" 2>/dev/null | cut -d: -f6 || echo "$HOME")"
+if [[ -n "$user_home" && -d "$user_home/.config" ]]; then
+    pd_dir="$user_home/.config/systemd/user/plasma-powerdevil.service.d"
+    log_info "Configuring PowerDevil systemd user override ($pd_dir)..."
+    mkdir -p "$pd_dir"
+    cat << 'EOF' > "$pd_dir/override.conf"
+[Service]
+# Eliminate libddcutil 400ms I2C bus locks and KWin atomic commit stutter on laptops
+Environment="POWERDEVIL_NO_DDCUTIL=1"
+EOF
+    if [[ "$(id -u)" -eq 0 && -n "${SUDO_USER:-}" ]]; then
+        chown -R "$target_user":"$target_user" "$pd_dir"
     fi
+    log_success "Configured PowerDevil override (POWERDEVIL_NO_DDCUTIL=1)"
 fi
 
-# 6. Enable systemd sleep services
+# 5. Decommission deprecated supergfxctl and install/configure asusctl
+decommission_supergfxctl
+install_asusctl
+
+# 6. Install & configure Cardwire eBPF GPU manager
+install_cardwire
+
+# 7. Enable systemd sleep services
 if [[ -f /etc/fedora-release ]] && ! systemctl list-unit-files nvidia-suspend.service &>/dev/null; then
     if command -v dnf >/dev/null 2>&1; then
         log_info "NVIDIA sleep services not found. Attempting to install xorg-x11-drv-nvidia-power..."
@@ -287,14 +729,14 @@ if [[ -d /sys/module/nvidia ]] || systemctl list-unit-files nvidia-suspend.servi
     done
 fi
 
-# 6. Apply active power profile immediately
+# 8. Apply active power profile immediately
 if [[ -x /usr/local/bin/power-profile-switch.sh ]]; then
     log_info "Applying active power profile switch..."
     run_as_root /usr/local/bin/power-profile-switch.sh || true
 fi
 
-# 7. Rebuild initramfs across all distros
+# 9. Rebuild initramfs across all distros
 rebuild_initramfs
 
-# 8. Verify
+# 10. Verify
 verify_profile

@@ -1,5 +1,7 @@
 # ==============================================================================
 # archConfig Battery Limit Configuration
-# Target battery charging cap percentage (e.g. 85, 80, 60, 100)
+# Target battery charging cap percentage (e.g. 80, 85, 60, 100)
+# ASUS ROG laptops typically support discrete steps: 60, 80, 100.
+# Default is set to 80% for optimal battery health longevity.
 # ==============================================================================
-BATTERY_LIMIT=85
+BATTERY_LIMIT=80

@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 EnvironmentFile=-/etc/default/battery-limit
 ExecStart=/usr/local/bin/set-battery-limit.sh
 

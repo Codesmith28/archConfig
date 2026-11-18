@@ -9,9 +9,9 @@ if [[ -f /etc/default/battery-limit ]]; then
     source /etc/default/battery-limit
 fi
 
-# Target battery charging cap percentage (e.g. 85, 80, 60, 100 to disable cap).
-# Priority: CLI argument ($1) > /etc/default/battery-limit > default 85%
-BATTERY_LIMIT="${1:-${BATTERY_LIMIT:-85}}"
+# Target battery charging cap percentage (e.g. 80, 85, 60, 100 to disable cap).
+# Priority: CLI argument ($1) > /etc/default/battery-limit > default 80%
+BATTERY_LIMIT="${1:-${BATTERY_LIMIT:-80}}"
 
 # Validate input limit (1-100)
 if ! [[ "$BATTERY_LIMIT" =~ ^[0-9]+$ ]] || [ "$BATTERY_LIMIT" -lt 1 ] || [ "$BATTERY_LIMIT" -gt 100 ]; then
@@ -29,6 +29,20 @@ write_node() {
 }
 
 applied=0
+
+# Fast-path check: Check if target limit is already active
+# Prevents redundant D-Bus / sysfs transactions and avoids re-triggering udev events
+current_limit=""
+if [ -r /sys/class/power_supply/BAT0/charge_control_end_threshold ]; then
+    current_limit="$(cat /sys/class/power_supply/BAT0/charge_control_end_threshold 2>/dev/null || echo "")"
+elif command -v asusctl >/dev/null 2>&1; then
+    current_limit="$(asusctl battery info 2>/dev/null | grep -Po 'Current battery charge limit:\s*\K[0-9]+' || echo "")"
+fi
+
+if [ -n "$current_limit" ] && [ "$current_limit" = "$BATTERY_LIMIT" ]; then
+    echo "Charging limit is already set to ${BATTERY_LIMIT}%. No action required."
+    exit 0
+fi
 
 # 0. ASUS ROG laptops via asusctl / asusd (works unprivileged via dbus)
 if command -v asusctl >/dev/null 2>&1; then
@@ -108,7 +122,12 @@ if [ "$applied" -eq 0 ]; then
 fi
 
 if [ "$applied" -eq 0 ]; then
-    echo "Notice: No supported hardware battery charge threshold found on this device." >&2
+    if [ "$EUID" -ne 0 ] && ! sudo -n true 2>/dev/null; then
+        echo "Error: Modifying battery threshold requires root privileges (run with sudo)." >&2
+        exit 1
+    else
+        echo "Notice: No supported hardware battery charge threshold found on this device." >&2
+    fi
 fi
 
 exit 0

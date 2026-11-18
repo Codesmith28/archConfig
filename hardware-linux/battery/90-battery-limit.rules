@@ -1,5 +1,8 @@
 # ==============================================================================
 # archConfig Battery Limit Udev Dispatch
-# Re-enforce battery threshold whenever power supply status changes
+# Re-enforce battery threshold whenever AC / USB-PD power supply status changes
+# Strictly matches Mains and USB power supplies with active ONLINE status to
+# eliminate self-referential uevent loops on BAT0 threshold sysfs writes.
 # ==============================================================================
-SUBSYSTEM=="power_supply", ACTION=="change", KERNEL=="BAT[0-9]*|ADP[0-9]*|AC*", RUN+="/usr/local/bin/set-battery-limit.sh"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/set-battery-limit.sh"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/set-battery-limit.sh"
