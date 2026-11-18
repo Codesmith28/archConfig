@@ -5,7 +5,6 @@ return {
     "Codesmith28/assistant.nvim",
     dir = vim.fn.isdirectory(local_project) == 1 and local_project or nil,
     enabled = deps.has_cpp or deps.has_python or deps.has_rust,
-    lazy = false,
     cmd = { "Assistant" },
     keys = {
         {

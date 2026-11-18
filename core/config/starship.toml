@@ -33,9 +33,7 @@ up_to_date = " "
 untracked  = "? "
 modified   = " "
 stashed    = ""
-staged     = ""
 renamed    = ""
-deleted    = ""
 
 [hostname]
 ssh_only = false

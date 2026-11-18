@@ -27,11 +27,13 @@ graph TD
     Core["🌐 core/<br/>(Universal Shell, Neovim, Ghostty, Herdr, Starship, Yazi)"]
     Desktop["🖥️ desktop/<br/>(GNOME, KDE Plasma, Hyprland Lua/Classic)"]
     Distros["📦 distros/<br/>(Arch, Ubuntu, macOS, Fedora, OmArchy)"]
+    Hardware["⚡ hardware-linux/<br/>(ROG, NVIDIA, Battery, Bluetooth)"]
     Troubleshoot["🩺 troubleshoot/<br/>(GRUB, Dual-Boot, Toolchain fixes)"]
     
     Sync --> Core
     Sync --> Desktop
     Sync --> Distros
+    Sync --> Hardware
     Sync --> Troubleshoot
 ```
 
@@ -40,6 +42,7 @@ graph TD
 * **[`core/`](file:///home/codesmith28/archConfig/core)** — Universal app configs (`nvim`, `ghostty`, `herdr`, `yazi`, `starship`), shell dotfiles, and automated setup.
 * **[`desktop/`](file:///home/codesmith28/archConfig/desktop)** — Modular DE configurations for GNOME (dconf/extensions), KDE Plasma, and Hyprland.
 * **[`distros/`](file:///home/codesmith28/archConfig/distros)** — Distro-native package installation, systemd services, and hardware optimizations.
+* **[`hardware-linux/`](file:///home/codesmith28/archConfig/hardware-linux)** — Hardware-specific optimizations for Linux (ASUS ROG & NVIDIA power profiles, battery thresholds, Bluetooth).
 * **[`troubleshoot/`](file:///home/codesmith28/archConfig/troubleshoot)** — Self-contained recovery guides & executable repair scripts for GRUB, dual-boot, and compilers.
 * **[`.agents/skills/`](file:///home/codesmith28/archConfig/.agents/skills)** — Guardian skill (`archconfig-guard`) preventing multi-distro breakage.
 
@@ -110,6 +113,7 @@ Run native system package installers and hardware drivers on clean machines:
 
 * 🐧 **[KDE Plasma Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/kde_plasma_cross_distro_setup.md)**: Fix shortcut persistence (`kglobalshortcutsrc`), Plasma 6 migration, and window routing.
 * 🎨 **[GNOME Setup Guide](file:///home/codesmith28/archConfig/troubleshoot/gnome_cross_distro_setup.md)**: Fix DBus session attachment, GSettings compilation, and Ubuntu dock collisions.
+* ⚡ **[Cardwire & NVIDIA GPU Power Guide](file:///home/codesmith28/archConfig/troubleshoot/cardwire_gpu_power_management.md)**: Fix GPU isolation, runtime D3cold power management, and hybrid power profiles.
 * 🥾 **[GRUB Recovery Guide](file:///home/codesmith28/archConfig/troubleshoot/restore_grub.md)** & **[Auto-Repair Script](file:///home/codesmith28/archConfig/troubleshoot/restoreGrub.sh)**: Restore EFI boot entries and dual-boot entries after Windows updates.
 * 🍎 **[macOS `<bits/stdc++.h>` Fix](file:///home/codesmith28/archConfig/troubleshoot/fix_bits_stdcxx_macos.md)**: Resolve missing C++ bits headers on Darwin for competitive programming.
 
@@ -119,4 +123,3 @@ Run native system package installers and hardware drivers on clean machines:
 
 * Controlled by [archconfig-guard](file:///home/codesmith28/archConfig/.agents/skills/archconfig-guard) to enforce cross-platform compatibility rules.
 * Never hardcodes compiler versions or platform-exclusive commands in `core/`.
-* For historical context and design decisions, see [MIGRATION.md](file:///home/codesmith28/archConfig/MIGRATION.md).

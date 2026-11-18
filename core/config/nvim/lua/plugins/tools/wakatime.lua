@@ -40,7 +40,7 @@ local api_key = get_wakatime_key()
 
 return {
     "wakatime/vim-wakatime",
-    lazy = false,
+    event = "LazyFile",
     enabled = api_key ~= nil,
     init = function()
         if api_key then

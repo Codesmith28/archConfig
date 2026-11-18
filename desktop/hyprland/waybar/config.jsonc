@@ -23,7 +23,7 @@
   "custom/os_logo": {
     "format": "󰣇",
     "tooltip": false,
-    "on-click": "wofi --show drun"
+    "on-click": "rofi -show drun"
   },
   "hyprland/workspaces": {
     "on-click": "activate",

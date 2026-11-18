@@ -9,7 +9,6 @@ hyprshot
 hyprpicker
 swaync
 wlogout
-wl-clipboard
 wtype
 clipse
 grim

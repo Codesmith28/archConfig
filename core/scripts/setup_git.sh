@@ -48,6 +48,8 @@ CLI_KEY=""
 CLI_SCAN_KEYS=false
 KEY_TYPE="ed25519"
 KEY_TYPE_EXPLICIT=false
+CLI_PASSPHRASE=""
+PASSPHRASE_PROVIDED=false
 
 show_help() {
     cat <<EOF
@@ -66,6 +68,7 @@ Options:
   --profile-dir <path>     Alias for --dir
   --key <path>             Explicit SSH private key to associate with profile
   --profile-key <path>     Alias for --key
+  --passphrase <pass>      Optional passphrase for generated SSH key
   --key-type <ed25519|rsa> SSH key algorithm to generate (default: ed25519)
   -t <ed25519|rsa>         Alias for --key-type
   --scan-keys              Scan ~/.ssh/ for keys and show profile assignments
@@ -111,6 +114,11 @@ while [[ $# -gt 0 ]]; do
             ;;
         --key|--profile-key)
             CLI_KEY="$2"
+            shift 2
+            ;;
+        --passphrase)
+            CLI_PASSPHRASE="$2"
+            PASSPHRASE_PROVIDED=true
             shift 2
             ;;
         --scan-keys)
@@ -231,28 +239,8 @@ get_key_profile() {
     base_name="$(basename "$real_key")"
     local ssh_config="$HOME/.ssh/config"
 
-    # 1. Check ~/.ssh/config directory Match rules
+    # 1. Check Host github.com block in ~/.ssh/config
     if [ -f "$ssh_config" ]; then
-        local cur_match=""
-        while IFS= read -r line; do
-            if [[ "$line" =~ ^Match\ host\ github\.com\ exec\ .*grep\ -q\ \'\^([^\']+)\' ]]; then
-                cur_match="${BASH_REMATCH[1]}"
-            elif [[ "$line" =~ ^Host\  ]]; then
-                cur_match=""
-            elif [[ "$line" =~ IdentityFile\ (.*) ]]; then
-                local id_path="${BASH_REMATCH[1]}"
-                id_path="${id_path/#\~/$HOME}"
-                id_path="$(resolve_symlink "$id_path")"
-                if [ "$id_path" = "$real_key" ] || [ "$(basename "$id_path")" = "$base_name" ]; then
-                    if [ -n "$cur_match" ]; then
-                        echo "$(basename "$cur_match") [scoped to $cur_match]"
-                        return 0
-                    fi
-                fi
-            fi
-        done < "$ssh_config"
-
-        # 2. Check Host github.com block in ~/.ssh/config
         local in_gh=false
         while IFS= read -r line; do
             if [[ "$line" =~ ^Host\ github\.com$ ]]; then
@@ -271,7 +259,7 @@ get_key_profile() {
         done < "$ssh_config"
     fi
 
-    # 3. Check includeIf in ~/.gitconfig.local
+    # 2. Check includeIf in ~/.gitconfig.local
     if [ -f "$LOCAL_GITCONFIG" ]; then
         local inc_paths
         inc_paths="$(git config --file "$LOCAL_GITCONFIG" --get-regexp '^includeif\.gitdir:' 2>/dev/null || true)"
@@ -292,7 +280,7 @@ get_key_profile() {
         fi
     fi
 
-    # 4. Check if standard id_ed25519, id_rsa, or id_personal when default identity configured
+    # 3. Check if standard id_ed25519, id_rsa, or id_personal when default identity configured
     if [ -f "$LOCAL_GITCONFIG" ] && [ -n "$(git config --file "$LOCAL_GITCONFIG" user.name 2>/dev/null || true)" ]; then
         if [ "$real_key" = "$(resolve_symlink "$HOME/.ssh/id_ed25519" 2>/dev/null || true)" ] || \
            [ "$real_key" = "$(resolve_symlink "$HOME/.ssh/id_rsa" 2>/dev/null || true)" ] || \
@@ -650,12 +638,32 @@ configure_profile() {
             fi
         fi
 
+        local passphrase=""
+        if [ "$PASSPHRASE_PROVIDED" = true ]; then
+            passphrase="$CLI_PASSPHRASE"
+        elif [ "$NON_INTERACTIVE" = false ]; then
+            read -s -rp "Enter optional passphrase for SSH key (empty for no passphrase): " passphrase || true
+            echo ""
+            if [ -n "$passphrase" ]; then
+                read -s -rp "Confirm passphrase: " passphrase_confirm || true
+                echo ""
+                while [ "$passphrase" != "$passphrase_confirm" ]; do
+                    echo "  ⚠️ Passphrases do not match. Please try again."
+                    read -s -rp "Enter optional passphrase for SSH key (empty for no passphrase): " passphrase || true
+                    echo ""
+                    [ -z "$passphrase" ] && break
+                    read -s -rp "Confirm passphrase: " passphrase_confirm || true
+                    echo ""
+                done
+            fi
+        fi
+
         key_path="$HOME/.ssh/id_${chosen_algo}${key_suffix}"
         echo "  🔑 Generating SSH key ($chosen_algo) for profile '$target_profile'..."
         if [ "$chosen_algo" = "rsa" ]; then
-            ssh-keygen -t rsa -b 4096 -C "$final_email" -f "$key_path" -N ""
+            ssh-keygen -t rsa -b 4096 -C "$final_email" -f "$key_path" -N "$passphrase"
         else
-            ssh-keygen -t ed25519 -C "$final_email" -f "$key_path" -N ""
+            ssh-keygen -t ed25519 -C "$final_email" -f "$key_path" -N "$passphrase"
         fi
         chmod 600 "$key_path"
         chmod 644 "$key_path.pub"
@@ -720,33 +728,6 @@ EOF
         local gitdir_pattern="${target_dir%/}/"
         git config --file "$LOCAL_GITCONFIG" --unset-all "includeIf.gitdir:$gitdir_pattern.path" 2>/dev/null || true
         git config --file "$LOCAL_GITCONFIG" --add "includeIf.gitdir:$gitdir_pattern.path" "$profile_config"
-
-        # Configure ~/.ssh/config directory match rule so git clone and SSH in the entire directory use this key
-        local ssh_config="$HOME/.ssh/config"
-        touch "$ssh_config"
-        chmod 600 "$ssh_config"
-        local match_rule="Match host github.com exec \"pwd | grep -q '^$target_dir'\""
-        if ! grep -Fq "$match_rule" "$ssh_config" 2>/dev/null; then
-            if grep -q "Host github.com" "$ssh_config" 2>/dev/null; then
-                awk -v rule="$match_rule" -v key="$key_path" '
-                    /^Host github\.com$/ && !inserted {
-                        print rule;
-                        print "        IdentityFile " key;
-                        print "        IdentitiesOnly yes\n";
-                        inserted = 1;
-                    }
-                    { print }
-                ' "$ssh_config" > "$ssh_config.tmp" && mv "$ssh_config.tmp" "$ssh_config"
-            else
-                cat >> "$ssh_config" <<EOF
-
-$match_rule
-        IdentityFile $key_path
-        IdentitiesOnly yes
-EOF
-            fi
-            echo "  ✓ Added directory-scoped SSH rule for $target_dir -> $key_path"
-        fi
     fi
 
     # Reorder ~/.gitconfig.local so includeIf directives are always at the bottom,
@@ -853,6 +834,8 @@ else
                 CLI_EMAIL=""
                 CLI_DIR=""
                 CLI_KEY=""
+                CLI_PASSPHRASE=""
+                PASSPHRASE_PROVIDED=false
                 ;;
             *)
                 break

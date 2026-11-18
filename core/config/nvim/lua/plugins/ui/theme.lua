@@ -50,7 +50,7 @@ return {
 
     {
         "Codesmith28/gruvbox_v2.nvim",
-        lazy = false,
+        lazy = true,
         priority = 1000,
         opts = {
             transparent = "true",

@@ -15,11 +15,20 @@ BASHRC_SOURCED=1
 # ------------------------------------------------------------------------------
 # 2. History & Shell Options
 # ------------------------------------------------------------------------------
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=50000
+HISTFILESIZE=50000
+HISTTIMEFORMAT="%F %T "
+
+# Synchronize history across terminals in real-time
+PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND:-}"
+
 shopt -s checkwinsize
+shopt -s histverify 2>/dev/null || true
+shopt -s autocd 2>/dev/null || true
+shopt -s cdspell 2>/dev/null || true
+shopt -s globstar 2>/dev/null || true
 
 # Make less more friendly for non-text input files (see lesspipe(1))
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"

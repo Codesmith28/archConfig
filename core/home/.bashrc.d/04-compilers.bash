@@ -2,6 +2,14 @@
 # Automatically discovers and selects the newest installed GCC/G++ version without hardcoding
 
 detect_compilers() {
+    local cache_file="${XDG_CACHE_HOME:-$HOME/.cache}/archconfig/compilers.env"
+    if [ "${1:-}" != "--force" ] && [ -f "$cache_file" ]; then
+        # Fast path: load cached compiler configuration
+        . "$cache_file"
+        [ -n "${CC:-}" ] && [ "$CC" != "gcc" ] && alias gcc="$CC" 2>/dev/null || true
+        [ -n "${CXX:-}" ] && [ "$CXX" != "g++" ] && alias g++="$CXX" 2>/dev/null || true
+        return 0
+    fi
     # Helper: return 0 if version v1 > version v2, 1 otherwise
     _compiler_ver_gt() {
         [ -z "$1" ] && return 1
@@ -141,6 +149,15 @@ detect_compilers() {
 
     [ -n "$latest_gcc" ] && export CC="$latest_gcc"
     [ -n "$latest_gpp" ] && export CXX="$latest_gpp"
+
+    # Save to user cache for fast shell startup
+    if [ -n "$latest_gcc" ] || [ -n "$latest_gpp" ]; then
+        mkdir -p "${cache_file%/*}" 2>/dev/null || true
+        cat <<EOF > "$cache_file" 2>/dev/null || true
+export CC="${latest_gcc:-}"
+export CXX="${latest_gpp:-}"
+EOF
+    fi
 
     # Alias gcc/g++ to the latest versioned compiler if one was detected
     if [ -n "$latest_gcc" ] && [ "$latest_gcc" != "gcc" ]; then

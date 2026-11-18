@@ -125,9 +125,9 @@ cardwire config save
 ```
 
 ### Step 3: Install Udev Rules & Power Profile Dispatcher
-Automate power profiles and CPU energy performance preference (EPP) using the provided scripts in `hardware/rog-nvidia/`:
+Automate power profiles and CPU energy performance preference (EPP) using the provided scripts in `hardware-linux/rog-nvidia/`:
 ```bash
-cd ~/archConfig/hardware/rog-nvidia
+cd ~/archConfig/hardware-linux/rog-nvidia
 sudo ./setup.sh
 ```
 This deploys:
