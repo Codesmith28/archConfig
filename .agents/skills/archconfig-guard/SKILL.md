@@ -9,7 +9,7 @@ description: >-
 # archConfig Cross-Distro Guardian Skill
 
 ## Purpose
-`archConfig` manages dotfiles and bootstrap routines for **Fedora, Arch Linux, Ubuntu (Desktop & Server), macOS, and OmArchy**.
+`archConfig` manages dotfiles and bootstrap routines for **Fedora, Arch Linux, Ubuntu (Desktop & Server), macOS, OmArchy, and NixOS**.
 This skill ensures that changes made to core tools remain 100% functional across all target environments without causing configuration drift, breaking live symlinks, or leaking secrets.
 
 ---
@@ -42,6 +42,15 @@ This skill ensures that changes made to core tools remain 100% functional across
   - Ensure any reusable recovery scripts (like `restoreGrub.sh`) are executable in `troubleshoot/`.
 
 ### 5. Secret & PII Hygiene
-- **NEVER** commit `.env` files, API keys, tokens, session cookies, or credentials to this repository.
+- **NEVER** commit `.env` files, API keys, tokens, session cookies, personal usernames, or credentials to this repository.
 - Use dynamic secret retrieval (e.g., `export KEY="$(grep '^KEY=' "$HOME/.env" ...)"`) so secrets remain strictly local on the host machine.
 - Block files larger than 5 MB (such as high-res wallpapers or installer `.deb`/`.zip` archives) from entering Git packfiles.
+- **Git Identity & NixOS Template Patterns**: User-specific identity is separated into templates (`core/home/.gitconfig.local.template` copied to `~/.gitconfig.local`, and `distros/nixos/user-config.nix.template` copied to `distros/nixos/user-config.nix`). Both `.local` files and `user-config.nix` are gitignored so personal credentials or usernames are never committed.
+
+### 6. Declarative NixOS & Home Manager Architecture
+- **Single Source of Truth in `core/`**: All universal application configurations (`core/config/`) and shell dotfiles (`core/home/`) remain the single authoritative source of truth. NixOS modules must never fork or maintain duplicate dotfile copies.
+- **Dynamic User Configuration via Templates**: NixOS modules (`modules/system/users.nix`, `home/default.nix`) must dynamically read `distros/nixos/user-config.nix` (with fallback to `distros/nixos/user-config.nix.template`). Never hardcode personal usernames into NixOS configs or Home Manager declarations.
+- **Home Manager Out-of-Store Symlinks**: In `distros/nixos/home/links.nix`, configuration files must be mapped via `config.lib.file.mkOutOfStoreSymlink` pointing to absolute paths in `~/archConfig/core/config/` and `~/archConfig/core/home/`. This maintains identical file paths across distros and enables live dotfile editing without rebuilding the system.
+- **Herdr Scoping**: Link only `core/config/herdr/config.toml` to `~/.config/herdr/config.toml` (do not link the parent `core/config/herdr/` directory) to keep runtime logs, sockets, and transient state unmanaged.
+- **Local Secret Isolation**: Home Manager modules must NEVER link or manage host-local secret files (`~/.gitconfig.local`, `~/.wakatime.cfg.local`, `~/.profile.local`, `~/.zshrc.local`).
+- **Strict `sync.sh` Safety Guard & Offload**: `sync.sh` explicitly detects NixOS (`/etc/NIXOS`, `/etc/nixos/configuration.nix`, or `ID=nixos` in `/etc/os-release`), initializes user/git template configs if missing, and offloads system and dotfile deployment to `sudo nixos-rebuild switch --flake ./distros/nixos` (or `bun run switch` / `pnpm run switch`). Imperative symlinks are never created on NixOS.

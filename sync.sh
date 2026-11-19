@@ -76,7 +76,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  --dry-run                 Show what symlinks would be created without making changes"
-            echo "  --distro <name>           Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy)"
+            echo "  --distro <name>           Override distro (fedora, arch, ubuntu, ubuntu_server, mac, omarchy, nixos)"
             echo "  --de <name>               Override desktop environment (gnome, kde, hyprland, none)"
             echo "  --core-only               Only synchronize core application configs and home dotfiles"
             echo "  --desktop-only            Only synchronize desktop environment configurations"
@@ -107,6 +107,8 @@ detect_os() {
 
     if [ "$(uname -s)" = "Darwin" ]; then
         echo "mac"
+    elif [ -f /etc/NIXOS ] || [ -f /etc/nixos/configuration.nix ] || grep -qiE '^ID="?nixos"?' /etc/os-release 2>/dev/null || grep -qi 'ID=nixos' /etc/os-release 2>/dev/null; then
+        echo "nixos"
     elif [ -f /etc/fedora-release ]; then
         echo "fedora"
     elif [ -f /etc/arch-release ]; then
@@ -162,8 +164,65 @@ detect_de() {
     fi
 }
 
+sync_nixos() {
+    echo "❄️  NixOS detected. Dotfile deployment is managed by Home Manager."
+    echo "   Offloading system and user environment management to Nix Flake..."
+
+    local nix_dir="$REPO_DIR/distros/nixos"
+    local user_cfg="$nix_dir/user-config.nix"
+    local user_tmpl="$nix_dir/user-config.nix.template"
+    local git_cfg="$HOME/.gitconfig.local"
+    local git_tmpl="$REPO_DIR/core/home/.gitconfig.local.template"
+
+    if [ "$DRY_RUN" = true ]; then
+        echo ""
+        echo "  (dry-run) [NixOS Offload] Would initialize missing templates:"
+        [ ! -f "$user_cfg" ] && [ -f "$user_tmpl" ] && echo "    • $user_cfg <- $user_tmpl"
+        [ ! -f "$git_cfg" ] && [ -f "$git_tmpl" ] && echo "    • $git_cfg <- $git_tmpl"
+        echo "  (dry-run) [NixOS Offload] Would execute: sudo nixos-rebuild switch --flake \"$nix_dir\""
+        exit 0
+    fi
+
+    # Initialize templates if missing
+    if [ ! -f "$user_cfg" ] && [ -f "$user_tmpl" ]; then
+        cp -n "$user_tmpl" "$user_cfg" 2>/dev/null || true
+        [ -f "$user_cfg" ] && echo "  📦 Initialized $user_cfg from template."
+    fi
+
+    if [ ! -f "$git_cfg" ] && [ -f "$git_tmpl" ]; then
+        cp -n "$git_tmpl" "$git_cfg" 2>/dev/null || true
+        [ -f "$git_cfg" ] && echo "  📦 Initialized $git_cfg from template."
+    fi
+
+    echo ""
+    if command -v nixos-rebuild >/dev/null 2>&1; then
+        echo "  🚀 Executing NixOS rebuild switch..."
+        if command -v bun >/dev/null 2>&1 && [ -f "$nix_dir/package.json" ]; then
+            bun run --cwd "$nix_dir" switch
+        elif command -v pnpm >/dev/null 2>&1 && [ -f "$nix_dir/package.json" ]; then
+            pnpm --dir "$nix_dir" run switch
+        else
+            sudo nixos-rebuild switch --flake "$nix_dir"
+        fi
+    else
+        echo "  💡 Execute the following command to deploy system and dotfiles:"
+        if [ -f "$nix_dir/package.json" ]; then
+            echo "     cd distros/nixos && bun run switch   # or sudo nixos-rebuild switch --flake \"$nix_dir\""
+        else
+            echo "     sudo nixos-rebuild switch --flake \"$nix_dir\""
+        fi
+    fi
+
+    exit 0
+}
+
 DETECTED_OS="$(detect_os)"
 DETECTED_DE="$(detect_de)"
+
+# Offload to NixOS / Home Manager setup when NixOS is detected
+if [ "$DETECTED_OS" = "nixos" ]; then
+    sync_nixos
+fi
 
 BACKUP_ROOT="${CUSTOM_BACKUP_DIR:-${ARCHCONFIG_BACKUP_DIR:-$CONFIG_DIR/old_config_backups}}"
 TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
@@ -296,6 +355,16 @@ if [ "$SYNC_DESKTOP_ONLY" = false ]; then
         fi
     fi
 
+    # Initialize ~/.gitconfig.local from template if missing
+    if [ ! -f "$HOME/.gitconfig.local" ] && [ -f "$REPO_DIR/core/home/.gitconfig.local.template" ]; then
+        if [ "$DRY_RUN" = false ]; then
+            cp "$REPO_DIR/core/home/.gitconfig.local.template" "$HOME/.gitconfig.local"
+            echo "  📦 Initialized ~/.gitconfig.local from template"
+        else
+            echo "  (dry-run) Would initialize ~/.gitconfig.local from template"
+        fi
+    fi
+
     # Manage WakaTime API key & Opt-out preference before ~/.wakatime.cfg symlink
     WAKATIME_LOCAL_CFG="$HOME/.wakatime.cfg.local"
     _existing_waka_key=""
@@ -385,6 +454,7 @@ EOF
         [ "$name" = "." ] && continue
         [ "$name" = ".." ] && continue
         [ "$name" = "*" ] && continue
+        [[ "$name" == *.template ]] && continue
         link_item "$item" "$HOME/$name"
     done
 fi
