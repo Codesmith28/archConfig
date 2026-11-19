@@ -17,6 +17,15 @@ core/home/.wakatime.cfg.local
 .env.*
 !.env.example
 
+# NixOS User Config & Local Machine Overrides
+distros/nixos/user-config.nix
+!distros/nixos/user-config.nix.template
+*.local.nix
+
+# Allow template files to be tracked
+!*.template
+!core/home/.gitconfig.local.template
+
 # ------------------------------------------------------------------------------
 # 2. Terminal, Editor & IDE Ephemeral Artifacts
 # ------------------------------------------------------------------------------
