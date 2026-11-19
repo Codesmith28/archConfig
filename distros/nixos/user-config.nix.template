@@ -1,0 +1,5 @@
+{
+  username = "username"; # Replace with your local username
+  description = "Primary User";
+  hostname = "nixos"; # Host configuration name (e.g. nixos, my-laptop)
+}

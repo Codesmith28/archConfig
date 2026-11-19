@@ -1,0 +1,12 @@
+{
+  "name": "archconfig-nixos",
+  "private": true,
+  "scripts": {
+    "switch": "sudo nixos-rebuild switch --flake .",
+    "boot": "sudo nixos-rebuild boot --flake .",
+    "test": "sudo nixos-rebuild test --flake .",
+    "update": "nix flake update",
+    "check": "nix flake check",
+    "clean": "nix-collect-garbage -d && sudo nix-collect-garbage -d"
+  }
+}
