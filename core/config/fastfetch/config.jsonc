@@ -15,6 +15,12 @@
         "title",
         "separator",
         "os",
+        {
+            "type": "disk",
+            "key": "Age",
+            "folders": "/",
+            "format": "{days} days"
+        },
         "host",
         "kernel",
         "uptime",
