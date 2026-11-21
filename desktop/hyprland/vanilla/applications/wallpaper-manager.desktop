@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpaper Manager
+Comment=Add, browse, or remove wallpapers
+Exec=sh -c 'mkdir -p "$HOME/Pictures/Wallpapers" && if command -v nautilus >/dev/null 2>&1; then exec nautilus "$HOME/Pictures/Wallpapers"; elif command -v gio >/dev/null 2>&1; then exec gio open "$HOME/Pictures/Wallpapers"; else exec xdg-open "$HOME/Pictures/Wallpapers"; fi'
+Icon=preferences-desktop-wallpaper
+Categories=Settings;DesktopSettings;Utility;
+Keywords=wallpaper;background;image;photo;
+Terminal=false

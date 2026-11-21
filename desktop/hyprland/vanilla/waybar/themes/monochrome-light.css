@@ -1,0 +1,41 @@
+/* =============================================================================
+ * Waybar Color Theme: Monochrome Light
+ * Pure minimal high-contrast grayscale light aesthetics
+ * ============================================================================= */
+@define-color base       #f5f5f5;
+@define-color mantle     #ebebeb;
+@define-color crust      #e0e0e0;
+
+@define-color text       #1a1a1a;
+@define-color subtext0   #4a4a4a;
+@define-color subtext1   #333333;
+
+@define-color surface0   #dedede;
+@define-color surface1   #cccccc;
+@define-color surface2   #bbbbbb;
+
+@define-color overlay0   #888888;
+@define-color overlay1   #666666;
+
+@define-color mauve      #222222;
+@define-color blue       #333333;
+@define-color sapphire   #444444;
+@define-color sky        #555555;
+@define-color teal       #333333;
+@define-color green      #2e6930;
+@define-color yellow     #7c6f00;
+@define-color peach      #8f4b00;
+@define-color maroon     #772222;
+@define-color red        #aa1111;
+@define-color pink       #555555;
+@define-color flamingo   #444444;
+@define-color rosewater  #333333;
+
+/* Structural interface colors */
+@define-color accent        #222222;
+@define-color bar-bg        rgba(235, 235, 235, 0.92);
+@define-color bar-border    rgba(34, 34, 34, 0.45);
+@define-color island-bg     rgba(245, 245, 245, 0.85);
+@define-color island-border rgba(34, 34, 34, 0.16);
+@define-color window-bg     rgba(245, 245, 245, 0.75);
+@define-color window-border rgba(34, 34, 34, 0.12);

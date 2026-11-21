@@ -66,16 +66,6 @@ install_distro_packages() {
                 run_root dnf install -y "${fedora_pkgs[@]}" || log_warn "Failed to install Fedora packages (${fedora_pkgs[*]})."
             fi
 
-            # COPR package required by blur-my-shell + dash-to-dock for rounded window blur
-            if ! rpm -q gnome-rounded-blur >/dev/null 2>&1; then
-                log_info "Enabling COPR repo ublue-os/packages and installing gnome-rounded-blur..."
-                if run_root dnf copr enable -y ublue-os/packages; then
-                    run_root dnf install -y gnome-rounded-blur || log_warn "Failed to install gnome-rounded-blur from COPR."
-                else
-                    log_warn "Could not enable COPR repo ublue-os/packages; skipping gnome-rounded-blur."
-                fi
-            fi
-
             if command -v flatpak >/dev/null 2>&1; then
                 if ! flatpak list 2>/dev/null | grep -q "com.mattjakeman.ExtensionManager"; then
                     log_info "Installing Extension Manager via flatpak..."
@@ -134,7 +124,7 @@ if [[ "$(id -u)" -eq 0 && "${1:-}" != "--user-run" ]]; then
             TARGET_USER="$(who | awk '$1 != "root" {print $1; exit}' || true)"
         fi
         if [[ -z "$TARGET_USER" ]]; then
-            TARGET_USER="codesmith28"
+            TARGET_USER="$(awk -F: '$3 >= 1000 && $3 < 60000 {print $1; exit}' /etc/passwd 2>/dev/null || id -un)"
         fi
     fi
 
@@ -215,25 +205,19 @@ if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.ubun
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Key GNOME Extensions Installation & Auto-Compilation
+# 5. GNOME Extensions Installation & Auto-Compilation (Clean Utilities Only)
 # ------------------------------------------------------------------------------
-# 1. Blur my Shell
-# 2. Clipboard Indicator
-# 3. Compiz alike magic lamp effect
-# 4. Dash to Dock
-# 5. Rounded Window Corners Reborn
+# 1. Clipboard Indicator
+# 2. Dash to Dock
 install_key_extensions() {
-    log_info "Verifying and provisioning the 5 key GNOME extensions..."
+    log_info "Verifying and provisioning GNOME utility extensions..."
     
     python3 - << 'PYEOF'
 import urllib.request, json, zipfile, io, os, subprocess
 
 EXTENSIONS = [
-    ("blur-my-shell@aunetx", "Blur my Shell"),
     ("clipboard-indicator@tudmotu.com", "Clipboard Indicator"),
-    ("compiz-alike-magic-lamp-effect@hermes83.github.com", "Compiz alike magic lamp effect"),
-    ("dash-to-dock@micxgx.gmail.com", "Dash to Dock"),
-    ("rounded-window-corners@fxgn", "Rounded Window Corners Reborn")
+    ("dash-to-dock@micxgx.gmail.com", "Dash to Dock")
 ]
 
 def get_shell_version():
@@ -249,7 +233,14 @@ for uuid, name in EXTENSIONS:
     user_ext_dir = os.path.expanduser(f"~/.local/share/gnome-shell/extensions/{uuid}")
     sys_ext_dir = f"/usr/share/gnome-shell/extensions/{uuid}"
     
-    if os.path.exists(user_ext_dir) or os.path.exists(sys_ext_dir):
+    is_installed = os.path.exists(user_ext_dir)
+    if not is_installed and os.path.exists(sys_ext_dir):
+        css_file = os.path.join(sys_ext_dir, "stylesheet.css")
+        # System packages on some distros (like Fedora) package an unbundled stub (<1KB) with broken @imports
+        if not os.path.exists(css_file) or os.path.getsize(css_file) > 1024:
+            is_installed = True
+
+    if is_installed:
         print(f"    ✓ {name} ({uuid}) is installed")
     else:
         print(f"    📦 Installing {name} ({uuid}) for GNOME {shell_ver}...")
@@ -305,10 +296,7 @@ import subprocess
 
 uuids = [
     "dash-to-dock@micxgx.gmail.com",
-    "clipboard-indicator@tudmotu.com",
-    "blur-my-shell@aunetx",
-    "compiz-alike-magic-lamp-effect@hermes83.github.com",
-    "rounded-window-corners@fxgn"
+    "clipboard-indicator@tudmotu.com"
 ]
 
 res = subprocess.run(["gsettings", "get", "org.gnome.shell", "enabled-extensions"], capture_output=True, text=True).stdout.strip()
@@ -448,12 +436,11 @@ if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.tili
 fi
 
 # ==============================================================================
-# Font Settings: Sans for UI & Document, Monospace for Terminal/Code
-# Uses system default fontconfig aliases so fonts stay in sync automatically
+# Font Settings: Monospace Only (Never interfere with OS Sans-Serif fonts)
 # ==============================================================================
-gsettings set org.gnome.desktop.interface font-name 'Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface document-font-name 'Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace 10' 2>/dev/null || true
+gsettings reset org.gnome.desktop.interface font-name 2>/dev/null || true
+gsettings reset org.gnome.desktop.interface document-font-name 2>/dev/null || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace 11' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface font-antialiasing 'rgba' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface font-hinting 'slight' 2>/dev/null || true
 
@@ -562,19 +549,6 @@ fi
 dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Super>v']" 2>/dev/null || true
 dconf write /org/gnome/shell/extensions/clipboard-indicator/enable-keybindings true 2>/dev/null || true
 
-# ==============================================================================
-# Blur My Shell Extension Configuration (Persistent Across AC / Battery)
-# ==============================================================================
-BLUR_MY_SHELL_SCHEMAS="$HOME/.local/share/gnome-shell/extensions/blur-my-shell@aunetx/schemas"
-if [[ -d "$BLUR_MY_SHELL_SCHEMAS" ]]; then
-    gsettings --schemadir "$BLUR_MY_SHELL_SCHEMAS" set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
-fi
-
-if gsettings list-schemas 2>/dev/null | grep -q "^org\.gnome\.shell\.extensions\.blur-my-shell$"; then
-    gsettings set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
-fi
-
-dconf write /org/gnome/shell/extensions/blur-my-shell/power-saver false 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 8. Post-Setup Verification Suite
@@ -588,10 +562,8 @@ checks = [
     ("Minimize (<Super>m)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "minimize"], lambda v: "<Super>m" in v),
     ("Center Window (<Super>c)", ["gsettings", "get", "org.gnome.desktop.wm.keybindings", "move-to-center"], lambda v: "<Super>c" in v),
     ("Titlebar Buttons", ["gsettings", "get", "org.gnome.desktop.wm.preferences", "button-layout"], lambda v: "minimize,maximize,close" in v),
-    ("Interface Font (Sans)", ["gsettings", "get", "org.gnome.desktop.interface", "font-name"], lambda v: "sans" in v.lower()),
     ("Mono Font (Monospace)", ["gsettings", "get", "org.gnome.desktop.interface", "monospace-font-name"], lambda v: "monospace" in v.lower()),
     ("Default Terminal Executable", ["which", "default-terminal"], lambda v: len(v.strip()) > 0),
-    ("Blur My Shell Persistent Power State", ["dconf", "read", "/org/gnome/shell/extensions/blur-my-shell/power-saver"], lambda v: v.strip() == "false"),
 ]
 
 all_passed = True

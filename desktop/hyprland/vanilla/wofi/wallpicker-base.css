@@ -1,0 +1,82 @@
+/* =============================================================================
+ * Wofi Base Layout Stylesheet for Wallpaper Picker
+ * Preview thumbnails with clean typography, fixed borders, and solid background
+ * ============================================================================= */
+
+* {
+    font-family: monospace;
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+window {
+    margin: 0px;
+    background-color: @window-bg;
+    border: 2px solid @accent;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+#input {
+    margin: 16px;
+    padding: 10px 16px;
+    border: 1px solid @input-border;
+    border-radius: 8px;
+    color: @text;
+    background-color: @input-bg;
+    outline: none;
+    font-size: 14px;
+}
+
+#input:focus {
+    border: 1.5px solid @accent;
+    box-shadow: 0 0 8px @accent-shadow;
+}
+
+#inner-box {
+    margin: 4px 16px 16px 16px;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 0px;
+    background-color: @window-bg;
+    border-radius: 12px;
+    padding: 6px;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 4px 6px;
+    border: none;
+    color: @text;
+}
+
+#entry {
+    padding: 8px 12px;
+    margin: 3px 0;
+    border-radius: 8px;
+    background-color: transparent;
+    transition: all 0.15s ease-in-out;
+    border-left: 3px solid transparent;
+}
+
+#entry:selected {
+    background-color: @selected-bg;
+    border-left: 3px solid @accent;
+}
+
+#entry:selected #text {
+    color: @selected-text;
+    font-weight: bold;
+}
+
+#img {
+    margin-right: 16px;
+    background-color: transparent;
+    border-radius: 6px;
+}

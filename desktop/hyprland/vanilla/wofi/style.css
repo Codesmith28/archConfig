@@ -1,0 +1,125 @@
+/* =============================================================================
+ * Wofi Color Theme: Catppuccin Mocha
+ * ============================================================================= */
+@define-color base            #1e1e2e;
+@define-color mantle          #181825;
+@define-color crust           #11111b;
+@define-color text            #cdd6f4;
+@define-color subtext0        #a6adc8;
+@define-color surface0        #313244;
+@define-color surface1        #45475a;
+@define-color mauve           #cba6f7;
+@define-color blue            #89b4fa;
+@define-color accent          #cba6f7;
+@define-color window-bg       #1e1e2e;
+@define-color accent-border   rgba(203, 166, 247, 0.45);
+@define-color accent-shadow   rgba(203, 166, 247, 0.40);
+@define-color input-bg        rgba(30, 30, 46, 0.85);
+@define-color input-border    rgba(255, 255, 255, 0.12);
+@define-color selected-bg     rgba(203, 166, 247, 0.22);
+@define-color selected-text   #ffffff;
+/* =============================================================================
+ * Wofi Base Layout Stylesheet
+ * Dynamic system monospace typography with crisp borders
+ * ============================================================================= */
+
+* {
+    font-family: monospace;
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+window {
+    margin: 0px;
+    background-color: @window-bg;
+    border: 2px solid @accent;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+#input {
+    margin: 16px;
+    padding: 10px 16px;
+    border: 1px solid @input-border;
+    border-radius: 8px;
+    color: @text;
+    background-color: @input-bg;
+    outline: none;
+    font-size: 14px;
+}
+
+#input:focus {
+    border: 1.5px solid @accent;
+    box-shadow: 0 0 8px @accent-shadow;
+}
+
+#inner-box {
+    margin: 4px 16px 16px 16px;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 0px;
+    background-color: @window-bg;
+    border-radius: 12px;
+    padding: 6px;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+scrollbar,
+scrollbar.vertical {
+    background-color: transparent;
+    min-width: 0px;
+    border: none;
+    opacity: 0;
+}
+
+scrollbar slider,
+scrollbar.vertical slider {
+    background-color: transparent;
+    min-width: 0px;
+    border: none;
+    opacity: 0;
+}
+
+scrollbar trough,
+scrollbar.vertical trough {
+    background-color: transparent;
+    border: none;
+    opacity: 0;
+}
+
+#text {
+    margin: 4px 6px;
+    border: none;
+    color: @text;
+}
+
+#entry {
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-left: 3px solid transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    transition: all 0.15s ease-in-out;
+}
+
+#entry:selected {
+    background-color: @selected-bg;
+    border-left: 3px solid @accent;
+}
+
+#entry:selected #text {
+    color: @selected-text;
+    font-weight: bold;
+}
+
+#img {
+    margin-right: 12px;
+    background-color: transparent;
+    border-radius: 6px;
+}

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Theme Picker
+Comment=Select Waybar and Launcher theme
+Exec=sh -c '$HOME/.config/hypr/scripts/theme-toggle.sh --menu'
+Icon=preferences-desktop-theme
+Categories=Settings;DesktopSettings;Utility;
+Keywords=theme;style;appearance;color;waybar;wofi;

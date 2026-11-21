@@ -5,6 +5,9 @@
 # ------------------------------------------------------------------------------
 # 1. Secrets, Credentials & Local Machine Overrides
 # ------------------------------------------------------------------------------
+.wakatime.cfg
+*.wakatime.cfg
+core/home/.wakatime.cfg
 .wakatime.cfg.local
 *.wakatime.cfg.local
 core/home/.wakatime.cfg.local
@@ -13,6 +16,7 @@ core/home/.wakatime.cfg.local
 *.key
 *.secret
 *.token
+*.log
 .env
 .env.*
 !.env.example
@@ -42,3 +46,6 @@ __pycache__/
 *.py[cod]
 .cache/
 **/.cache/
+*.zsh_plugins.zsh
+.zsh_plugins.zsh
+.antidote

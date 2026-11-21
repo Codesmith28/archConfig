@@ -1,0 +1,20 @@
+/* =============================================================================
+ * Wofi Color Theme: Catppuccin Latte (Light)
+ * ============================================================================= */
+@define-color base            #eff1f5;
+@define-color mantle          #e6e9ef;
+@define-color crust           #dce0e8;
+@define-color text            #4c4f69;
+@define-color subtext0        #6c6f85;
+@define-color surface0        #ccd0da;
+@define-color surface1        #bcc0cc;
+@define-color mauve           #8839ef;
+@define-color blue            #1e66f5;
+@define-color accent          #8839ef;
+@define-color window-bg       #eff1f5;
+@define-color accent-border   rgba(136, 57, 239, 0.45);
+@define-color accent-shadow   rgba(136, 57, 239, 0.30);
+@define-color input-bg        rgba(230, 233, 239, 0.90);
+@define-color input-border    rgba(76, 79, 105, 0.20);
+@define-color selected-bg     rgba(136, 57, 239, 0.20);
+@define-color selected-text   #1e1e2e;

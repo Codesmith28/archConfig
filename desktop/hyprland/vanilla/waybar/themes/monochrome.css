@@ -1,0 +1,41 @@
+/* =============================================================================
+ * Waybar Color Theme: Monochrome
+ * Minimalist, high-contrast, pure grayscale aesthetics
+ * ============================================================================= */
+@define-color base       #121212;
+@define-color mantle     #0a0a0a;
+@define-color crust      #000000;
+
+@define-color text       #e0e0e0;
+@define-color subtext0   #b0b0b0;
+@define-color subtext1   #cccccc;
+
+@define-color surface0   #1f1f1f;
+@define-color surface1   #2c2c2c;
+@define-color surface2   #3d3d3d;
+
+@define-color overlay0   #5c5c5c;
+@define-color overlay1   #787878;
+
+@define-color mauve      #ffffff;
+@define-color blue       #e0e0e0;
+@define-color sapphire   #cccccc;
+@define-color sky        #d6d6d6;
+@define-color teal       #b8b8b8;
+@define-color green      #f0f0f0;
+@define-color yellow     #e8e8e8;
+@define-color peach      #d0d0d0;
+@define-color maroon     #a0a0a0;
+@define-color red        #ffffff;
+@define-color pink       #e8e8e8;
+@define-color flamingo   #cccccc;
+@define-color rosewater  #f5f5f5;
+
+/* Structural interface colors */
+@define-color accent        #ffffff;
+@define-color bar-bg        rgba(10, 10, 10, 0.88);
+@define-color bar-border    rgba(255, 255, 255, 0.45);
+@define-color island-bg     rgba(28, 28, 28, 0.82);
+@define-color island-border rgba(255, 255, 255, 0.16);
+@define-color window-bg     rgba(28, 28, 28, 0.65);
+@define-color window-border rgba(255, 255, 255, 0.12);

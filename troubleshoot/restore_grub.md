@@ -15,7 +15,7 @@ sudo mount /dev/nvme0n1p1 /mnt/boot  # or /mnt/boot/efi
 arch-chroot /mnt
 
 # 3. Run the automated restore script:
-bash /home/codesmith28/archConfig/troubleshoot/restoreGrub.sh
+bash ~/archConfig/troubleshoot/restoreGrub.sh
 ```
 
 ### Manual Commands

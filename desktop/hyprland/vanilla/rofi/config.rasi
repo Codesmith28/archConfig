@@ -1,0 +1,19 @@
+configuration {
+    modi: "drun,run,window,emoji";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    matching: "fuzzy";
+    sort: true;
+    sorting-method: "fzf";
+    hover-select: false;
+    drun-display-format: "{icon}  {name}";
+    window-format: "{w} · {c} · {t}";
+    display-drun: "󰀻  Apps";
+    display-run: "󰌌  Run";
+    display-window: "󰖲  Windows";
+    display-emoji: "󰞅  Emoji";
+    terminal: "ghostty";
+    font: "monospace 11";
+}
+
+@theme "themes/catppuccin-mocha.rasi"

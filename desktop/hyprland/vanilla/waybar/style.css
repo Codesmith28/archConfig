@@ -1,0 +1,278 @@
+/* =============================================================================
+ * Waybar Stylesheet (Universal Modular Architecture)
+ * Minimalist, Flat, Box-less Interface with Clean Typography & Dynamic Theming
+ * ============================================================================= */
+
+@import "theme.css";
+
+/* ----------------------------------------------------- * General * ----------------------------------------------------- */
+* {
+    font-family: monospace;
+    font-size: 14.5px;
+    font-weight: 500;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: @bar-bg;
+    border-bottom: 1px solid @bar-border;
+    border-radius: 0;
+    color: @text;
+    transition-property: background-color;
+    transition-duration: 0.3s;
+}
+
+/* ----------------------------------------------------- * Container Groups * ----------------------------------------------------- */
+.modules-left,
+.modules-center,
+.modules-right {
+    margin: 0 4px;
+}
+
+/* ----------------------------------------------------- * Workspaces (Flat, Box-less with Thick Underline) * ----------------------------------------------------- */
+#workspaces {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 3px 4px 0 2px;
+}
+
+#workspaces button {
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin: 0 2px;
+    padding: 3px 6px 1px 6px;
+    color: @subtext0;
+    border-radius: 0;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    background-color: transparent;
+    border-bottom: 3px solid @surface1;
+    color: @text;
+}
+
+#workspaces button.active {
+    background-color: transparent;
+    border-bottom: 3px solid @accent;
+    color: @accent;
+}
+
+#workspaces button.urgent {
+    background-color: transparent;
+    border-bottom: 3px solid @red;
+    color: @red;
+}
+
+/* ----------------------------------------------------- * Left Modules * ----------------------------------------------------- */
+#custom-os_logo {
+    background-color: transparent;
+    border: none;
+    color: @accent;
+    font-size: 16px;
+    padding: 0 8px 0 4px;
+    margin: 0;
+    transition: color 0.2s ease;
+}
+
+#custom-os_logo:hover {
+    background-color: transparent;
+    color: @text;
+}
+
+#window {
+    background-color: transparent;
+    border: none;
+    color: @text;
+    padding: 0 6px;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+window#waybar.empty #window {
+    background-color: transparent;
+    border: none;
+}
+
+/* ----------------------------------------------------- * Center Module (Clock) * ----------------------------------------------------- */
+#clock {
+    background-color: transparent;
+    border: none;
+    color: @text;
+    font-size: 13.5px;
+    padding: 0 10px;
+    margin: 0;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+#clock label {
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+#clock:hover {
+    background-color: transparent;
+    color: @accent;
+}
+
+/* ----------------------------------------------------- * Right Modules (Flat, Box-less) * ----------------------------------------------------- */
+/* Proportional icon & text sizing: Sleek, compact and unified across all right modules */
+#tray,
+#custom-notification,
+#bluetooth,
+#network,
+#pulseaudio,
+#custom-microphone,
+#backlight,
+#battery,
+#custom-power,
+#cpu,
+#memory {
+    background-color: transparent;
+    border: none;
+    color: @text;
+    font-size: 13.5px;
+    padding: 0 5px;
+    margin: 0 1px;
+    transition: color 0.2s ease;
+}
+
+/* Maintain consistent text label sizing across all modules */
+#clock label,
+#battery label,
+#pulseaudio label,
+#network label,
+#bluetooth label,
+#backlight label,
+#cpu label,
+#memory label,
+#window label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+#tray:hover,
+#custom-notification:hover,
+#bluetooth:hover,
+#network:hover,
+#pulseaudio:hover,
+#custom-microphone:hover,
+#backlight:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover {
+    background-color: transparent;
+    color: @accent;
+}
+
+/* Specific module accents */
+#pulseaudio {
+    color: @sapphire;
+}
+
+#pulseaudio.muted {
+    color: @overlay0;
+}
+
+#custom-microphone.muted {
+    color: @red;
+}
+
+#custom-microphone.enabled {
+    color: @green;
+}
+
+#network {
+    color: @teal;
+}
+
+#network.disconnected {
+    color: @red;
+}
+
+#bluetooth {
+    color: @blue;
+}
+
+#backlight {
+    color: @yellow;
+}
+
+#battery {
+    color: @green;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @teal;
+}
+
+#battery.warning:not(.charging) {
+    color: @yellow;
+}
+
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1s ease-in-out infinite alternate;
+}
+
+#custom-notification {
+    color: @mauve;
+}
+
+#custom-power {
+    color: @red;
+    padding: 0 8px;
+    margin-right: 4px;
+}
+
+#custom-power:hover {
+    background-color: transparent;
+    color: @text;
+}
+
+/* ----------------------------------------------------- * Tray * ----------------------------------------------------- */
+#tray {
+    background-color: transparent;
+    border: none;
+    padding: 0 6px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @red;
+}
+
+/* ----------------------------------------------------- * Tooltips & Prominent Calendar Preview * ----------------------------------------------------- */
+tooltip {
+    background-color: @mantle;
+    border: 1px solid @surface1;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    padding: 12px 16px;
+}
+
+tooltip label {
+    font-family: monospace;
+    font-size: 16px;
+    color: @text;
+    padding: 6px 8px;
+}
+
+/* ----------------------------------------------------- * Animations * ----------------------------------------------------- */
+@keyframes blink {
+    to {
+        background-color: transparent;
+        color: @crust;
+    }
+}

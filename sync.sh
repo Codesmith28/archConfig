@@ -296,6 +296,11 @@ if [ "$SYNC_DESKTOP_ONLY" = false ]; then
         fi
     fi
 
+    # Ensure core/home/.wakatime.cfg exists from template if not present
+    if [ ! -f "$REPO_DIR/core/home/.wakatime.cfg" ] && [ -f "$REPO_DIR/core/home/.wakatime.cfg.template" ]; then
+        cp "$REPO_DIR/core/home/.wakatime.cfg.template" "$REPO_DIR/core/home/.wakatime.cfg"
+    fi
+
     # Manage WakaTime API key & Opt-out preference before ~/.wakatime.cfg symlink
     WAKATIME_LOCAL_CFG="$HOME/.wakatime.cfg.local"
     _existing_waka_key=""
@@ -385,6 +390,8 @@ EOF
         [ "$name" = "." ] && continue
         [ "$name" = ".." ] && continue
         [ "$name" = "*" ] && continue
+        [ "$name" = ".antidote" ] && continue
+        [ "$name" = ".zsh-defer" ] && continue
         link_item "$item" "$HOME/$name"
     done
 fi
@@ -443,15 +450,28 @@ if [ "$SYNC_CORE_ONLY" = false ]; then
         echo ""
         echo "==> Applying Hyprland Wayland Layer..."
         if [ "$DETECTED_OS" = "omarchy" ]; then
-            link_item "$REPO_DIR/desktop/hyprland/lua" "$CONFIG_DIR/hypr"
+            link_item "$REPO_DIR/desktop/hyprland/omarchy" "$CONFIG_DIR/hypr"
+            if [ -d "$REPO_DIR/desktop/hyprland/omarchy/hyprshell" ]; then
+                link_item "$REPO_DIR/desktop/hyprland/omarchy/hyprshell" "$CONFIG_DIR/hyprshell"
+            fi
         else
-            link_item "$REPO_DIR/desktop/hyprland/classic" "$CONFIG_DIR/hypr"
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/hypr" "$CONFIG_DIR/hypr"
+            if [ "$DRY_RUN" = false ]; then
+                mkdir -p "$CONFIG_DIR/hyprlauncher"
+            fi
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/hypr/hyprlauncher.conf" "$CONFIG_DIR/hyprlauncher/hyprlauncher.conf"
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/waybar" "$CONFIG_DIR/waybar"
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/rofi" "$CONFIG_DIR/rofi"
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/wofi" "$CONFIG_DIR/wofi"
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/swaync" "$CONFIG_DIR/swaync"
+            link_item "$REPO_DIR/desktop/hyprland/vanilla/clipse" "$CONFIG_DIR/clipse"
         fi
-        link_item "$REPO_DIR/desktop/hyprland/waybar" "$CONFIG_DIR/waybar"
-        link_item "$REPO_DIR/desktop/hyprland/rofi" "$CONFIG_DIR/rofi"
-        link_item "$REPO_DIR/desktop/hyprland/swaync" "$CONFIG_DIR/swaync"
-        if [ -d "$REPO_DIR/desktop/hyprland/hyprshell" ]; then
-            link_item "$REPO_DIR/desktop/hyprland/hyprshell" "$CONFIG_DIR/hyprshell"
+        if [ -f "$REPO_DIR/desktop/hyprland/setup.sh" ]; then
+            if [ "$DRY_RUN" = false ]; then
+                bash "$REPO_DIR/desktop/hyprland/setup.sh"
+            else
+                echo "  (dry-run) Would execute $REPO_DIR/desktop/hyprland/setup.sh"
+            fi
         fi
     fi
 fi
@@ -485,6 +505,24 @@ if [ "$(uname -s)" = "Linux" ]; then
     [ "$target_distro_script" = "ubuntu_server" ] && target_distro_script="ubuntu"
     if [ -f "$REPO_DIR/distros/$target_distro_script/setup.sh" ]; then
         echo "     sudo ./distros/$target_distro_script/setup.sh"
+    fi
+    if [ "$DETECTED_OS" = "fedora" ] && [ "$DETECTED_DE" = "gnome" ] && [ -f "$REPO_DIR/distros/fedora/setup-hyprland-on-fedora-gnome.sh" ]; then
+        echo ""
+        echo "  🪟 Optional Hyprland: To install Hyprland on top of Fedora GNOME, run:"
+        echo "     sudo ./distros/fedora/setup-hyprland-on-fedora-gnome.sh"
+        if [ "$NON_INTERACTIVE" = false ] && [ "$DRY_RUN" = false ] && [ -t 0 ]; then
+            echo ""
+            read -rp "  Would you like to install optional Hyprland desktop on top of Fedora GNOME now? [y/N]: " _run_hypr || true
+            case "${_run_hypr:-}" in
+                [yY]|[yY][eE][sS])
+                    echo "==> Running Fedora Hyprland setup..."
+                    sudo bash "$REPO_DIR/distros/fedora/setup-hyprland-on-fedora-gnome.sh"
+                    ;;
+                *)
+                    echo "  ⏭️ Skipping optional Hyprland setup."
+                    ;;
+            esac
+        fi
     fi
 elif [ "$(uname -s)" = "Darwin" ]; then
     if [ -f "$REPO_DIR/distros/mac/setup.sh" ]; then

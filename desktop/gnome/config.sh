@@ -97,21 +97,32 @@ if gsettings list-schemas 2>/dev/null | grep -q "org.gnome.shell.extensions.tili
 fi
 
 # ------------------------------------------------------------------------------
-# 7. Font Settings
+# 7. Font Settings (Monospace Only - Never interfere with OS Sans-Serif fonts)
 # ------------------------------------------------------------------------------
-gsettings set org.gnome.desktop.interface font-name 'Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface document-font-name 'Sans 11' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace 10' 2>/dev/null || true
+gsettings reset org.gnome.desktop.interface font-name 2>/dev/null || true
+gsettings reset org.gnome.desktop.interface document-font-name 2>/dev/null || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace 11' 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 8. Appearance & Peripherals
 # ------------------------------------------------------------------------------
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface icon-theme 'Adwaita' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface accent-color 'blue' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-format '24h' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-show-seconds false 2>/dev/null || true
 gsettings set org.gnome.desktop.interface clock-show-weekday false 2>/dev/null || true
 gsettings set org.gnome.desktop.interface show-battery-percentage true 2>/dev/null || true
 gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true 2>/dev/null || true
+
+# Clean up any potential GTK_THEME / Hyprland session pollution in GNOME
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl --user unset-environment GTK_THEME HYPRCURSOR_THEME HYPRCURSOR_SIZE 2>/dev/null || true
+    systemctl --user set-environment XCURSOR_THEME=Adwaita XCURSOR_SIZE=24 2>/dev/null || true
+fi
+rm -f "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
 
 gsettings set org.gnome.desktop.peripherals.keyboard repeat true
 gsettings set org.gnome.desktop.peripherals.keyboard delay 250
@@ -133,17 +144,9 @@ dconf write /org/gnome/shell/extensions/clipboard-indicator/toggle-menu "['<Supe
 dconf write /org/gnome/shell/extensions/clipboard-indicator/enable-keybindings true 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
-# 10. Blur My Shell (Persistent Active State Across AC / Battery)
+# 10. Dash-to-Dock Reset
 # ------------------------------------------------------------------------------
-BLUR_MY_SHELL_SCHEMAS="$HOME/.local/share/gnome-shell/extensions/blur-my-shell@aunetx/schemas"
-if [[ -d "$BLUR_MY_SHELL_SCHEMAS" ]]; then
-    gsettings --schemadir "$BLUR_MY_SHELL_SCHEMAS" set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
-fi
-
-if gsettings list-schemas 2>/dev/null | grep -q "^org\.gnome\.shell\.extensions\.blur-my-shell$"; then
-    gsettings set org.gnome.shell.extensions.blur-my-shell power-saver false 2>/dev/null || true
-fi
-
-dconf write /org/gnome/shell/extensions/blur-my-shell/power-saver false 2>/dev/null || true
+dconf write /org/gnome/shell/extensions/dash-to-dock/background-opacity 0.8 2>/dev/null || true
+dconf reset /org/gnome/shell/extensions/dash-to-dock/transparency-mode 2>/dev/null || true
 
 echo "GNOME configurations applied successfully!"

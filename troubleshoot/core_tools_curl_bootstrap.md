@@ -27,7 +27,7 @@ When bootstrapping `archConfig` across heterogeneous environments (Fedora, Arch 
 
 ## Implemented Solution
 
-The automated runner [`core/scripts/setup_shell_dependencies.sh`](file:///home/codesmith28/archConfig/core/scripts/setup_shell_dependencies.sh) handles universal unattended installation:
+The automated runner [`core/scripts/setup_shell_dependencies.sh`](../core/scripts/setup_shell_dependencies.sh) handles universal unattended installation:
 
 ```bash
 # Check and install all missing core tools

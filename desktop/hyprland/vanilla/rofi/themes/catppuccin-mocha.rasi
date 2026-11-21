@@ -1,0 +1,141 @@
+* {
+    font: "monospace 11";
+
+    /* Catppuccin Mocha Palette */
+    bg-base:        rgba (30, 30, 46, 88%);
+    bg-mantle:      rgba (24, 24, 37, 92%);
+    bg-surface0:    rgba (49, 50, 68, 70%);
+    bg-surface1:    rgba (69, 71, 90, 80%);
+    bg-surface2:    rgba (88, 91, 112, 60%);
+
+    fg-text:        rgba (205, 214, 244, 100%);
+    fg-subtext1:    rgba (186, 194, 222, 100%);
+    fg-subtext0:    rgba (166, 173, 200, 100%);
+    fg-overlay0:    rgba (108, 112, 134, 100%);
+
+    accent-mauve:   rgba (203, 166, 247, 100%);
+    accent-blue:    rgba (137, 180, 250, 100%);
+    accent-lavender:rgba (180, 190, 254, 100%);
+    border-subtle:  rgba (137, 180, 250, 30%);
+
+    radius-window:  14px;
+    radius-item:    8px;
+    spacing:        8px;
+}
+
+window {
+    width: 28%;
+    location: center;
+    anchor: center;
+    transparency: "real";
+
+    background-color: @bg-base;
+    border: 1px;
+    border-radius: @radius-window;
+    border-color: @border-subtle;
+
+    padding: 14px;
+}
+
+mainbox {
+    background-color: transparent;
+    spacing: 10px;
+    children: [ inputbar, listview, mode-switcher ];
+}
+
+inputbar {
+    background-color: @bg-surface0;
+    border: 1px;
+    border-color: @border-subtle;
+    border-radius: @radius-item;
+    padding: 10px 14px;
+    spacing: 10px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @accent-mauve;
+    font-weight: bold;
+}
+
+entry {
+    background-color: transparent;
+    text-color: @fg-text;
+    placeholder: "Search applications, windows...";
+    placeholder-color: @fg-overlay0;
+    cursor-color: @accent-blue;
+}
+
+listview {
+    background-color: transparent;
+    lines: 8;
+    columns: 1;
+    dynamic: true;
+    cycle: false;
+    scrollbar: false;
+    spacing: 4px;
+    padding: 4px 0px;
+}
+
+element {
+    orientation: horizontal;
+    children: [ element-icon, element-text ];
+    spacing: 12px;
+    background-color: transparent;
+    border-radius: @radius-item;
+    padding: 8px 12px;
+    text-color: @fg-subtext1;
+}
+
+element selected {
+    background-color: @bg-surface1;
+    border: 1px;
+    border-color: @accent-blue;
+    text-color: @fg-text;
+}
+
+element-icon {
+    size: 1.35em;
+    vertical-align: 0.5;
+    background-color: transparent;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+    background-color: transparent;
+}
+
+mode-switcher {
+    background-color: transparent;
+    spacing: 6px;
+}
+
+button {
+    background-color: @bg-surface0;
+    border: 1px;
+    border-color: transparent;
+    border-radius: @radius-item;
+    padding: 6px 12px;
+    text-color: @fg-subtext0;
+}
+
+button selected {
+    background-color: @bg-surface1;
+    border-color: @accent-mauve;
+    text-color: @accent-mauve;
+    font-weight: bold;
+}
+
+@media ( max-width: 1500 ) {
+    window {
+        width: 34%;
+    }
+}
+
+@media ( max-width: 1100 ) {
+    window {
+        width: 48%;
+    }
+}

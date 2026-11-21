@@ -1,0 +1,460 @@
+/* Catppuccin Mocha Palette for SwayNC - Monospace & 10px Curvature */
+:root {
+  --base: #1e1e2e;
+  --mantle: #181825;
+  --crust: #11111b;
+
+  --text: #cdd6f4;
+  --subtext0: #a6adc8;
+  --subtext1: #bac2de;
+
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+
+  --overlay0: #6c7086;
+  --overlay1: #7f849c;
+
+  --mauve: #cba6f7;
+  --blue: #89b4fa;
+  --lavender: #b4befe;
+  --sapphire: #74c7ec;
+  --sky: #89dceb;
+  --teal: #94e2d5;
+  --green: #a6e3a1;
+  --yellow: #f9e2af;
+  --peach: #fab387;
+  --red: #f38ba8;
+
+  --border: rgba(137, 180, 250, 0.28);
+  --border-soft: rgba(180, 190, 254, 0.14);
+  --border-radius: 10px;
+}
+
+/* Global Monospace Styling */
+* {
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+
+window,
+notificationwindow,
+blankwindow,
+.blank-window,
+.notification-window {
+  background: transparent;
+}
+
+/* ── Floating Notifications Container & Geometry ─────────── */
+.floating-notifications {
+  background: transparent;
+  margin: 10px;
+}
+
+.notification-row {
+  outline: none;
+  background: transparent;
+  margin: 5px 0;
+  padding: 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  background: transparent;
+}
+
+.notification-background {
+  padding: 0;
+}
+
+/* ── Floating Rectangular Notification Card ──────────────── */
+.notification {
+  background: rgba(30, 30, 46, 0.92);
+  border: 1px solid var(--border-soft);
+  border-left: 4px solid var(--mauve);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  margin: 4px 0;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.notification:hover {
+  background: rgba(49, 50, 68, 0.92);
+  border-color: var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+.notification.low {
+  border-left-color: var(--overlay0);
+}
+
+.notification.normal {
+  border-left-color: var(--mauve);
+}
+
+.notification.critical {
+  border-left-color: var(--red);
+  background: rgba(40, 25, 35, 0.95);
+  border-color: rgba(243, 139, 168, 0.4);
+}
+
+/* Action button area inside notification */
+.notification-default-action {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  border-radius: var(--border-radius);
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.notification-default-action:hover {
+  background: transparent;
+}
+
+.notification-content {
+  background: transparent;
+  padding: 2px;
+}
+
+/* ── Monospace Text Typography ───────────────────────────── */
+.notification-summary,
+.summary {
+  font-family: monospace;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--mauve);
+  margin-bottom: 4px;
+}
+
+.notification-body,
+.body {
+  font-family: monospace;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.notification-time,
+.time {
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--subtext0);
+  margin-right: 28px;
+}
+
+/* ── Images, Thumbnails & App Icons ──────────────────────── */
+.image,
+.notification-content .image {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-soft);
+  margin: 4px 10px 4px 0;
+}
+
+.app-icon,
+.notification-content .app-icon {
+  border-radius: 6px;
+  margin: 4px;
+}
+
+.body-image,
+.notification-content .body-image {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-soft);
+  margin-top: 6px;
+}
+
+/* ── Close Button ────────────────────────────────────────── */
+.close-button {
+  background: rgba(69, 71, 90, 0.6);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  color: var(--text);
+  font-family: monospace;
+  font-size: 11px;
+  padding: 2px 6px;
+  margin: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: var(--red);
+  color: var(--crust);
+  border-color: var(--red);
+}
+
+/* ── Action Buttons ──────────────────────────────────────── */
+.notification-action {
+  background: rgba(49, 50, 68, 0.7);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  color: var(--text);
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 6px 4px 0 0;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.notification-action:hover {
+  background: var(--mauve);
+  color: var(--crust);
+  border-color: var(--mauve);
+}
+
+/* ── Notification Progress Bars (Volume, Brightness, Mic) ── */
+.notification progressbar,
+progressbar {
+  background-color: transparent;
+  border-radius: var(--border-radius);
+  min-height: 10px;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  padding: 0;
+}
+
+.notification progressbar trough,
+progressbar trough {
+  background-color: rgba(49, 50, 68, 0.75);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  min-height: 10px;
+  min-width: 220px;
+}
+
+.notification progressbar progress,
+progressbar progress {
+  background-color: var(--mauve);
+  border: none;
+  border-radius: var(--border-radius);
+  min-height: 10px;
+}
+
+.notification.normal progressbar progress {
+  background-color: var(--mauve);
+}
+
+.notification.low progressbar progress {
+  background-color: var(--blue);
+}
+
+.notification.critical progressbar progress {
+  background-color: var(--red);
+}
+
+.notification.progress {
+  min-height: 54px;
+  padding: 10px 14px;
+}
+
+/* ── Control Center Panel ────────────────────────────────── */
+#control-center,
+.control-center {
+  background: rgba(24, 24, 37, 0.94);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+  padding: 12px;
+}
+
+.control-center-list {
+  background: transparent;
+}
+
+.control-center-list-placeholder {
+  opacity: 0.5;
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--subtext0);
+}
+
+#control-center .widget-title,
+#control-center .widget-dnd,
+#control-center .widget-mpris,
+#control-center .widget-buttons-grid,
+#control-center .widget-volume,
+#control-center .widget-backlight,
+#control-center .widget-slider,
+#control-center .floating-notifications {
+  background: rgba(49, 50, 68, 0.45);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  margin: 6px 4px;
+  padding: 10px 12px;
+}
+
+/* ── Title Widget ────────────────────────────────────────── */
+#control-center .widget-title label {
+  font-family: monospace;
+  color: var(--mauve);
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+#control-center .widget-title > button {
+  background: rgba(69, 71, 90, 0.6);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  color: var(--text);
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  transition: all 0.2s ease;
+}
+
+#control-center .widget-title > button:hover {
+  background: var(--red);
+  color: var(--crust);
+  border-color: var(--red);
+}
+
+/* ── DND Widget ──────────────────────────────────────────── */
+#control-center .widget-dnd label {
+  font-family: monospace;
+  color: var(--subtext1);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#control-center .widget-dnd > switch {
+  background: rgba(69, 71, 90, 0.6);
+  border-radius: var(--border-radius);
+}
+
+#control-center .widget-dnd > switch:checked {
+  background: var(--mauve);
+}
+
+/* ── Volume & Brightness Sliders in Control Center ────────── */
+.widget-volume,
+.widget-backlight,
+.widget-slider {
+  background: rgba(49, 50, 68, 0.45);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  margin: 6px 4px;
+  padding: 8px 12px;
+}
+
+.widget-volume label,
+.widget-backlight label,
+.widget-slider label {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mauve);
+  margin-right: 8px;
+}
+
+.widget-volume scale,
+.widget-backlight scale,
+.widget-slider scale {
+  padding: 4px 0;
+}
+
+.widget-volume scale trough,
+.widget-backlight scale trough,
+.widget-slider scale trough {
+  background: rgba(30, 30, 46, 0.85);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  min-height: 10px;
+}
+
+.widget-volume scale highlight,
+.widget-slider scale highlight {
+  background: var(--blue);
+  border-radius: var(--border-radius);
+  min-height: 10px;
+}
+
+.widget-backlight scale highlight {
+  background: var(--yellow);
+  border-radius: var(--border-radius);
+  min-height: 10px;
+}
+
+.widget-volume scale slider,
+.widget-backlight scale slider,
+.widget-slider scale slider {
+  background: var(--text);
+  border: 1px solid var(--surface2);
+  border-radius: var(--border-radius);
+  min-width: 14px;
+  min-height: 14px;
+  margin: -2px 0;
+}
+
+/* ── Media Controller (MPRIS) ────────────────────────────── */
+.widget-mpris-player {
+  padding: 6px 4px;
+}
+
+.widget-mpris-album-art {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-soft);
+  min-width: 56px;
+  min-height: 56px;
+}
+
+.widget-mpris-title {
+  font-family: monospace;
+  color: var(--mauve);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.widget-mpris-subtitle {
+  font-family: monospace;
+  color: var(--subtext0);
+  font-size: 12px;
+}
+
+.widget-mpris button {
+  background: rgba(69, 71, 90, 0.5);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  color: var(--text);
+  font-family: monospace;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 4px 8px;
+  margin: 0 3px;
+  transition: all 0.2s ease;
+}
+
+.widget-mpris button:hover {
+  background: var(--surface1);
+  border-color: var(--mauve);
+  color: var(--mauve);
+}
+
+/* ── Power & Action Buttons Grid ─────────────────────────── */
+.widget-buttons-grid button {
+  background: rgba(49, 50, 68, 0.6);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+  color: var(--text);
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 65px;
+  min-height: 38px;
+  padding: 8px 10px;
+  margin: 3px;
+  transition: all 0.2s ease;
+}
+
+.widget-buttons-grid button:hover {
+  background: var(--surface1);
+  border-color: var(--mauve);
+  color: var(--mauve);
+}

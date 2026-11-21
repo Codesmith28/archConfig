@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Emoji Picker
+Comment=Search and copy emojis to clipboard
+Exec=sh -c '"$HOME/.config/hypr/scripts/launcher-emoji.sh"'
+Icon=preferences-desktop-emoticons
+Categories=Utility;
+Keywords=emoji;emoticon;smile;symbol;picker;
+Terminal=false

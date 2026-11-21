@@ -27,10 +27,14 @@ This skill ensures that changes made to core tools remain 100% functional across
 ### 2. Shell Environment & Compiler Resolution
 - `core/home/.profile`: Universal POSIX login environment (PATH, default editor, JAVA_HOME).
 - `core/home/.bash_profile`: Universal login loader that sources `.profile` and `.bashrc`.
-- `core/home/.bashrc`: Modular loader reading `core/home/.bashrc.d/*.bash`.
-- Dynamic GCC/G++ Discovery (`04-compilers.bash`): Always dynamically search for the latest versioned compiler across system binary paths (e.g. `gcc-[0-9]*` and `g++-[0-9]*`) and evaluate unversioned fallbacks rather than hardcoding compiler version lists.
+- `core/home/.bashrc`: Modular Bash loader reading exclusively from `core/home/.bashrc.d/*.bash`.
+- `core/home/.zshrc`: Modular Zsh loader reading exclusively from `core/home/.zshrc.d/*.zsh` (strictly decoupled from `.bashrc.d`).
+- `core/home/.zshrc.d/`: Standalone, self-contained Zsh suite (history, plugins via Antidote, completion, keybindings, starship, fzf, runtimes, aliases, functions, compilers, cuda, zoxide).
+- Dynamic GCC/G++ Discovery: Dynamically searches for the latest versioned compiler across system binary paths (e.g. `gcc-[0-9]*` and `g++-[0-9]*`) and evaluates unversioned fallbacks rather than hardcoding compiler version lists.
+- Plugin & Tool Management: External tools (like Antidote) are managed directly via `curl` archives in user space (`$HOME/.antidote`), never committed as git repositories or submodules within `core/home/`.
 
-### 3. Desktop Environment (DE) Modularity
+### 3. Desktop Environment (DE) & Typography Guardrails
+- **Strictly No Sans-Serif Interference**: Developer configurations must **never** modify system interface (`font-name`) or document (`document-font-name`) sans-serif fonts. Respect the distro's native UI typography (e.g., Adwaita Sans on Fedora, Ubuntu font on Ubuntu, Cantarell on upstream GNOME). Dotfiles manage **only** `monospace-font-name` for developer workflows.
 - GNOME extensions, dconf scripts, and GTK titlebars live in `desktop/gnome/`.
 - KDE Plasma shortcut schemes and kxmlgui settings live in `desktop/kde/`.
 - Wayland / Hyprland tiling configs live in `desktop/hyprland/`.

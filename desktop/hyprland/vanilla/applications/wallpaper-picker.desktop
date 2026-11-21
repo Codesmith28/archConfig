@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpaper Picker
+Comment=Pick and apply desktop wallpaper with live thumbnail preview
+Exec=sh -c '"$HOME/.config/hypr/scripts/wallpicker.sh"'
+Icon=preferences-desktop-wallpaper
+Categories=Settings;DesktopSettings;Utility;
+Keywords=wallpaper;background;image;picker;
+Terminal=false

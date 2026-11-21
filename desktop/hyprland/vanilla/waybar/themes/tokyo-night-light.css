@@ -1,0 +1,41 @@
+/* =============================================================================
+ * Waybar Color Theme: Tokyo Night Light (Day)
+ * Crisp, clean daylight theme with bold blue and purple accents
+ * ============================================================================= */
+@define-color base       #e1e2e7;
+@define-color mantle     #d5d6db;
+@define-color crust      #cbccd1;
+
+@define-color text       #3760bf;
+@define-color subtext0   #6172b0;
+@define-color subtext1   #515c7e;
+
+@define-color surface0   #c4c8da;
+@define-color surface1   #b4b8cb;
+@define-color surface2   #9fa4bd;
+
+@define-color overlay0   #8990b3;
+@define-color overlay1   #737aa2;
+
+@define-color mauve      #9854f1;
+@define-color blue       #2e7de9;
+@define-color sapphire   #188092;
+@define-color sky        #007197;
+@define-color teal       #179299;
+@define-color green      #587539;
+@define-color yellow     #8c6c3e;
+@define-color peach      #b15c00;
+@define-color maroon     #b15c00;
+@define-color red        #f52a65;
+@define-color pink       #f52a65;
+@define-color flamingo   #c0caf5;
+@define-color rosewater  #dc8a78;
+
+/* Structural interface colors */
+@define-color accent        #2e7de9;
+@define-color bar-bg        rgba(213, 214, 219, 0.92);
+@define-color bar-border    rgba(46, 125, 233, 0.45);
+@define-color island-bg     rgba(225, 226, 231, 0.85);
+@define-color island-border rgba(46, 125, 233, 0.18);
+@define-color window-bg     rgba(225, 226, 231, 0.75);
+@define-color window-border rgba(46, 125, 233, 0.15);

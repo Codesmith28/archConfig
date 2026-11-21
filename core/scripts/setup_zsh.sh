@@ -10,7 +10,7 @@
 #  1. Antidote   - Ultra-fast Zsh plugin manager (mattmc3/antidote)
 #  2. zsh-defer  - Deferred plugin loading utility (romkatv/zsh-defer)
 #  3. Plugins    - Automated bundling of plugins from ~/.config/zsh/plugins.txt
-#  4. Dotfiles   - Safe linking of core/home/.zshrc and core/config/zsh
+#  4. Dotfiles   - Safe linking of core/home/.zshrc, core/home/.zshrc.d, and core/config/zsh
 #
 # Guarantees:
 #  - Installs directly to user-space (~/.antidote, ~/.zsh-defer)
@@ -268,6 +268,28 @@ if [ -f "$REPO_DIR/core/home/.zshrc" ]; then
     fi
 fi
 
+# Link ~/.zshrc.d if repository home directory exists
+if [ -d "$REPO_DIR/core/home/.zshrc.d" ]; then
+    if [ -L "$HOME/.zshrc.d" ]; then
+        current_zshrc_d="$(readlink "$HOME/.zshrc.d" 2>/dev/null || true)"
+        if [ "$current_zshrc_d" != "$REPO_DIR/core/home/.zshrc.d" ]; then
+            ln -snf "$REPO_DIR/core/home/.zshrc.d" "$HOME/.zshrc.d"
+            echo "  → Updated symlink: ~/.zshrc.d -> $REPO_DIR/core/home/.zshrc.d"
+        else
+            echo "  ✓ ~/.zshrc.d already linked to repository"
+        fi
+    elif [ -d "$HOME/.zshrc.d" ]; then
+        bak_dir="$HOME/.zshrc.d.bak.$(date +%Y%m%d_%H%M%S)"
+        echo "  📦 Backing up existing ~/.zshrc.d -> $bak_dir"
+        mv "$HOME/.zshrc.d" "$bak_dir"
+        ln -snf "$REPO_DIR/core/home/.zshrc.d" "$HOME/.zshrc.d"
+        echo "  → Linked: ~/.zshrc.d -> $REPO_DIR/core/home/.zshrc.d"
+    else
+        ln -snf "$REPO_DIR/core/home/.zshrc.d" "$HOME/.zshrc.d"
+        echo "  → Linked: ~/.zshrc.d -> $REPO_DIR/core/home/.zshrc.d"
+    fi
+fi
+
 # ------------------------------------------------------------------------------
 # 6. Pre-bundle / Compile Static Plugins via Antidote
 # ------------------------------------------------------------------------------
@@ -338,6 +360,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  ✨ archConfig Zsh Environment Ready"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  • Config file   : ~/.zshrc -> $REPO_DIR/core/home/.zshrc"
+echo "  • Modular dir   : ~/.zshrc.d -> $REPO_DIR/core/home/.zshrc.d"
 echo "  • Plugins list  : $PLUGINS_TXT"
 echo "  • Static bundle : $PLUGINS_ZSH"
 echo "  • Antidote path : $ANTIDOTE_DIR"

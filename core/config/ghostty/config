@@ -4,6 +4,7 @@ font-family = monospace
 font-style = Regular
 font-size = 10
 bold-color = bright
+font-thicken = true
 
 # Window
 window-width = 200
@@ -13,7 +14,7 @@ window-theme = ghostty
 window-padding-x = 5
 window-padding-y = 5
 window-decoration = server
-gtk-titlebar-style = tabs
+# gtk-titlebar-style = none
 
 confirm-close-surface=false
 resize-overlay = never

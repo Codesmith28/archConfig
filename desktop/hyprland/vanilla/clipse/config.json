@@ -1,0 +1,26 @@
+{
+  "allowImages": true,
+  "imageDisplay": {
+    "type": "kitty",
+    "scaleX": 9,
+    "scaleY": 9
+  },
+  "allowDuplicates": false,
+  "historyFile": "clipboard_history.json",
+  "maxHistory": 100,
+  "deleteAfter": 0,
+  "logFile": "clipse.log",
+  "pollInterval": 50,
+  "maxEntryLength": 80,
+  "themeFile": "custom_theme.json",
+  "tempDir": "tmp_files",
+  "enableMouse": true,
+  "enableDescription": true,
+  "keyBindings": {
+    "choose": "enter",
+    "filter": "/",
+    "preview": "space",
+    "togglePin": "p",
+    "remove": "backspace"
+  }
+}

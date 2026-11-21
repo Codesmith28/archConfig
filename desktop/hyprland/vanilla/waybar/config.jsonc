@@ -1,0 +1,216 @@
+{
+  "reload_style_on_change": true,
+  "layer": "top",
+  "position": "top",
+  "spacing": 6,
+  "height": 36,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+  "margin-bottom": 0,
+  "modules-left": [
+    "custom/os_logo",
+    "hyprland/workspaces",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "tray",
+    "custom/notification",
+    "bluetooth",
+    "network",
+    "pulseaudio",
+    "custom/microphone",
+    "backlight",
+    "battery",
+    "custom/power"
+  ],
+  "custom/os_logo": {
+    "exec": "bash -c 'if [ -x \"$HOME/.config/hypr/scripts/os-logo.sh\" ]; then \"$HOME/.config/hypr/scripts/os-logo.sh\"; elif [ -f /etc/os-release ] && grep -qi fedora /etc/os-release; then echo ; else echo 󰣇; fi'",
+    "interval": "once",
+    "tooltip": true,
+    "tooltip-format": "Application Launcher",
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/launcher-apps.sh\" ]; then \"$HOME/.config/hypr/scripts/launcher-apps.sh\"; elif command -v wofi >/dev/null 2>&1; then wofi --show drun; elif command -v hyprlauncher >/dev/null 2>&1; then hyprlauncher -t || hyprlauncher; elif command -v hyprland-run >/dev/null 2>&1; then hyprland-run; else rofi -show drun; fi'"
+  },
+  "hyprland/workspaces": {
+    "on-click": "activate",
+    "all-outputs": true,
+    "format": "{name}",
+    "persistent-workspaces": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": []
+    }
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 42,
+    "separate-outputs": true,
+    "rewrite": {
+      "^$": "Desktop",
+      "(.*) — Mozilla Firefox": "󰈹  $1",
+      "(.*) - Zen Browser": "󰈹  $1",
+      "(.*) - Google Chrome": "  $1",
+      "(.*) - Visual Studio Code": "󰨞  $1",
+      "(.*) - Ghostty": "󰞷  $1",
+      "(.*) - Kitty": "󰞷  $1",
+      "(.*) - Dolphin": "󰉋  $1",
+      "(.*) - Neovim": "  $1"
+    }
+  },
+  "clock": {
+    "interval": 1,
+    "timezones": [
+      "Asia/Kolkata",
+      "America/New_York"
+    ],
+    "format": "󰥔  {:%a %d %b, %H:%M %Z}",
+    "timezone-tooltip-format": "  • {:%Z: %H:%M  (%a, %d %b)}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n\n<tt>{calendar}</tt>\n\n<b>Timezones:</b>\n{tz_list}",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "weeks-pos": "right",
+      "on-scroll": 1,
+      "format": {
+        "months": "<span color='#cba6f7'><b>{}</b></span>",
+        "days": "<span color='#cdd6f4'><b>{}</b></span>",
+        "weeks": "<span color='#89dceb'><b>W{}</b></span>",
+        "weekdays": "<span color='#89b4fa'><b>{}</b></span>",
+        "today": "<span color='#f38ba8'><b><u>{}</u></b></span>"
+      }
+    },
+    "on-click": "sh -c 'if command -v swaync-client >/dev/null 2>&1; then swaync-client -t -sw; elif command -v gnome-calendar >/dev/null 2>&1; then gnome-calendar; fi'",
+    "on-click-right": "sh -c 'if command -v swaync-client >/dev/null 2>&1; then swaync-client -t -swa; elif command -v gnome-calendar >/dev/null 2>&1; then gnome-calendar; fi'",
+    "actions": {
+      "on-click-middle": "mode",
+      "on-click-forward": "tz_up",
+      "on-click-backward": "tz_down",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
+    }
+  },
+  "tray": {
+    "icon-size": 17,
+    "spacing": 8
+  },
+  "custom/notification": {
+    "tooltip": true,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󰂚<span color='#f38ba8'><sup></sup></span>",
+      "none": "󰂚",
+      "dnd-notification": "󰂛<span color='#f38ba8'><sup></sup></span>",
+      "dnd-none": "󰂛",
+      "inhibited-notification": "󰂚<span color='#f38ba8'><sup></sup></span>",
+      "inhibited-none": "󰂚",
+      "dnd-inhibited-notification": "󰂛<span color='#f38ba8'><sup></sup></span>",
+      "dnd-inhibited-none": "󰂛"
+    },
+    "return-type": "json",
+    "exec-if": "command -v swaync-client >/dev/null 2>&1",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "Bluetooth: {controller_alias}",
+    "tooltip-format-connected": "Bluetooth: {controller_alias}\n\nConnected:\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "  • {device_alias}",
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/bluetooth.sh\" ]; then \"$HOME/.config/hypr/scripts/bluetooth.sh\"; elif [ -x \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/bluetooth.sh\" ]; then \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/bluetooth.sh\"; else command -v blueman-manager >/dev/null 2>&1 && blueman-manager || ghostty --class=small_float -e bluetoothctl; fi'",
+    "on-click-right": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/bluetooth-codec.sh\" ]; then \"$HOME/.config/hypr/scripts/bluetooth-codec.sh\"; elif [ -x \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/bluetooth-codec.sh\" ]; then \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/bluetooth-codec.sh\"; fi'"
+  },
+  "network": {
+    "format": "{icon}",
+    "format-wifi": "  {essid}",
+    "format-ethernet": "󰈀  {ifname}",
+    "format-linked": "󰈀  {ifname} (No IP)",
+    "format-disconnected": "󰖪  Offline",
+    "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength}%)\n⇣ {bandwidthDownBytes}  ⇡ {bandwidthUpBytes}",
+    "tooltip-format-ethernet": "Ethernet: {ifname}\n⇣ {bandwidthDownBytes}  ⇡ {bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Network disconnected",
+    "interval": 5,
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/wifi.sh\" ]; then \"$HOME/.config/hypr/scripts/wifi.sh\"; elif [ -x \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/wifi.sh\" ]; then \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/wifi.sh\"; elif command -v nm-connection-editor >/dev/null 2>&1; then nm-connection-editor; else command -v ghostty >/dev/null 2>&1 && ghostty --class=small_float -e nmtui || nmtui; fi'"
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰝟 Muted",
+    "tooltip-format": "{desc} ({volume}%)",
+    "scroll-step": 5,
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/volume-control.sh\" ]; then \"$HOME/.config/hypr/scripts/volume-control.sh\" mixer; elif [ -x \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/volume-control.sh\" ]; then \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/volume-control.sh\" mixer; elif command -v pavucontrol >/dev/null 2>&1; then pavucontrol; else org.pulseaudio.pavucontrol; fi'",
+    "on-click-middle": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/volume-control.sh\" ]; then \"$HOME/.config/hypr/scripts/volume-control.sh\" mute; elif command -v wpctl >/dev/null 2>&1; then wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; elif command -v pactl >/dev/null 2>&1; then pactl set-sink-mute @DEFAULT_SINK@ toggle; fi'",
+    "on-click-right": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/volume-control.sh\" ]; then \"$HOME/.config/hypr/scripts/volume-control.sh\" mute; elif command -v wpctl >/dev/null 2>&1; then wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; elif command -v pactl >/dev/null 2>&1; then pactl set-sink-mute @DEFAULT_SINK@ toggle; fi'",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "󰋎",
+      "headset": "󰋎",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "custom/microphone": {
+    "exec": "bash -c 'if command -v wpctl >/dev/null 2>&1; then if wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q \"[MUTED]\"; then echo \"{\\\"text\\\":\\\"󰍭\\\",\\\"tooltip\\\":\\\"Microphone: Muted\\\",\\\"class\\\":\\\"muted\\\"}\"; else echo \"{\\\"text\\\":\\\"󰍬\\\",\\\"tooltip\\\":\\\"Microphone: Active\\\",\\\"class\\\":\\\"enabled\\\"}\"; fi; elif command -v pactl >/dev/null 2>&1; then if pactl get-source-mute @DEFAULT_SOURCE@ | grep -q yes; then echo \"{\\\"text\\\":\\\"󰍭\\\",\\\"tooltip\\\":\\\"Microphone: Muted\\\",\\\"class\\\":\\\"muted\\\"}\"; else echo \"{\\\"text\\\":\\\"󰍬\\\",\\\"tooltip\\\":\\\"Microphone: Active\\\",\\\"class\\\":\\\"enabled\\\"}\"; fi; else echo \"{\\\"text\\\":\\\"󰍬\\\",\\\"tooltip\\\":\\\"Microphone: Unknown\\\",\\\"class\\\":\\\"unknown\\\"}\"; fi'",
+    "on-click": "bash -c 'if command -v wpctl >/dev/null 2>&1; then wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle; elif command -v pactl >/dev/null 2>&1; then pactl set-source-mute @DEFAULT_SOURCE@ toggle; fi; pkill -RTMIN+8 waybar'",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "signal": 8,
+    "tooltip": true
+  },
+  "backlight": {
+    "format": "{icon}  {percent}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃠"
+    ],
+    "scroll-step": 5,
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/notify-progress.sh\" ] && command -v brightnessctl >/dev/null 2>&1; then CUR=$(brightnessctl -m | cut -d, -f4 | tr -d \"%\"); \"$HOME/.config/hypr/scripts/notify-progress.sh\" \"Brightness\" 999 \"$CUR\"; elif [ -x \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/notify-progress.sh\" ] && command -v brightnessctl >/dev/null 2>&1; then CUR=$(brightnessctl -m | cut -d, -f4 | tr -d \"%\"); \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/notify-progress.sh\" \"Brightness\" 999 \"$CUR\"; else notify-send -r 999 \"Brightness\" \"$(brightnessctl -m 2>/dev/null | cut -d, -f4 || echo \"Brightness\")\"; fi'"
+  },
+  "battery": {
+    "states": {
+      "warning": 25,
+      "critical": 15
+    },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": [
+      "󰂎",
+      "󰁺",
+      "󰁻",
+      "󰁼",
+      "󰁽",
+      "󰁾",
+      "󰁿",
+      "󰂀",
+      "󰂁",
+      "󰂂",
+      "󰁹"
+    ],
+    "interval": 5,
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/battery-info.sh\" ]; then \"$HOME/.config/hypr/scripts/battery-info.sh\"; else CAP=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -n1 || echo \"\"); STAT=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -n1 || echo \"\"); PROF=\"\"; if command -v powerprofilesctl >/dev/null 2>&1; then PROF=\"\\nProfile: $(powerprofilesctl get 2>/dev/null || true)\"; fi; notify-send -i battery -r 992 \"Battery & Power\" \"Level: ${CAP}% [${STAT}]${PROF}\"; fi'"
+  },
+  "custom/power": {
+    "format": "󰐥",
+    "tooltip": true,
+    "tooltip-format": "Power Menu",
+    "on-click": "sh -c 'if [ -x \"$HOME/.config/hypr/scripts/launcher-power.sh\" ]; then \"$HOME/.config/hypr/scripts/launcher-power.sh\"; elif [ -x \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/launcher-power.sh\" ]; then \"$HOME/archConfig/desktop/hyprland/vanilla/hypr/scripts/launcher-power.sh\"; else wlogout; fi'"
+  }
+}

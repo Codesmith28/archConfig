@@ -1,0 +1,20 @@
+/* =============================================================================
+ * Wofi Color Theme: Monochrome
+ * ============================================================================= */
+@define-color base            #121212;
+@define-color mantle          #0a0a0a;
+@define-color crust           #000000;
+@define-color text            #e0e0e0;
+@define-color subtext0        #b0b0b0;
+@define-color surface0        #1f1f1f;
+@define-color surface1        #2c2c2c;
+@define-color mauve           #ffffff;
+@define-color blue            #e0e0e0;
+@define-color accent          #ffffff;
+@define-color window-bg       #121212;
+@define-color accent-border   rgba(255, 255, 255, 0.40);
+@define-color accent-shadow   rgba(255, 255, 255, 0.30);
+@define-color input-bg        rgba(26, 26, 26, 0.88);
+@define-color input-border    rgba(255, 255, 255, 0.15);
+@define-color selected-bg     rgba(255, 255, 255, 0.20);
+@define-color selected-text   #ffffff;

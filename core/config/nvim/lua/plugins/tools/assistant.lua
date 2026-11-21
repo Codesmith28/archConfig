@@ -5,7 +5,8 @@ return {
     "Codesmith28/assistant.nvim",
     dir = vim.fn.isdirectory(local_project) == 1 and local_project or nil,
     enabled = deps.has_cpp or deps.has_python or deps.has_rust,
-    cmd = { "Assistant" },
+    event = "VeryLazy",
+    cmd = { "Assistant", "AssistantServerStart", "AssistantServerStop", "AssistantServerStatus" },
     keys = {
         {
             "<leader>a",
@@ -16,6 +17,7 @@ return {
     opts = {
         core = {
             port = 10043,
+            auto_start_server = true,
             process_budget = 5000,
             default_source = "cpp",
             out_dir = ".ast/bin",

@@ -1,0 +1,11 @@
+mode=drun
+prompt=Search applications...
+width=600
+lines=10
+allow_images=true
+image_size=28
+layer=overlay
+insensitive=true
+term=ghostty
+hide_scroll=true
+no_actions=true

@@ -43,7 +43,7 @@ When following generic manuals or forum guides for NVIDIA power management and C
 - **Common Error in Guides:**
   Blindly creating `/etc/modprobe.d/nvidia-pm.conf` or setting `NVreg_TemporaryFilePath=/var/tmp`.
 - **The Reality:**
-  Fedora's SELinux policy enforces strict write confinement on `systemd_sleep_t`. As documented in [nvidia_selinux_suspend_battery_drain.md](file:///home/codesmith28/archConfig/troubleshoot/nvidia_selinux_suspend_battery_drain.md), writing sleep memory dumps anywhere other than `/var/lib/systemd/sleep` causes immediate suspend abortions and drains the battery rapidly in backpacks.
+  Fedora's SELinux policy enforces strict write confinement on `systemd_sleep_t`. As documented in [nvidia_selinux_suspend_battery_drain.md](./nvidia_selinux_suspend_battery_drain.md), writing sleep memory dumps anywhere other than `/var/lib/systemd/sleep` causes immediate suspend abortions and drains the battery rapidly in backpacks.
   - **The Fix:** Preserve `NVreg_TemporaryFilePath=/var/lib/systemd/sleep` and `NVreg_PreserveVideoMemoryAllocations=1` while adding `NVreg_DynamicPowerManagement=0x02` and `nvidia-drm modeset=1` in a single unified configuration file (`/etc/modprobe.d/nvidia-power-management.conf`).
 
 ### 4. PCI Audio Controller (`0x040300`) Missing from Runtime PM

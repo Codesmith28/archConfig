@@ -1,0 +1,20 @@
+/* =============================================================================
+ * Wofi Color Theme: Tokyo Night
+ * ============================================================================= */
+@define-color base            #1a1b26;
+@define-color mantle          #16161e;
+@define-color crust           #13141c;
+@define-color text            #c0caf5;
+@define-color subtext0        #a9b1d6;
+@define-color surface0        #24283b;
+@define-color surface1        #292e42;
+@define-color mauve           #bb9af7;
+@define-color blue            #7aa2f7;
+@define-color accent          #7aa2f7;
+@define-color window-bg       #1a1b26;
+@define-color accent-border   rgba(122, 162, 247, 0.45);
+@define-color accent-shadow   rgba(122, 162, 247, 0.40);
+@define-color input-bg        rgba(36, 40, 59, 0.85);
+@define-color input-border    rgba(122, 162, 247, 0.15);
+@define-color selected-bg     rgba(122, 162, 247, 0.22);
+@define-color selected-text   #ffffff;

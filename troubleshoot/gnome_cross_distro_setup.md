@@ -9,7 +9,7 @@ Across different Linux distributions (**Fedora, Ubuntu, Arch Linux**), GNOME des
 
 ### 1. Root Privilege & DBus Session Detachment
 - **The Issue**: Running a bootstrap or setup script with `sudo` causes `gsettings` and `dconf` to write directly to `/root/.config/dconf/user` instead of `/home/<user>/.config/dconf/user`. Furthermore, when executed over SSH, TTY, or before the graphical desktop starts, `DBUS_SESSION_BUS_ADDRESS` is absent, causing `dconf` to abort with `failed to commit changes to dconf: Cannot autolaunch D-Bus without X11 $DISPLAY`.
-- **The Fix**: [`desktop/gnome/setup.sh`](file:///home/codesmith28/archConfig/desktop/gnome/setup.sh) automatically inspects the caller. If invoked with `sudo` or as root, it drops privileges to the active desktop session user (using `DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/<uid>/bus"`). If no active DBus bus is running, it spawns a headless bus via `dbus-run-session` so dconf writes directly to the user's database.
+- **The Fix**: [`desktop/gnome/setup.sh`](../desktop/gnome/setup.sh) automatically inspects the caller. If invoked with `sudo` or as root, it drops privileges to the active desktop session user (using `DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/<uid>/bus"`). If no active DBus bus is running, it spawns a headless bus via `dbus-run-session` so dconf writes directly to the user's database.
 
 ### 2. Extension Version Gating & Master Toggle
 - **The Issue**: By default, GNOME Shell checks extension metadata for exact GNOME version compatibility. Whenever GNOME receives a minor or major point update (e.g. 46 to 47 or 50), extensions without the new version tag are automatically disabled. In addition, after any shell crash, GNOME may set `disable-user-extensions = true`.

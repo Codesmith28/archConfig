@@ -1,0 +1,79 @@
+# ==============================================================================
+# 08-aliases.zsh - Shell aliases and navigation shortcuts
+# ==============================================================================
+
+# Navigation & Listing
+if command -v dircolors >/dev/null 2>&1; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza --icons=always'
+    alias ll='eza -l --icons=always'
+    alias la='eza -a --icons=always'
+    alias lla='eza -al --icons=always'
+else
+    alias ls='ls --color=auto'
+    alias ll='ls -alF'
+    alias la='ls -A'
+    alias l='ls -CF'
+fi
+
+alias pj='cd ~/Projects/'
+
+# Shell Navigation & Quick Actions
+alias c='clear'
+alias e='exit'
+alias cf='clear && fastfetch'
+
+# Sourcing & Environment Management
+alias sourceb='source ~/.bashrc'
+alias sourcez='source ~/.zshrc'
+alias source_venv='source ./venv/bin/activate'
+
+# Universal Shell Reload Helper
+unalias source_p 2>/dev/null || true
+source_p() {
+    if [ -n "$ZSH_VERSION" ]; then
+        source "$HOME/.zshrc"
+    elif [ -n "$BASH_VERSION" ]; then
+        source "$HOME/.bashrc"
+    else
+        . "$HOME/.profile"
+    fi
+}
+alias sourcep='source_p'
+
+# Quick Configuration Editing
+alias confb='${EDITOR:-nvim} ~/.bashrc'
+alias confz='${EDITOR:-nvim} ~/.zshrc'
+alias confp='${EDITOR:-nvim} ~/.profile'
+alias confa='${EDITOR:-nvim} ~/.zshrc.d/08-aliases.zsh'
+alias confn='${EDITOR:-nvim} ~/.config/nvim/'
+alias confg='${EDITOR:-nvim} ~/.config/ghostty/config'
+alias confw='${EDITOR:-nvim} ~/.config/work/work.sh'
+alias conff='${EDITOR:-nvim} ~/.config/fontconfig/fonts.conf'
+
+# Developer Tools & Cross-Platform Utilities
+case "$(uname -s)" in
+Darwin)
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+    ;;
+Linux)
+    if command -v wl-copy >/dev/null 2>&1; then
+        alias copy='wl-copy'
+        alias paste='wl-paste'
+    elif command -v xclip >/dev/null 2>&1; then
+        alias copy='xclip -selection clipboard'
+        alias paste='xclip -selection clipboard -o'
+    fi
+    ;;
+esac
+
+alias lg='lazygit'
+alias lzd='lazydocker'
+alias agy='agy --dangerously-skip-permissions'
