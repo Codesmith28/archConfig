@@ -77,53 +77,48 @@ command='default-terminal'
 name='Default Terminal'
 
 [org/gnome/shell/extensions/blur-my-shell]
+pipelines={'pipeline_default': {'name': <'Default'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_8eaeb510-3fec-45da-a2cf-89dcee5af201'>, 'params': <@a{sv} {}>}>]>}, 'pipeline_default_light': {'name': <'Default (Light mode)'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_default_light_blur'>, 'params': <{'unscaled_radius': <30>, 'brightness': <1>}>}>, <{'type': <'color'>, 'id': <'effect_default_light_color'>, 'params': <{'color': <(1.0, 1.0, 1.0, 0.5)>, 'blend_mode': <3>}>}>]>}, 'pipeline_liquid_glass': {'name': <'Liquid Glass'>, 'effects': <[<{'type': <'luminosity'>, 'id': <'effect_liquid_glass_luminosity'>, 'params': <{'saturation_multiplicator': <1.1000000000000001>}>}>, <{'type': <'refraction'>, 'id': <'effect_liquid_glass_refraction'>, 'params': <{'tint': <0>}>}>, <{'type': <'noise'>, 'id': <'effect_liquid_glass_noise'>, 'params': <{'noise': <0.10000000000000001>}>}>]>}, 'pipeline_vapor_glass': {'name': <'Vapor Glass'>, 'effects': <[<{'type': <'luminosity'>, 'id': <'effect_vapor_glass_luminosity'>, 'params': <{'saturation_multiplicator': <1.1000000000000001>}>}>, <{'type': <'wave'>, 'id': <'effect_vapor_glass_wave'>, 'params': <@a{sv} {}>}>, <{'type': <'refraction'>, 'id': <'effect_vapor_glass_refraction'>, 'params': <{'tint': <0>}>}>, <{'type': <'noise'>, 'id': <'effect_vapor_glass_noise'>, 'params': <{'noise': <0.10000000000000001>}>}>]>}, 'pipeline_classic_light_background': {'name': <'Classic Light Background'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_classic_light_blur'>, 'params': <{'unscaled_radius': <30>, 'brightness': <0.59999999999999998>}>}>, <{'type': <'color'>, 'id': <'effect_classic_light_color'>, 'params': <{'color': <(1.0, 1.0, 1.0, 0.25)>, 'blend_mode': <17>}>}>]>}, 'pipeline_classic_dark_background': {'name': <'Classic Dark Background'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_classic_dark_blur'>, 'params': <{'unscaled_radius': <30>, 'brightness': <0.59999999999999998>}>}>, <{'type': <'color'>, 'id': <'effect_classic_dark_color'>, 'params': <{'color': <(0.40000000000000002, 0.40000000000000002, 0.40000000000000002, 0.34999999999999998)>, 'blend_mode': <17>}>}>]>}}
 power-saver=false
-rounded-blur-found=true
-settings-version=2
-
-[org/gnome/shell/extensions/blur-my-shell/appfolder]
-blur=true
-brightness=0.59999999999999998
-sigma=30
+rounded-blur-notice-dismissed=true
+settings-version=10
 
 [org/gnome/shell/extensions/blur-my-shell/applications]
+blur=false
 pipeline='pipeline_default'
-
-[org/gnome/shell/extensions/blur-my-shell/coverflow-alt-tab]
-pipeline='pipeline_default'
+pipeline-dark='pipeline_default'
+pipeline-light='pipeline_default_light'
 
 [org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
-blur=true
-brightness=0.56999999999999995
-pipeline='pipeline_default_rounded'
-sigma=30
+pipeline='pipeline_default'
+pipeline-auto-mode=false
+pipeline-dark='pipeline_default'
+pipeline-light='pipeline_default_light'
 static-blur=false
-style-dash-to-dock=0
 
 [org/gnome/shell/extensions/blur-my-shell/lockscreen]
-blur=true
 pipeline='pipeline_default'
-
-[org/gnome/shell/extensions/blur-my-shell/overview]
-blur=true
-pipeline='pipeline_default'
+pipeline-auto-mode=true
+pipeline-dark='pipeline_default'
+pipeline-light='pipeline_default_light'
 
 [org/gnome/shell/extensions/blur-my-shell/panel]
 blur=true
-brightness=0.59999999999999998
-corner-radius=0
 pipeline='pipeline_default'
-sigma=30
+pipeline-auto-mode=false
+pipeline-dark='pipeline_default'
+pipeline-light='pipeline_default_light'
 static-blur=false
+style-panel=0
+unblur-in-overview=true
+
+[org/gnome/shell/extensions/blur-my-shell/popup]
+screenshot-corner-radius=36
 
 [org/gnome/shell/extensions/blur-my-shell/screenshot]
-blur=true
 pipeline='pipeline_default'
-
-[org/gnome/shell/extensions/blur-my-shell/window-list]
-blur=true
-brightness=0.59999999999999998
-sigma=30
+pipeline-auto-mode=true
+pipeline-dark='pipeline_default'
+pipeline-light='pipeline_default_light'
 
 [org/gnome/shell/extensions/clipboard-indicator]
 enable-keybindings=true
