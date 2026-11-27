@@ -41,9 +41,9 @@ case "${1:-}" in
         fi
         ;;
     post)
-        # Wait up to 5s for the USB/CNVi HCI adapter and bluetoothd to become ready
+        # Wait up to 5s for a USB/CNVi HCI adapter and bluetoothd to become ready
         for _ in $(seq 1 10); do
-            if [[ -d /sys/class/bluetooth/hci0 ]] && btctl show >/dev/null 2>&1; then
+            if compgen -G "/sys/class/bluetooth/hci*" >/dev/null && btctl show >/dev/null 2>&1; then
                 break
             fi
             sleep 0.5

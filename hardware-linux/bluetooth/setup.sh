@@ -17,7 +17,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --hook-dest)
-            HOOK_DEST="${2:-}"
+            if [[ $# -lt 2 || -z "${2:-}" ]]; then
+                echo "Missing value for --hook-dest" >&2
+                exit 1
+            fi
+            HOOK_DEST="$2"
             shift 2
             ;;
         bluetooth)
@@ -65,7 +69,7 @@ restart_user_audio() {
         local target_uid
         target_uid="$(id -u "$target_user" 2>/dev/null || true)"
         if [[ -n "$target_uid" && -S "/run/user/$target_uid/bus" ]]; then
-            sudo -u "$target_user" \
+            sudo -u "$target_user" env \
                 XDG_RUNTIME_DIR="/run/user/$target_uid" \
                 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$target_uid/bus" \
                 systemctl --user restart wireplumber pipewire pipewire-pulse 2>/dev/null || true
@@ -169,9 +173,17 @@ if [[ "$MODE" == "verify" ]]; then
         grep -qi "^[[:space:]]*AutoEnable[[:space:]]*=[[:space:]]*true" /etc/bluetooth/main.conf && echo "  • Controller AutoEnable: active" || echo "  • Controller AutoEnable: not enabled"
         grep -qi "^[[:space:]]*ResumeDelay[[:space:]]*=" /etc/bluetooth/main.conf && echo "  • ResumeDelay: configured" || echo "  • ResumeDelay: default (2s)"
     fi
-    if [[ -f /etc/wireplumber/wireplumber.conf.d/50-bluetooth-quality.conf || -f "$HOME/.config/wireplumber/wireplumber.conf.d/50-bluetooth-quality.conf" ]]; then
-        echo "wireplumber quality config: active"
-    else
+    wp_conf_checked=""
+    for wp_conf in /etc/wireplumber/wireplumber.conf.d/50-bluetooth-quality.conf "$HOME/.config/wireplumber/wireplumber.conf.d/50-bluetooth-quality.conf"; do
+        if [[ -f "$wp_conf" ]]; then
+            wp_conf_checked="$wp_conf"
+            echo "wireplumber quality config: active ($wp_conf)"
+            if grep -qE '"(hfp_hf|bap_sink|bap_source)"' "$wp_conf"; then
+                echo "  • [WARN] $wp_conf still enables hfp_hf/bap_* (may trigger rfcomm_bind or bap errors); re-run setup.sh"
+            fi
+        fi
+    done
+    if [[ -z "$wp_conf_checked" ]]; then
         echo "wireplumber quality config: NOT found"
     fi
     echo "bluetooth.service status: $(systemctl is-active bluetooth.service 2>/dev/null || echo 'unknown') (enabled: $(systemctl is-enabled bluetooth.service 2>/dev/null || echo 'unknown'))"
@@ -270,12 +282,16 @@ if [[ -f "$WP_CONF_SRC" ]]; then
     user_home="$(getent passwd "$target_user" 2>/dev/null | cut -d: -f6 || echo "${HOME:-}")"
     if [[ -n "$user_home" && -d "$user_home" && "$target_user" != "root" ]]; then
         user_wp_dir="$user_home/.config/wireplumber/wireplumber.conf.d"
-        if [[ "$(id -u)" -eq 0 ]]; then
-            sudo -u "$target_user" mkdir -p "$user_wp_dir" 2>/dev/null || true
-            sudo -u "$target_user" ln -sf "$WP_CONF_SRC" "$user_wp_dir/50-bluetooth-quality.conf" 2>/dev/null || true
-        else
-            mkdir -p "$user_wp_dir"
-            ln -sf "$WP_CONF_SRC" "$user_wp_dir/50-bluetooth-quality.conf"
+        user_wp_conf="$user_wp_dir/50-bluetooth-quality.conf"
+        # Skip symlinking if sync.sh already linked ~/.config/wireplumber -> core/config/wireplumber
+        if [[ ! "$WP_CONF_SRC" -ef "$user_wp_conf" ]]; then
+            if [[ "$(id -u)" -eq 0 ]]; then
+                sudo -u "$target_user" mkdir -p "$user_wp_dir" 2>/dev/null || true
+                sudo -u "$target_user" ln -sf "$WP_CONF_SRC" "$user_wp_conf" 2>/dev/null || true
+            else
+                mkdir -p "$user_wp_dir"
+                ln -sf "$WP_CONF_SRC" "$user_wp_conf"
+            fi
         fi
     fi
 fi

@@ -44,7 +44,7 @@ if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
     target_uid="$(id -u "$SUDO_USER" 2>/dev/null || true)"
     if [[ -n "$target_uid" && -S "/run/user/$target_uid/bus" ]]; then
         echo "Restarting user audio stack ($SUDO_USER) to re-sync with BlueZ..."
-        sudo -u "$SUDO_USER" \
+        sudo -u "$SUDO_USER" env \
             XDG_RUNTIME_DIR="/run/user/$target_uid" \
             DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$target_uid/bus" \
             systemctl --user restart wireplumber pipewire pipewire-pulse || true
