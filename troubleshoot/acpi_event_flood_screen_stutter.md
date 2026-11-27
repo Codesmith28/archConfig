@@ -128,22 +128,48 @@ set_gpu_posture() {
     ```
     If the threshold is already active, the script immediately exits without performing any D-Bus or sysfs I/O.
 
+### Layer 5: Eliminate AC-Connect TuneD Bounce, Cardwire Race, and Duplicate Worker Storms
+* **Root Cause Observed on AC Connect (`journalctl -b 0` & `/var/log/tuned/tuned.log`):**
+  1. When `tuned-ppd` switches between `powersave` and `throughput-performance` on AC connect, TuneD runs `full_rollback` on `plugin_acpi` first (`quiet` -> `balanced`) and then applies the target (`balanced` -> `performance`), causing `asusd`'s `watch_platform_profile` inotify watcher to fire 4 times in 1 second (`balanced` x2, `performance` x2) and flood the ASUS EC with 12 WMI fan-curve writes.
+  2. `cardwired` with `battery-auto-switch = true` reacted to `battery event detected: false` on AC connect by immediately switching to `Integrated`, forcing `power-profile-switch.sh` to switch back to `Smart` 2–3 seconds later (`Integrated -> Smart` double-switch and `NVRM: PlatformRequestHandler` SBIOS assertions).
+  3. During the 1.5s debounce window before `/run/laptop-power-state` is written, multiple `power_supply` uevents caused `systemd-run --unit=laptop-power-profile-switch` to fail for subsequent events when `laptop-power-profile-switch.service` was `active` or `activating`, falling back to `nohup` and spawning duplicate workers.
+* **Action:**
+  - Added custom TuneD profiles in `hardware-linux/rog-nvidia/tuned-profiles/` (`rog-powersave`, `rog-balanced`, `rog-performance`) with `[acpi] enabled=false` and wired them into `/etc/tuned/profiles/` and `/etc/tuned/ppd.conf` via `hardware-linux/rog-nvidia/setup.sh`, while letting `power-profile-switch.sh` prefer `rog-performance` / `rog-powersave` and perform a single direct `/sys/firmware/acpi/platform_profile` write only when `cur_plat != target_plat`.
+  - Set `cardwire config battery-auto-switch false` in `hardware-linux/rog-nvidia/setup.sh` (and self-heal it in `power-profile-switch.sh` `sanitize_tuned_ppd_config()`) so `power-profile-switch.sh` is the sole debounced GPU posture controller, and made `set_gpu_posture()` check `cardwire get` before calling `cardwire set`.
+  - Guarded `--async` in `power-profile-switch.sh` with `systemctl show -p ActiveState --value laptop-power-profile-switch.service` (exiting cleanly on `active|activating|reloading` and resetting `failed` before retrying `systemd-run`) so duplicate uevents never fall back to `nohup` while the singleton unit is running.
+
+### Layer 6: Cardwire eBPF PCI Visibility, TuneD EPB/EPP Errors, PCIe AER Storm & S3-Persistent GPE Guard
+* **Additional Root Causes Observed Live on Fedora 45 (`kernel 7.3.4-300.fc45.x86_64`, BIOS `G614JV.334`):**
+  1. **Cardwire eBPF Hides `0000:01:00.0` from `lspci` + Dead Rescan Guard:** In `Integrated`/`Smart` mode, Cardwire's eBPF LSM hides `/sys/devices/pci0000:00/0000:00:01.0` and `0000:01:00.0` (`-ENOENT`), so `lspci -d 10de:` outputs nothing while **still exiting `0`** (while `/proc/bus/pci/devices` and `/proc/driver/nvidia/gpus/` show the GPU is physically present). As a result, `if ! lspci -d 10de:` in `power-profile-switch.sh` and `setup.sh` was dead code, and naive `lspci` checks falsely reported the GPU missing.
+  2. **Mid-Flight AC/Battery Bounce (`Integrated -> Smart` in 1–2s):** `power-profile-switch.sh` locked `target_state` into `$STATEFILE` before running slow D-Bus checks (`cardwire config battery-auto-switch` on every transition) and `cardwire`/`tuned` switches (~4–5s total). Transient AC/UCSI dips that recovered during that window queued `$PENDINGFILE` and forced a full `Integrated` + `rog-powersave` transition before immediately reverting to `Smart` + `rog-performance`.
+  3. **TuneD `rog-powersave` / `rog-performance` Sysfs Errors (`/var/log/tuned/tuned.log`):** `rog-powersave` inherited `energy_perf_bias=powersave|power` from `powersave`, failing `[Errno 22] Invalid argument` across all 20 CPUs on `powersave`; `rog-performance` inherited `governor=performance` + `min_perf_pct=100` from `throughput-performance`, causing `energy_performance_preference=balance_performance` to fail `[Errno 16] Device or resource busy` across all 20 CPUs.
+  4. **ASUS Daemon `disable_nvidia_powerd_on_battery` Race:** `/etc/asusd/asusd.ron` retained `disable_nvidia_powerd_on_battery: true`, racing against `cardwired` over `nvidia-powerd.service` alongside `NVRM: PlatformRequestHandler` SBIOS assertions on AC transitions.
+  5. **Continuous PCIe AER `UnsupReq` Error Storm (`0000:00:1d.4` -> `0000:6e:00.0` Micron 2400 NVMe):** Across every boot (`journalctl -b 0`..`-8`), `pcieport 0000:00:1d.4` + `nvme 0000:6e:00.0` (`[1344:5413]`) generated continuous PCIe AER `Correctable` and `Uncorrectable (Non-Fatal) [20] UnsupReq` interrupt floods (`166–665` log lines per boot, `TOTAL_ERR_NONFATAL=66`, `aer_rootport_total_err_cor=134`) because ACPI FADT disables PCIe ASPM while root-port AER stays active on `IRQ 126`.
+  6. **Ephemeral GPE Storm Guard & Initramfs Udev Errors:** `guard_gpe_interrupt_storms()` only ran on AC/battery udev transitions (never at boot or after S3 resume, which resets ACPI GPE masks) and used a static `> 10000` count instead of interrupt rate. Additionally, `99-laptop-power-dispatch.rules` lacked `TEST=="/usr/local/bin/power-profile-switch.sh"`, causing `(udev-worker)` callout errors in dracut initramfs on every boot.
+* **Action:**
+  - Updated `hardware-linux/rog-nvidia/power-profile-switch.sh` and `hardware-linux/rog-nvidia/setup.sh` with `dgpu_present_on_pci()` (`/proc/bus/pci/devices` + `/proc/driver/nvidia/gpus/`), pre-commit debounce/sanitization ordering with `/run/power-profile-switch.cw_checked` caching, and `disable_nvidia_powerd_on_battery: false` sanitization in `/etc/asusd/asusd.ron`.
+  - Fixed `hardware-linux/rog-nvidia/tuned-profiles/rog-powersave/tuned.conf` (`energy_perf_bias=power`) and `rog-performance/tuned.conf` (`governor=powersave`, `min_perf_pct=0`) to eliminate all 20-CPU sysfs errors in `/var/log/tuned/tuned.log`.
+  - Added `TEST=="/usr/local/bin/power-profile-switch.sh"` to `hardware-linux/rog-nvidia/99-laptop-power-dispatch.rules` to silence initramfs udev callout failures.
+  - Created `hardware-linux/acpi/` (`acpi-storm-guard.sh`, `acpi-storm-guard.service`, `acpi-storm-sleep.sh`, `setup.sh`) providing boot + S3-resume persistent rate-aware GPE storm masking (`>= 500/s` or `> 50000 && > 50/s`) and automatic `pci=noaer` bootloader persistence when active PCIe AER `UnsupReq` storms are detected.
+
 ---
 
 ## 📊 Verification & Diagnostics
 
 ### 1. Verify Discrete GPU Posture & Bus Presence
 ```bash
-# Verify NVIDIA GPU is visible on PCI bus
-lspci -nnk -d 10de:
+# Check kernel PCI device table (works even when Cardwire eBPF hides sysfs/lspci)
+grep -iE '^[0-9a-f]+[[:space:]]+10de' /proc/bus/pci/devices
+ls -la /proc/driver/nvidia/gpus/
 
-# Verify Cardwire mode
+# Verify Cardwire mode (and note lspci may appear empty while Cardwire blocks sysfs)
 cardwire get
+cardwire list
 
 # Verify ASUS dGPU sysfs node is NOT disabling the port (must be 0)
 cat /sys/devices/platform/asus-nb-wmi/dgpu_disable
 ```
-*Expected*: NVIDIA RTX 4060 present in `lspci`, Cardwire reports `Integrated` (battery) or `Smart` (AC), `dgpu_disable` is `0`.
+*Expected*: `0100 10de28e0` present in `/proc/bus/pci/devices`, Cardwire reports `Integrated` (battery) or `Smart` (AC), `dgpu_disable` is `0`.
 
 ### 2. Verify TuneD-PPD & ASUS Stability
 ```bash
@@ -165,8 +191,32 @@ journalctl -u asusd.service -n 30 --no-pager | grep -i "permission denied"
 ```
 *Expected Output*: `Charging limit is already set to 80%. No action required.`
 
-### 4. Verify ACPI & WMI Logs on Unplug
+### 4. Verify ACPI & WMI Logs on AC Connect / Disconnect
 ```bash
 journalctl -b 0 | grep -E "nvAssertOkFailed|Failed to notify asus-wmi|atomic commit"
+journalctl -b 0 -u asusd.service -u cardwired.service -n 40 --no-pager
+cat /sys/firmware/acpi/interrupts/gpe_all
 ```
-*Expected Output*: Zero recurring entries during AC disconnect transitions.
+*Expected Output*:
+- Zero recurring `Failed to notify asus-wmi` or `atomic commit` stalls during AC connect/disconnect transitions.
+- Single `cardwired` mode transition (`Integrated` on battery, `Smart` on AC) without an immediate `Integrated -> Smart` double-switch on AC connect.
+- Single `asusd` `watch_platform_profile` transition without an intermediate `balanced` bounce in `/var/log/tuned/tuned.log`.
+
+### 5. Host Deployment & Recovery (Requires Root Outside Sandbox)
+Because installing system scripts/profiles, enabling systemd units, updating bootloader kernel arguments (`pci=noaer`), and toggling system D-Bus / sysfs require root privileges outside restricted environments, apply the repository fixes on the host with:
+```bash
+cd ~/archConfig/hardware-linux
+sudo ./rog-nvidia/setup.sh
+sudo ./acpi/setup.sh
+./rog-nvidia/setup.sh --verify
+./acpi/setup.sh --verify
+```
+Reboot once so `pci=noaer` and the `TEST==` udev rule take effect in initramfs and kernel boot:
+```bash
+cat /proc/cmdline | grep -o "pci=noaer"
+grep -E "^(power-saver|balanced|performance)=" /etc/tuned/ppd.conf
+ls -la /etc/tuned/profiles/rog-*/tuned.conf
+cardwire config battery-auto-switch
+systemctl is-enabled acpi-storm-guard.service
+```
+*Expected*: `pci=noaer` active, `power-saver=rog-powersave`, `balanced=rog-balanced`, `performance=rog-performance`, `cardwire config battery-auto-switch` reports `false`, `acpi-storm-guard.service` is `enabled`, and `/var/log/tuned/tuned.log` has zero `Invalid argument` or `Device or resource busy` errors.

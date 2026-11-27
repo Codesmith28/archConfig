@@ -15,6 +15,7 @@ hardware-linux/
 ├── usb-wake/         # USB sleep isolation (Hot backpack mouse/dongle wake block)
 ├── bluetooth/        # Intel AX211 SCO packet fix (btusb.conf), BlueZ optimizations & audio autoswitch
 ├── rog-nvidia/       # ASUS ROG + NVIDIA RTX D3cold, Cardwire eBPF & debounced switching
+├── acpi/             # Rate-aware GPE interrupt storm guard & PCIe AER UnsupReq mitigation
 └── setup.sh          # Universal master runner with hardware validation & --verify flag
 ```
 
@@ -43,8 +44,14 @@ hardware-linux/
   * Enforces fine-grained `D3cold` (0W idle) and VRAM preservation via `/var/lib/systemd/sleep`.
   * Configures Cardwire eBPF LSM GPU isolation (`Smart` mode on AC, `Integrated` mode on Battery).
   * Automatically unmasks dGPU for external displays (HDMI / Type-C DP).
-  * Deploys a 4-second debounced AC/Battery switcher to prevent power thrashing during electrical grid flickers.
+  * Deploys a debounced AC/Battery switcher to prevent power thrashing during electrical grid flickers.
 * **Hardware guard:** Strictly checks DMI (`ROG/TUF/ASUS`) and discrete NVIDIA GPU presence. Skips automatically on non-matching machines.
+
+### 5. `acpi/` (ACPI GPE & PCIe AER Storm Guard)
+* **What it does:**
+  * Runs `acpi-storm-guard.sh` at boot (`acpi-storm-guard.service`) and after S3/hibernate resume (`system-sleep/acpi-storm-guard.sh`) to re-apply masked storming GPEs and reconcile power state.
+  * Detects actively storming GPE channels using interrupt-rate thresholds (`>= 500/s` or `> 50,000` with `> 50/s`) without disabling healthy cumulative EC vectors.
+  * Detects active PCIe AER `UnsupReq` / correctable error floods (e.g., Micron 2400 NVMe behind Intel root ports when ACPI FADT disables ASPM) and persists `pci=noaer` across `grubby`, `/etc/default/grub`, and BLS `/etc/kernel/cmdline` / `/boot/loader/entries/*.conf`.
 
 ---
 

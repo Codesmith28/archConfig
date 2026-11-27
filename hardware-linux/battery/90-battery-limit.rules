@@ -4,5 +4,5 @@
 # Strictly matches Mains and USB power supplies with active ONLINE status to
 # eliminate self-referential uevent loops on BAT0 threshold sysfs writes.
 # ==============================================================================
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/set-battery-limit.sh"
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/set-battery-limit.sh"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", ENV{POWER_SUPPLY_ONLINE}=="?*", TEST=="/usr/local/bin/set-battery-limit.sh", RUN+="/usr/local/bin/set-battery-limit.sh"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", ENV{POWER_SUPPLY_ONLINE}=="?*", TEST=="/usr/local/bin/set-battery-limit.sh", RUN+="/usr/local/bin/set-battery-limit.sh"
