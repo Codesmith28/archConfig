@@ -2,69 +2,32 @@
 
 ## Symptoms
 After waking the system from sleep/suspend:
-1. **Bluetooth connects without audio**: The headset (e.g. OnePlus Nord Buds 4 Pro) shows as connected in Bluetooth settings, but audio continues playing through laptop speakers or no audio plays at all.
-2. **Volume buttons (Vol +/-) stop working**: Pressing the hardware volume up/down or mute keys produces no volume changes and no on-screen display (OSD) feedback.
-3. **`Super + Return` (Ghostty terminal) does not work**: Pressing the custom shortcut to launch the default terminal emulator is completely ignored.
+1. **Bluetooth connects without audio or fails to reconnect**: The headset (e.g. OnePlus Nord Buds 4 Pro) stays disconnected or connects without A2DP (`Unable to load LastUsed: rseid 1 not found`, `Unable to select SEP`, `a2dp-source profile connect failed: Device or resource busy`).
+2. **Profile/RFCOMM errors on resume or daemon restart**: `bluetoothd` logs `RFCOMM server failed for Hands-Free unit: rfcomm_bind: Address already in use (98)` and WirePlumber logs `spa.bluez5.midi: RegisterApplication() failed: Already Exists`.
+3. **Volume buttons (Vol +/-) stop working**: Pressing hardware volume keys produces no volume changes and no OSD feedback.
+4. **`Super + Return` (Ghostty terminal) does not work**: Custom shortcuts are ignored.
 
 ---
 
 ## 🔍 Root Cause Analysis: The Cascade of Failure
 
-The problem is not three separate bugs, but a **cascading domino failure** triggered across the kernel, audio daemon, and GNOME settings daemon.
+The problem is a **cascading domino failure** across the kernel, BlueZ, PipeWire/WirePlumber, and GNOME settings daemon:
 
-```
-+-----------------------------------------------------------------------------------+
-| 1. System Wakes from Sleep                                                        |
-|    - Intel AX211 Bluetooth USB root hub resets abruptly on resume.                |
-|    - Headset reconnects via AVRCP (controls), but WirePlumber holds stale A2DP    |
-|      transport endpoint (/org/bluez/hci0/.../sep1/fd0).                           |
-+----------------------------------------+------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 2. Audio Profile Fails                                                            |
-|    - bluetoothd reports: "a2dp-source profile connect failed: Device or busy"     |
-|    - WirePlumber logs: "Multiple sound server instances are probably trying to    |
-|      use Bluetooth audio at the same time."                                       |
-+----------------------------------------+------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 3. Fatal Restart of bluetooth.service                                             |
-|    - When bluetooth.service restarts while WirePlumber is running, WirePlumber    |
-|      attempts to re-bind its BlueZ endpoints without closing old sockets:         |
-|      "spa.bluez5.native: listen(): Address already in use"                        |
-|      "RegisterProfile() failed: org.bluez.Error.NotPermitted"                     |
-|    - WirePlumber DEADLOCKS. All PipeWire IPC (e.g. wpctl status) hangs indefinitely.|
-+----------------------------------------+------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 4. User Presses Volume Keys                                                       |
-|    - gsd-media-keys intercepts XF86AudioRaiseVolume/LowerVolume.                  |
-|    - It attempts to play the audio feedback beep via libcanberra-pulse.           |
-|    - libcanberra-pulse calls pa_threaded_mainloop_wait() to reach pipewire-pulse. |
-|    - Because pipewire-pulse is stuck waiting on WirePlumber,                      |
-|      gsd-media-keys blocks forever in pthread_cond_wait().                        |
-+----------------------------------------+------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 5. All Custom Shortcuts Die (Super + Return)                                      |
-|    - In GNOME, custom shortcuts configured in org.gnome.settings-daemon.plugins.  |
-|      media-keys.custom-keybindings (e.g. default-terminal) are executed by        |
-|      gsd-media-keys, NOT directly by mutter or gnome-shell.                       |
-|    - With gsd-media-keys main event loop frozen on audio feedback, all shortcuts  |
-|      are blocked from executing.                                                  |
-+-----------------------------------------------------------------------------------+
-```
+1. **Abrupt suspend & half-open AVDTP state**:
+   - If the Bluetooth headset is not cleanly disconnected before the xHCI/CNVi controller enters S3 deep sleep, the headset holds a stale AVDTP stream endpoint. On resume, BlueZ hits `Unable to load LastUsed: rseid 1 not found` / `Unable to select SEP` / `SET_CONFIGURATION request rejected: Stream End Point in Use (19)`.
+   - Previously, `hardware-linux/bluetooth/bluetooth-sleep.sh` disconnected devices on `pre` without waiting for L2CAP/AVDTP teardown, never recorded which devices were connected, and only ran `bluetoothctl power on` on `post` (never reconnecting them or waiting for `hci0` readiness).
+2. **`bluetooth.service` restarted in isolation (without restarting user `wireplumber`)**:
+   - Running `sudo ./hardware-linux/bluetooth/setup.sh` restarted `bluetooth.service`, then skipped restarting `wireplumber` because `id -u == 0`.
+   - Leaving `wireplumber` running across a `bluetoothd` restart (or running `hfp_hf` across both GDM and user sessions during seat transitions) leaves stale RFCOMM/BlueZ sockets bound, triggering `rfcomm_bind: Address already in use (98)` and WirePlumber IPC deadlocks.
+3. **GNOME `gsd-media-keys` deadlock on stalled PipeWire**:
+   - When `org.gnome.desktop.sound input-feedback-sounds` is `true`, `gsd-media-keys` calls `libcanberra-pulse` (`pa_threaded_mainloop_wait()`) synchronously on volume key presses. If PipeWire/WirePlumber is hung, `gsd-media-keys` freezes and stops dispatching all custom shortcuts (`Super + Return`, media keys).
 
 ---
 
 ## 🔬 Evidence & Diagnostic Traces
 
 ### 1. `gsd-media-keys` Deadlock Trace
-Attaching `gdb` to `gsd-media-keys` during the frozen state revealed the exact blocking call in Thread 1:
+Attaching `gdb` to `gsd-media-keys` during the frozen state revealed the blocking call in Thread 1:
 ```text
 #0  0x00007f8cad5f3352 in __syscall_cancel_arch () from /lib64/libc.so.6
 #1  0x00007f8cad5ea0ec in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
@@ -74,15 +37,15 @@ Attaching `gdb` to `gsd-media-keys` during the frozen state revealed the exact b
 #5  0x000055792c7cd07f in do_sound_action ()
 #6  0x000055792c7cd6a9 in on_accelerator_activated ()
 ```
-The thread was indefinitely waiting for PulseAudio emulation (`pipewire-pulse`) to answer the feedback sound request.
 
-### 2. WirePlumber Socket Collision
-Journal logs from `wireplumber`:
+### 2. BlueZ / WirePlumber Socket & Endpoint Errors
+Observed in `journalctl -b`:
 ```text
-wireplumber: spa.bluez5.native: listen(): Address already in use
-wireplumber: spa.bluez5.native: RegisterProfile() failed: org.bluez.Error.NotPermitted
+bluetoothd: profiles/audio/a2dp.c:load_remote_sep() Unable to load LastUsed: rseid 1 not found
+bluetoothd: profiles/audio/a2dp.c:a2dp_select_capabilities() Unable to select SEP
+bluetoothd: src/profile.c:ext_start_servers() RFCOMM server failed for Hands-Free unit: rfcomm_bind: Address already in use (98)
+wireplumber: spa.bluez5.midi: org.bluez.GattManager1.RegisterApplication() failed: GDBus.Error:org.bluez.Error.AlreadyExists: Already Exists
 ```
-`wpctl status` timed out with exit code `124` because WirePlumber was unresponsive.
 
 ---
 
@@ -92,6 +55,8 @@ wireplumber: spa.bluez5.native: RegisterProfile() failed: org.bluez.Error.NotPer
 Run the recovery script included in this repository:
 ```bash
 ~/archConfig/troubleshoot/restore_audio_bluetooth_sleep.sh
+# Or, if bluetoothd itself is wedged, restart BlueZ BEFORE user PipeWire/WirePlumber:
+~/archConfig/troubleshoot/restore_audio_bluetooth_sleep.sh --restart-bluetooth
 ```
 
 ### Manual Recovery Commands
@@ -119,11 +84,14 @@ wpctl status
 ### 1. Never Restart `bluetooth.service` in Isolation
 If you ever restart the system Bluetooth daemon (`sudo systemctl restart bluetooth`), **always** restart user PipeWire/WirePlumber immediately after:
 ```bash
-sudo systemctl restart bluetooth && systemctl --user restart wireplumber
+sudo systemctl restart bluetooth && systemctl --user restart wireplumber pipewire pipewire-pulse
 ```
-Leaving WirePlumber running while BlueZ restarts triggers the upstream `spa.bluez5.native: listen(): Address already in use` bug.
+`hardware-linux/bluetooth/setup.sh` and `troubleshoot/fix_intel_bluetooth_sco.sh` now automatically restart `$SUDO_USER`'s user audio stack whenever `bluetooth.service` is restarted.
 
-### 2. Disable Volume Change Sound Feedback (Protects Shortcuts)
+### 2. Clean Sleep Hook + BlueZ `ResumeDelay = 3`
+`hardware-linux/bluetooth/bluetooth-sleep.sh` records connected devices before suspend, disconnects them with a 0.5s settle window so AVDTP tears down cleanly, waits for `hci0` readiness on resume, powers on the adapter, and reconnects previously active devices after BlueZ/WirePlumber endpoints settle. `ResumeDelay = 3` in `/etc/bluetooth/main.conf` provides additional coexistence settling time on Intel CNVi hardware.
+
+### 3. Disable Volume Change Sound Feedback (Protects Shortcuts)
 To ensure that an audio server hang can **never** freeze your keyboard shortcuts (`Super + Return`, media keys, etc.), disable GNOME's audible feedback on volume key presses:
 ```bash
 gsettings set org.gnome.desktop.sound input-feedback-sounds false

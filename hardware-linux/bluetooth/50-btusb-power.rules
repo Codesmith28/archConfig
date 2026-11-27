@@ -1,5 +1,7 @@
 # ==============================================================================
-# Intel AX211 Bluetooth USB Power Control Rule
-# Prevents USB autosuspend / ACPI sleep state race conditions on the Bluetooth radio
+# Bluetooth USB Controller Power Control Rule
+# Prevents USB runtime-PM autosuspend / ACPI sleep state race conditions on the
+# Bluetooth radio (Intel AX211 8087:0033 and standard USB BT class e0/01/01).
 # ==============================================================================
-ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="8087", ATTR{idProduct}=="0033", ATTR{power/control}="on"
+ACTION=="add|change", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="8087", ATTR{idProduct}=="0033", ATTR{power/control}="on"
+ACTION=="add|change", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="e0", ATTR{bDeviceSubClass}=="01", ATTR{bDeviceProtocol}=="01", ATTR{power/control}="on"
