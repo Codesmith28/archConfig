@@ -81,7 +81,19 @@ persist_kernel_arg() {
 
     if [[ -f /etc/kernel/cmdline ]] && ! grep -qw "$arg" /etc/kernel/cmdline 2>/dev/null; then
         log_info "Appending $arg to /etc/kernel/cmdline (BLS / systemd-boot)..."
-        run_as_root sed -i -E "s|[[:space:]]*$| ${arg}|" /etc/kernel/cmdline
+        run_as_root sed -i -E "1s|[[:space:]]*$| ${arg}|" /etc/kernel/cmdline
+    fi
+
+    # Direct systemd-boot BLS entries (Arch/OmArchy/non-grubby setups)
+    if [[ -d /boot/loader/entries ]] && ! command -v grubby >/dev/null 2>&1; then
+        local entry
+        for entry in /boot/loader/entries/*.conf; do
+            [[ -f "$entry" ]] || continue
+            if grep -q "^options " "$entry" 2>/dev/null && ! grep -qw "$arg" "$entry" 2>/dev/null; then
+                log_info "Appending $arg to BLS entry $entry..."
+                run_as_root sed -i -E "/^options / s|[[:space:]]*$| ${arg}|" "$entry"
+            fi
+        done
     fi
 }
 

@@ -7,6 +7,7 @@
 # 2. usb-wake        : USB sleep isolation (Hot backpack mouse/dongle wake block)
 # 3. bluetooth       : Intel AX211 SCO packet fix, BlueZ optimizations & audio autoswitch
 # 4. rog-nvidia      : ASUS ROG + NVIDIA RTX D3cold, Cardwire eBPF & debounced switching
+# 5. acpi            : Rate-aware GPE interrupt storm guard & PCIe AER UnsupReq mitigation
 # ==============================================================================
 set -euo pipefail
 
@@ -31,7 +32,7 @@ if [[ "$(uname -s)" != "Linux" ]]; then
     exit 0
 fi
 
-MODULES=("battery" "usb-wake" "bluetooth" "rog-nvidia")
+MODULES=("battery" "usb-wake" "bluetooth" "rog-nvidia" "acpi")
 REQUESTED=("$@")
 
 should_run() {

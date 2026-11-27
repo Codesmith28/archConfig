@@ -107,7 +107,7 @@ print_status() {
 
     echo ""
     echo "Key /proc/interrupts Counters (ACPI / GPIO / I2C / PCIe AER):"
-    grep -E "^\s*(9|14|27|126|145):" /proc/interrupts 2>/dev/null || true
+    grep -iE '^\s*9:|acpi|i2c_designware|ASUF|aerdrv|PCIe PME' /proc/interrupts 2>/dev/null || true
 
     echo ""
     echo "PCIe AER Hardware Error Counters:"
