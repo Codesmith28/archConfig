@@ -1,0 +1,11 @@
+[Unit]
+Description=ACPI GPE and Interrupt Storm Guard
+After=systemd-udevd.service multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/acpi-storm-guard.sh --boot
+
+[Install]
+WantedBy=multi-user.target

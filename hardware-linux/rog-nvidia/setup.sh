@@ -44,7 +44,18 @@ is_rog_machine() {
     echo "$prod_fam $prod_name $sys_ven $board_name" | grep -qiE "ROG|TUF|ASUS|Strix|Zephyrus|Flow|Scar"
 }
 
+dgpu_present_on_pci() {
+    if [[ -r /proc/bus/pci/devices ]] && grep -qiE '^[0-9a-f]+[[:space:]]+10de' /proc/bus/pci/devices 2>/dev/null; then
+        return 0
+    fi
+    if compgen -G "/proc/driver/nvidia/gpus/*" >/dev/null 2>&1; then
+        return 0
+    fi
+    [[ -n "$(lspci -d 10de: 2>/dev/null || true)" ]]
+}
+
 has_nvidia_gpu() {
+    dgpu_present_on_pci || \
     lspci 2>/dev/null | grep -qiE "(VGA|3D|Display).*NVIDIA" || \
     { command -v cardwire >/dev/null 2>&1 && cardwire list 2>/dev/null | grep -qi "NVIDIA"; } || \
     [[ -f /sys/devices/platform/asus-nb-wmi/dgpu_disable ]] || \
@@ -110,15 +121,29 @@ configure_asusd_policies() {
         run_as_root mkdir -p /etc/asusd
         local asusd_conf="/etc/asusd/asusd.ron"
         if [[ -f "$asusd_conf" ]]; then
-            run_as_root sed -i 's/change_platform_profile_on_battery:[[:space:]]*true/change_platform_profile_on_battery: false/g; s/change_platform_profile_on_ac:[[:space:]]*true/change_platform_profile_on_ac: false/g; s/platform_profile_linked_epp:[[:space:]]*true/platform_profile_linked_epp: false/g; s/ChargeMode:[[:space:]]*[0-9]*,//g' "$asusd_conf"
+            run_as_root sed -i 's/change_platform_profile_on_battery:[[:space:]]*true/change_platform_profile_on_battery: false/g; s/change_platform_profile_on_ac:[[:space:]]*true/change_platform_profile_on_ac: false/g; s/platform_profile_linked_epp:[[:space:]]*true/platform_profile_linked_epp: false/g; s/disable_nvidia_powerd_on_battery:[[:space:]]*true/disable_nvidia_powerd_on_battery: false/g; s/ChargeMode:[[:space:]]*[0-9]*,//g' "$asusd_conf"
             command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart asusd.service 2>/dev/null || true
-            log_success "asusd configured: internal profile switching and rogue ChargeMode disabled"
+            log_success "asusd configured: internal profile switching, nvidia-powerd toggling, and rogue ChargeMode disabled"
         fi
     fi
+    if [[ -d "$SCRIPT_DIR/tuned-profiles" ]] && { [[ -d /etc/tuned ]] || command -v tuned-adm >/dev/null 2>&1; }; then
+        run_as_root mkdir -p /etc/tuned/profiles
+        for prof in rog-powersave rog-balanced rog-performance; do
+            if [[ -f "$SCRIPT_DIR/tuned-profiles/$prof/tuned.conf" ]]; then
+                run_as_root mkdir -p "/etc/tuned/profiles/$prof"
+                run_as_root cp -f "$SCRIPT_DIR/tuned-profiles/$prof/tuned.conf" "/etc/tuned/profiles/$prof/tuned.conf"
+                run_as_root chmod 644 "/etc/tuned/profiles/$prof/tuned.conf"
+            fi
+        done
+        log_success "Installed custom ASUS ROG TuneD profiles (eliminates intermediate balanced platform_profile bounce)"
+    fi
     if [[ -f /etc/tuned/ppd.conf ]]; then
+        if [[ -d "$SCRIPT_DIR/tuned-profiles" ]]; then
+            run_as_root sed -i -E 's/^power-saver[[:space:]]*=[[:space:]]*powersave[[:space:]]*$/power-saver=rog-powersave/; s/^balanced[[:space:]]*=[[:space:]]*balanced[[:space:]]*$/balanced=rog-balanced/; s/^performance[[:space:]]*=[[:space:]]*throughput-performance[[:space:]]*$/performance=rog-performance/' /etc/tuned/ppd.conf
+        fi
         run_as_root sed -i 's/sysfs_acpi_monitor=[[:space:]]*true/sysfs_acpi_monitor=false/g; s/battery_detection=[[:space:]]*true/battery_detection=false/g' /etc/tuned/ppd.conf
-        command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart tuned-ppd.service 2>/dev/null || true
-        log_success "tuned-ppd configured: sysfs_acpi_monitor and battery_detection disabled"
+        command -v systemctl >/dev/null 2>&1 && run_as_root systemctl try-restart tuned.service tuned-ppd.service 2>/dev/null || true
+        log_success "tuned-ppd configured: sysfs_acpi_monitor, battery_detection disabled, and rog-* profiles active"
     fi
     local dgpu_node="/sys/devices/platform/asus-nb-wmi/dgpu_disable"
     if [[ -f "$dgpu_node" ]]; then
@@ -128,7 +153,7 @@ configure_asusd_policies() {
             run_as_root bash -c "echo 0 > $dgpu_node" 2>/dev/null || true
         fi
     fi
-    if [[ -e /sys/bus/pci/rescan ]] && ! lspci -d 10de: >/dev/null 2>&1; then
+    if [[ -e /sys/bus/pci/rescan ]] && ! dgpu_present_on_pci; then
         run_as_root bash -c "echo 1 > /sys/bus/pci/rescan" 2>/dev/null || true
     fi
 }
@@ -231,11 +256,13 @@ EOF
 configure_cardwire_policies() {
     if command -v cardwire >/dev/null 2>&1; then
         log_info "Configuring Cardwire daemon auto-switching policies..."
-        cardwire config battery-auto-switch true >/dev/null 2>&1 || true
+        # Disable cardwired's un-debounced battery-auto-switch so power-profile-switch.sh
+        # acts as the single debounced GPU posture controller (avoids Integrated->Smart double-switch on AC connect)
+        cardwire config battery-auto-switch false >/dev/null 2>&1 || true
         cardwire config battery-auto-switch-mode integrated >/dev/null 2>&1 || true
         cardwire config external-display-auto-switch true >/dev/null 2>&1 || true
         cardwire config save >/dev/null 2>&1 || true
-        log_success "Cardwire auto-switch configured (Battery: Integrated, AC/Display: Auto)"
+        log_success "Cardwire configured (Single debounced controller via power-profile-switch.sh)"
     fi
 }
 
@@ -521,6 +548,13 @@ verify_profile() {
         fi
 
         log_info "Cardwire active posture: $(cardwire get 2>/dev/null || echo 'unable to query')"
+        local cw_auto
+        cw_auto="$(cardwire config battery-auto-switch 2>/dev/null | awk '{print tolower($NF)}' | tr -d '[:space:]' || true)"
+        if [[ "$cw_auto" == "false" ]]; then
+            log_success "Cardwire battery-auto-switch: false (single debounced controller via power-profile-switch.sh)"
+        elif [[ "$cw_auto" == "true" ]]; then
+            log_warn "Cardwire battery-auto-switch: true (may race on AC connect; run setup.sh to set false)"
+        fi
         log_info "Cardwire GPU devices:"
         cardwire list 2>/dev/null || true
     else
@@ -559,6 +593,11 @@ verify_profile() {
             else
                 log_warn "asusd configuration: /etc/asusd/asusd.ron has internal profile switching enabled (may conflict with power dispatch)"
             fi
+            if grep -q "disable_nvidia_powerd_on_battery:[[:space:]]*false" /etc/asusd/asusd.ron 2>/dev/null; then
+                log_success "asusd configuration: disable_nvidia_powerd_on_battery=false (no nvidia-powerd race with cardwired)"
+            else
+                log_warn "asusd configuration: disable_nvidia_powerd_on_battery=true in /etc/asusd/asusd.ron (run setup.sh to disable)"
+            fi
         else
             log_info "asusd configuration: /etc/asusd/asusd.ron not created yet"
         fi
@@ -590,9 +629,32 @@ verify_profile() {
         log_success "Active Power Profile (via D-Bus): $prof"
     elif command -v tuned-adm >/dev/null 2>&1; then
         local prof
-        prof=$(tuned-adm active 2>/dev/null | awk -F': ' '{print $2}' || echo "N/A")
+        prof=$(tuned-adm active 2>/dev/null | awk -F': ' '/: /{val=$2} END{print val}' || echo "N/A")
         log_success "Active Power Profile (via tuned): $prof"
     fi
+
+    # 6b. TuneD ROG profile & tuned-ppd anti-bounce check
+    if [[ -f /etc/tuned/ppd.conf ]]; then
+        if grep -q "battery_detection=false" /etc/tuned/ppd.conf 2>/dev/null && \
+           grep -q "sysfs_acpi_monitor=false" /etc/tuned/ppd.conf 2>/dev/null; then
+            log_success "tuned-ppd config: battery_detection=false and sysfs_acpi_monitor=false"
+        else
+            log_warn "tuned-ppd config: battery_detection or sysfs_acpi_monitor not disabled in /etc/tuned/ppd.conf"
+        fi
+        if grep -q "power-saver=rog-powersave" /etc/tuned/ppd.conf 2>/dev/null && \
+           grep -q "performance=rog-performance" /etc/tuned/ppd.conf 2>/dev/null; then
+            log_success "tuned-ppd profile map: rog-powersave / rog-balanced / rog-performance active"
+        else
+            log_warn "tuned-ppd profile map: stock profiles still mapped in /etc/tuned/ppd.conf (run setup.sh to install rog-* profiles)"
+        fi
+    fi
+    for prof in rog-powersave rog-balanced rog-performance; do
+        if [[ -f "/etc/tuned/profiles/$prof/tuned.conf" ]]; then
+            log_success "Installed TuneD profile: /etc/tuned/profiles/$prof/tuned.conf"
+        elif [[ -d /etc/tuned ]]; then
+            log_warn "Missing TuneD profile: /etc/tuned/profiles/$prof/tuned.conf"
+        fi
+    done
 
     # 7. Installed scripts, udev rules, and user-space drop-ins
     echo ""
@@ -612,6 +674,12 @@ verify_profile() {
         log_success "Installed user drop-in: $pd_dropin (POWERDEVIL_NO_DDCUTIL=1)"
     else
         log_info "User drop-in: not installed at $pd_dropin"
+    fi
+
+    if [[ -x /usr/local/bin/acpi-storm-guard.sh ]]; then
+        log_success "Installed ACPI storm guard: /usr/local/bin/acpi-storm-guard.sh ($(systemctl is-enabled acpi-storm-guard.service 2>/dev/null || echo 'unknown'))"
+    else
+        log_warn "Missing /usr/local/bin/acpi-storm-guard.sh (run hardware-linux/acpi/setup.sh)"
     fi
     echo ""
 }

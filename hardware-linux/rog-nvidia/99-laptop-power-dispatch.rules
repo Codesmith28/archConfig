@@ -13,8 +13,8 @@
 # ==============================================================================
 
 # Barrel Jack AC Adapter online state transitions (connect / disconnect)
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="Mains", ENV{POWER_SUPPLY_ONLINE}=="?*", TEST=="/usr/local/bin/power-profile-switch.sh", RUN+="/usr/local/bin/power-profile-switch.sh --async"
 
 # USB Type-C Power Delivery (UCSI / PD) online state transitions (connect / disconnect)
-ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", ENV{POWER_SUPPLY_ONLINE}=="?*", RUN+="/usr/local/bin/power-profile-switch.sh --async"
+ACTION=="change", SUBSYSTEM=="power_supply", ATTR{type}=="USB", ENV{POWER_SUPPLY_ONLINE}=="?*", TEST=="/usr/local/bin/power-profile-switch.sh", RUN+="/usr/local/bin/power-profile-switch.sh --async"
 
